@@ -327,12 +327,50 @@
   - Updated `GovernmentDashboardPage.tsx` with statewide coverage gap disclosure (1 block assimilated, 820+ pending).
   - Updated `ForecastLabPage.tsx` with dual tabs for live 7-stage scientific chain generation and Phase 4D hindcasting.
   - Added unit and component tests: `ForecastService.test.ts`, `FarmerForecastPage.test.tsx`, `OfficerForecastPage.test.tsx` (all 31 frontend tests passing, Vite builds clean).
-- [x] **Comprehensive Documentation:**
-  - Authored `docs/forecast-products.md` (16 sections).
-- [x] **Full Test Suite Verification:**
-  - `pytest ml-service/tests`: 99/99 tests passed (100%).
-  - `npm test` in `backend/`: 54/54 tests passed (100%).
-  - `npm test` in `frontend/`: 31/31 tests passed (100%).
+#### Current Phase: PHASE 4F
+**Status:** COMPLETED  
+**Last Updated:** September 2026
+
+---
+
+## 9. Phase 4F: Operational Forecast Delivery, Alert Intelligence & Production-Readiness Hardening
+- **Status:** COMPLETED
+
+### Completed in Phase 4F
+- [x] **Deterministic Finite State Machine & Forecast Lifecycle (`ml-service/app/lifecycle/`):**
+  - Implemented 7 lifecycle states: `GENERATED`, `ACTIVE`, `EXPIRING`, `EXPIRED`, `VERIFIED`, `SUPERSEDED`, `REJECTED`.
+  - Implemented strict transition matrix with `IllegalStateTransitionError` validation.
+  - Implemented `ForecastLifecycleManager` with disk persistence in `ml-service/artifacts/lifecycle/`.
+- [x] **Deterministic Threshold Event Detector & Deduplication (`ml-service/app/events/`):**
+  - Meteorological event definitions: `HEAVY_RAIN_RISK` ($\ge 64.5$mm), `EXTREME_RAIN_RISK` ($\ge 204.5$mm), `DRY_SPELL_RISK` ($\ge 5$ days), `MONSOON_ONSET_RISK`, `FALSE_ONSET_RISK`, `RAINFALL_ANOMALY`.
+  - Severity mapping: `INFO`, `WATCH`, `WARNING`, `CRITICAL`.
+  - Cryptographic 16-char SHA-256 fingerprinting for deterministic deduplication.
+  - 24-hour cooldown window with probability escalation checks ($|\Delta p| \ge 0.10$ triggers `UPDATED`, otherwise `SUPPRESSED`).
+  - Event lifecycle transitions: `DETECTED` $\to$ `ACKNOWLEDGED`, `UPDATED`, `RESOLVED`, `EXPIRED`.
+- [x] **Provider-Neutral Delivery Channel Abstraction (`ml-service/app/delivery/`):**
+  - Protocol contracts: `NotificationDeliveryProvider`, `DeliveryStatus` (`SENT`, `FAILED`, `SIMULATED`, `NOT_CONFIGURED`).
+  - Implemented `ConsoleDeliveryProvider` and `DatabaseDeliveryProvider` (local persistence in `ml-service/artifacts/deliveries/`).
+  - External channels (SMS, WhatsApp, Voice/IVR) strictly enforced as `NOT_CONFIGURED`.
+- [x] **Operational Monitoring & Automated Expiry (`ml-service/app/operations/`):**
+  - Idempotent `ForecastExpirySweep` processor transitioning expired forecasts and events.
+  - Unified operational readiness status reporting across all pipelines.
+  - Added 6 pytest suites (116/116 tests passing).
+- [x] **PostgreSQL / PostGIS Schema & Repositories (`backend/`):**
+  - Migration `008_forecast_events_lifecycle.sql`: `forecast_lifecycle_events`, `forecast_events`, `forecast_event_transitions`, `notification_preferences`, `notification_deliveries`.
+  - Parameterized repositories: `eventRepository.ts`, `notificationRepository.ts`.
+  - Controllers and routes: `eventController`, `notificationController`, `operationController`, `forecastController.processExpiry`.
+  - Added 12 backend integration tests (66/66 backend tests passing, `tsc` zero errors).
+- [x] **Frontend Alert Center & Workflow Integration (`frontend/`):**
+  - Implemented typed `eventService.ts` API client.
+  - Created `AlertCenterPage.tsx` with severity filters, non-alarmist phrasing notices, event audit history modal, and detection/expiry action triggers.
+  - Mounted `/analyst/alerts` in `App.tsx` and `AnalystLayout.tsx`.
+  - Updated `FarmerForecastPage.tsx` with non-operational scientific indicator banners, zero agronomic commands.
+  - Updated `OfficerForecastPage.tsx` with lifecycle delivery status and block-level event timeline without rankings.
+  - Updated `GovernmentDashboardPage.tsx` with delivery channels status matrix (`NOT_CONFIGURED` safeguards).
+  - Added unit/component tests in `EventService.test.ts` and `AlertCenterPage.test.tsx` (41/41 frontend tests passing, Vite builds clean).
+- [x] **Documentation & Verification:**
+  - Authored `docs/operational-alerting.md`, `docs/forecast-lifecycle.md`, `docs/production-readiness.md`.
+  - Full system test suite: **116 ml-service + 66 backend + 41 frontend = 223/223 tests passing (100%)**.
 
 ---
 
@@ -346,15 +384,13 @@
 - **Phase 4B:** COMPLETED
 - **Phase 4C:** COMPLETED
 - **Phase 4D:** COMPLETED
-- **Phase 4E:** **COMPLETED**
-- **Phase 4F:** **NOT STARTED** (Strict sequence enforced)
+- **Phase 4E:** COMPLETED
+- **Phase 4F:** **COMPLETED**
 - **Phase 5:** **NOT STARTED** (Strict sequence enforced)
 
 ---
 
 ## 10. Pending (Future Phases)
-- [ ] **Phase 4F: Production Ensembling, Spatial Teleconnections & Advanced Downscaling**
-  - DO NOT START UNTIL INSTRUCTED.
 - [ ] **Phase 5: Agronomic Rules Engine & What-If Simulator**
   - DO NOT START UNTIL INSTRUCTED.
   - Declarative crop rules matrix across growth stages.
@@ -367,7 +403,8 @@
 ---
 
 ## 11. Technical Debt
-- **Zero Technical Debt Introduced:** Fully typed interfaces, zero synthetic or fabricated observations, strict chronological splitting without leakage, immutable artifact management, and honest disclosure of single-season data limits.
+- **Zero Technical Debt Introduced:** Fully typed interfaces, zero synthetic or fabricated observations, strict chronological splitting without leakage, immutable artifact management, deterministic lifecycle state machine, cryptographic deduplication, provider-neutral delivery abstraction, and honest disclosure of single-season data limits.
+
 
 
 

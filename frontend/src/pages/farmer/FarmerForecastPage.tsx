@@ -22,6 +22,7 @@ import { HorizonSelector } from '../../components/forecast/HorizonSelector';
 import { Badge } from '../../components/ui/Badge';
 import { Progress } from '../../components/ui/Progress';
 import { forecastService, ScientificForecastRecord } from '../../services/forecastService';
+import { eventService, ForecastEvent } from '../../services/eventService';
 import { ForecastHorizonDays } from '@shared/types';
 
 export const FarmerForecastPage: React.FC = () => {
@@ -29,6 +30,7 @@ export const FarmerForecastPage: React.FC = () => {
   const { horizon, setHorizon, location } = useFarmerStore();
   const [openWhyId, setOpenWhyId] = useState<string | null>(null);
   const [forecasts, setForecasts] = useState<ScientificForecastRecord[]>([]);
+  const [activeEvents, setActiveEvents] = useState<ForecastEvent[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   const toggleWhy = (id: string) => {
@@ -36,15 +38,24 @@ export const FarmerForecastPage: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchForecasts = async () => {
+    const fetchForecastsAndEvents = async () => {
       try {
         setLoading(true);
-        const res = await forecastService.getForecasts({
-          horizon: horizon,
-          block_id: 'UP_LKO_BKT',
-        });
-        if (res.success && res.data?.forecasts) {
-          setForecasts(res.data.forecasts);
+        const [fcRes, evRes] = await Promise.all([
+          forecastService.getForecasts({
+            horizon: horizon,
+            block_id: 'UP_LKO_BKT',
+          }).catch(() => null),
+          eventService.getEvents({
+            block_id: 'UP_LKO_BKT',
+            horizon_days: horizon,
+          }).catch(() => null),
+        ]);
+        if (fcRes?.success && fcRes.data?.forecasts) {
+          setForecasts(fcRes.data.forecasts);
+        }
+        if (evRes?.success && evRes.data?.events) {
+          setActiveEvents(evRes.data.events.filter(e => e.state !== 'RESOLVED' && e.state !== 'EXPIRED'));
         }
       } catch (err) {
         // Fallback gracefully
@@ -52,7 +63,7 @@ export const FarmerForecastPage: React.FC = () => {
         setLoading(false);
       }
     };
-    fetchForecasts();
+    fetchForecastsAndEvents();
   }, [horizon]);
 
   // Map icons for standard targets
@@ -117,6 +128,57 @@ export const FarmerForecastPage: React.FC = () => {
           </p>
         </div>
       </div>
+
+      {/* 2b. Non-Operational Meteorological Risk Indicators (Phase 4F) */}
+      {activeEvents.length > 0 && (
+        <div className="p-4 bg-blue-50/80 border border-blue-200 rounded-xl space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <ShieldAlert className="w-5 h-5 text-blue-700" />
+              <h2 className="font-heading font-bold text-sm text-blue-950">
+                Active Meteorological Scientific Indicators ({activeEvents.length})
+              </h2>
+            </div>
+            <div className="flex items-center gap-2">
+              <Badge variant="azure" size="sm">
+                NON-OPERATIONAL METEOROLOGICAL NOTICE
+              </Badge>
+              <Badge variant="neutral" size="sm">
+                BROADCASTING DISABLED
+              </Badge>
+            </div>
+          </div>
+          <p className="text-xs text-blue-900 leading-relaxed">
+            The system has identified meteorological threshold conditions matching scientific event definitions.
+            <strong> Note:</strong> Production SMS/WhatsApp alerting is inactive and agronomic advice (e.g. sowing, irrigation, spraying) is excluded from this meteorological forecast layer.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+            {activeEvents.map((evt) => (
+              <div key={evt.event_id} className="p-2.5 bg-white rounded-lg border border-blue-200 flex items-start justify-between text-xs">
+                <div>
+                  <div className="font-semibold text-slate-800 flex items-center gap-1.5">
+                    <span>{evt.event_type.replace(/_/g, ' ')}</span>
+                    <Badge
+                      variant={
+                        evt.severity === 'CRITICAL' ? 'crimson' :
+                        evt.severity === 'WARNING' ? 'amber' :
+                        evt.severity === 'WATCH' ? 'azure' : 'neutral'
+                      }
+                      size="sm"
+                    >
+                      {evt.severity}
+                    </Badge>
+                  </div>
+                  <p className="text-[11px] text-slate-600 mt-1">{evt.description}</p>
+                  <p className="text-[10px] text-slate-500 font-mono mt-0.5">
+                    Validity: {evt.valid_from} → {evt.valid_until} | State: {evt.state}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* 3. Target Forecasts Grid */}
       {loading ? (

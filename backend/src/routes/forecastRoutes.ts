@@ -14,6 +14,7 @@ forecastRoutes.get('/location/:blockId', forecastController.getLocationForecasts
 // Forecast listing & generation
 forecastRoutes.get('/', forecastController.listForecasts);
 forecastRoutes.post('/generate', forecastController.generateForecast);
+forecastRoutes.post('/process-expiry', forecastController.processExpiry);
 
 // Parameterized by forecast ID
 forecastRoutes.get('/:id/explanation', forecastController.getForecastExplanation);

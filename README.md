@@ -2,7 +2,7 @@
 > *“From climate signals to confident farm decisions.”*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Status: Phase 4E Complete](https://img.shields.io/badge/Status-Phase%204E%20Complete-emerald.svg)](#roadmap)
+[![Status: Phase 4F Complete](https://img.shields.io/badge/Status-Phase%204F%20Complete-emerald.svg)](#roadmap)
 [![Stack: TypeScript & Python](https://img.shields.io/badge/Stack-TypeScript%20%7C%20Python%203.11-slate.svg)](#technology-stack)
 
 ---
@@ -26,9 +26,9 @@ Operating at the critical block and gram panchayat scale, VarshaSetu bridges the
 ```bash
 cd backend
 npm install
-npm run migrate   # Applies 7 migrations (geography, auth, sources, ingestion)
+npm run migrate   # Applies 8 migrations (geography, auth, sources, ingestion, lifecycle & events)
 npm run seed      # Seeds demonstration administrative hierarchy & demo users
-npm test          # Runs 54 API, RBAC, downscaling, calibration, hindcasting, and forecast tests
+npm test          # Runs 66 API, RBAC, downscaling, calibration, hindcasting, and event tests
 npm run dev       # Starts backend API on http://localhost:5001
 ```
 
@@ -38,7 +38,7 @@ cd ml-service
 python3.11 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-pytest            # Runs 99 provider, tree ensemble, SHAP, calibration, hindcasting, and forecast tests
+pytest            # Runs 116 provider, tree ensemble, SHAP, calibration, hindcasting, lifecycle, and event tests
 uvicorn app.main:app --port 8000 --reload  # Starts ML service on http://localhost:8000
 ```
 
@@ -46,7 +46,7 @@ uvicorn app.main:app --port 8000 --reload  # Starts ML service on http://localho
 ```bash
 cd frontend
 npm install
-npm test          # Runs 31 UI, accessibility, calibration, hindcasting, and forecast tests
+npm test          # Runs 41 UI, accessibility, calibration, hindcasting, alert center, and forecast tests
 npm run dev       # Starts Vite dev server on http://localhost:5173
 ```
 
@@ -60,6 +60,9 @@ npm run dev       # Starts Vite dev server on http://localhost:5173
 - **[Probabilistic Calibration & Reliability](docs/probabilistic-calibration.md):** Platt/Isotonic calibration, reliability diagrams, Murphy (1973) Brier score decomposition, and data sufficiency gatekeepers.
 - **[Multi-Year Validation & Hindcasting](docs/hindcasting-validation.md):** Walk-forward backtesting, multi-horizon evaluation, cross-season stability, feature drift (PSI/KS), and multi-year data gate.
 - **[Operational Forecast Products & API](docs/forecast-products.md):** Scientific forecast schemas, multi-tier operational gating, retrospective verification, uncertainty intervals, and domain SHAP explainability.
+- **[Operational Alerting & Event Intelligence](docs/operational-alerting.md):** Deterministic threshold detection, 16-char cryptographic deduplication, cooldown windows, and non-alarmist communication.
+- **[Forecast Lifecycle & Expiry Architecture](docs/forecast-lifecycle.md):** Deterministic 7-state finite state machine, transition matrices, freshness levels, and automated expiry sweeps.
+- **[Production Readiness & Gating Audits](docs/production-readiness.md):** Subsystem audit matrix, carrier gating safeguards, and operational verification endpoints.
 - **[Scientific Data Catalog](docs/scientific-data-catalog.md):** Specification of ENSO, IOD, MJO, and ERA5-Land variables, physical bounds QC, and derived features.
 - **[Data Pipeline Architecture](docs/data-pipeline.md):** End-to-end ingestion lifecycle, retry policies, Parquet storage, and PostgreSQL tracking.
 - **[Provider Integration Guide](docs/provider-integration.md):** Connection contracts, parsing protocols, and rate-limiting resilience for NOAA, BoM, and Open-Meteo.

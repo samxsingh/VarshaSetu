@@ -35,6 +35,7 @@ const AnalystOverviewPage = lazy(() => import('./pages/analyst/AnalystOverviewPa
 const ForecastLabPage = lazy(() => import('./pages/analyst/ForecastLabPage').then((m) => ({ default: m.ForecastLabPage })));
 const ModelsPage = lazy(() => import('./pages/analyst/ModelsPage').then((m) => ({ default: m.ModelsPage })));
 const DataHealthPage = lazy(() => import('./pages/analyst/DataHealthPage').then((m) => ({ default: m.DataHealthPage })));
+const AlertCenterPage = lazy(() => import('./pages/analyst/AlertCenterPage').then((m) => ({ default: m.AlertCenterPage })));
 
 // Lazy Loaded Admin Page
 const AdminDashboardPage = lazy(() => import('./pages/admin/AdminDashboardPage').then((m) => ({ default: m.AdminDashboardPage })));
@@ -82,6 +83,7 @@ export function App() {
               <Route path="forecast-lab" element={<ForecastLabPage />} />
               <Route path="models" element={<ModelsPage />} />
               <Route path="data-health" element={<DataHealthPage />} />
+              <Route path="alerts" element={<AlertCenterPage />} />
             </Route>
 
             {/* Admin Routes */}

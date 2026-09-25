@@ -4,24 +4,37 @@ import { Badge } from '../../components/ui/Badge';
 import { HorizonSelector } from '../../components/forecast/HorizonSelector';
 import { ForecastHorizonDays } from '@shared/types';
 import { forecastService, ScientificForecastRecord } from '../../services/forecastService';
-import { Info, MapPin, ShieldAlert, CheckCircle2, Clock } from 'lucide-react';
+import { eventService, ForecastEvent, OperationalStatusResponse } from '../../services/eventService';
+import { Info, MapPin, ShieldAlert, CheckCircle2, Clock, Bell, Radio } from 'lucide-react';
 
 export const OfficerForecastPage: React.FC = () => {
   const [horizon, setHorizon] = useState<ForecastHorizonDays>(7);
   const [forecasts, setForecasts] = useState<ScientificForecastRecord[]>([]);
+  const [events, setEvents] = useState<ForecastEvent[]>([]);
+  const [opStatus, setOpStatus] = useState<OperationalStatusResponse | null>(null);
 
   useEffect(() => {
-    const fetchForecasts = async () => {
+    const fetchForecastsAndEvents = async () => {
       try {
-        const res = await forecastService.getForecasts({ horizon });
-        if (res.success && res.data?.forecasts) {
-          setForecasts(res.data.forecasts);
+        const [fcRes, evRes, opRes] = await Promise.all([
+          forecastService.getForecasts({ horizon }).catch(() => null),
+          eventService.getEvents().catch(() => null),
+          eventService.getOperationalStatus().catch(() => null),
+        ]);
+        if (fcRes?.success && fcRes.data?.forecasts) {
+          setForecasts(fcRes.data.forecasts);
+        }
+        if (evRes?.success && evRes.data?.events) {
+          setEvents(evRes.data.events);
+        }
+        if (opRes?.success && opRes.data) {
+          setOpStatus(opRes.data);
         }
       } catch (err) {
         // Fallback
       }
     };
-    fetchForecasts();
+    fetchForecastsAndEvents();
   }, [horizon]);
 
   // Standard Lucknow district block matrix with scientific observational status
@@ -197,6 +210,95 @@ export const OfficerForecastPage: React.FC = () => {
           </table>
         </div>
       </Card>
+
+      {/* 4. Active Forecast Lifecycle & Event Intelligence (Phase 4F) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card className="p-5 space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-surface-border">
+            <div className="flex items-center gap-2">
+              <Radio className="w-4 h-4 text-brand-teal" />
+              <h3 className="font-heading font-bold text-sm text-slate-900">
+                Forecast Lifecycle & Delivery Status
+              </h3>
+            </div>
+            <Badge variant="amber" size="sm">
+              DIAGNOSTIC ONLY
+            </Badge>
+          </div>
+
+          <div className="space-y-3 text-xs">
+            <div className="flex justify-between items-center p-2.5 bg-surface-muted/60 rounded-lg">
+              <span className="text-slate-600 font-medium">Operational Status:</span>
+              <span className="font-bold font-mono text-amber-800">
+                {opStatus?.delivery_status || 'DIAGNOSTIC_ONLY'}
+              </span>
+            </div>
+            <div className="flex justify-between items-center p-2.5 bg-surface-muted/60 rounded-lg">
+              <span className="text-slate-600 font-medium">Data Freshness:</span>
+              <span className="font-mono text-slate-800">
+                {opStatus?.data_freshness_status || 'HISTORICAL_ONLY'}
+              </span>
+            </div>
+            <div className="flex justify-between items-center p-2.5 bg-surface-muted/60 rounded-lg">
+              <span className="text-slate-600 font-medium">Active Events Count:</span>
+              <span className="font-bold text-slate-900">
+                {events.filter(e => e.state !== 'RESOLVED' && e.state !== 'EXPIRED').length} Detected
+              </span>
+            </div>
+            <div className="p-2.5 bg-amber-50 rounded-lg border border-amber-200 text-[11px] text-amber-900 leading-relaxed">
+              <strong>Notice:</strong> Broadcast alerts via external telecommunication channels (SMS, WhatsApp, Voice) remain NOT CONFIGURED. All current events are evaluated on the Kharif 2024 historical observation record.
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-5 space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-surface-border">
+            <div className="flex items-center gap-2">
+              <Bell className="w-4 h-4 text-indigo-600" />
+              <h3 className="font-heading font-bold text-sm text-slate-900">
+                Block-Level Meteorological Event Timeline
+              </h3>
+            </div>
+            <span className="text-xs text-slate-500 font-mono">
+              {events.length} Total Registered
+            </span>
+          </div>
+
+          {events.length > 0 ? (
+            <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+              {events.slice(0, 5).map((evt) => (
+                <div key={evt.event_id} className="p-2.5 rounded-lg border border-slate-200 bg-white text-xs space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-slate-800 font-heading">
+                      {evt.event_type.replace(/_/g, ' ')}
+                    </span>
+                    <Badge
+                      variant={
+                        evt.severity === 'CRITICAL' ? 'crimson' :
+                        evt.severity === 'WARNING' ? 'amber' :
+                        evt.severity === 'WATCH' ? 'azure' : 'neutral'
+                      }
+                      size="sm"
+                    >
+                      {evt.severity}
+                    </Badge>
+                  </div>
+                  <p className="text-[11px] text-slate-600">{evt.description}</p>
+                  <div className="flex items-center justify-between text-[10px] text-slate-500 font-mono pt-1 border-t border-slate-100">
+                    <span>Block: {evt.block_id}</span>
+                    <span>State: <strong className="text-slate-700">{evt.state}</strong></span>
+                    <span>Prob: {evt.probability ? `${Math.round(evt.probability * 100)}%` : 'N/A'}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="p-6 text-center text-xs text-slate-500 bg-slate-50 rounded-lg">
+              No active meteorological event alerts for this horizon.
+            </div>
+          )}
+        </Card>
+      </div>
     </div>
   );
 };

@@ -5,20 +5,25 @@ import { ClimateSignalCard } from '../../components/analyst/ClimateSignalCard';
 import { ProvenanceCard } from '../../components/analyst/ProvenanceCard';
 import { Landmark, TrendingUp, AlertTriangle, ShieldAlert, Activity, CheckCircle2, XCircle, Database } from 'lucide-react';
 import { forecastService, ForecastStatusResponse, ForecastAvailabilityResponse } from '../../services/forecastService';
+import { eventService, OperationalStatusResponse } from '../../services/eventService';
+import { Radio, BellRing, Server, ShieldCheck } from 'lucide-react';
 
 export const GovernmentDashboardPage: React.FC = () => {
   const [forecastStatus, setForecastStatus] = useState<ForecastStatusResponse | null>(null);
   const [availability, setAvailability] = useState<ForecastAvailabilityResponse | null>(null);
+  const [opStatus, setOpStatus] = useState<OperationalStatusResponse | null>(null);
 
   useEffect(() => {
     const fetchGovData = async () => {
       try {
-        const [stRes, avRes] = await Promise.all([
+        const [stRes, avRes, opRes] = await Promise.all([
           forecastService.getForecastStatus().catch(() => null),
           forecastService.getForecastAvailability('UP_LKO_BKT').catch(() => null),
+          eventService.getOperationalStatus().catch(() => null),
         ]);
         if (stRes?.success && stRes.data) setForecastStatus(stRes.data);
         if (avRes?.success && avRes.data) setAvailability(avRes.data);
+        if (opRes?.success && opRes.data) setOpStatus(opRes.data);
       } catch (err) {
         // Fallback
       }
@@ -124,7 +129,84 @@ export const GovernmentDashboardPage: React.FC = () => {
         </Card>
       </div>
 
-      {/* 4. Global Climate Teleconnections & Provenance */}
+      {/* 4. Operational Delivery & Production Gating Status (Phase 4F) */}
+      <Card className="p-5 space-y-4">
+        <div className="flex items-center justify-between pb-3 border-b border-surface-border">
+          <div className="flex items-center gap-2">
+            <Radio className="w-5 h-5 text-brand-teal" />
+            <div>
+              <h2 className="font-heading font-bold text-base text-slate-900">
+                Operational Delivery Channels & Gating Infrastructure
+              </h2>
+              <p className="text-xs text-slate-500">
+                Phase 4F alert engine, forecast state machine, and provider-neutral telemetry
+              </p>
+            </div>
+          </div>
+          <Badge variant="amber" size="sm">
+            DIAGNOSTIC ONLY — NON-OPERATIONAL
+          </Badge>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-1">
+          <div className="p-3.5 bg-surface-muted/50 rounded-xl border border-surface-border space-y-1">
+            <span className="text-[11px] font-heading font-semibold text-slate-500 uppercase tracking-wider">
+              In-App Notification
+            </span>
+            <div className="font-bold text-sm text-slate-900 font-mono">
+              SIMULATED / ACTIVE
+            </div>
+            <p className="text-[10px] text-slate-500">
+              Internal state machine & delivery logs recorded.
+            </p>
+          </div>
+
+          <div className="p-3.5 bg-surface-muted/50 rounded-xl border border-surface-border space-y-1">
+            <span className="text-[11px] font-heading font-semibold text-slate-500 uppercase tracking-wider">
+              SMS Gateway
+            </span>
+            <div className="font-bold text-sm text-amber-700 font-mono">
+              NOT CONFIGURED
+            </div>
+            <p className="text-[10px] text-slate-500">
+              External telecommunication carrier not active.
+            </p>
+          </div>
+
+          <div className="p-3.5 bg-surface-muted/50 rounded-xl border border-surface-border space-y-1">
+            <span className="text-[11px] font-heading font-semibold text-slate-500 uppercase tracking-wider">
+              WhatsApp Broadcasting
+            </span>
+            <div className="font-bold text-sm text-amber-700 font-mono">
+              NOT CONFIGURED
+            </div>
+            <p className="text-[10px] text-slate-500">
+              Broadcasting disabled until production readiness.
+            </p>
+          </div>
+
+          <div className="p-3.5 bg-surface-muted/50 rounded-xl border border-surface-border space-y-1">
+            <span className="text-[11px] font-heading font-semibold text-slate-500 uppercase tracking-wider">
+              Voice / IVR Gateway
+            </span>
+            <div className="font-bold text-sm text-amber-700 font-mono">
+              NOT CONFIGURED
+            </div>
+            <p className="text-[10px] text-slate-500">
+              Outbound telephony calls strictly disabled.
+            </p>
+          </div>
+        </div>
+
+        <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-700 flex items-start gap-2.5">
+          <Server className="w-4 h-4 text-slate-500 shrink-0 mt-0.5" />
+          <p>
+            <strong>Operational System Note:</strong> In accordance with scientific verification rules, all alert thresholds, lifecycle states, and notification events are gated to <code>DIAGNOSTIC_ONLY</code>. Outbound push distribution to farmers will remain disabled until multi-year hindcasting achieves operational certification.
+          </p>
+        </div>
+      </Card>
+
+      {/* 5. Global Climate Teleconnections & Provenance */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <ClimateSignalCard />
         <ProvenanceCard />

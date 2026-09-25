@@ -897,5 +897,194 @@ def generate_forecast(req: ForecastGenerateRequest) -> Dict[str, Any]:
     Validates data freshness, model eligibility, calibration gates, and uncertainty bounds.
     """
     record = ForecastService.generate_forecast(req)
+    # Auto-register in lifecycle management
+    ForecastLifecycleManager.initialize_forecast(
+        forecast_id=record.forecast_id,
+        model_version=record.model.model_version,
+        dataset_fingerprint=record.model.dataset_fingerprint,
+        auto_activate=True,
+    )
     return record.model_dump(mode="json")
+
+
+# ====================================================================
+# PHASE 4F — FORECAST LIFECYCLE, EVENT INTELLIGENCE & PRODUCTION READINESS
+# ====================================================================
+
+from .lifecycle import ForecastLifecycleManager, InvalidLifecycleTransitionError
+from .forecast.freshness import ForecastFreshnessEvaluator
+from .events import EventManager
+from .delivery import DeliveryRouter
+from .operations import ForecastExpiryProcessor, OperationalMonitor
+from .schemas.lifecycle import (
+    ForecastLifecycleState,
+    LifecycleTransitionRequest,
+)
+from .schemas.events import (
+    EventState,
+    EventDetectionRequest,
+    EventActionRequest,
+)
+from .schemas.delivery import (
+    DeliveryMessage,
+)
+
+
+@app.get("/forecasts/{forecast_id}/lifecycle")
+def get_forecast_lifecycle(forecast_id: str) -> Dict[str, Any]:
+    """Retrieves forecast lifecycle state and complete audit trail."""
+    summary = ForecastLifecycleManager.get_summary(forecast_id)
+    return summary.model_dump(mode="json")
+
+
+@app.post("/forecasts/{forecast_id}/lifecycle/transition")
+def transition_forecast_lifecycle(forecast_id: str, req: LifecycleTransitionRequest) -> Dict[str, Any]:
+    """Transitions a forecast to a new lifecycle state with deterministic validation."""
+    try:
+        record = ForecastLifecycleManager.transition(
+            forecast_id=forecast_id,
+            target_status=req.target_status,
+            reason=req.reason,
+            actor=req.actor or "SYSTEM",
+            metadata=req.metadata,
+        )
+        return record.model_dump(mode="json")
+    except InvalidLifecycleTransitionError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.get("/forecasts/{forecast_id}/freshness")
+def evaluate_forecast_freshness(forecast_id: str) -> Dict[str, Any]:
+    """Audits data age and forecast validity window."""
+    record = ForecastService.get_forecast(forecast_id)
+    if not record:
+        raise HTTPException(status_code=404, detail=f"Forecast '{forecast_id}' not found.")
+
+    res = ForecastFreshnessEvaluator.evaluate(
+        forecast_id=forecast_id,
+        generated_at_str=record.generated_at,
+        valid_from_str=record.valid_from,
+        valid_until_str=record.valid_until,
+        source_observation_date_str="2024-09-30",
+    )
+    return res.model_dump(mode="json")
+
+
+@app.post("/forecasts/process-expiry")
+def process_forecast_expiries() -> Dict[str, Any]:
+    """Idempotently discovers expired forecasts and marks them EXPIRED."""
+    res = ForecastExpiryProcessor.process_expiries()
+    OperationalMonitor.record_expiry_run()
+    return res.model_dump(mode="json")
+
+
+@app.post("/events/detect")
+def detect_events(req: EventDetectionRequest) -> Dict[str, Any]:
+    """
+    Evaluates eligible forecasts against Phase 4A meteorological thresholds,
+    applies operational gates, deduplicates, and persists detected events.
+    """
+    forecasts = ForecastService.get_location_forecasts(block_id=req.block_id or "UP_LKO_BKT")
+    if req.target_types:
+        forecasts = [f for f in forecasts if f.target.target_type in req.target_types]
+
+    res = EventManager.detect_events(
+        forecasts=forecasts,
+        cooldown_hours=req.cooldown_hours,
+        actor="SYSTEM",
+    )
+    OperationalMonitor.record_event_detection()
+    return res.model_dump(mode="json")
+
+
+@app.get("/events")
+def list_events(
+    block_id: Optional[str] = None,
+    event_type: Optional[str] = None,
+    severity: Optional[str] = None,
+    state: Optional[str] = None,
+    limit: int = 100,
+) -> Dict[str, Any]:
+    """Retrieves list of detected meteorological events."""
+    events = EventManager.list_events(
+        block_id=block_id,
+        event_type=event_type,
+        severity=severity,
+        state=state,
+        limit=limit,
+    )
+    return {
+        "total_events": len(events),
+        "events": [e.model_dump(mode="json") for e in events],
+    }
+
+
+@app.get("/events/{event_id}")
+def get_event_by_id(event_id: str) -> Dict[str, Any]:
+    """Retrieves a single detected event by identifier."""
+    event = EventManager.get_event(event_id)
+    if not event:
+        raise HTTPException(status_code=404, detail=f"Event '{event_id}' not found.")
+    return event.model_dump(mode="json")
+
+
+@app.get("/events/{event_id}/history")
+def get_event_history(event_id: str) -> Dict[str, Any]:
+    """Retrieves lifecycle transition history for an event."""
+    history = EventManager.get_event_history(event_id)
+    return {
+        "event_id": event_id,
+        "history": [t.model_dump(mode="json") for t in history],
+    }
+
+
+@app.post("/events/{event_id}/acknowledge")
+def acknowledge_event(event_id: str, req: EventActionRequest) -> Dict[str, Any]:
+    """Acknowledges an active event without clearing underlying historical data."""
+    try:
+        updated = EventManager.transition_event(
+            event_id=event_id,
+            target_state=EventState.ACKNOWLEDGED,
+            reason=req.reason,
+            actor=req.actor,
+            metadata=req.metadata,
+        )
+        return updated.model_dump(mode="json")
+    except KeyError:
+        raise HTTPException(status_code=404, detail=f"Event '{event_id}' not found.")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.post("/events/{event_id}/resolve")
+def resolve_event(event_id: str, req: EventActionRequest) -> Dict[str, Any]:
+    """Resolves an active event."""
+    try:
+        updated = EventManager.transition_event(
+            event_id=event_id,
+            target_state=EventState.RESOLVED,
+            reason=req.reason,
+            actor=req.actor,
+            metadata=req.metadata,
+        )
+        return updated.model_dump(mode="json")
+    except KeyError:
+        raise HTTPException(status_code=404, detail=f"Event '{event_id}' not found.")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.get("/operations/status")
+def get_operations_status() -> Dict[str, Any]:
+    """Consolidated operational monitoring, subsystem telemetry, and safety disclosures."""
+    summary = OperationalMonitor.get_status()
+    return summary.model_dump(mode="json")
+
+
+@app.post("/delivery/simulate")
+def simulate_delivery(msg: DeliveryMessage) -> Dict[str, Any]:
+    """Dispatches a simulated internal notification payload."""
+    res = DeliveryRouter.dispatch(msg)
+    return res.model_dump(mode="json")
+
 

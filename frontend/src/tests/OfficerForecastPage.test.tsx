@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { OfficerForecastPage } from '../pages/officer/OfficerForecastPage';
 import { forecastService } from '../services/forecastService';
+import { eventService } from '../services/eventService';
 
 describe('OfficerForecastPage Component (Phase 4E Scientific Comparison Matrix)', () => {
   beforeEach(() => {
@@ -17,6 +18,34 @@ describe('OfficerForecastPage Component (Phase 4E Scientific Comparison Matrix)'
         timestamp: new Date().toISOString(),
         dataMode: 'REAL',
       },
+    });
+    vi.spyOn(eventService, 'getEvents').mockResolvedValue({
+      success: true,
+      data: {
+        total_events: 0,
+        events: [],
+      },
+    });
+    vi.spyOn(eventService, 'getOperationalStatus').mockResolvedValue({
+      success: true,
+      data: {
+        service: 'varshasetu-operational-engine',
+        phase: 'PHASE_4F_OPERATIONAL_DELIVERY',
+        system_status: 'DIAGNOSTIC_ONLY',
+        operational_alerting_allowed: false,
+        data_freshness: 'HISTORICAL_ONLY',
+        dataset: 'Kharif 2024',
+        channels: {
+          IN_APP: { status: 'SIMULATED' },
+          SMS: { status: 'NOT_CONFIGURED' },
+          WHATSAPP: { status: 'NOT_CONFIGURED' },
+          VOICE: { status: 'NOT_CONFIGURED' },
+        },
+        events: { active_count: 0, total_detected: 0 },
+        lifecycle: { active_forecasts: 0, expired_forecasts: 0 },
+        gating_rationale: 'Kharif 2024 archive',
+        timestamp: new Date().toISOString(),
+      } as any,
     });
   });
 

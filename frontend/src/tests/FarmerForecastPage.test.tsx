@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { FarmerForecastPage } from '../pages/farmer/FarmerForecastPage';
 import { forecastService } from '../services/forecastService';
+import { eventService } from '../services/eventService';
 
 describe('FarmerForecastPage Component (Phase 4E Scientific Forecast Products)', () => {
   const mockForecasts = [
@@ -90,6 +91,13 @@ describe('FarmerForecastPage Component (Phase 4E Scientific Forecast Products)',
       meta: {
         timestamp: new Date().toISOString(),
         dataMode: 'REAL',
+      },
+    });
+    vi.spyOn(eventService, 'getEvents').mockResolvedValue({
+      success: true,
+      data: {
+        total_events: 0,
+        events: [],
       },
     });
   });

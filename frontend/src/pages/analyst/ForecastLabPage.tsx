@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   modelService,
   HindcastStatusResponse,
@@ -32,6 +33,7 @@ import {
   FileText,
   TrendingUp,
   Info,
+  BellRing,
 } from 'lucide-react';
 
 export const ForecastLabPage: React.FC = () => {
@@ -175,30 +177,40 @@ export const ForecastLabPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Tab Switcher */}
-      <div className="flex border-b border-surface-border gap-2">
-        <button
-          onClick={() => setActiveTab('chain')}
-          className={`px-4 py-2.5 text-xs font-semibold border-b-2 transition-colors flex items-center gap-2 ${
-            activeTab === 'chain'
-              ? 'border-indigo-600 text-indigo-600'
-              : 'border-transparent text-slate-500 hover:text-slate-800'
-          }`}
+      {/* Tab Switcher & Quick Navigation */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-surface-border gap-2 pb-1">
+        <div className="flex gap-2">
+          <button
+            onClick={() => setActiveTab('chain')}
+            className={`px-4 py-2.5 text-xs font-semibold border-b-2 transition-colors flex items-center gap-2 ${
+              activeTab === 'chain'
+                ? 'border-indigo-600 text-indigo-600'
+                : 'border-transparent text-slate-500 hover:text-slate-800'
+            }`}
+          >
+            <Layers className="w-4 h-4" />
+            Forecast Generator & Scientific Chain
+          </button>
+          <button
+            onClick={() => setActiveTab('hindcasting')}
+            className={`px-4 py-2.5 text-xs font-semibold border-b-2 transition-colors flex items-center gap-2 ${
+              activeTab === 'hindcasting'
+                ? 'border-indigo-600 text-indigo-600'
+                : 'border-transparent text-slate-500 hover:text-slate-800'
+            }`}
+          >
+            <Activity className="w-4 h-4" />
+            Multi-Year Hindcasting & Skill Evaluation
+          </button>
+        </div>
+
+        <Link
+          to="/analyst/alerts"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-heading font-semibold bg-brand-teal/10 text-brand-teal hover:bg-brand-teal/20 transition-colors self-start sm:self-auto"
         >
-          <Layers className="w-4 h-4" />
-          Forecast Generator & Scientific Chain
-        </button>
-        <button
-          onClick={() => setActiveTab('hindcasting')}
-          className={`px-4 py-2.5 text-xs font-semibold border-b-2 transition-colors flex items-center gap-2 ${
-            activeTab === 'hindcasting'
-              ? 'border-indigo-600 text-indigo-600'
-              : 'border-transparent text-slate-500 hover:text-slate-800'
-          }`}
-        >
-          <Activity className="w-4 h-4" />
-          Multi-Year Hindcasting & Skill Evaluation
-        </button>
+          <BellRing className="w-3.5 h-3.5" />
+          <span>Alert Center & Lifecycle Engine</span>
+        </Link>
       </div>
 
       {activeTab === 'hindcasting' ? (
