@@ -25,7 +25,11 @@ export const ClimateSignalCard: React.FC = () => {
         </div>
       </CardHeader>
 
-      <CardContent className="pt-4">
+      <CardContent className="pt-4 space-y-4">
+        <div className="bg-amber-50 border border-amber-200 p-2.5 rounded-lg text-xs text-amber-900">
+          <strong>Pipeline Status:</strong> Teleconnection values shown below are simulated development indicators. Live FTP/NetCDF ingestion pipelines from NOAA CPC and Australia BoM connect in Phase 3.
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* ENSO (Niño 3.4) */}
           <div className="bg-surface-muted/60 p-4 rounded-xl border border-surface-border flex flex-col justify-between">

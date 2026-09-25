@@ -108,9 +108,27 @@ Under harsh outdoor sunlight, soft drop shadows wash out into gray smudges. Vars
 - **`Tabs`:** Accessible tab lists with pill selection indicators and count badges.
 - **`Progress`:** Horizontal percentage bars with color-coded fills and ARIA attributes (`aria-valuenow`).
 - **`Modal`:** Accessible dialog overlays with backdrop blur, escape key handlers, and focus trapping.
+- **`HorizonSelector`:** Standardized, accessible horizon selector supporting 7, 14, 21, and 30 day forecast horizons with ARIA tab roles, keyboard navigation, and bilingual labels.
+- **`TargetRiskCard`:** Reusable multi-horizon target risk indicator enforcing the universal rule: **Color + Icon + Text Label + Probability Value/Status**.
 - **`MapContainer`:** Interactive vector GIS map of Lucknow District administrative blocks with real-time choropleth fills, hover tooltips, and click selection.
 - **`MapLayerControl` & `MapLegend`:** Floating map overlays for switching between Onset, Dry Spell, Heavy Rain, and Anomaly layers.
 - **`DemoBanner`:** Sticky top notification reminding users that data is simulated and transparent.
+- **`NotFoundPage`:** Friendly, accessible 404 fallback page providing context and quick return routes for all user roles.
+
+---
+
+## 8. Frontend API Service Architecture
+
+The frontend communicates with future backend endpoints through a strongly typed service layer (`src/services/`) adhering to `@shared/types`:
+- **`apiClient`:** Centralized fetch wrapper managing JSON deserialization, auth tokens, error normalization (`ApiError`), and base URL configuration via `VITE_API_BASE_URL`.
+- **`geographyService`:** Fetches administrative hierarchy (States, Districts, Blocks, Panchayats, Villages).
+- **`forecastService`:** Retrieves multi-horizon probabilistic forecasts, climate signals, and block-level choropleths.
+- **`advisoryService`:** Delivers explainable crop advisories, avoid checklists, and official bulletin generation.
+- **`cropService`:** Provides master crop metadata, stages, and agronomic thresholds.
+- **`climateService`:** Fetches global teleconnections (ENSO, IOD, MJO) and historical anomalies.
+- **`dataHealthService`:** Audits real-time data freshness, provider health, and pipeline execution logs.
+- **`modelService`:** Inspects model registry, versioning, operational status, and calibration curves.
+- **`authService`:** Handles credential authentication, token storage, and session validation.
 
 ---
 

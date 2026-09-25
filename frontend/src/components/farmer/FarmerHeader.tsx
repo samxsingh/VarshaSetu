@@ -22,12 +22,12 @@ export const FarmerHeader: React.FC = () => {
               <h2 className="font-heading font-bold text-lg text-slate-900">
                 {location.village}, {location.block}
               </h2>
-              <Badge variant="teal" size="sm">
-                {t('common.verifiedLocation')}
+              <Badge variant="demo" size="sm">
+                {t('common.demoLocationBadge')}
               </Badge>
             </div>
             <p className="text-xs text-slate-600 mt-0.5">
-              {location.district} District, {location.state} • Radar Synced: Today 06:30 AM IST
+              {location.district} District, {location.state} • {t('common.noLiveWeatherNotice')}
             </p>
           </div>
         </div>

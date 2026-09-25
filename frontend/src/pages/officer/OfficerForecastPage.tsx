@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
-import { Tabs } from '../../components/ui/Tabs';
-import { CloudRain, SunMedium, CloudLightning, TrendingUp } from 'lucide-react';
+import { HorizonSelector } from '../../components/forecast/HorizonSelector';
+import { ForecastHorizonDays } from '@shared/types';
 
 export const OfficerForecastPage: React.FC = () => {
-  const [horizon, setHorizon] = useState<'7' | '14' | '21' | '30'>('14');
+  const [horizon, setHorizon] = useState<ForecastHorizonDays>(14);
 
   const blocksForecast = [
     { name: 'Bakshi Ka Talab', onset: 88, drySpell: 58, heavyRain: 65, anomaly: '+14%', riskTier: 'MODERATE' },
@@ -32,16 +32,7 @@ export const OfficerForecastPage: React.FC = () => {
             </p>
           </div>
 
-          <Tabs
-            items={[
-              { id: '7', label: '7-Day' },
-              { id: '14', label: '14-Day' },
-              { id: '21', label: '21-Day' },
-              { id: '30', label: '30-Day' },
-            ]}
-            activeId={horizon}
-            onChange={(id) => setHorizon(id as any)}
-          />
+          <HorizonSelector value={horizon} onChange={setHorizon} />
         </div>
       </Card>
 

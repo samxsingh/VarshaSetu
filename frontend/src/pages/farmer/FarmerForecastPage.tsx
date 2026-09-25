@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { useFarmerStore } from '../../stores/useFarmerStore';
 import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
-import { Tabs } from '../../components/ui/Tabs';
+import { HorizonSelector } from '../../components/forecast/HorizonSelector';
 import { Badge } from '../../components/ui/Badge';
 import { Progress } from '../../components/ui/Progress';
 import { ForecastHorizonDays } from '@shared/types';
@@ -23,13 +23,6 @@ export const FarmerForecastPage: React.FC = () => {
   const { t } = useTranslation();
   const { horizon, setHorizon, location } = useFarmerStore();
   const [openWhyId, setOpenWhyId] = useState<string | null>(null);
-
-  const horizonTabs = [
-    { id: '7', label: t('farmer.sevenDay') },
-    { id: '14', label: t('farmer.fourteenDay') },
-    { id: '21', label: t('farmer.twentyOneDay') },
-    { id: '30', label: t('farmer.thirtyDay') },
-  ];
 
   const toggleWhy = (id: string) => {
     setOpenWhyId(openWhyId === id ? null : id);
@@ -106,11 +99,7 @@ export const FarmerForecastPage: React.FC = () => {
             </p>
           </div>
 
-          <Tabs
-            items={horizonTabs}
-            activeId={String(horizon)}
-            onChange={(id) => setHorizon(Number(id) as ForecastHorizonDays)}
-          />
+          <HorizonSelector value={horizon} onChange={setHorizon} />
         </div>
       </Card>
 

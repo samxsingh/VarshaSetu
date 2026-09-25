@@ -49,7 +49,11 @@
     "riskModerate": "मध्यम जोखिम",
     "riskHigh": "उच्च चेतावनी",
     "verifiedLocation": "सत्यापित जीपीएस स्थान",
-    "defaultLocation": "प्रायोगिक डिफ़ॉल्ट: लखनऊ जिला, उत्तर प्रदेश"
+    "demoLocationBadge": "प्रायोगिक स्थान",
+    "userLocationBadge": "चुना हुआ स्थान",
+    "defaultLocation": "प्रायोगिक डिफ़ॉल्ट: लखनऊ जिला, उत्तर प्रदेश",
+    "noLiveWeatherNotice": "प्रायोगिक संदर्भ क्षेत्र • लाइव मौसम डेटा चरण 3 में जुड़ेगा",
+    "simulatedAudioNotice": "प्रायोगिक ऑडियो पूर्वावलोकन (भाषिणी एकीकरण आगामी चरण 6 में)"
   },
   "farmer": {
     "welcome": "नमस्ते, किसान भाई / बहन",

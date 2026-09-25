@@ -11,21 +11,14 @@ import {
 import { Link } from 'react-router-dom';
 import { useFarmerStore } from '../../stores/useFarmerStore';
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card';
-import { Tabs } from '../ui/Tabs';
 import { Badge } from '../ui/Badge';
 import { Progress } from '../ui/Progress';
+import { HorizonSelector } from '../forecast/HorizonSelector';
 import { ForecastHorizonDays } from '@shared/types';
 
 export const MonsoonGlanceCard: React.FC = () => {
   const { t } = useTranslation();
   const { horizon, setHorizon } = useFarmerStore();
-
-  const horizonTabs = [
-    { id: '7', label: t('farmer.sevenDay') },
-    { id: '14', label: t('farmer.fourteenDay') },
-    { id: '21', label: t('farmer.twentyOneDay') },
-    { id: '30', label: t('farmer.thirtyDay') },
-  ];
 
   // Controlled Demo Scenarios calibrated per horizon (explicitly simulated)
   const demoOutlookData: Record<
@@ -101,12 +94,8 @@ export const MonsoonGlanceCard: React.FC = () => {
             </p>
           </div>
 
-          {/* Horizon Switcher Tabs */}
-          <Tabs
-            items={horizonTabs}
-            activeId={String(horizon)}
-            onChange={(id) => setHorizon(Number(id) as ForecastHorizonDays)}
-          />
+          {/* Horizon Switcher */}
+          <HorizonSelector value={horizon} onChange={setHorizon} />
         </div>
       </CardHeader>
 

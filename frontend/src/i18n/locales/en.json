@@ -49,7 +49,11 @@
     "riskModerate": "Moderate Risk",
     "riskHigh": "High Alert",
     "verifiedLocation": "Verified GPS Location",
-    "defaultLocation": "Demonstration Default: Lucknow District, UP"
+    "demoLocationBadge": "Demo Location",
+    "userLocationBadge": "User Selected Location",
+    "defaultLocation": "Demonstration Default: Lucknow District, UP",
+    "noLiveWeatherNotice": "Configured Demo Geography • Live feeds connect in Phase 3",
+    "simulatedAudioNotice": "Demonstration voice preview (Bhashini integration in Phase 6)"
   },
   "farmer": {
     "welcome": "Namaste, Farmer Friend",

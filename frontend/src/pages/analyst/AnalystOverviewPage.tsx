@@ -25,61 +25,42 @@ export const AnalystOverviewPage: React.FC = () => {
       {/* Global Teleconnections */}
       <ClimateSignalCard />
 
-      {/* Feature Attribution Weights (SHAP preview) */}
+      {/* Feature Attribution Architecture (SHAP) */}
       <Card className="p-5">
         <CardHeader className="pb-3 border-b border-surface-border">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base">
-              Feature Importance & Driver Attribution (SHAP Analysis)
+              Feature Importance & Driver Attribution (SHAP Architecture)
             </CardTitle>
-            <Badge variant="neutral" size="sm">Pre-trained Ensemble Weights</Badge>
+            <Badge variant="neutral" size="sm">Not Evaluated (Phase 1C Shell)</Badge>
           </div>
         </CardHeader>
-        <CardContent className="pt-4 space-y-3">
-          <p className="text-xs text-slate-600 leading-relaxed">
-            Relative weight of planetary indices vs regional boundary layer variables in triggering the 14-day dry spell forecast in Central UP:
-          </p>
+        <CardContent className="pt-4 space-y-4">
+          <div className="bg-amber-50 border border-amber-200 p-3 rounded-xl text-xs text-amber-900">
+            <strong>Scientific Transparency Standard:</strong> Feature attribution values (SHAP / TreeSHAP) will be calculated dynamically by the Python FastAPI ML microservice upon model training in Phase 4. Zero synthetic SHAP scores are fabricated in this frontend shell.
+          </div>
 
           <div className="space-y-2 text-xs">
-            <div>
-              <div className="flex justify-between font-medium mb-1">
-                <span>MJO Phase 3 Propagation Speed</span>
-                <strong>+0.34 SHAP</strong>
-              </div>
-              <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-                <div className="bg-brand-teal h-full rounded-full" style={{ width: '68%' }} />
-              </div>
-            </div>
+            <span className="font-heading font-semibold text-slate-700 uppercase tracking-wider text-[11px] block">
+              Configured Feature Inputs for Downscaling Engine:
+            </span>
 
-            <div>
-              <div className="flex justify-between font-medium mb-1">
-                <span>850 hPa Cross-Equatorial Westerly Jet Speed</span>
-                <strong>+0.28 SHAP</strong>
+            {[
+              { name: 'MJO Phase & Amplitude (Wheeler-Hendon RMM Coordinates)', source: 'NOAA CPC / BoM' },
+              { name: '850 hPa Cross-Equatorial Low-Level Westerly Jet Speed', source: 'NCMRWF / IMD Telemetry' },
+              { name: 'Niño 3.4 Sea Surface Temperature Anomaly (°C)', source: 'NOAA CPC Monthly' },
+              { name: 'Total Precipitable Water (TPW) Moisture Depth', source: 'INSAT-3D Satellite Radiometer' },
+            ].map((feat, idx) => (
+              <div key={idx} className="p-2.5 bg-surface-muted rounded-lg flex items-center justify-between border border-surface-border/60">
+                <div>
+                  <span className="font-medium text-slate-900 block">{feat.name}</span>
+                  <span className="text-[10px] text-slate-500">Source: {feat.source}</span>
+                </div>
+                <Badge variant="neutral" size="sm">
+                  Pending Phase 4 Model
+                </Badge>
               </div>
-              <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-                <div className="bg-brand-azure h-full rounded-full" style={{ width: '56%' }} />
-              </div>
-            </div>
-
-            <div>
-              <div className="flex justify-between font-medium mb-1">
-                <span>Niño 3.4 SST Anomaly (-0.34°C)</span>
-                <strong>+0.16 SHAP</strong>
-              </div>
-              <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-                <div className="bg-brand-emerald h-full rounded-full" style={{ width: '32%' }} />
-              </div>
-            </div>
-
-            <div>
-              <div className="flex justify-between font-medium mb-1">
-                <span>Precipitable Water Depth (TPW)</span>
-                <strong>+0.12 SHAP</strong>
-              </div>
-              <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-                <div className="bg-brand-amber h-full rounded-full" style={{ width: '24%' }} />
-              </div>
-            </div>
+            ))}
           </div>
         </CardContent>
       </Card>

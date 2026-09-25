@@ -49,12 +49,12 @@ export const AudioBriefingBar: React.FC<AudioBriefingBarProps> = ({
             {isAudioBriefingPlaying && (
               <span className="flex items-center gap-1 text-[11px] font-bold text-brand-azure uppercase">
                 <Radio className="w-3 h-3 animate-pulse" />
-                Live
+                Audio Preview
               </span>
             )}
           </div>
           <p className="text-xs text-slate-600 truncate mt-0.5">
-            {t('farmer.audioNotice')} • {durationText}
+            {t('common.simulatedAudioNotice')}
           </p>
         </div>
       </div>

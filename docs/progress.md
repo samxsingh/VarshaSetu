@@ -3,7 +3,7 @@
 
 ---
 
-### Current Phase: PHASE 1B
+#### Current Phase: PHASE 1C
 **Status:** COMPLETED  
 **Last Updated:** September 2026
 
@@ -17,66 +17,46 @@
 
 ## 2. Phase 1B: Interactive UI/UX Design + Application Shell
 - **Status:** COMPLETED
-
-### Completed in Phase 1B
-- [x] **Stitch MCP UI/UX Exploration:** Explored layout rhythms, tactile utilitarianism, and component structures using Stitch MCP project `3293451152379745739` ("Agro-Meteorological Precision" design system).
-- [x] **Design Tokens & Theme Foundation:** Configured Tailwind CSS with custom palette: `#FAF7F2` (Warm Ivory Canvas), `#0F172A` (Slate 900 Text), `#0D9488` (Primary Teal), `#B45309` (Advisory Amber), `#0284C7` (Precipitation Azure), `#15803D` (Favorable Emerald), `#DC2626` (Alert Crimson).
-- [x] **Typography Scale:** Configured `Lexend` for prominent headings and numeric data clarity, paired with `Inter` for tabular and body legibility.
-- [x] **Reusable UI Component System (`src/components/ui/`):**
-  - `Button`: Multiple variants, accessible 44–48px touch targets, loading spinner.
-  - `Badge`: Categorical risk badges, pill badges, and prominent `DEMO / SIMULATED DATA` tags.
-  - `Card`: Structured containers with custom left-accent borders (`accent`, `warning`, `alert`).
-  - `Alert`: Accessible notice banners for informative, caution, and critical statements.
-  - `Tabs`: Accessible pill and underline tab switchers.
-  - `Progress`: Calibrated probability and moisture progress bars with ARIA values.
-  - `Input` & `Select`: Form controls with accessible labels, icons, and error states.
-  - `Modal`: Accessible dialog overlay with backdrop blur and escape key dismissal.
-  - `EmptyState` & `LoadingState`: Zero-data and loading indicators.
-- [x] **Shell Layouts (`src/layouts/`):**
-  - `RootLayout`: Persistent `DemoBanner`, `Navbar`, and `Footer`.
-  - `FarmerLayout`: Desktop sub-navigation tabs, mobile persistent `AudioBriefingBar`, and mobile sticky bottom navigation (`FarmerBottomNav`).
-  - `OfficerLayout`: Multi-tab officer subnavigation bar and global `BulletinModal`.
-  - `AnalystLayout`: Scientific lab subnavigation.
-- [x] **Public Experience Pages:**
-  - `LandingPage`: Rich visual storytelling covering Problem, Architecture, 4 Forecast Targets, Farmer Experience, Officer Center, and What-If preview.
-  - `AboutPage`: Institutional mission, rainfed agriculture context, and core principles.
-  - `HowItWorksPage`: Step-by-step breakdown from global teleconnections to field decisions.
-- [x] **Farmer Experience Pages:**
-  - `FarmerDashboardPage`: Location header, 7–30 day glance card, crop advisory card, and simulator card.
-  - `FarmerOnboardingPage`: Progressive 3-step intake (Where is your farm? -> What are you growing? -> Crop growth stage?) + skippable farm details.
-  - `FarmerForecastPage`: Multi-horizon timeline breakdown with progressive scientific explainability ("Why?").
-  - `FarmerAdvisoryPage`: Explainable crop-specific recommendations, avoid checklist, and KVK contact details.
-  - `FarmerWhatIfPage`: Interactive comparative decision simulator (*Sow Now* vs *Wait 7 Days*) with mandatory disclaimers.
-  - `FarmerProfilePage`: Registered farm metadata and quick configuration reset.
-- [x] **Officer Experience Pages:**
-  - `OfficerDashboardPage`: Summary stat cards, PostGIS GIS map, and Gram Panchayat drill-down panel.
-  - `OfficerMapPage`: Full-width map interface with layer toggles and risk legends.
-  - `OfficerForecastPage`: Block-level comparative probability matrix.
-  - `OfficerAdvisoriesPage`: Dissemination history and broadcast PDF viewer.
-  - `OfficerCropsPage`: Acreage vulnerability matrix for Paddy, Pulses, Maize, and Vegetables.
-- [x] **Government & Analyst Experience Pages:**
-  - `GovernmentDashboardPage`: Statewide teleconnections, drought watch, and provenance audit.
-  - `AnalystOverviewPage`: Climate teleconnection tracking (ENSO, IOD, MJO) and SHAP feature importance.
-  - `ForecastLabPage`: Hindcasting and probability calibration framework.
-  - `ModelsPage`: Model registry strictly displaying *"Not evaluated yet"* rather than fabricated metrics.
-  - `DataHealthPage`: Provider ingestion audit and freshness status monitor.
-  - `AdminDashboardPage`: System administration, user counts, and configuration review.
-- [x] **Localization Foundation:**
-  - Initialized `react-i18next` with complete English (`en.json`) and Hindi (`hi.json`) translation namespaces.
-  - Interactive language switcher toggle accessible in header and mobile drawers.
-- [x] **Scientific Transparency Standard:**
-  - Persistent `DemoBanner` at the top of every screen.
-  - Every simulated probability, map, and advisory carries explicit simulated data badging.
-  - No fabricated ML accuracy claims; un-trained models explicitly state *"Not evaluated yet"*.
-- [x] **Build & Verification:**
-  - `tsc && vite build` compiles cleanly with zero errors in 1.45 seconds.
-  - Responsive layouts validated across mobile, tablet, and desktop breakpoints.
-- [x] **Design System Documentation (`docs/design-system.md`):** Complete design tokens, typography, component philosophy, accessibility, and UX guidelines documented.
+- Delivered complete visual foundation, Tailwind tokens, 20 routes across all personas, Stitch exploration, interactive GIS map shell, what-if comparison simulator, and localization foundation.
 
 ---
 
-### In Progress
-- None (Phase 1B completed and awaiting instruction to start Phase 2).
+## 3. Phase 1C: Frontend Refinement, UX Validation & Application Hardening
+- **Status:** COMPLETED
+
+### Completed in Phase 1C
+- [x] **API Service Layer Architecture (`src/services/`):**
+  - Built typed API clients using `@shared/types`: `apiClient`, `geographyService`, `forecastService`, `advisoryService`, `cropService`, `climateService`, `dataHealthService`, `modelService`, and `authService`.
+  - Configured error handling (`ApiError`), query parameter serializing, token attachment, and environment configuration via `VITE_API_BASE_URL`.
+- [x] **Reusable UI Component Hardening:**
+  - `HorizonSelector`: Standardized 7, 14, 21, and 30-day forecast horizon switcher with ARIA tab roles, keyboard navigation, and bilingual support.
+  - `TargetRiskCard`: Enforces universal visual hierarchy: Color + Icon + Text Label + Probability Metric/Status.
+  - Integrated `HorizonSelector` across `MonsoonGlanceCard`, `FarmerForecastPage`, and `OfficerForecastPage`.
+- [x] **Routing Hardening & Code-Splitting:**
+  - Added `NotFoundPage` (404 handler) for unknown routes with role-based navigation links.
+  - Implemented dynamic route imports (`React.lazy` + `Suspense`) in `App.tsx` with high-contrast `PageSkeletonFallback` loader.
+  - Reduced initial bundle size: main bundle is **96.6 kB gzipped**, with isolated lazy chunks for all major views.
+- [x] **Scientific Transparency & Honesty Hardening:**
+  - Removed misleading claims: eliminated "Verified GPS" and "Radar Synced" badges; added transparent `DEMO LOCATION` badge and configuration notice.
+  - Removed fabricated SHAP feature importance values (`+0.34`, etc.) in `AnalystOverviewPage`; replaced with architectural feature list and explicit *"Not Evaluated (Phase 1C Shell)"* notice.
+  - Clarified `AudioBriefingBar` as an interactive UI audio preview, documenting full Bhashini speech-to-text integration for Phase 6.
+  - Added pipeline transparency banners to `ClimateSignalCard` confirming data is development fixtures.
+- [x] **Accessibility & Localization Quality:**
+  - Verified 44px–48px touch targets across mobile bottom nav, forecast horizon tabs, and onboarding selectors.
+  - Added natural Hindi phrases in `hi.json` for audio briefing preview, demo location badges, and horizon selectors.
+- [x] **Unit Testing Infrastructure:**
+  - Configured Vitest 2.1 + React Testing Library + jsdom with setup in `src/tests/setup.ts`.
+  - Created test suites: `HorizonSelector.test.tsx`, `TargetRiskCard.test.tsx`, `DemoBanner.test.tsx` (7/7 tests passing).
+- [x] **Zero Build Errors:**
+  - `npm run build` succeeds cleanly in 1.45s (`tsc && vite build`).
+
+---
+
+### Phase Status & Guardrails
+- **Phase 1A:** COMPLETED
+- **Phase 1B:** COMPLETED
+- **Phase 1C:** COMPLETED
+- **Phase 2:** NOT STARTED (Pending user direction)
 
 ---
 
