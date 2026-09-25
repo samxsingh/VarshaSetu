@@ -9,6 +9,8 @@ import { eventRoutes } from './eventRoutes';
 import { notificationRoutes } from './notificationRoutes';
 import { operationRoutes } from './operationRoutes';
 import { advisoryRoutes } from './advisoryRoutes';
+import { scenarioRoutes } from './scenarioRoutes';
+import { scenarioController } from '../controllers/scenarioController';
 import { requireAuth } from '../middleware/authMiddleware';
 import { requireRole, requirePermission } from '../middleware/rbacMiddleware';
 import { sendSuccess } from '../utils/responseEnvelope';
@@ -26,6 +28,8 @@ apiRouter.use('/forecasts', forecastRoutes);
 apiRouter.use('/events', eventRoutes);
 apiRouter.use('/notifications', notificationRoutes);
 apiRouter.use('/operations', operationRoutes);
+apiRouter.get('/agronomy/scenario-registry', scenarioController.getRegistry);
+apiRouter.use('/agronomy/scenarios', scenarioRoutes);
 apiRouter.use('/agronomy', advisoryRoutes);
 apiRouter.use('/advisories', advisoryRoutes);
 

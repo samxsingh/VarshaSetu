@@ -169,32 +169,190 @@ class AdvisoryEvaluationResponse(BaseModel):
     notice: str = "Advisories are informational meteorological risk indicators on historical data. Field-level agronomic actions are not certified."
 
 
+
+# ====================================================================
+# PHASE 5B — ADVANCED SCENARIO ANALYSIS, SENSITIVITY & ENVELOPES
+# ====================================================================
+
+class ScenarioType(str, Enum):
+    """Controlled scenario typology for decision support simulation."""
+    SOWING_DELAY = "SOWING_DELAY"
+    IRRIGATION_INTERVENTION = "IRRIGATION_INTERVENTION"
+    SEASONAL_ANOMALY = "SEASONAL_ANOMALY"
+    RAINFALL_TIMING_SHIFT = "RAINFALL_TIMING_SHIFT"
+    HEAVY_RAIN_CONCENTRATION = "HEAVY_RAIN_CONCENTRATION"
+    COMBINED_SCENARIO = "COMBINED_SCENARIO"
+
+
+class IndicatorSeverity(str, Enum):
+    """Standardized 4-tier indicator category for agro-climatic exposures."""
+    LOW = "LOW"
+    MODERATE = "MODERATE"
+    HIGH = "HIGH"
+    SEVERE = "SEVERE"
+
+
+class HazardApplicability(str, Enum):
+    """Relevance of hazard indicator to specific crop and stage."""
+    APPLICABLE = "APPLICABLE"
+    NOT_APPLICABLE = "NOT_APPLICABLE"
+
+
+class IndicatorDelta(BaseModel):
+    """Quantitative baseline vs scenario comparison for an indicator."""
+    indicator_name: str
+    baseline_value: float
+    scenario_value: float
+    absolute_delta: float
+    relative_delta_pct: Optional[float] = None
+    baseline_category: IndicatorSeverity
+    scenario_category: IndicatorSeverity
+    direction: str  # INCREASED, DECREASED, UNCHANGED
+    scientific_interpretation: str
+
+
+class ScenarioEnvelope(BaseModel):
+    """Bounded parameter range envelope (min, max, baseline, median)."""
+    indicator_name: str
+    min_value: float
+    max_value: float
+    baseline_value: float
+    median_value: float
+    min_category: IndicatorSeverity
+    max_category: IndicatorSeverity
+    baseline_category: IndicatorSeverity
+    median_category: IndicatorSeverity
+    data_origin_labels: Dict[str, str] = Field(default_factory=lambda: {
+        "observed": "OBSERVED",
+        "baseline": "BASELINE",
+        "scenario": "SCENARIO",
+        "derived": "DERIVED_INDICATOR",
+    })
+
+
+class SensitivityPoint(BaseModel):
+    """Single point along a deterministic parameter sensitivity curve."""
+    parameter_value: float
+    parameter_label: str
+    indicator_values: Dict[str, float]
+    indicator_categories: Dict[str, IndicatorSeverity]
+    deltas: Dict[str, float]
+
+
+class SensitivityAnalysisResult(BaseModel):
+    """Complete response curve and envelope across bounded parameter variations."""
+    scenario_id: str
+    scenario_type: ScenarioType
+    parameter_name: str
+    parameter_range: List[float]
+    curve_points: List[SensitivityPoint]
+    envelope: ScenarioEnvelope
+    scientific_notes: List[str]
+
+
+class ScenarioProvenance(BaseModel):
+    """Deterministic cryptographic lineage metadata for scenario reproducibility."""
+    dataset_fingerprint: str = "3fec50c2ef89dbfc"
+    scenario_fingerprint: str
+    engine_version: str = "1.0.0"
+    scenario_version: str = "5B.1.0"
+    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    baseline_reference: str = "Kharif 2024 (Bakshi Ka Talab, UP_LKO_BKT)"
+    parameter_hash: str
+    input_feature_hash: str
+
+
+class ScenarioExplanation(BaseModel):
+    """Non-causal explainability breakdown of scenario perturbations."""
+    baseline_description: str
+    perturbations_applied: List[str]
+    indicator_shift_summary: str
+    meteorological_drivers: List[str]
+    assumptions: List[str]
+    observed_vs_simulated: Dict[str, str]
+    non_causal_statement: str = (
+        "Statistical associations reflect historical analog shifts under defined scenario perturbations. "
+        "Outputs evaluate sensitivity indicators rather than physical or causal guarantees."
+    )
+
+
 class ScenarioContract(BaseModel):
-    """What-If scenario simulation input contract."""
+    """What-If scenario simulation input contract (supports Phases 5A & 5B)."""
     scenario_id: Optional[str] = None
-    base_forecast_id: Optional[str] = None
+    base_forecast_id: Optional[str] = "fc_kharif2024_anchor"
     block_id: str = "UP_LKO_BKT"
-    rainfall_delta_mm: float = 0.0
-    temperature_delta_c: float = 0.0
-    additional_dry_days: int = 0
     crop: CropType = CropType.GENERAL
     crop_stage: GrowthStage = GrowthStage.VEGETATIVE
     horizon_days: int = 7
+    scenario_type: ScenarioType = ScenarioType.SOWING_DELAY
+    parameters: Dict[str, Any] = Field(default_factory=dict)
+    
+    # Typed parameter shortcuts
+    delay_days: Optional[int] = None
+    intervention_start_day: Optional[int] = None
+    intervention_frequency: Optional[int] = None
+    intervention_duration: Optional[int] = None
+    rainfall_anomaly_pct: Optional[float] = None
+    shift_days: Optional[int] = None
+    rainfall_window: Optional[int] = None
+    concentration_factor: Optional[float] = None
+    window_days: Optional[int] = None
+    combined_types: Optional[List[ScenarioType]] = None
+
+    # Phase 5A legacy fields
+    rainfall_delta_mm: float = 0.0
+    temperature_delta_c: float = 0.0
+    additional_dry_days: int = 0
+
+
+class ScenarioComparison(BaseModel):
+    """Baseline vs scenario comparative evaluation."""
+    scenario_id: str
+    baseline_reference: str
+    scenario_type: ScenarioType
+    crop: str
+    crop_stage: str
+    applicability: HazardApplicability
+    deltas: List[IndicatorDelta]
+    envelope: Optional[ScenarioEnvelope] = None
+    explanation: ScenarioExplanation
+    provenance: ScenarioProvenance
+    scientific_disclaimer: str = (
+        "This scenario evaluates meteorological and agro-meteorological sensitivity indicators only. "
+        "It does NOT predict crop yields, biomass production, revenue, or guaranteed agronomic outcomes."
+    )
 
 
 class ScenarioResult(BaseModel):
-    """Output of scenario simulation, strictly labeled SCENARIO_INDICATOR_ONLY."""
+    """Comprehensive output of scenario simulation, strictly labeled SCENARIO_INDICATOR_ONLY."""
     scenario_id: str
+    scenario_type: ScenarioType = ScenarioType.SOWING_DELAY
     classification: str = "SCENARIO_INDICATOR_ONLY"
     block_id: str
     crop: str
     crop_stage: str
+    applicability: HazardApplicability = HazardApplicability.APPLICABLE
     inputs: Dict[str, Any]
     baseline_summary: Dict[str, Any]
     simulated_summary: Dict[str, Any]
     hypothetical_risk_indicators: List[Dict[str, Any]]
+    deltas: List[IndicatorDelta] = Field(default_factory=list)
+    envelope: Optional[ScenarioEnvelope] = None
+    explanation: Optional[ScenarioExplanation] = None
+    provenance: Optional[ScenarioProvenance] = None
     scientific_disclaimer: str = (
-        "Scenario simulation provides exploratory meteorological sensitivity indicators only. "
-        "It does NOT predict crop yields, germination rates, or economic outcomes."
+        "This scenario evaluates meteorological and agro-meteorological sensitivity indicators only. "
+        "It does NOT predict crop yields, biomass production, revenue, or guaranteed agronomic outcomes."
     )
     timestamp: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
+
+class ScenarioRegistryItem(BaseModel):
+    """Metadata item in the scenario registry catalog."""
+    scenario_type: ScenarioType
+    display_name: str
+    description: str
+    allowed_parameters: Dict[str, Any]
+    evaluated_indicators: List[str]
+    max_dimensions: int = 1
+

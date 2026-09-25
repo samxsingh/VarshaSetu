@@ -18,6 +18,17 @@ from app.agronomy.schemas import (
     AdvisoryEvaluationResponse,
     ScenarioContract,
     ScenarioResult,
+    ScenarioType,
+    IndicatorSeverity,
+    HazardApplicability,
+    IndicatorDelta,
+    ScenarioEnvelope,
+    SensitivityPoint,
+    SensitivityAnalysisResult,
+    ScenarioProvenance,
+    ScenarioExplanation,
+    ScenarioComparison,
+    ScenarioRegistryItem,
 )
 from app.agronomy.crops import CROP_REGISTRY, get_all_crops, get_crop
 from app.agronomy.registry import rule_registry, AgronomicRuleRegistry
@@ -26,6 +37,8 @@ from app.agronomy.evidence import build_evidence_from_forecast
 from app.agronomy.explain import generate_advisory_explanation
 from app.agronomy.advisory import advisory_engine, AdvisoryEngine
 from app.agronomy.simulator.scenarios import ScenarioSimulator
+from app.agronomy.simulator.provenance import ScenarioProvenanceEngine
+from app.agronomy.simulator.explain import ScenarioExplanationEngine
 
 __all__ = [
     "CropType",

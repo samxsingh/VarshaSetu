@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { advisoryService } from '../services/advisoryService';
 import * as apiClient from '../services/apiClient';
 
-describe('AdvisoryService (Phase 5A Agronomic Rules & Simulation)', () => {
+describe('AdvisoryService (Phase 5A & 5B Agronomic Rules & Scenario Analysis)', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
   });
@@ -58,76 +58,73 @@ describe('AdvisoryService (Phase 5A Agronomic Rules & Simulation)', () => {
     expect(res.data?.total_crops).toBe(6);
   });
 
-  it('fetches registered agronomic rules', async () => {
-    const mockRules = {
-      total_rules: 1,
-      rules: [
-        {
-          rule_id: 'AGRO_HEAVY_RAIN_INFO_001',
-          rule_name: 'General Heavy Rainfall Information',
-          description: 'IMD threshold >= 64.5 mm',
-          target_meteorological_event: 'HEAVY_RAIN',
-          applicable_crops: ['GENERAL'],
-          applicable_growth_stages: ['ALL'],
-          severity: 'INFO' as const,
-          category: 'WEATHER_RISK' as const,
-          probability_threshold: 0.40,
-          meteorological_threshold: 64.5,
-          meteorological_unit: 'mm',
-          rationale_template: 'Rain >= 64.5mm',
-          advisory_template: 'Notice',
-          scientific_basis: 'IMD criteria',
-          priority: 10,
-          is_active: true,
-        },
+  it('fetches scenario registry with 6 scenario types (Phase 5B)', async () => {
+    const mockRegistry = {
+      status: 'active',
+      phase: 'PHASE_5B_ADVANCED_SCENARIO_ANALYSIS',
+      classification: 'SCENARIO_INDICATOR_ONLY',
+      total_scenario_types: 6,
+      registry: [
+        { scenario_type: 'SOWING_DELAY', display_name: 'Sowing Delay', description: '', allowed_parameters: {}, evaluated_indicators: [], max_dimensions: 1 },
+        { scenario_type: 'IRRIGATION_INTERVENTION', display_name: 'Supplemental Irrigation', description: '', allowed_parameters: {}, evaluated_indicators: [], max_dimensions: 1 },
+        { scenario_type: 'SEASONAL_ANOMALY', display_name: 'Seasonal Anomaly', description: '', allowed_parameters: {}, evaluated_indicators: [], max_dimensions: 1 },
+        { scenario_type: 'RAINFALL_TIMING_SHIFT', display_name: 'Timing Shift', description: '', allowed_parameters: {}, evaluated_indicators: [], max_dimensions: 1 },
+        { scenario_type: 'HEAVY_RAIN_CONCENTRATION', display_name: 'Heavy Rain Concentration', description: '', allowed_parameters: {}, evaluated_indicators: [], max_dimensions: 1 },
+        { scenario_type: 'COMBINED_SCENARIO', display_name: 'Compound Multi-Hazard', description: '', allowed_parameters: {}, evaluated_indicators: [], max_dimensions: 3 },
       ],
+      scientific_disclaimer: 'This scenario evaluates sensitivity indicators only. It does NOT predict crop yields.',
     };
 
     vi.spyOn(apiClient, 'request').mockResolvedValue({
       success: true,
-      data: mockRules,
+      data: mockRegistry,
     });
 
-    const res = await advisoryService.listRules();
+    const res = await advisoryService.getScenarioRegistry();
     expect(res.success).toBe(true);
-    expect(res.data?.rules.length).toBe(1);
-    expect(res.data?.rules[0].rule_id).toBe('AGRO_HEAVY_RAIN_INFO_001');
+    expect(res.data?.total_scenario_types).toBe(6);
+    expect(res.data?.classification).toBe('SCENARIO_INDICATOR_ONLY');
   });
 
-  it('executes What-If scenario simulation returning SCENARIO_INDICATOR_ONLY', async () => {
-    const mockSim = {
-      scenario_id: 'SCEN_TEST_01',
+  it('runs scenario simulation and returns comparative deltas (Phase 5B)', async () => {
+    const mockResult = {
+      scenario_id: 'SCEN_5B_001',
       scenario_type: 'SOWING_DELAY',
-      block_id: 'UP_LKO_BKT',
-      crop_type: 'PADDY',
-      growth_stage: 'VEGETATIVE',
-      baseline_forecast_id: 'FCST_BASE',
-      parameters: { delay_days: 7 },
-      risk_shift_indicator: 'ELEVATED_RISK' as const,
-      water_stress_shift_percentage: 24.5,
-      waterlogging_shift_percentage: -8.2,
-      confidence_status: 'MODERATE_CONFIDENCE',
       classification: 'SCENARIO_INDICATOR_ONLY',
-      yield_prediction_disclaimer: 'What-if simulations evaluate meteorological sensitivity indicators only.',
-      scientific_notes: ['Kharif 2024 analog patterns.'],
-      computed_at: '2026-09-25T00:00:00Z',
+      block_id: 'UP_LKO_BKT',
+      crop: 'PADDY',
+      crop_stage: 'VEGETATIVE',
+      deltas: [
+        {
+          indicator_name: 'moisture_stress_pct',
+          baseline_value: 32.0,
+          scenario_value: 51.6,
+          absolute_delta: 19.6,
+          relative_delta_pct: 61.25,
+          baseline_category: 'MODERATE' as const,
+          scenario_category: 'HIGH' as const,
+          direction: 'INCREASED' as const,
+          scientific_interpretation: 'Moisture stress increases under simulated delay.',
+        },
+      ],
+      scientific_disclaimer: 'It does NOT predict crop yields.',
     };
 
     vi.spyOn(apiClient, 'request').mockResolvedValue({
       success: true,
-      data: mockSim,
+      data: mockResult,
     });
 
-    const res = await advisoryService.simulateScenario({
-      block_id: 'UP_LKO_BKT',
-      crop_type: 'PADDY',
-      growth_stage: 'VEGETATIVE',
+    const res = await advisoryService.runScenario({
       scenario_type: 'SOWING_DELAY',
-      parameters: { delay_days: 7 },
+      delay_days: 7,
+      crop: 'PADDY',
+      crop_stage: 'VEGETATIVE',
     });
 
     expect(res.success).toBe(true);
     expect(res.data?.classification).toBe('SCENARIO_INDICATOR_ONLY');
-    expect(res.data?.yield_prediction_disclaimer).toContain('meteorological sensitivity');
+    expect(res.data?.deltas?.length).toBe(1);
+    expect(res.data?.deltas?.[0].direction).toBe('INCREASED');
   });
 });

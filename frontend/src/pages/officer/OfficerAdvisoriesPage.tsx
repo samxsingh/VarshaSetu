@@ -298,6 +298,43 @@ export const OfficerAdvisoriesPage: React.FC = () => {
           </Card>
         ))}
       </div>
+
+      {/* Phase 5B: What-If Scenario Sensitivity Evaluation Inspection */}
+      <div className="bg-white p-5 rounded-2xl border border-surface-border shadow-card space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Layers className="w-5 h-5 text-brand-teal" />
+            <h3 className="font-heading font-bold text-base text-slate-900">
+              What-If Agro-Meteorological Sensitivity Monitor (Phase 5B)
+            </h3>
+          </div>
+          <Badge variant="amber" size="sm">SCENARIO_INDICATOR_ONLY</Badge>
+        </div>
+        <p className="text-xs text-slate-600 leading-relaxed">
+          Extension officers can review scenario-derived sensitivity response envelopes for <strong>Bakshi Ka Talab (UP_LKO_BKT)</strong>.
+          Evaluations operate strictly on meteorological indicators (moisture stress, waterlogging risk) and explicitly exclude yield predictions.
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+          <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
+            <span className="font-semibold text-slate-700 block">Sowing Delay Analysis</span>
+            <span className="text-slate-500 block text-[11px] mt-0.5">Evaluated range: [1, 21 days]</span>
+            <span className="text-brand-teal font-mono font-semibold block mt-1">Monotonic moisture stress increase</span>
+          </div>
+
+          <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
+            <span className="font-semibold text-slate-700 block">Supplemental Irrigation</span>
+            <span className="text-slate-500 block text-[11px] mt-0.5">Evaluated intervals: [1, 7 days]</span>
+            <span className="text-brand-emerald font-mono font-semibold block mt-1">Stress attenuation up to -35%</span>
+          </div>
+
+          <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
+            <span className="font-semibold text-slate-700 block">Precipitation Concentration</span>
+            <span className="text-slate-500 block text-[11px] mt-0.5">Evaluated multiplier: [1.0x, 2.5x]</span>
+            <span className="text-brand-crimson font-mono font-semibold block mt-1">Waterlogging risk escalation</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

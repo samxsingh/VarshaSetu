@@ -1,0 +1,105 @@
+{
+  "forecast_id": "fc_heavy_rain_7d_20260925_162714_c468c4",
+  "generated_at": "2026-09-25T16:27:14.715085+00:00",
+  "valid_from": "2024-10-01",
+  "valid_until": "2024-10-07",
+  "location": {
+    "state_id": "UP",
+    "district_id": "UP_LKO",
+    "block_id": "UP_LKO_BKT",
+    "latitude": 26.9749,
+    "longitude": 80.9276,
+    "spatial_resolution": "BLOCK"
+  },
+  "target": {
+    "target_type": "HEAVY_RAIN",
+    "target_definition_version": "v1.0-imd-kharif",
+    "threshold": 64.5,
+    "unit": "probability"
+  },
+  "horizon": {
+    "horizon_days": 7,
+    "horizon_label": "7-Day Medium-Range Planning Outlook"
+  },
+  "model": {
+    "model_id": "xgboost",
+    "model_family": "Gradient Boosted Decision Trees",
+    "model_version": "1.0.0",
+    "training_period": "2024-06-01 to 2024-07-31",
+    "dataset_fingerprint": "f60e1d12bd2802c7"
+  },
+  "prediction": {
+    "probability": 0.182,
+    "predicted_value": null,
+    "category": "MODERATE",
+    "event_observed_reference_if_available": null
+  },
+  "calibration": {
+    "status": "NOT_CALIBRATED",
+    "calibrator_type": "NONE",
+    "calibration_artifact_id": null
+  },
+  "uncertainty": {
+    "status": "NOT_AVAILABLE",
+    "lower_bound": null,
+    "median": null,
+    "upper_bound": null,
+    "method": "NONE"
+  },
+  "validation": {
+    "validation_status": "INSUFFICIENT_DATA",
+    "validation_years": [
+      2024
+    ],
+    "hindcast_experiment_id": "hindcast_heavy_rain_7d_20260925_144539"
+  },
+  "explainability": {
+    "status": "EXPLAINED",
+    "top_features": [
+      {
+        "feature": "rainfall_3d",
+        "category": "Antecedent Moisture",
+        "shap_value": 0.042,
+        "direction": "elevates",
+        "magnitude": 0.042,
+        "description": "3-day cumulative rainfall (27.7) elevates the predicted event probability by a model contribution of 0.042 log-odds."
+      },
+      {
+        "feature": "temperature_2m_max_c",
+        "category": "Thermodynamics",
+        "shap_value": -0.028,
+        "direction": "suppresses",
+        "magnitude": 0.028,
+        "description": "Maximum surface temperature (31.8) suppresses the predicted event probability by a model contribution of 0.028 log-odds."
+      },
+      {
+        "feature": "mjo_amplitude",
+        "category": "Climate Teleconnections",
+        "shap_value": 0.035,
+        "direction": "elevates",
+        "magnitude": 0.035,
+        "description": "MJO tropical convective amplitude (nan) elevates the predicted event probability by a model contribution of 0.035 log-odds."
+      }
+    ],
+    "shap_artifact_id": "shap_fc_heavy_rain_7d_20260925_162714_c468c4"
+  },
+  "data": {
+    "source_status": "IMD_ERA5_INGESTED",
+    "freshness_status": "HISTORICAL_ONLY",
+    "missingness": 10.5,
+    "feature_coverage": "19/19 features complete"
+  },
+  "scientific_disclosure": {
+    "status": "DIAGNOSTIC_ONLY",
+    "messages": [
+      "Observational data is from historical archive (Kharif 2024, latest date 2024-09-30). Forecast product is retrospective and must be treated as DIAGNOSTIC_ONLY.",
+      "Multi-year validation gate is INSUFFICIENT_DATA (1 season(s) available < 5 required). Operational forecast certification requires multi-season hindcast verification.",
+      "Operational probability calibration is inactive due to sample size or event balance gatekeeper. Probabilities represent raw tree scores or diagnostic estimates.",
+      "Spatial resolution bounded at BLOCK level; localized convective micro-bursts are unresolvable.",
+      "Feature attributions reflect statistical model contributions, not physical or agronomic causality.",
+      "Input dataset is retrospective (Kharif 2024 archive). Forecast reflects historical conditions, NOT current live weather.",
+      "Historical record spans 1 season (<5 seasons required). Multi-year operational skill certification is scientifically gated.",
+      "Probabilities are uncalibrated empirical scores due to sample size constraints on operational calibrators."
+    ]
+  }
+}

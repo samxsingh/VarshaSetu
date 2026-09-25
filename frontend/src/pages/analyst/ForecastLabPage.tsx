@@ -343,6 +343,75 @@ export const ForecastLabPage: React.FC = () => {
               ))}
             </div>
           </Card>
+
+          {/* Phase 5B: Advanced Scenario Analysis & Sensitivity Engine Checks */}
+          <Card className="p-5 space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className="font-heading font-bold text-sm text-slate-900">
+                  Scenario Analysis Safety Checks (Checks 14–21) & Controlled Catalog
+                </h4>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Verifies What-If perturbations remain strictly within scientific bounds with zero yield models.
+                </p>
+              </div>
+              <Badge variant="teal" size="sm">Phase 5B Active</Badge>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              {[
+                { name: '14. Parameter Range Check', rule: 'Enforces strict parameter bounds (e.g. delay <= 21d, anomaly <= 60%)' },
+                { name: '15. Combination Limit Check', rule: 'Limits combined scenarios to max 3 compatible orthogonal dimensions' },
+                { name: '16. Baseline Integrity Check', rule: 'Restricts scenarios strictly to verified ground anchor UP_LKO_BKT' },
+                { name: '17. Observation Separation', rule: 'Blocks outputs from claiming OBSERVED or GROUND_TRUTH status' },
+                { name: '18. Yield Model Absence Check', rule: 'Blocks any claims of crop yield, biomass, or kg/ha harvest output' },
+                { name: '19. Economic Claim Absence Check', rule: 'Blocks any claims of revenue, profit, or rupee/dollar losses' },
+                { name: '20. Reproducibility Check', rule: 'Enforces deterministic coordinates, crop bindings, and parameter hash' },
+                { name: '21. Scientific Disclosure Check', rule: 'Mandates SCENARIO_INDICATOR_ONLY classification and disclaimer' },
+              ].map((chk, idx) => (
+                <div key={idx} className="p-3 bg-surface-muted/50 rounded-xl border border-surface-border text-xs space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="font-heading font-semibold text-slate-900">{chk.name}</span>
+                    <CheckCircle2 className="w-4 h-4 text-brand-emerald" />
+                  </div>
+                  <p className="text-[11px] text-slate-600">{chk.rule}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Controlled Scenario Registry 6 Types Summary */}
+            <div className="pt-2 border-t border-surface-border">
+              <h5 className="font-heading font-bold text-xs text-slate-800 uppercase tracking-wider mb-2">
+                Controlled Scenario Types Catalog (6 Registered Types)
+              </h5>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 text-xs">
+                <div className="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
+                  <strong className="text-slate-900 block font-mono">1. SOWING_DELAY</strong>
+                  <span className="text-slate-500 text-[11px]">Bounds: [1, 21 days]. Evaluates moisture stress shifts.</span>
+                </div>
+                <div className="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
+                  <strong className="text-slate-900 block font-mono">2. IRRIGATION_INTERVENTION</strong>
+                  <span className="text-slate-500 text-[11px]">Bounds: Start [1, 30d], Freq [1, 7d], Dur [1, 5d]. Stress alleviation.</span>
+                </div>
+                <div className="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
+                  <strong className="text-slate-900 block font-mono">3. SEASONAL_ANOMALY</strong>
+                  <span className="text-slate-500 text-[11px]">Bounds: [-60.0%, +60.0%]. Cumulative rainfall shock.</span>
+                </div>
+                <div className="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
+                  <strong className="text-slate-900 block font-mono">4. RAINFALL_TIMING_SHIFT</strong>
+                  <span className="text-slate-500 text-[11px]">Bounds: [-14, +14 days]. Translates monsoon timing.</span>
+                </div>
+                <div className="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
+                  <strong className="text-slate-900 block font-mono">5. HEAVY_RAIN_CONCENTRATION</strong>
+                  <span className="text-slate-500 text-[11px]">Bounds: [1.0x, 2.5x]. Pulse compression into extreme bursts.</span>
+                </div>
+                <div className="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
+                  <strong className="text-slate-900 block font-mono">6. COMBINED_SCENARIO</strong>
+                  <span className="text-slate-500 text-[11px]">Compound multi-hazard: max 3 compatible orthogonal perturbations.</span>
+                </div>
+              </div>
+            </div>
+          </Card>
         </div>
       ) : activeTab === 'hindcasting' ? (
         <div className="space-y-6">

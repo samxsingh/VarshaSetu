@@ -1100,11 +1100,18 @@ from .agronomy.schemas import (
     ScenarioContract,
     ScenarioResult,
     ScientificAdvisory,
+    ScenarioType,
+    ScenarioComparison,
+    SensitivityAnalysisResult,
+    ScenarioRegistryItem,
 )
 from .agronomy.crops import get_all_crops, get_crop
 from .agronomy.registry import rule_registry
 from .agronomy.advisory import advisory_engine
 from .agronomy.simulator.scenarios import ScenarioSimulator
+from .agronomy.simulator.provenance import ScenarioProvenanceEngine
+from .agronomy.safety import AgronomicSafetyGate
+from .agronomy.schemas import SafetyGateStatus
 
 
 @app.get("/agronomy/status")
@@ -1242,11 +1249,139 @@ def get_agronomic_advisory(advisory_id: str) -> Dict[str, Any]:
 @app.post("/agronomy/simulate")
 def simulate_agronomic_scenario(contract: ScenarioContract) -> Dict[str, Any]:
     """
-    Executes a What-If sensitivity scenario.
+    Executes a What-If sensitivity scenario (Phase 5A / 5B compatibility).
     Classified strictly as SCENARIO_INDICATOR_ONLY (not yield predictions).
     """
-    res = ScenarioSimulator.simulate(contract)
-    return res.model_dump(mode="json")
+    try:
+        res = ScenarioSimulator.simulate(contract)
+        return res.model_dump(mode="json")
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+# ====================================================================
+# PHASE 5B — ADVANCED SCENARIO ANALYSIS, SENSITIVITY & COMPARISONS
+# ====================================================================
+
+@app.get("/agronomy/scenario-registry")
+def get_scenario_registry() -> Dict[str, Any]:
+    """Returns the controlled registry of supported scenario types and parameter bounds."""
+    items = ScenarioSimulator.get_registry()
+    return {
+        "status": "active",
+        "phase": "PHASE_5B_ADVANCED_SCENARIO_ANALYSIS",
+        "classification": "SCENARIO_INDICATOR_ONLY",
+        "total_scenario_types": len(items),
+        "registry": [item.model_dump(mode="json") for item in items],
+        "scientific_disclaimer": (
+            "This scenario evaluates meteorological and agro-meteorological sensitivity indicators only. "
+            "It does not predict crop yield, biomass production, revenue, or guaranteed agronomic outcomes."
+        ),
+    }
+
+
+@app.get("/agronomy/scenarios")
+def list_scenarios(limit: int = Query(default=20, ge=1, le=100)) -> Dict[str, Any]:
+    """Lists recently persisted immutable scenario artifacts."""
+    artifacts = ScenarioProvenanceEngine.list_artifacts(limit=limit)
+    return {
+        "total_scenarios": len(artifacts),
+        "scenarios": artifacts,
+    }
+
+
+@app.get("/agronomy/scenarios/{scenario_id}")
+def get_scenario_artifact(scenario_id: str) -> Dict[str, Any]:
+    """Retrieves an immutable scenario result artifact by identifier."""
+    data = ScenarioProvenanceEngine.get_artifact(scenario_id)
+    if not data:
+        raise HTTPException(status_code=404, detail=f"Scenario artifact '{scenario_id}' not found.")
+    return data
+
+
+@app.post("/agronomy/scenarios/run")
+def run_scenario(contract: ScenarioContract) -> Dict[str, Any]:
+    """Runs a single scenario simulation with delta and envelope analysis."""
+    gate_status, blocked = AgronomicSafetyGate.evaluate_scenario(contract)
+    if gate_status == SafetyGateStatus.BLOCKED and blocked:
+        raise HTTPException(
+            status_code=422,
+            detail=f"Safety gate blocked scenario: {blocked.reason_code} - {blocked.message}",
+        )
+    try:
+        res = ScenarioSimulator.simulate(contract)
+        return res.model_dump(mode="json")
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.post("/agronomy/scenarios/compare")
+def compare_scenario(contract: ScenarioContract) -> Dict[str, Any]:
+    """Generates baseline vs scenario comparative delta evaluation."""
+    gate_status, blocked = AgronomicSafetyGate.evaluate_scenario(contract)
+    if gate_status == SafetyGateStatus.BLOCKED and blocked:
+        raise HTTPException(
+            status_code=422,
+            detail=f"Safety gate blocked scenario: {blocked.reason_code} - {blocked.message}",
+        )
+    try:
+        comparison = ScenarioSimulator.compare(contract)
+        return comparison.model_dump(mode="json")
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.post("/agronomy/scenarios/sensitivity")
+def run_scenario_sensitivity(contract: ScenarioContract) -> Dict[str, Any]:
+    """Runs bounded deterministic sensitivity analysis across parameter intervals."""
+    gate_status, blocked = AgronomicSafetyGate.evaluate_scenario(contract)
+    if gate_status == SafetyGateStatus.BLOCKED and blocked:
+        raise HTTPException(
+            status_code=422,
+            detail=f"Safety gate blocked scenario: {blocked.reason_code} - {blocked.message}",
+        )
+    try:
+        sens = ScenarioSimulator.sensitivity(contract)
+        return sens.model_dump(mode="json")
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.get("/agronomy/scenarios/{scenario_id}/sensitivity")
+def get_scenario_sensitivity(scenario_id: str) -> Dict[str, Any]:
+    """Retrieves sensitivity analysis for a scenario."""
+    data = ScenarioProvenanceEngine.get_artifact(scenario_id)
+    if not data:
+        raise HTTPException(status_code=404, detail=f"Scenario artifact '{scenario_id}' not found.")
+    # Re-evaluate sensitivity from saved contract
+    contract = ScenarioContract(**data.get("inputs", {}))
+    sens = ScenarioSimulator.sensitivity(contract)
+    return sens.model_dump(mode="json")
+
+
+@app.get("/agronomy/scenarios/{scenario_id}/explanation")
+def get_scenario_explanation(scenario_id: str) -> Dict[str, Any]:
+    """Retrieves non-causal explanation for a scenario."""
+    data = ScenarioProvenanceEngine.get_artifact(scenario_id)
+    if not data:
+        raise HTTPException(status_code=404, detail=f"Scenario artifact '{scenario_id}' not found.")
+    explanation = data.get("explanation")
+    if not explanation:
+        raise HTTPException(status_code=404, detail=f"Explanation for scenario '{scenario_id}' unavailable.")
+    return explanation
+
+
+@app.get("/agronomy/scenarios/{scenario_id}/provenance")
+def get_scenario_provenance(scenario_id: str) -> Dict[str, Any]:
+    """Retrieves cryptographic provenance metadata for scenario reproducibility."""
+    data = ScenarioProvenanceEngine.get_artifact(scenario_id)
+    if not data:
+        raise HTTPException(status_code=404, detail=f"Scenario artifact '{scenario_id}' not found.")
+    provenance = data.get("provenance")
+    if not provenance:
+        raise HTTPException(status_code=404, detail=f"Provenance for scenario '{scenario_id}' unavailable.")
+    return provenance
+
 
 
 

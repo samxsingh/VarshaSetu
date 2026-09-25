@@ -1,0 +1,176 @@
+{
+  "scenario_id": "test_timing_shift_01",
+  "scenario_type": "RAINFALL_TIMING_SHIFT",
+  "classification": "SCENARIO_INDICATOR_ONLY",
+  "block_id": "UP_LKO_BKT",
+  "crop": "PADDY",
+  "crop_stage": "FLOWERING",
+  "applicability": "APPLICABLE",
+  "inputs": {
+    "scenario_id": "test_timing_shift_01",
+    "base_forecast_id": "fc_kharif2024_anchor",
+    "block_id": "UP_LKO_BKT",
+    "crop": "PADDY",
+    "crop_stage": "FLOWERING",
+    "horizon_days": 7,
+    "scenario_type": "RAINFALL_TIMING_SHIFT",
+    "parameters": {},
+    "delay_days": null,
+    "intervention_start_day": null,
+    "intervention_frequency": null,
+    "intervention_duration": null,
+    "rainfall_anomaly_pct": null,
+    "shift_days": 7,
+    "rainfall_window": null,
+    "concentration_factor": null,
+    "window_days": null,
+    "combined_types": null,
+    "rainfall_delta_mm": 0.0,
+    "temperature_delta_c": 0.0,
+    "additional_dry_days": 0
+  },
+  "baseline_summary": {
+    "moisture_stress_pct": 32.0,
+    "waterlogging_risk_pct": 24.0,
+    "dry_spell_exposure_days": 4.0,
+    "heavy_rain_prob": 0.35,
+    "peak_daily_rain_mm": 52.0,
+    "cumulative_rain_mm": 68.5
+  },
+  "simulated_summary": {
+    "moisture_stress_pct": 42.5,
+    "waterlogging_risk_pct": 24.0,
+    "dry_spell_exposure_days": 6.45,
+    "heavy_rain_prob": 0.35,
+    "peak_daily_rain_mm": 52.0,
+    "cumulative_rain_mm": 68.5
+  },
+  "hypothetical_risk_indicators": [
+    {
+      "hazard": "DRY_SPELL_SENSITIVITY",
+      "severity": "HIGH",
+      "indicator_text": "Dry Spell Exposure Days shifted higher (+2.45) under this scenario (MODERATE -> HIGH)."
+    },
+    {
+      "hazard": "CUMULATIVE_RAIN_MM_SENSITIVITY",
+      "severity": "HIGH",
+      "indicator_text": "Cumulative Rain Mm remained stable at baseline level (HIGH)."
+    }
+  ],
+  "deltas": [
+    {
+      "indicator_name": "moisture_stress_pct",
+      "baseline_value": 32.0,
+      "scenario_value": 42.5,
+      "absolute_delta": 10.5,
+      "relative_delta_pct": 32.8,
+      "baseline_category": "MODERATE",
+      "scenario_category": "MODERATE",
+      "direction": "INCREASED",
+      "scientific_interpretation": "Moisture Stress Pct shifted higher (+10.5) under this scenario (MODERATE -> MODERATE)."
+    },
+    {
+      "indicator_name": "waterlogging_risk_pct",
+      "baseline_value": 24.0,
+      "scenario_value": 24.0,
+      "absolute_delta": 0.0,
+      "relative_delta_pct": 0.0,
+      "baseline_category": "MODERATE",
+      "scenario_category": "MODERATE",
+      "direction": "UNCHANGED",
+      "scientific_interpretation": "Waterlogging Risk Pct remained stable at baseline level (MODERATE)."
+    },
+    {
+      "indicator_name": "dry_spell_exposure_days",
+      "baseline_value": 4.0,
+      "scenario_value": 6.45,
+      "absolute_delta": 2.45,
+      "relative_delta_pct": 61.3,
+      "baseline_category": "MODERATE",
+      "scenario_category": "HIGH",
+      "direction": "INCREASED",
+      "scientific_interpretation": "Dry Spell Exposure Days shifted higher (+2.45) under this scenario (MODERATE -> HIGH)."
+    },
+    {
+      "indicator_name": "heavy_rain_prob",
+      "baseline_value": 0.35,
+      "scenario_value": 0.35,
+      "absolute_delta": 0.0,
+      "relative_delta_pct": 0.0,
+      "baseline_category": "MODERATE",
+      "scenario_category": "MODERATE",
+      "direction": "UNCHANGED",
+      "scientific_interpretation": "Heavy Rain Prob remained stable at baseline level (MODERATE)."
+    },
+    {
+      "indicator_name": "peak_daily_rain_mm",
+      "baseline_value": 52.0,
+      "scenario_value": 52.0,
+      "absolute_delta": 0.0,
+      "relative_delta_pct": 0.0,
+      "baseline_category": "MODERATE",
+      "scenario_category": "MODERATE",
+      "direction": "UNCHANGED",
+      "scientific_interpretation": "Peak Daily Rain Mm remained stable at baseline level (MODERATE)."
+    },
+    {
+      "indicator_name": "cumulative_rain_mm",
+      "baseline_value": 68.5,
+      "scenario_value": 68.5,
+      "absolute_delta": 0.0,
+      "relative_delta_pct": 0.0,
+      "baseline_category": "HIGH",
+      "scenario_category": "HIGH",
+      "direction": "UNCHANGED",
+      "scientific_interpretation": "Cumulative Rain Mm remained stable at baseline level (HIGH)."
+    }
+  ],
+  "envelope": {
+    "indicator_name": "moisture_stress_pct",
+    "min_value": 20.0,
+    "max_value": 75.0,
+    "baseline_value": 32.0,
+    "median_value": 32.0,
+    "min_category": "LOW",
+    "max_category": "SEVERE",
+    "baseline_category": "MODERATE",
+    "median_category": "MODERATE",
+    "data_origin_labels": {
+      "observed": "OBSERVED (Kharif 2024 UP_LKO_BKT)",
+      "baseline": "BASELINE (Reference meteorological sequence)",
+      "scenario": "SCENARIO (Controlled perturbation)",
+      "derived": "DERIVED_INDICATOR (Deterministic sensitivity index)"
+    }
+  },
+  "explanation": {
+    "baseline_description": "Historical Kharif 2024 meteorological observation sequence for Bakshi Ka Talab (UP_LKO_BKT, 122 daily records from June 1 to September 30, 2024).",
+    "perturbations_applied": [
+      "Rainfall event sequence shifted by +7 days within active horizon."
+    ],
+    "indicator_shift_summary": "moisture stress pct increased by 10.5 units (MODERATE -> MODERATE); waterlogging risk pct remained unchanged by 0.0 units (MODERATE -> MODERATE); dry spell exposure days increased by 2.5 units (MODERATE -> HIGH); heavy rain prob remained unchanged by 0.0 units (MODERATE -> MODERATE); peak daily rain mm remained unchanged by 0.0 units (MODERATE -> MODERATE); cumulative rain mm remained unchanged by 0.0 units (HIGH -> HIGH)",
+    "meteorological_drivers": [
+      "Chronological translation of precipitation pulses by +7 days."
+    ],
+    "assumptions": [
+      "Total cumulative rainfall across the complete seasonal cycle is strictly conserved."
+    ],
+    "observed_vs_simulated": {
+      "historical_baseline": "OBSERVED (Kharif 2024 Bakshi Ka Talab ground station record)",
+      "scenario_inputs": "SIMULATED (Controlled hypothetical parameter adjustments)",
+      "indicator_outputs": "DERIVED_INDICATOR (Deterministic agro-meteorological sensitivity indices)"
+    },
+    "non_causal_statement": "Under this scenario, altered precipitation timing and volume are statistically associated with changed moisture availability for PADDY at the FLOWERING stage. These indicators reflect sensitivity analysis rather than physical or agronomic guarantees."
+  },
+  "provenance": {
+    "dataset_fingerprint": "3fec50c2ef89dbfc",
+    "scenario_fingerprint": "83db1e22582cffef814ab46d82bd24b04b86b72c3edcaad0ea890a487e537f5a",
+    "engine_version": "1.0.0",
+    "scenario_version": "5B.1.0",
+    "created_at": "2026-09-25T16:28:39.765418+00:00",
+    "baseline_reference": "Kharif 2024 (Bakshi Ka Talab, UP_LKO_BKT)",
+    "parameter_hash": "52dc5036b2de2ab2a4328da2a419e919e5b301c6e19671432ab5c99459e3c4a9",
+    "input_feature_hash": "d6dd7956247efeef545b07618d7d5cd26eaccda041b1bcb98c97e6954449ac2b"
+  },
+  "scientific_disclaimer": "This scenario evaluates meteorological and agro-meteorological sensitivity indicators only. It does NOT predict crop yields, biomass production, revenue, or guaranteed agronomic outcomes.",
+  "timestamp": "2026-09-25T16:28:39.765449+00:00"
+}

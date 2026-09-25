@@ -238,21 +238,124 @@ export interface ScenarioContract {
   disclaimer: string;
 }
 
+export interface IndicatorDelta {
+  indicator_name: string;
+  baseline_value: number;
+  scenario_value: number;
+  absolute_delta: number;
+  relative_delta_pct?: number | null;
+  baseline_category: 'LOW' | 'MODERATE' | 'HIGH' | 'SEVERE';
+  scenario_category: 'LOW' | 'MODERATE' | 'HIGH' | 'SEVERE';
+  direction: 'INCREASED' | 'DECREASED' | 'UNCHANGED';
+  scientific_interpretation: string;
+}
+
+export interface ScenarioEnvelope {
+  indicator_name: string;
+  min_value: number;
+  max_value: number;
+  baseline_value: number;
+  median_value: number;
+  min_category: 'LOW' | 'MODERATE' | 'HIGH' | 'SEVERE';
+  max_category: 'LOW' | 'MODERATE' | 'HIGH' | 'SEVERE';
+  baseline_category: 'LOW' | 'MODERATE' | 'HIGH' | 'SEVERE';
+  median_category: 'LOW' | 'MODERATE' | 'HIGH' | 'SEVERE';
+  data_origin_labels?: Record<string, string>;
+}
+
+export interface SensitivityPoint {
+  parameter_value: number;
+  parameter_label: string;
+  indicator_values: Record<string, number>;
+  indicator_categories: Record<string, string>;
+  deltas: Record<string, number>;
+}
+
+export interface SensitivityAnalysisResult {
+  scenario_id: string;
+  scenario_type: string;
+  parameter_name: string;
+  parameter_range: number[];
+  curve_points: SensitivityPoint[];
+  envelope: ScenarioEnvelope;
+  scientific_notes: string[];
+}
+
+export interface ScenarioProvenance {
+  dataset_fingerprint: string;
+  scenario_fingerprint: string;
+  engine_version: string;
+  scenario_version: string;
+  created_at: string;
+  baseline_reference: string;
+  parameter_hash: string;
+  input_feature_hash: string;
+}
+
+export interface ScenarioExplanation {
+  baseline_description: string;
+  perturbations_applied: string[];
+  indicator_shift_summary: string;
+  meteorological_drivers: string[];
+  assumptions: string[];
+  observed_vs_simulated: Record<string, string>;
+  non_causal_statement: string;
+}
+
+export interface ScenarioComparison {
+  scenario_id: string;
+  baseline_reference: string;
+  scenario_type: string;
+  crop: string;
+  crop_stage: string;
+  applicability: string;
+  deltas: IndicatorDelta[];
+  envelope?: ScenarioEnvelope;
+  explanation: ScenarioExplanation;
+  provenance: ScenarioProvenance;
+  scientific_disclaimer: string;
+}
+
+export interface ScenarioRegistryItem {
+  scenario_type: string;
+  display_name: string;
+  description: string;
+  allowed_parameters: Record<string, any>;
+  evaluated_indicators: string[];
+  max_dimensions: number;
+}
+
 export interface ScenarioResult {
   scenario_id: string;
   scenario_type: string;
-  block_id: string;
-  crop_type: string;
-  growth_stage: string;
-  baseline_forecast_id: string;
-  parameters: Record<string, any>;
-  risk_shift_indicator: 'REDUCED_RISK' | 'NEUTRAL_CHANGE' | 'ELEVATED_RISK';
-  water_stress_shift_percentage: number;
-  waterlogging_shift_percentage: number;
-  confidence_status: string;
   classification: string;
-  yield_prediction_disclaimer: string;
-  scientific_notes: string[];
-  computed_at: string;
+  block_id: string;
+  crop: string;
+  crop_stage: string;
+  applicability?: string;
+  inputs?: Record<string, any>;
+  baseline_summary?: Record<string, any>;
+  simulated_summary?: Record<string, any>;
+  hypothetical_risk_indicators?: any[];
+  deltas?: IndicatorDelta[];
+  envelope?: ScenarioEnvelope;
+  explanation?: ScenarioExplanation;
+  provenance?: ScenarioProvenance;
+  scientific_disclaimer: string;
+  timestamp?: string;
+
+  // Legacy Phase 5A fields for compatibility
+  crop_type?: string;
+  growth_stage?: string;
+  baseline_forecast_id?: string;
+  parameters?: Record<string, any>;
+  risk_shift_indicator?: 'REDUCED_RISK' | 'NEUTRAL_CHANGE' | 'ELEVATED_RISK';
+  water_stress_shift_percentage?: number;
+  waterlogging_shift_percentage?: number;
+  confidence_status?: string;
+  yield_prediction_disclaimer?: string;
+  scientific_notes?: string[];
+  computed_at?: string;
 }
+
 

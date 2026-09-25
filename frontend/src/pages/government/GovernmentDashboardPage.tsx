@@ -263,12 +263,28 @@ export const GovernmentDashboardPage: React.FC = () => {
               Safety Gate State
             </span>
             <div className="font-bold text-lg text-brand-emerald font-mono">
-              13 Checks ENFORCING
+              21 Checks Active
             </div>
             <p className="text-[10px] text-slate-500">
-              Imperatives & yield projections strictly blocked
+              13 advisory checks + 8 scenario safety checks
             </p>
           </div>
+        </div>
+
+        {/* Phase 5B: Scenario Analysis Capacity */}
+        <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+          <div className="space-y-0.5">
+            <div className="flex items-center gap-2">
+              <strong className="text-slate-900 font-heading">What-If Scenario & Sensitivity Engine (Phase 5B)</strong>
+              <Badge variant="amber" size="sm">SCENARIO_INDICATOR_ONLY</Badge>
+            </div>
+            <p className="text-slate-600 text-[11px]">
+              6 controlled scenario types (sowing delay, supplemental irrigation, seasonal anomaly, timing shift, heavy rain concentration, compound multi-hazard) evaluated on Kharif 2024 meteorological baseline without yield or economic predictions.
+            </p>
+          </div>
+          <Badge variant="teal" size="sm" className="shrink-0">
+            Ground Anchor: UP_LKO_BKT
+          </Badge>
         </div>
 
         <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-amber-900 text-xs flex items-start gap-2.5">

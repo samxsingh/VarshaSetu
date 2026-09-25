@@ -9,6 +9,11 @@ import {
   AgronomicRule,
   AgronomicCrop,
   ScenarioResult,
+  ScenarioComparison,
+  SensitivityAnalysisResult,
+  ScenarioRegistryItem,
+  ScenarioExplanation,
+  ScenarioProvenance,
 } from '@shared/types';
 
 export interface AgronomyStatusResponse {
@@ -43,6 +48,15 @@ export interface ListRulesResponse {
 export interface ListCropsResponse {
   total_crops: number;
   crops: AgronomicCrop[];
+}
+
+export interface ScenarioRegistryResponse {
+  status: string;
+  phase: string;
+  classification: string;
+  total_scenario_types: number;
+  registry: ScenarioRegistryItem[];
+  scientific_disclaimer: string;
 }
 
 export const advisoryService = {
@@ -112,7 +126,111 @@ export const advisoryService = {
   },
 
   /**
-   * Phase 5A: What-If Scenario Sensitivity Simulation
+   * Phase 5B: Controlled Scenario Registry Catalog
+   */
+  async getScenarioRegistry(): Promise<ApiResponse<ScenarioRegistryResponse>> {
+    return request<ScenarioRegistryResponse>('/agronomy/scenario-registry');
+  },
+
+  /**
+   * Phase 5B: List Persisted Scenarios
+   */
+  async listScenarios(limit = 20): Promise<ApiResponse<{ total_scenarios: number; scenarios: any[] }>> {
+    return request<{ total_scenarios: number; scenarios: any[] }>(`/agronomy/scenarios?limit=${limit}`);
+  },
+
+  /**
+   * Phase 5B: Run What-If Scenario with Delta and Envelope Analysis
+   */
+  async runScenario(payload: {
+    scenario_type: string;
+    block_id?: string;
+    crop?: string;
+    crop_stage?: string;
+    parameters?: Record<string, any>;
+    delay_days?: number;
+    intervention_start_day?: number;
+    intervention_frequency?: number;
+    intervention_duration?: number;
+    rainfall_anomaly_pct?: number;
+    shift_days?: number;
+    concentration_factor?: number;
+    combined_types?: string[];
+  }): Promise<ApiResponse<ScenarioResult>> {
+    return request<ScenarioResult>('/agronomy/scenarios/run', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  },
+
+  /**
+   * Phase 5B: Compare Baseline vs Scenario
+   */
+  async compareScenario(payload: {
+    scenario_type: string;
+    block_id?: string;
+    crop?: string;
+    crop_stage?: string;
+    parameters?: Record<string, any>;
+    delay_days?: number;
+    intervention_start_day?: number;
+    intervention_frequency?: number;
+    intervention_duration?: number;
+    rainfall_anomaly_pct?: number;
+    shift_days?: number;
+    concentration_factor?: number;
+    combined_types?: string[];
+  }): Promise<ApiResponse<ScenarioComparison>> {
+    return request<ScenarioComparison>('/agronomy/scenarios/compare', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  },
+
+  /**
+   * Phase 5B: Deterministic Sensitivity Analysis & Response Curves
+   */
+  async runSensitivity(payload: {
+    scenario_type: string;
+    block_id?: string;
+    crop?: string;
+    crop_stage?: string;
+    parameters?: Record<string, any>;
+    delay_days?: number;
+    intervention_start_day?: number;
+    rainfall_anomaly_pct?: number;
+    shift_days?: number;
+    concentration_factor?: number;
+  }): Promise<ApiResponse<SensitivityAnalysisResult>> {
+    return request<SensitivityAnalysisResult>('/agronomy/scenarios/sensitivity', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  },
+
+  /**
+   * Phase 5B: Get Scenario By Identifier
+   */
+  async getScenarioById(id: string): Promise<ApiResponse<ScenarioResult>> {
+    return request<ScenarioResult>(`/agronomy/scenarios/${encodeURIComponent(id)}`);
+  },
+
+  /**
+   * Phase 5B: Get Scenario Explanation
+   */
+  async getScenarioExplanation(id: string): Promise<ApiResponse<ScenarioExplanation>> {
+    return request<ScenarioExplanation>(`/agronomy/scenarios/${encodeURIComponent(id)}/explanation`);
+  },
+
+  /**
+   * Phase 5B: Get Scenario Cryptographic Lineage & Provenance
+   */
+  async getScenarioProvenance(id: string): Promise<ApiResponse<ScenarioProvenance>> {
+    return request<ScenarioProvenance>(`/agronomy/scenarios/${encodeURIComponent(id)}/provenance`);
+  },
+
+  /**
+   * Phase 5A: What-If Scenario Sensitivity Simulation (Legacy)
    */
   async simulateScenario(payload: {
     block_id?: string;
@@ -148,3 +266,4 @@ export const advisoryService = {
     });
   },
 };
+

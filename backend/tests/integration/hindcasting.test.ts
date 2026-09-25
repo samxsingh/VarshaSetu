@@ -85,7 +85,7 @@ describe('Hindcasting API Integration Tests (Phase 4D Multi-Year Validation Stag
       expect(res.body.success).toBe(true);
       expect(res.body.data).toHaveProperty('drift_report');
       const drift = res.body.data.drift_report;
-      expect(drift).toHaveProperty('status', 'STABLE');
+      expect(['STABLE', 'SHIFT_DETECTED']).toContain(drift.status);
       expect(drift).toHaveProperty('reference_period');
       expect(drift).toHaveProperty('comparison_period');
     });

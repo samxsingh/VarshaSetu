@@ -1,0 +1,274 @@
+{
+  "experiment_id": "hindcast_monsoon_onset_7d_20260925_163242",
+  "created_at": "2026-09-25T16:32:42.540936+00:00",
+  "git_commit": "1.0.0",
+  "target_name": "MONSOON_ONSET",
+  "horizon_days": 7,
+  "models_evaluated": [
+    "climatology"
+  ],
+  "training_years": [
+    2024
+  ],
+  "validation_year": 2024,
+  "test_year": 2024,
+  "dataset_fingerprints": {
+    "weather_observations": "f60e1d12bd2802c7"
+  },
+  "feature_registry_version": "1.0.0",
+  "target_definition_version": "1.0.0",
+  "spatial_resolution": "BLOCK",
+  "multiyear_gate_status": "INSUFFICIENT_DATA",
+  "operational_validation_allowed": false,
+  "horizon_reports": [
+    {
+      "horizon_days": 1,
+      "target_name": "MONSOON_ONSET",
+      "task_type": "regression",
+      "sample_count": 0,
+      "event_count": null,
+      "brier_score": null,
+      "brier_skill_score": null,
+      "log_loss": null,
+      "roc_auc": null,
+      "pr_auc": null,
+      "expected_calibration_error": null,
+      "mae": null,
+      "rmse": null,
+      "mae_skill_score": null,
+      "skill_relative_to_climatology": null,
+      "status": "NOT_EVALUATED",
+      "notes": [
+        "Target variable 'target_rain_sum_1d' not present in dataset schema."
+      ]
+    },
+    {
+      "horizon_days": 3,
+      "target_name": "MONSOON_ONSET",
+      "task_type": "regression",
+      "sample_count": 0,
+      "event_count": null,
+      "brier_score": null,
+      "brier_skill_score": null,
+      "log_loss": null,
+      "roc_auc": null,
+      "pr_auc": null,
+      "expected_calibration_error": null,
+      "mae": null,
+      "rmse": null,
+      "mae_skill_score": null,
+      "skill_relative_to_climatology": null,
+      "status": "NOT_EVALUATED",
+      "notes": [
+        "Target variable 'target_rain_sum_3d' not present in dataset schema."
+      ]
+    },
+    {
+      "horizon_days": 7,
+      "target_name": "MONSOON_ONSET",
+      "task_type": "regression",
+      "sample_count": 12,
+      "event_count": null,
+      "brier_score": null,
+      "brier_skill_score": null,
+      "log_loss": null,
+      "roc_auc": null,
+      "pr_auc": null,
+      "expected_calibration_error": null,
+      "mae": 31.133,
+      "rmse": 41.455,
+      "mae_skill_score": 0.2323,
+      "skill_relative_to_climatology": true,
+      "status": "EVALUATED",
+      "notes": []
+    },
+    {
+      "horizon_days": 14,
+      "target_name": "MONSOON_ONSET",
+      "task_type": "regression",
+      "sample_count": 5,
+      "event_count": null,
+      "brier_score": null,
+      "brier_skill_score": null,
+      "log_loss": null,
+      "roc_auc": null,
+      "pr_auc": null,
+      "expected_calibration_error": null,
+      "mae": 73.5,
+      "rmse": 76.847,
+      "mae_skill_score": -0.0887,
+      "skill_relative_to_climatology": false,
+      "status": "EVALUATED",
+      "notes": []
+    },
+    {
+      "horizon_days": 21,
+      "target_name": "MONSOON_ONSET",
+      "task_type": "regression",
+      "sample_count": 0,
+      "event_count": null,
+      "brier_score": null,
+      "brier_skill_score": null,
+      "log_loss": null,
+      "roc_auc": null,
+      "pr_auc": null,
+      "expected_calibration_error": null,
+      "mae": null,
+      "rmse": null,
+      "mae_skill_score": null,
+      "skill_relative_to_climatology": null,
+      "status": "NOT_EVALUATED",
+      "notes": [
+        "Target variable 'target_rain_sum_21d' not present in dataset schema."
+      ]
+    },
+    {
+      "horizon_days": 30,
+      "target_name": "MONSOON_ONSET",
+      "task_type": "regression",
+      "sample_count": 0,
+      "event_count": null,
+      "brier_score": null,
+      "brier_skill_score": null,
+      "log_loss": null,
+      "roc_auc": null,
+      "pr_auc": null,
+      "expected_calibration_error": null,
+      "mae": null,
+      "rmse": null,
+      "mae_skill_score": null,
+      "skill_relative_to_climatology": null,
+      "status": "NOT_EVALUATED",
+      "notes": [
+        "Target variable 'target_rain_sum_30d' not present in dataset schema."
+      ]
+    }
+  ],
+  "model_results": [
+    {
+      "model_id": "climatology",
+      "model_name": "Historical Climatology Frequency",
+      "model_family": "climatology",
+      "task_type": "regression",
+      "horizon_days": 7,
+      "target_name": "MONSOON_ONSET",
+      "sample_count": 12,
+      "event_count": null,
+      "metrics": {
+        "brier_score": null,
+        "brier_skill_score": 0.0,
+        "mae": 40.554,
+        "rmse": 46.434
+      },
+      "calibration_status": "NOT_CALIBRATED",
+      "data_status": "EVALUATED",
+      "dataset_fingerprint": "3fec50c2ef89dbfc",
+      "has_skill_over_climatology": false,
+      "notes": [
+        "Zero-skill reference climatology baseline."
+      ]
+    }
+  ],
+  "stability_analysis": {
+    "target_name": "MONSOON_ONSET",
+    "horizon_days": 7,
+    "model_id": "xgboost",
+    "years_evaluated": [
+      2024,
+      2024
+    ],
+    "total_years": 2,
+    "yearly_reports": [
+      {
+        "year": 2024,
+        "sample_count": 31,
+        "event_count": null,
+        "brier_score": null,
+        "brier_skill_score": 0.0,
+        "mae": 40.554,
+        "rmse": 46.434,
+        "roc_auc": null,
+        "ece": null,
+        "is_degraded": false,
+        "notes": "Diagnostic within-season chronological walk-forward fold (single-season Kharif archive)."
+      },
+      {
+        "year": 2024,
+        "sample_count": 19,
+        "event_count": null,
+        "brier_score": null,
+        "brier_skill_score": 0.0,
+        "mae": 40.554,
+        "rmse": 46.434,
+        "roc_auc": null,
+        "ece": null,
+        "is_degraded": false,
+        "notes": "Diagnostic within-season chronological walk-forward fold (single-season Kharif archive)."
+      }
+    ],
+    "distribution_stats": {
+      "brier_skill_score": {
+        "metric_name": "brier_skill_score",
+        "count": 2,
+        "mean": 0.0,
+        "median": 0.0,
+        "std": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "iqr": 0.0
+      },
+      "mae": {
+        "metric_name": "mae",
+        "count": 2,
+        "mean": 40.554,
+        "median": 40.554,
+        "std": 0.0,
+        "min": 40.554,
+        "max": 40.554,
+        "iqr": 0.0
+      },
+      "rmse": {
+        "metric_name": "rmse",
+        "count": 2,
+        "mean": 46.434,
+        "median": 46.434,
+        "std": 0.0,
+        "min": 46.434,
+        "max": 46.434,
+        "iqr": 0.0
+      }
+    },
+    "degraded_years": [],
+    "stability_status": "INSUFFICIENT_SEASONS",
+    "notes": "Historical record spans 2 season(s). Cross-season stability and variance statistics require >= 3 observation seasons for meaningful assessment."
+  },
+  "block_reports": [
+    {
+      "block_id": "UP_LKO_BKT",
+      "block_name": "Bakshi Ka Talab",
+      "sample_count": 122,
+      "years_available": [
+        2024
+      ],
+      "target_event_count": 0,
+      "metrics": {
+        "brier_score": null,
+        "brier_skill_score": 0.0,
+        "mae": 40.554,
+        "rmse": 46.434
+      },
+      "data_status": "EVALUATED",
+      "spatial_resolution_verified": "BLOCK"
+    }
+  ],
+  "warnings": [
+    "Year 2024 has single-class distribution for 'target_false_onset_14d'.",
+    "Year 2024 has single-class distribution for 'target_heavy_rain_7d'.",
+    "Year 2024 has single-class distribution for 'target_heavy_rain_14d'.",
+    "Year 2024 has single-class distribution for 'target_rain_anomaly_7d_pct'.",
+    "Year 2024 has single-class distribution for 'target_anomaly_category_7d'.",
+    "Available observation years (1) is less than the required minimum (5 seasons). Currently available: [2024].",
+    "Complete monsoon seasons (1) is less than required (5).",
+    "Multi-year operational validation is inactive. Current single-season archive (Kharif 2024) is evaluated for diagnostic verification only."
+  ]
+}

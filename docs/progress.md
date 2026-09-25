@@ -432,6 +432,53 @@
 
 ---
 
+## 11. Phase 5B: Advanced What-If Scenario Analysis, Sensitivity Engine & Decision-Support Simulation
+- **Status:** **COMPLETED**
+- **Last Updated:** September 2026
+- **Commit:** (In progress)
+- **Comprehensive Specification Document:** [docs/scenario-analysis.md](file:///Users/sameersingh/Desktop/VarshaSetu/docs/scenario-analysis.md)
+
+### Completed in Phase 5B:
+- [x] **Controlled Scenario Catalog & Schemas (`ml-service/app/agronomy/schemas.py`):**
+  - Controlled registry with 6 scenario types: `SOWING_DELAY`, `IRRIGATION_INTERVENTION`, `SEASONAL_ANOMALY`, `RAINFALL_TIMING_SHIFT`, `HEAVY_RAIN_CONCENTRATION`, `COMBINED_SCENARIO`.
+  - Strictly typed contracts: `IndicatorSeverity`, `HazardApplicability`, `IndicatorDelta`, `ScenarioEnvelope`, `SensitivityPoint`, `SensitivityAnalysisResult`, `ScenarioProvenance`, `ScenarioExplanation`, `ScenarioComparison`, `ScenarioRegistryItem`.
+  - Backward-compatible `ScenarioContract` and `ScenarioResult`.
+- [x] **Deterministic Agronomic Safety Gate (Checks 14–21) (`ml-service/app/agronomy/safety.py`):**
+  - Check 14: `SCENARIO_RANGE_CHECK` (validates all parameter bounds; rejects out-of-bounds with `PARAMETER_OUT_OF_BOUNDS`).
+  - Check 15: `SCENARIO_COMBINATION_CHECK` (enforces max 3 simultaneous orthogonal dimensions, min 2 types; rejects with `INVALID_SCENARIO_COMBINATION`).
+  - Check 16: `BASELINE_INTEGRITY_CHECK` (strictly anchors to `UP_LKO_BKT`; rejects with `INVALID_BASELINE_LOCATION`).
+  - Check 17: `OBSERVATION_SCENARIO_SEPARATION_CHECK` (blocks outputs labeled `OBSERVED`).
+  - Check 18: `YIELD_MODEL_ABSENCE_CHECK` (blocks claims of `yield`, `biomass`, `harvest_output` with `PROHIBITED_YIELD_PREDICTION_CLAIM`).
+  - Check 19: `ECONOMIC_CLAIM_CHECK` (blocks claims of `revenue`, `profit`, `rupee_loss`, `₹`, `$` with `PROHIBITED_ECONOMIC_CLAIM`).
+  - Check 20: `SCENARIO_REPRODUCIBILITY_CHECK` (enforces deterministic coordinates and crop binding).
+  - Check 21: `SCENARIO_DISCLOSURE_CHECK` (enforces mandatory scientific disclaimer).
+- [x] **Deterministic Sensitivity Engine & Envelopes (`ml-service/app/agronomy/simulator/scenarios.py`):**
+  - Bounded response curves across parameter variation steps without machine learning curve fitting.
+  - Scenario envelope computing min, max, baseline, and median values.
+  - Quantitative deltas (`IndicatorDelta`) with absolute/relative deltas, directions, severity transitions, and interpretations.
+- [x] **Cryptographic Lineage & Non-Causal Explanation (`ml-service/app/agronomy/simulator/`):**
+  - `provenance.py`: Computes SHA-256 parameter hash, dataset fingerprint `3fec50c2ef89dbfc`, and immutable artifact storage in `artifacts/scenarios/`.
+  - `explain.py`: Non-causal explainability breakdown with explicit statistical association disclaimer.
+- [x] **ML Service REST API (`ml-service/app/main.py`):**
+  - Mounted: `/agronomy/scenario-registry`, `/agronomy/scenarios`, `/agronomy/scenarios/{id}`, `/agronomy/scenarios/run`, `/agronomy/scenarios/compare`, `/agronomy/scenarios/sensitivity`, `/agronomy/scenarios/{id}/sensitivity`, `/agronomy/scenarios/{id}/explanation`, `/agronomy/scenarios/{id}/provenance`.
+  - 158/158 tests passing in `ml-service/`.
+- [x] **PostgreSQL Schema & Persistence (`backend/`):**
+  - Migration `010_scenario_analysis.sql`: extends `scenario_runs`, creates `scenario_comparisons` and `scenario_sensitivities` tables. Applied via `npm run migrate`.
+  - Repository `scenarioRepository.ts` with upsert and retrieval methods.
+  - Controller `scenarioController.ts` and routes `scenarioRoutes.ts` mounted under `/api/v1/agronomy/scenarios` and `/api/v1/agronomy/scenario-registry`.
+  - 80/80 backend tests passing, `tsc` zero build errors.
+- [x] **Frontend User Interfaces (`frontend/`):**
+  - Updated `advisoryService.ts` with typed scenario methods.
+  - Upgraded `FarmerWhatIfPage.tsx`: 6 scenario types, bounded sliders, comparative delta table, deterministic sensitivity response curves, envelope metrics, non-causal explanation, cryptographic provenance, and explicit disclaimer banner.
+  - Upgraded `OfficerAdvisoriesPage.tsx`: Added What-If Sensitivity Monitor inspection section.
+  - Upgraded `GovernmentDashboardPage.tsx`: Added Scenario Analysis & Sensitivity Engine capacity card.
+  - Upgraded `ForecastLabPage.tsx`: Added Scenario Analysis Safety Checks (Checks 14–21) showcase and 6-type catalog.
+  - 52/52 frontend tests passing, Vite builds clean.
+- [x] **Full Regression Verification:**
+  - **158 ML Service + 80 Backend + 52 Frontend = 290 total tests passing (100%)**.
+
+---
+
 ### Phase Status & Guardrails Summary
 - **Phase 1A:** COMPLETED
 - **Phase 1B:** COMPLETED
@@ -444,17 +491,15 @@
 - **Phase 4D:** COMPLETED
 - **Phase 4E:** COMPLETED
 - **Phase 4F:** COMPLETED
-- **Phase 5A:** **COMPLETED**
-- **Phase 5B:** **NOT STARTED** (Strict sequence enforced)
+- **Phase 5A:** COMPLETED
+- **Phase 5B:** **COMPLETED**
 - **Phase 5C:** **NOT STARTED** (Strict sequence enforced)
 - **Phase 6:** **NOT STARTED** (Strict sequence enforced)
 
 ---
 
-## 11. Pending (Future Phases)
-- [ ] **Phase 5B: Crop-Specific Rules & Agronomic Calibrations**
-  - DO NOT START UNTIL INSTRUCTED.
-- [ ] **Phase 5C: Multi-Season Agronomic Validation**
+## 12. Pending (Future Phases)
+- [ ] **Phase 5C: Multi-Season Agronomic Validation & Reliability**
   - DO NOT START UNTIL INSTRUCTED.
 - [ ] **Phase 6: Voice & Dissemination Gateway**
   - Bhashini ASR/TTS contract integration.
@@ -462,8 +507,9 @@
 
 ---
 
-## 12. Technical Debt
-- **Zero Technical Debt Introduced:** Fully typed interfaces, zero synthetic or fabricated observations, strict chronological splitting without leakage, immutable artifact management, deterministic lifecycle state machine, cryptographic deduplication, provider-neutral delivery abstraction, 13-check deterministic safety gate, and honest disclosure of single-season data limits.
+## 13. Technical Debt
+- **Zero Technical Debt Introduced:** Fully typed interfaces, zero synthetic or fabricated observations, strict chronological splitting without leakage, immutable artifact management, deterministic lifecycle state machine, cryptographic deduplication, provider-neutral delivery abstraction, 21-check deterministic safety gate, zero crop yield models, zero economic loss assertions, and honest disclosure of single-season data limits.
+
 
 
 
