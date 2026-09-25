@@ -792,3 +792,110 @@ def run_hindcast_experiment(req: RunHindcastRequest) -> Dict[str, Any]:
         "experiment": exp.model_dump(mode="json")
     }
 
+
+# ====================================================================
+# PHASE 4E — OPERATIONAL FORECAST PRODUCTS & SCIENTIFIC EXPLAINABILITY
+# ====================================================================
+
+from .forecast import ForecastService
+from .schemas.forecast import (
+    ScientificForecastRecord,
+    ForecastGenerateRequest,
+    ForecastStatusResponse,
+    ForecastAvailabilityResponse,
+    ForecastListResponse,
+    ForecastExplanationResponse,
+    ForecastHistoryResponse,
+    TargetListResponse,
+    HorizonListResponse
+)
+
+
+@app.get("/forecasts/status")
+def get_forecast_status() -> Dict[str, Any]:
+    """Microservice operational forecasting readiness and status."""
+    res = ForecastService.get_status()
+    return res.model_dump(mode="json")
+
+
+@app.get("/forecasts/availability")
+def get_forecast_availability(block_id: str = "UP_LKO_BKT") -> Dict[str, Any]:
+    """Data freshness, completeness, and update cadence report."""
+    res = ForecastService.get_availability(block_id=block_id)
+    return res.model_dump(mode="json")
+
+
+@app.get("/forecasts")
+def list_forecasts(
+    target: Optional[str] = None,
+    horizon: Optional[int] = None,
+    block_id: Optional[str] = None,
+    status: Optional[str] = None,
+    limit: int = 50
+) -> Dict[str, Any]:
+    """Lists generated and persisted scientific forecast records."""
+    res = ForecastService.list_forecasts(
+        target=target, horizon=horizon, block_id=block_id, status=status, limit=limit
+    )
+    return res.model_dump(mode="json")
+
+
+@app.get("/forecasts/history")
+def get_forecast_history(limit: int = 100) -> Dict[str, Any]:
+    """Retrieves immutable forecast history records with verification statuses."""
+    res = ForecastService.get_history(limit=limit)
+    return res.model_dump(mode="json")
+
+
+@app.get("/forecasts/targets")
+def get_forecast_targets() -> Dict[str, Any]:
+    """Lists supported forecast target definitions and versions."""
+    res = ForecastService.get_targets()
+    return res.model_dump(mode="json")
+
+
+@app.get("/forecasts/horizons")
+def get_forecast_horizons() -> Dict[str, Any]:
+    """Lists supported forecast lead horizons and meteorological scales."""
+    res = ForecastService.get_horizons()
+    return res.model_dump(mode="json")
+
+
+@app.get("/forecasts/location/{block_id}")
+def get_location_forecasts(block_id: str = "UP_LKO_BKT") -> Dict[str, Any]:
+    """Retrieves operational forecast product portfolio for an administrative block."""
+    records = ForecastService.get_location_forecasts(block_id=block_id)
+    return {
+        "block_id": block_id,
+        "total_forecasts": len(records),
+        "forecasts": [r.model_dump(mode="json") for r in records]
+    }
+
+
+@app.get("/forecasts/{forecast_id}")
+def get_forecast_by_id(forecast_id: str) -> Dict[str, Any]:
+    """Retrieves a specific scientific forecast record by immutable identifier."""
+    record = ForecastService.get_forecast(forecast_id)
+    if not record:
+        raise HTTPException(status_code=404, detail=f"Forecast '{forecast_id}' not found.")
+    return record.model_dump(mode="json")
+
+
+@app.get("/forecasts/{forecast_id}/explanation")
+def get_forecast_explanation(forecast_id: str) -> Dict[str, Any]:
+    """Retrieves SHAP feature attributions and deterministic narrative for a forecast."""
+    exp = ForecastService.get_explanation(forecast_id)
+    if not exp:
+        raise HTTPException(status_code=404, detail=f"Forecast '{forecast_id}' not found.")
+    return exp.model_dump(mode="json")
+
+
+@app.post("/forecasts/generate", status_code=201)
+def generate_forecast(req: ForecastGenerateRequest) -> Dict[str, Any]:
+    """
+    Generates a structured forecast product through the 19-step scientific pipeline.
+    Validates data freshness, model eligibility, calibration gates, and uncertainty bounds.
+    """
+    record = ForecastService.generate_forecast(req)
+    return record.model_dump(mode="json")
+

@@ -9,9 +9,8 @@ In meteorological downscaling and agricultural decision support, **raw predicted
 **Phase 4C** establishes the scientific calibration and validation engine for VarshaSetu. It implements rigorous post-hoc calibration algorithms, reliability diagram generation, Expected Calibration Error (ECE), Murphy (1973) Brier score decomposition, and continuous residual uncertainty estimation, all protected by strict **Data Sufficiency Gatekeepers**.
 
 ### Strict Scope Boundary
-- **Phases 1A through 4C**: COMPLETED.
-- **Phase 4D**: COMPLETED.
-- **Phase 4E, Phase 4F & Phase 5**: **NOT STARTED**. Farmer-facing advisory generation, WhatsApp/SMS distribution, voice synthesis (Bhashini), and production agronomic rule triggers are strictly isolated to subsequent phases.
+- **Phases 1A through 4E**: COMPLETED.
+- **Phase 4F & Phase 5**: **NOT STARTED**. Production ensembling, farmer-facing advisory generation, WhatsApp/SMS distribution, voice synthesis (Bhashini), and production agronomic rule triggers are strictly isolated to subsequent phases.
 
 ---
 

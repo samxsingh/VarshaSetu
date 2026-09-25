@@ -15,9 +15,8 @@ Operational weather forecasting systems require rigorous retrospective verificat
 7. **Immutable Reproducibility Artifacts**: Deterministic JSON manifests with SHA-256 dataset fingerprints.
 
 ### Strict Scope Boundary
-- **Phases 1A through 4C**: COMPLETED.
-- **Phase 4D**: COMPLETED.
-- **Phase 4E, Phase 4F & Phase 5**: **NOT STARTED**. Agronomic decision rules, farmer-facing final advisories, What-If simulation engine, voice synthesis (Bhashini), and SMS/WhatsApp distribution channels belong to subsequent phases and have NOT been implemented.
+- **Phases 1A through 4E**: COMPLETED.
+- **Phase 4F & Phase 5**: **NOT STARTED**. Production ensembling, agronomic decision rules, farmer-facing final advisories, What-If simulation engine, voice synthesis (Bhashini), and SMS/WhatsApp distribution channels belong to subsequent phases and have NOT been implemented.
 
 ---
 

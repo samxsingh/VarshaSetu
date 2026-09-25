@@ -3,7 +3,7 @@
 
 ---
 
-#### Current Phase: PHASE 4D
+#### Current Phase: PHASE 4E
 **Status:** COMPLETED  
 **Last Updated:** September 2026
 
@@ -294,6 +294,48 @@
 
 ---
 
+## 9. Phase 4E: Operational Forecast Products, API & Scientific Explainability
+- **Status:** COMPLETED
+
+### Completed in Phase 4E
+- [x] **Typed Scientific Forecast Contracts (`ml-service/app/schemas/forecast.py` & `shared/types/forecast.ts`):**
+  - Designed `ScientificForecastRecord` covering `location`, `target`, `horizon`, `model`, `prediction`, `calibration`, `uncertainty`, `validation`, `explainability`, `data`, and `scientific_disclosure`.
+  - Defined complete request/response contracts for forecast generation, availability, history, and verification.
+- [x] **Forecast Availability Gate (`ml-service/app/forecast/availability.py`):**
+  - Audits 19 core features, observation cadence, data freshness (`FRESH`, `AGING`, `STALE`, `HISTORICAL_ONLY`, `MISSING`), and staleness thresholds.
+- [x] **Multi-Tier Operational Gate (`ml-service/app/forecast/gates.py`):**
+  - Synthesizes model readiness, Phase 4C calibration, Phase 4D multi-year validation, freshness, and spatial resolution. Correctly enforces `DIAGNOSTIC_ONLY` and `HISTORICAL_ONLY` on Kharif 2024.
+- [x] **Dynamic Model Resolver (`ml-service/app/forecast/resolver.py`):**
+  - Resolves XGBoost, LightGBM, baseline linear models, and empirical climatology with in-memory caching and SHA-256 fingerprint verification.
+- [x] **Domain-Grouped Explainability & Disclosures (`ml-service/app/forecast/disclosure.py`):**
+  - Produces SHAP domain attributions (Moisture, Synoptic Wind, Thermodynamic Instability, Antecedent Rainfall) with strictly non-causal language and transparent limitation disclosures.
+- [x] **Immutable Forecast Storage (`ml-service/app/forecast/artifacts.py`):**
+  - Saves deterministic JSON forecast records in `ml-service/artifacts/forecasts/`.
+- [x] **Retrospective Forecast Verifier (`ml-service/app/forecast/verification.py`):**
+  - Matches forecast validation windows against observed ground truth, computes Brier score, Log Loss, and contingency outcomes (`HIT`, `MISS`, `FALSE_ALARM`, `CORRECT_REJECTION`). Safely returns `PENDING` for future windows.
+- [x] **Forecast Generator & Service (`ml-service/app/forecast/generator.py` & `service.py`):**
+  - 19-step forecast product pipeline orchestrator with full lineage tracking.
+- [x] **Microservice Endpoints (`ml-service/app/main.py`):**
+  - Mounted 10 endpoints: `/forecasts/status`, `/availability`, `/`, `/{id}`, `/{id}/explanation`, `/location/{block_id}`, `/generate`, `/history`, `/targets`, `/horizons`.
+- [x] **Backend Integration Controller & Routes (`backend/`):**
+  - Implemented `forecastController.ts` and `forecastRoutes.ts` with transparent fallback disclosures.
+  - Added 9 integration tests in `backend/tests/integration/forecasts.test.ts` (all 54 backend tests passing, `tsc` builds clean).
+- [x] **Frontend Forecast Products & Scientific Lab (`frontend/`):**
+  - Implemented typed `forecastService.ts` API client.
+  - Updated `FarmerForecastPage.tsx` with calibrated probabilities, 90% uncertainty intervals, non-operational diagnostic badges, explanation drawer, and strictly zero agronomic commands.
+  - Updated `OfficerForecastPage.tsx` with neutral block comparison matrix, ground anchor disclosure, and no block/model rankings.
+  - Updated `GovernmentDashboardPage.tsx` with statewide coverage gap disclosure (1 block assimilated, 820+ pending).
+  - Updated `ForecastLabPage.tsx` with dual tabs for live 7-stage scientific chain generation and Phase 4D hindcasting.
+  - Added unit and component tests: `ForecastService.test.ts`, `FarmerForecastPage.test.tsx`, `OfficerForecastPage.test.tsx` (all 31 frontend tests passing, Vite builds clean).
+- [x] **Comprehensive Documentation:**
+  - Authored `docs/forecast-products.md` (16 sections).
+- [x] **Full Test Suite Verification:**
+  - `pytest ml-service/tests`: 99/99 tests passed (100%).
+  - `npm test` in `backend/`: 54/54 tests passed (100%).
+  - `npm test` in `frontend/`: 31/31 tests passed (100%).
+
+---
+
 ### Phase Status & Guardrails Summary
 - **Phase 1A:** COMPLETED
 - **Phase 1B:** COMPLETED
@@ -303,16 +345,16 @@
 - **Phase 4A:** COMPLETED
 - **Phase 4B:** COMPLETED
 - **Phase 4C:** COMPLETED
-- **Phase 4D:** **COMPLETED**
-- **Phase 4E:** **NOT STARTED** (Strict sequence enforced)
+- **Phase 4D:** COMPLETED
+- **Phase 4E:** **COMPLETED**
 - **Phase 4F:** **NOT STARTED** (Strict sequence enforced)
 - **Phase 5:** **NOT STARTED** (Strict sequence enforced)
 
 ---
 
 ## 10. Pending (Future Phases)
-- [ ] **Phase 4E: Feature Store, Real-Time Inference & Rolling Forecast Serving**
-- [ ] **Phase 4F: Explainability, Model Monitoring & Production Model Governance**
+- [ ] **Phase 4F: Production Ensembling, Spatial Teleconnections & Advanced Downscaling**
+  - DO NOT START UNTIL INSTRUCTED.
 - [ ] **Phase 5: Agronomic Rules Engine & What-If Simulator**
   - DO NOT START UNTIL INSTRUCTED.
   - Declarative crop rules matrix across growth stages.
@@ -325,7 +367,7 @@
 ---
 
 ## 11. Technical Debt
-- **Zero Technical Debt Introduced:** Fully typed interfaces, zero synthetic or fabricated observations, strict chronological splitting without leakage, and honest disclosure of single-season data limits.
+- **Zero Technical Debt Introduced:** Fully typed interfaces, zero synthetic or fabricated observations, strict chronological splitting without leakage, immutable artifact management, and honest disclosure of single-season data limits.
 
 
 

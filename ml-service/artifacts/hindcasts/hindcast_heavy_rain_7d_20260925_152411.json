@@ -1,0 +1,379 @@
+{
+  "experiment_id": "hindcast_heavy_rain_7d_20260925_152411",
+  "created_at": "2026-09-25T15:24:11.195980+00:00",
+  "git_commit": "1.0.0",
+  "target_name": "HEAVY_RAIN",
+  "horizon_days": 7,
+  "models_evaluated": [
+    "climatology",
+    "baseline_linear",
+    "xgboost",
+    "xgboost_calibrated",
+    "lightgbm"
+  ],
+  "training_years": [
+    2024
+  ],
+  "validation_year": 2024,
+  "test_year": 2024,
+  "dataset_fingerprints": {
+    "weather_observations": "f60e1d12bd2802c7"
+  },
+  "feature_registry_version": "1.0.0",
+  "target_definition_version": "1.0.0",
+  "spatial_resolution": "BLOCK",
+  "multiyear_gate_status": "INSUFFICIENT_DATA",
+  "operational_validation_allowed": false,
+  "horizon_reports": [
+    {
+      "horizon_days": 1,
+      "target_name": "HEAVY_RAIN",
+      "task_type": "classification",
+      "sample_count": 0,
+      "event_count": null,
+      "brier_score": null,
+      "brier_skill_score": null,
+      "log_loss": null,
+      "roc_auc": null,
+      "pr_auc": null,
+      "expected_calibration_error": null,
+      "mae": null,
+      "rmse": null,
+      "mae_skill_score": null,
+      "skill_relative_to_climatology": null,
+      "status": "NOT_EVALUATED",
+      "notes": [
+        "Target variable 'target_heavy_rain_1d' not present in dataset schema."
+      ]
+    },
+    {
+      "horizon_days": 3,
+      "target_name": "HEAVY_RAIN",
+      "task_type": "classification",
+      "sample_count": 0,
+      "event_count": null,
+      "brier_score": null,
+      "brier_skill_score": null,
+      "log_loss": null,
+      "roc_auc": null,
+      "pr_auc": null,
+      "expected_calibration_error": null,
+      "mae": null,
+      "rmse": null,
+      "mae_skill_score": null,
+      "skill_relative_to_climatology": null,
+      "status": "NOT_EVALUATED",
+      "notes": [
+        "Target variable 'target_heavy_rain_3d' not present in dataset schema."
+      ]
+    },
+    {
+      "horizon_days": 7,
+      "target_name": "HEAVY_RAIN",
+      "task_type": "classification",
+      "sample_count": 19,
+      "event_count": 0,
+      "brier_score": 0.0,
+      "brier_skill_score": null,
+      "log_loss": 0.0,
+      "roc_auc": null,
+      "pr_auc": null,
+      "expected_calibration_error": 0.0,
+      "mae": null,
+      "rmse": null,
+      "mae_skill_score": null,
+      "skill_relative_to_climatology": null,
+      "status": "EVALUATED",
+      "notes": [
+        "BSS undefined: Climatology reference has zero variance in test partition.",
+        "ROC-AUC and PR-AUC not computable: only class 0 present in test partition."
+      ]
+    },
+    {
+      "horizon_days": 14,
+      "target_name": "HEAVY_RAIN",
+      "task_type": "classification",
+      "sample_count": 19,
+      "event_count": 0,
+      "brier_score": 0.0,
+      "brier_skill_score": null,
+      "log_loss": 0.0,
+      "roc_auc": null,
+      "pr_auc": null,
+      "expected_calibration_error": 0.0,
+      "mae": null,
+      "rmse": null,
+      "mae_skill_score": null,
+      "skill_relative_to_climatology": null,
+      "status": "EVALUATED",
+      "notes": [
+        "BSS undefined: Climatology reference has zero variance in test partition.",
+        "ROC-AUC and PR-AUC not computable: only class 0 present in test partition."
+      ]
+    },
+    {
+      "horizon_days": 21,
+      "target_name": "HEAVY_RAIN",
+      "task_type": "classification",
+      "sample_count": 0,
+      "event_count": null,
+      "brier_score": null,
+      "brier_skill_score": null,
+      "log_loss": null,
+      "roc_auc": null,
+      "pr_auc": null,
+      "expected_calibration_error": null,
+      "mae": null,
+      "rmse": null,
+      "mae_skill_score": null,
+      "skill_relative_to_climatology": null,
+      "status": "NOT_EVALUATED",
+      "notes": [
+        "Target variable 'target_heavy_rain_21d' not present in dataset schema."
+      ]
+    },
+    {
+      "horizon_days": 30,
+      "target_name": "HEAVY_RAIN",
+      "task_type": "classification",
+      "sample_count": 0,
+      "event_count": null,
+      "brier_score": null,
+      "brier_skill_score": null,
+      "log_loss": null,
+      "roc_auc": null,
+      "pr_auc": null,
+      "expected_calibration_error": null,
+      "mae": null,
+      "rmse": null,
+      "mae_skill_score": null,
+      "skill_relative_to_climatology": null,
+      "status": "NOT_EVALUATED",
+      "notes": [
+        "Target variable 'target_heavy_rain_30d' not present in dataset schema."
+      ]
+    }
+  ],
+  "model_results": [
+    {
+      "model_id": "climatology",
+      "model_name": "Historical Climatology Frequency",
+      "model_family": "climatology",
+      "task_type": "classification",
+      "horizon_days": 7,
+      "target_name": "HEAVY_RAIN",
+      "sample_count": 19,
+      "event_count": 0,
+      "metrics": {
+        "brier_score": 0.0,
+        "brier_skill_score": 0.0,
+        "mae": null,
+        "rmse": null
+      },
+      "calibration_status": "NOT_CALIBRATED",
+      "data_status": "EVALUATED",
+      "dataset_fingerprint": "3fec50c2ef89dbfc",
+      "has_skill_over_climatology": false,
+      "notes": [
+        "Zero-skill reference climatology baseline."
+      ]
+    },
+    {
+      "model_id": "baseline_linear",
+      "model_name": "Regularized Linear Baseline (Phase 4A)",
+      "model_family": "baseline_linear",
+      "task_type": "classification",
+      "horizon_days": 7,
+      "target_name": "HEAVY_RAIN",
+      "sample_count": 19,
+      "event_count": 0,
+      "metrics": {
+        "brier_score": 0.0,
+        "brier_skill_score": null,
+        "log_loss": 0.0,
+        "roc_auc": null,
+        "mae": null,
+        "rmse": null
+      },
+      "calibration_status": "NOT_CALIBRATED",
+      "data_status": "EVALUATED",
+      "dataset_fingerprint": "3fec50c2ef89dbfc",
+      "has_skill_over_climatology": null,
+      "notes": [
+        "BSS undefined: Climatology reference has zero variance in test partition.",
+        "ROC-AUC and PR-AUC not computable: only class 0 present in test partition."
+      ]
+    },
+    {
+      "model_id": "xgboost",
+      "model_name": "XGBoost Gradient Boosted Trees",
+      "model_family": "xgboost",
+      "task_type": "classification",
+      "horizon_days": 7,
+      "target_name": "HEAVY_RAIN",
+      "sample_count": 19,
+      "event_count": 0,
+      "metrics": {
+        "brier_score": 0.0,
+        "brier_skill_score": null,
+        "log_loss": 0.0,
+        "roc_auc": null,
+        "pr_auc": null,
+        "expected_calibration_error": 0.0,
+        "mae": null,
+        "rmse": null
+      },
+      "calibration_status": "NOT_CALIBRATED",
+      "data_status": "EVALUATED",
+      "dataset_fingerprint": "3fec50c2ef89dbfc",
+      "has_skill_over_climatology": null,
+      "notes": [
+        "BSS undefined: Climatology reference has zero variance in test partition.",
+        "ROC-AUC and PR-AUC not computable: only class 0 present in test partition."
+      ]
+    },
+    {
+      "model_id": "xgboost_calibrated",
+      "model_name": "XGBoost (Platt Calibrated)",
+      "model_family": "xgboost",
+      "task_type": "classification",
+      "horizon_days": 7,
+      "target_name": "HEAVY_RAIN",
+      "sample_count": 19,
+      "event_count": 0,
+      "metrics": {
+        "brier_score": 0.0,
+        "brier_skill_score": null,
+        "log_loss": 0.0,
+        "expected_calibration_error": 0.0
+      },
+      "calibration_status": "NOT_CALIBRATED",
+      "data_status": "DIAGNOSTIC_ONLY",
+      "dataset_fingerprint": "3fec50c2ef89dbfc",
+      "has_skill_over_climatology": null,
+      "notes": [
+        "Post-hoc calibration gated by validation sufficiency thresholds."
+      ]
+    },
+    {
+      "model_id": "lightgbm",
+      "model_name": "LightGBM Leaf-Wise Ensembles",
+      "model_family": "lightgbm",
+      "task_type": "classification",
+      "horizon_days": 7,
+      "target_name": "HEAVY_RAIN",
+      "sample_count": 19,
+      "event_count": 0,
+      "metrics": {
+        "brier_score": 0.0,
+        "brier_skill_score": null,
+        "log_loss": 0.0,
+        "roc_auc": null,
+        "pr_auc": null,
+        "expected_calibration_error": 0.0,
+        "mae": null,
+        "rmse": null
+      },
+      "calibration_status": "NOT_CALIBRATED",
+      "data_status": "EVALUATED",
+      "dataset_fingerprint": "3fec50c2ef89dbfc",
+      "has_skill_over_climatology": null,
+      "notes": [
+        "BSS undefined: Climatology reference has zero variance in test partition.",
+        "ROC-AUC and PR-AUC not computable: only class 0 present in test partition."
+      ]
+    }
+  ],
+  "stability_analysis": {
+    "target_name": "HEAVY_RAIN",
+    "horizon_days": 7,
+    "model_id": "xgboost",
+    "years_evaluated": [
+      2024,
+      2024
+    ],
+    "total_years": 2,
+    "yearly_reports": [
+      {
+        "year": 2024,
+        "sample_count": 31,
+        "event_count": 0,
+        "brier_score": 0.0,
+        "brier_skill_score": 0.0,
+        "mae": null,
+        "rmse": null,
+        "roc_auc": null,
+        "ece": null,
+        "is_degraded": false,
+        "notes": "Diagnostic within-season chronological walk-forward fold (single-season Kharif archive)."
+      },
+      {
+        "year": 2024,
+        "sample_count": 19,
+        "event_count": 0,
+        "brier_score": 0.0,
+        "brier_skill_score": 0.0,
+        "mae": null,
+        "rmse": null,
+        "roc_auc": null,
+        "ece": null,
+        "is_degraded": false,
+        "notes": "Diagnostic within-season chronological walk-forward fold (single-season Kharif archive)."
+      }
+    ],
+    "distribution_stats": {
+      "brier_score": {
+        "metric_name": "brier_score",
+        "count": 2,
+        "mean": 0.0,
+        "median": 0.0,
+        "std": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "iqr": 0.0
+      },
+      "brier_skill_score": {
+        "metric_name": "brier_skill_score",
+        "count": 2,
+        "mean": 0.0,
+        "median": 0.0,
+        "std": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "iqr": 0.0
+      }
+    },
+    "degraded_years": [],
+    "stability_status": "INSUFFICIENT_SEASONS",
+    "notes": "Historical record spans 2 season(s). Cross-season stability and variance statistics require >= 3 observation seasons for meaningful assessment."
+  },
+  "block_reports": [
+    {
+      "block_id": "UP_LKO_BKT",
+      "block_name": "Bakshi Ka Talab",
+      "sample_count": 122,
+      "years_available": [
+        2024
+      ],
+      "target_event_count": 0,
+      "metrics": {
+        "brier_score": 0.0,
+        "brier_skill_score": 0.0,
+        "mae": null,
+        "rmse": null
+      },
+      "data_status": "EVALUATED",
+      "spatial_resolution_verified": "BLOCK"
+    }
+  ],
+  "warnings": [
+    "Year 2024 has single-class distribution for 'target_false_onset_14d'.",
+    "Year 2024 has single-class distribution for 'target_heavy_rain_7d'.",
+    "Year 2024 has single-class distribution for 'target_heavy_rain_14d'.",
+    "Year 2024 has single-class distribution for 'target_rain_anomaly_7d_pct'.",
+    "Year 2024 has single-class distribution for 'target_anomaly_category_7d'.",
+    "Available observation years (1) is less than the required minimum (5 seasons). Currently available: [2024].",
+    "Complete monsoon seasons (1) is less than required (5).",
+    "Multi-year operational validation is inactive. Current single-season archive (Kharif 2024) is evaluated for diagnostic verification only."
+  ]
+}

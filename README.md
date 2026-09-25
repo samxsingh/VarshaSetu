@@ -2,7 +2,7 @@
 > *“From climate signals to confident farm decisions.”*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Status: Phase 4D Complete](https://img.shields.io/badge/Status-Phase%204D%20Complete-emerald.svg)](#roadmap)
+[![Status: Phase 4E Complete](https://img.shields.io/badge/Status-Phase%204E%20Complete-emerald.svg)](#roadmap)
 [![Stack: TypeScript & Python](https://img.shields.io/badge/Stack-TypeScript%20%7C%20Python%203.11-slate.svg)](#technology-stack)
 
 ---
@@ -28,7 +28,7 @@ cd backend
 npm install
 npm run migrate   # Applies 7 migrations (geography, auth, sources, ingestion)
 npm run seed      # Seeds demonstration administrative hierarchy & demo users
-npm test          # Runs 45 API, RBAC, downscaling, calibration, and hindcasting tests
+npm test          # Runs 54 API, RBAC, downscaling, calibration, hindcasting, and forecast tests
 npm run dev       # Starts backend API on http://localhost:5001
 ```
 
@@ -38,7 +38,7 @@ cd ml-service
 python3.11 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-pytest            # Runs 71 provider, tree ensemble, SHAP, calibration, and hindcasting tests
+pytest            # Runs 99 provider, tree ensemble, SHAP, calibration, hindcasting, and forecast tests
 uvicorn app.main:app --port 8000 --reload  # Starts ML service on http://localhost:8000
 ```
 
@@ -46,7 +46,7 @@ uvicorn app.main:app --port 8000 --reload  # Starts ML service on http://localho
 ```bash
 cd frontend
 npm install
-npm test          # Runs 19 UI, accessibility, calibration, and hindcasting lab tests
+npm test          # Runs 31 UI, accessibility, calibration, hindcasting, and forecast tests
 npm run dev       # Starts Vite dev server on http://localhost:5173
 ```
 
@@ -59,6 +59,7 @@ npm run dev       # Starts Vite dev server on http://localhost:5173
 - **[ML Downscaling & Tree Ensembles](docs/ml-downscaling.md):** XGBoost/LightGBM ensembles, spatial downscaling guardrails, multi-model benchmarking, and SHAP explainability.
 - **[Probabilistic Calibration & Reliability](docs/probabilistic-calibration.md):** Platt/Isotonic calibration, reliability diagrams, Murphy (1973) Brier score decomposition, and data sufficiency gatekeepers.
 - **[Multi-Year Validation & Hindcasting](docs/hindcasting-validation.md):** Walk-forward backtesting, multi-horizon evaluation, cross-season stability, feature drift (PSI/KS), and multi-year data gate.
+- **[Operational Forecast Products & API](docs/forecast-products.md):** Scientific forecast schemas, multi-tier operational gating, retrospective verification, uncertainty intervals, and domain SHAP explainability.
 - **[Scientific Data Catalog](docs/scientific-data-catalog.md):** Specification of ENSO, IOD, MJO, and ERA5-Land variables, physical bounds QC, and derived features.
 - **[Data Pipeline Architecture](docs/data-pipeline.md):** End-to-end ingestion lifecycle, retry policies, Parquet storage, and PostgreSQL tracking.
 - **[Provider Integration Guide](docs/provider-integration.md):** Connection contracts, parsing protocols, and rate-limiting resilience for NOAA, BoM, and Open-Meteo.
@@ -211,8 +212,8 @@ Key environment parameters:
 - **Phase 4B (Complete):** Operational Downscaling, XGBoost/LightGBM Ensembles & SHAP Explainability.
 - **Phase 4C (Complete):** Probabilistic Calibration, Model Validation & Scientific Forecast Reliability.
 - **Phase 4D (Complete):** Multi-Year Validation, Hindcasting & Forecast Skill Evaluation.
-- **Phase 4E (Pending):** Feature Store, Real-Time Inference & Rolling Forecast Serving.
-- **Phase 4F (Pending):** Explainability, Model Monitoring & Production Model Governance.
+- **Phase 4E (Complete):** Operational Forecast Products, Forecast API, Scientific Explainability & Multi-Tier Gating.
+- **Phase 4F (Pending):** Production Ensembling, Spatial Teleconnections & Advanced Downscaling.
 - **Phase 5 (Pending):** Agronomic Rules Engine & What-If Decision Simulator.
 - **Phase 6 (Pending):** Voice capabilities, Bhashini multilingual translation, and broadcast distribution.
 
