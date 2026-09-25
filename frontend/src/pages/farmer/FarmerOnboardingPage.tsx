@@ -14,10 +14,11 @@ import {
   Ruler,
 } from 'lucide-react';
 import { useFarmerStore, DEFAULT_DEMO_SELECTION } from '../../stores/useFarmerStore';
+import { geographyService } from '../../services/geographyService';
 import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
-import { CropType, CropGrowthStage, IrrigationFacility, SoilType } from '@shared/types';
+import { CropType, CropGrowthStage, IrrigationFacility, SoilType, StateEntity, DistrictEntity, BlockEntity, PanchayatEntity } from '@shared/types';
 
 export const FarmerOnboardingPage: React.FC = () => {
   const { t } = useTranslation();
@@ -39,6 +40,62 @@ export const FarmerOnboardingPage: React.FC = () => {
   } = useFarmerStore();
 
   const [currentStep, setCurrentStep] = useState(1);
+  const [states, setStates] = useState<StateEntity[]>([]);
+  const [districts, setDistricts] = useState<DistrictEntity[]>([]);
+  const [blocks, setBlocks] = useState<BlockEntity[]>([]);
+  const [panchayats, setPanchayats] = useState<PanchayatEntity[]>([]);
+  const [isLiveGeography, setIsLiveGeography] = useState(false);
+  const [geoLoading, setGeoLoading] = useState(false);
+
+  React.useEffect(() => {
+    async function loadGeography() {
+      setGeoLoading(true);
+      try {
+        const statesRes = await geographyService.getStates();
+        if (statesRes.success && statesRes.data.length > 0) {
+          setStates(statesRes.data);
+          const defaultState = statesRes.data[0];
+          const distRes = await geographyService.getDistricts(defaultState.id);
+          if (distRes.success && distRes.data.length > 0) {
+            setDistricts(distRes.data);
+            const defaultDist = distRes.data[0];
+            const blocksRes = await geographyService.getBlocks(defaultDist.id);
+            if (blocksRes.success && blocksRes.data.length > 0) {
+              setBlocks(blocksRes.data);
+              setIsLiveGeography(true);
+              const bktBlock = blocksRes.data.find((b) => b.name === location.block) || blocksRes.data[0];
+              const panchRes = await geographyService.getPanchayats(bktBlock.id);
+              if (panchRes.success && panchRes.data.length > 0) {
+                setPanchayats(panchRes.data);
+              }
+            }
+          }
+        }
+      } catch {
+        // Graceful fallback to default demo selection
+        setIsLiveGeography(false);
+      } finally {
+        setGeoLoading(false);
+      }
+    }
+    loadGeography();
+  }, [location.block]);
+
+  const handleBlockChange = async (blockName: string) => {
+    setLocation({ block: blockName });
+    const selectedBlock = blocks.find((b) => b.name === blockName);
+    if (selectedBlock) {
+      try {
+        const res = await geographyService.getPanchayats(selectedBlock.id);
+        if (res.success && res.data.length > 0) {
+          setPanchayats(res.data);
+          setLocation({ village: res.data[0].name, panchayat: res.data[0].name });
+        }
+      } catch {
+        // Retain existing
+      }
+    }
+  };
 
   const cropsList: { type: CropType; label: string; icon: string; desc: string }[] = [
     { type: 'PADDY', label: t('crops.PADDY'), icon: '🌾', desc: 'Basmati, Swarna, Swarna Sub-1, Sambha' },
@@ -130,12 +187,18 @@ export const FarmerOnboardingPage: React.FC = () => {
           <div className="bg-brand-teal-tint/50 border border-brand-teal-border p-4 rounded-xl space-y-2">
             <div className="flex items-center justify-between">
               <span className="font-heading font-semibold text-xs text-brand-teal-dark uppercase tracking-wider">
-                Default Demonstration Location
+                Geographic Hierarchy
               </span>
-              <Badge variant="teal" size="sm">Lucknow District, UP</Badge>
+              {isLiveGeography ? (
+                <Badge variant="emerald" size="sm">POSTGIS / API CONNECTED</Badge>
+              ) : (
+                <Badge variant="teal" size="sm">DEFAULT DEMO: LUCKNOW, UP</Badge>
+              )}
             </div>
             <p className="text-xs text-slate-700 leading-relaxed">
-              In this development version, geography is initialized to Lucknow District. You can select sample blocks and panchayats below:
+              {isLiveGeography
+                ? 'Administrative nodes loaded live from PostgreSQL / PostGIS backend hierarchy.'
+                : 'In development mode, initialized to Lucknow District. Select demonstration blocks and panchayats:'}
             </p>
           </div>
 
@@ -147,7 +210,7 @@ export const FarmerOnboardingPage: React.FC = () => {
               <input
                 type="text"
                 disabled
-                value={location.state}
+                value={states.length > 0 ? states[0].name : location.state}
                 className="w-full bg-slate-100 border border-surface-border rounded-lg p-2.5 text-xs text-slate-700 font-medium"
               />
             </div>
@@ -158,7 +221,7 @@ export const FarmerOnboardingPage: React.FC = () => {
               <input
                 type="text"
                 disabled
-                value={location.district}
+                value={districts.length > 0 ? districts[0].name : location.district}
                 className="w-full bg-slate-100 border border-surface-border rounded-lg p-2.5 text-xs text-slate-700 font-medium"
               />
             </div>
@@ -168,14 +231,24 @@ export const FarmerOnboardingPage: React.FC = () => {
               </label>
               <select
                 value={location.block}
-                onChange={(e) => setLocation({ block: e.target.value })}
+                onChange={(e) => handleBlockChange(e.target.value)}
                 className="w-full bg-white border border-surface-border rounded-lg p-2.5 text-xs text-slate-900 font-medium focus:ring-1 focus:ring-brand-teal"
               >
-                <option value="Bakshi Ka Talab">Bakshi Ka Talab</option>
-                <option value="Malihabad">Malihabad</option>
-                <option value="Mohanlalganj">Mohanlalganj</option>
-                <option value="Sarojininagar">Sarojininagar</option>
-                <option value="Gosainganj">Gosainganj</option>
+                {blocks.length > 0 ? (
+                  blocks.map((b) => (
+                    <option key={b.id} value={b.name}>
+                      {b.name}
+                    </option>
+                  ))
+                ) : (
+                  <>
+                    <option value="Bakshi Ka Talab">Bakshi Ka Talab</option>
+                    <option value="Malihabad">Malihabad</option>
+                    <option value="Mohanlalganj">Mohanlalganj</option>
+                    <option value="Sarojininagar">Sarojininagar</option>
+                    <option value="Gosainganj">Gosainganj</option>
+                  </>
+                )}
               </select>
             </div>
             <div>
@@ -187,11 +260,20 @@ export const FarmerOnboardingPage: React.FC = () => {
                 onChange={(e) => setLocation({ village: e.target.value, panchayat: e.target.value })}
                 className="w-full bg-white border border-surface-border rounded-lg p-2.5 text-xs text-slate-900 font-medium focus:ring-1 focus:ring-brand-teal"
               >
-                <option value="Bhaisamau">Bhaisamau (भैंसामऊ)</option>
-                <option value="Asti">Asti (अस्ती)</option>
-                <option value="Bargadi Magath">Bargadi Magath (बरगदी मगठ)</option>
-                <option value="Itaunja">Itaunja (इटौंजा)</option>
-                <option value="Kathwara">Kathwara (कठवारा)</option>
+                {panchayats.length > 0 ? (
+                  panchayats.map((p) => (
+                    <option key={p.id} value={p.name}>
+                      {p.name}
+                    </option>
+                  ))
+                ) : (
+                  <>
+                    <option value="Bhaisamau">Bhaisamau (भैंसामऊ)</option>
+                    <option value="Rampur">Rampur (रामपुर)</option>
+                    <option value="Mampur">Mampur (मामपुर)</option>
+                    <option value="Kamalpur">Kamalpur (कमलपुर)</option>
+                  </>
+                )}
               </select>
             </div>
           </div>

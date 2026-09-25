@@ -2,7 +2,7 @@
 > *“From climate signals to confident farm decisions.”*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Status: Phase 1A Complete](https://img.shields.io/badge/Status-Phase%201A%20Complete-teal.svg)](#roadmap)
+[![Status: Phase 2 Complete](https://img.shields.io/badge/Status-Phase%202%20Complete-teal.svg)](#roadmap)
 [![Language: TypeScript & Python](https://img.shields.io/badge/Stack-TypeScript%20%7C%20Python-slate.svg)](#technology-stack)
 
 ---
@@ -12,6 +12,61 @@
 **VarshaSetu** is a production-oriented, hyperlocal monsoon intelligence and agricultural decision-support platform designed for Indian smallholder and rainfed farmers, extension officers, and agricultural planners.
 
 Operating at the critical block and gram panchayat scale, VarshaSetu bridges the gap between planetary climate modulators (El Niño-Southern Oscillation, Indian Ocean Dipole, Madden-Julian Oscillation) and village-level farm decisions. Rather than presenting generic daily weather forecasts or raw meteorological charts, VarshaSetu delivers **calibrated, probabilistic medium-range (7–30 day) forecasts** translated into **crop-stage-specific agronomic advice** and **interactive "what-if" risk simulations**.
+
+---
+
+## 2. Quickstart & Local Development
+
+### Prerequisites
+- Node.js 20+ LTS
+- PostgreSQL 16+ (with PostGIS or compatibility layer)
+
+### Backend Setup (Node.js / Express / PostGIS)
+```bash
+# Navigate to backend
+cd backend
+
+# Install dependencies
+npm install
+
+# Run database migrations (creates 6 relational tables + PostGIS spatial layer)
+npm run migrate
+
+# Seed demonstration data (Lucknow district hierarchy, demo boundary, 5 persona users)
+npm run seed
+
+# Run backend test suite (24 tests: health, geography, spatial GIS, auth, RBAC)
+npm test
+
+# Start development server on port 5001
+npm run dev
+```
+
+### Frontend Setup (React 18 / Vite / Tailwind)
+```bash
+# Navigate to frontend
+cd frontend
+
+# Install dependencies
+npm install
+
+# Run unit tests (7 tests: components, banners, selectors)
+npm test
+
+# Start frontend dev server on port 5173
+npm run dev
+```
+
+---
+
+## 3. Comprehensive Documentation
+
+- **[Product Requirements (PRD)](docs/PRD.md):** 28 sections detailing user personas, 4 forecast targets, and agronomic logic.
+- **[System Architecture](docs/architecture.md):** 23 sections covering data flows, PostGIS schemas, ML ensemble architecture, and security.
+- **[Design System Guidelines](docs/design-system.md):** Color tokens, typography, accessibility (WCAG AA), and component hierarchy.
+- **[REST API Specification](docs/api.md):** Complete `/api/v1` endpoint guide with request/response schemas and examples.
+- **[Database & Geospatial Engine](docs/database.md):** PostgreSQL/PostGIS schemas, spatial indexing, migrations, and seed credentials.
+- **[Project Progress Tracker](docs/progress.md):** Up-to-date roadmap, phase milestones, and completed features.
 
 ---
 
