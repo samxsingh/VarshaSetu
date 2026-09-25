@@ -3,6 +3,7 @@ import { healthRoutes } from './healthRoutes';
 import { authRoutes } from './authRoutes';
 import { geographyRoutes } from './geographyRoutes';
 import { dataHealthRoutes } from './dataHealthRoutes';
+import { modelRoutes } from './modelRoutes';
 import { requireAuth } from '../middleware/authMiddleware';
 import { requireRole, requirePermission } from '../middleware/rbacMiddleware';
 import { sendSuccess } from '../utils/responseEnvelope';
@@ -15,6 +16,7 @@ apiRouter.use('/health', healthRoutes);
 apiRouter.use('/auth', authRoutes);
 apiRouter.use('/geography', geographyRoutes);
 apiRouter.use('/data-health', dataHealthRoutes);
+apiRouter.use('/models', modelRoutes);
 
 // RBAC demonstration & test endpoints
 apiRouter.get(

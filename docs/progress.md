@@ -3,7 +3,7 @@
 
 ---
 
-#### Current Phase: PHASE 3
+#### Current Phase: PHASE 4A
 **Status:** COMPLETED  
 **Last Updated:** September 2026
 
@@ -132,20 +132,68 @@
 
 ---
 
+## 6. Phase 4A: ML Scientific Foundation, Target Definitions & Baseline Forecasting Engine
+- **Status:** COMPLETED
+
+### Completed in Phase 4A
+- [x] **Programmatic Data Inspection Utility (`ml-service/app/inspection/inspector.py`):**
+  - Audited all Phase 3 datasets: `climate_mjo_rmm` (17,876 daily rows), `climate_iod_dmi` (917 monthly rows), `climate_enso_nino34` (920 monthly rows), `weather_lucknow_observations` (122 daily rows).
+  - Validated 0 duplicate records, 0.0% missing cells, and strict schema datatypes.
+- [x] **Authoritative Target Definitions (`ml-service/app/targets/`):**
+  - `MonsoonOnsetDetector`: Multi-day rainfall burst framework ($\ge 25\text{ mm}$ over 3 days with $\ge 2$ rainy days $\ge 2.5\text{ mm}$ in Kharif window).
+  - `FalseOnsetDetector`: Deterministic detection of onset surge followed by $\ge 7$ dry days desiccation hiatus within 14 days.
+  - `DrySpellDetector`: Ordinary dry spell ($\ge 5$ consecutive dry days $< 1.0\text{ mm}$) vs. candidate break-monsoon ($\ge 10$ days in July-August).
+  - `HeavyRainDetector`: Centralized IMD threshold ($\ge 64.5\text{ mm/24h}$) and multi-category classification.
+  - `RainfallAnomalyCalculator`: Absolute anomaly ($P_{\text{obs}} - P_{\text{clim}}$) and percentage departure with zero-climatology protection and 5-tier classification.
+- [x] **Empirical Climatology Baseline Engine (`ml-service/app/baselines/climatology.py`):**
+  - Day-of-year and target-level empirical expectations calculated from observations without ML fabrication.
+  - Transparently returns `status: "INSUFFICIENT_HISTORY"` when long-term records are absent.
+- [x] **Temporal Feature Engineering & Registry (`ml-service/app/features/`):**
+  - Antecedent rainfall rolling sums (1d, 3d, 7d, 14d, 30d), rainy days count, running dry/wet days.
+  - Thermodynamics (Tmax, Tmin, diurnal temperature range), surface pressure, wind speed.
+  - Causal teleconnection lags (MJO 3d, 7d, 14d; ENSO 1m; IOD 1m).
+  - Cyclical harmonic calendar encoding (`sin_doy`, `cos_doy`).
+  - Feature definitions cataloged in `FEATURE_REGISTRY`.
+- [x] **Chronological Splitting & Leakage Prevention (`ml-service/app/training/`):**
+  - Non-random 70/15/15 chronological train/validation/test partitions.
+  - `LeakageAuditor`: Programmatic interception of temporal inversion, overlapping dates, target leakage in predictor matrices, and scaler contamination.
+- [x] **Baseline Statistical Models (`ml-service/app/models/baseline/`):**
+  - `BaselineLogisticModel`: $L_2$-penalized logistic regression for binary targets (`HEAVY_RAIN`, `DRY_SPELL`, `MONSOON_ONSET`).
+  - `BaselineRegressionModel`: Ridge regression for continuous rainfall sums and anomalies.
+  - Feature standardization fitted strictly on training data.
+- [x] **Probability Calibration Foundation (`ml-service/app/models/calibration.py`):**
+  - Platt scaling architecture. Explicitly reports `status = "NOT_CALIBRATED"` when validation cohort is too small ($N < 30$), preventing fabricated calibration.
+- [x] **Model Evaluation & Climatological Skill Comparison (`ml-service/app/evaluation/`):**
+  - Brier score, Log loss, ROC-AUC, PR-AUC, ECE, MAE, RMSE, $R^2$.
+  - Brier Skill Score ($BSS$) and MAE Skill Score ($MSS$) comparing baseline models directly against naive climatology.
+- [x] **Experiment Registry & Reproducibility (`ml-service/app/experiments/`):**
+  - Machine-readable JSON manifests logged to `ml-service/artifacts/experiments/`.
+- [x] **Backend & Analyst UI Integration:**
+  - Backend endpoints (`GET /api/v1/models/status`, `GET /api/v1/models/experiments`, `POST /api/v1/models/baselines/train`).
+  - Analyst `ModelsPage.tsx` wired to real telemetry, displaying live baseline experiments and climatological skill scores.
+- [x] **Testing & Validation:**
+  - `pytest ml-service/tests`: 26/26 tests passed in 0.61s.
+  - `npm test` in `backend/`: 31/31 passed in 1.59s.
+  - `npm test` in `frontend/`: 9/9 passed in 1.21s.
+  - `npm run build` in both `frontend` and `backend`: 0 errors.
+
+---
+
 ### Phase Status & Guardrails Summary
 - **Phase 1A:** COMPLETED
 - **Phase 1B:** COMPLETED
 - **Phase 1C:** COMPLETED
 - **Phase 2:** COMPLETED
 - **Phase 3:** COMPLETED
-- **Phase 4:** NOT STARTED (Strict sequence enforced)
+- **Phase 4A:** **COMPLETED**
+- **Phase 4B:** **NOT STARTED** (Strict sequence enforced)
 
 ---
 
-## 6. Pending (Future Phases)
-- [ ] **Phase 4: ML Prediction Models & Probabilistic Downscaling Engine**
+## 7. Pending (Future Phases)
+- [ ] **Phase 4B: Operational ML Downscaling & Gradient Boosted Ensembles**
   - DO NOT START UNTIL INSTRUCTED.
-  - Will implement: 30-year climatology baselines, downscaling ensemble (LightGBM/XGBoost), probabilistic calibration, onset/break/heavy-rain probability calculations.
+  - Will implement: Multi-decadal reanalysis ingestion, LightGBM/XGBoost probabilistic models, spatial hierarchical pooling, SHAP explainability.
 - [ ] **Phase 5: Agronomic Rules Engine & What-If Simulator**
   - Declarative crop rules matrix across growth stages.
   - What-If scenario comparison calculation engine.
@@ -155,7 +203,8 @@
 
 ---
 
-## 7. Technical Debt
-- **Zero Technical Debt Introduced:** Fully typed interfaces, genuine meteorological feeds (no simulated data passed off as real), exact physical unit conversions, atomic file persistence, and robust error handling.
+## 8. Technical Debt
+- **Zero Technical Debt Introduced:** Fully typed interfaces, zero fabricated forecast probabilities or accuracies, strict causal feature engineering, and automated temporal leakage interception.
+
 
 

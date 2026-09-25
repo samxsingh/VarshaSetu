@@ -35,6 +35,11 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+*.joblib
+*.pkl
+*.model
+ml-service/artifacts/models/*.joblib
+ml-service/artifacts/models/*.pkl
 .pytest_cache/
 .coverage
 htmlcov/

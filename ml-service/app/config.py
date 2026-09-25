@@ -19,6 +19,12 @@ class Settings(BaseSettings):
     PROCESSED_DATA_DIR: Path = BASE_DIR / "data" / "processed"
     FEATURE_DATA_DIR: Path = BASE_DIR / "data" / "features"
     
+    # ML Artifacts paths
+    ARTIFACTS_DIR: Path = BASE_DIR / "artifacts"
+    MODELS_DIR: Path = BASE_DIR / "artifacts" / "models"
+    METRICS_DIR: Path = BASE_DIR / "artifacts" / "metrics"
+    EXPERIMENTS_DIR: Path = BASE_DIR / "artifacts" / "experiments"
+    
     # Scientific Feature Calculation Thresholds
     DRY_DAY_THRESHOLD_MM: float = 1.0  # Configurable: Daily rainfall < 1.0 mm is a dry day
     HEAVY_RAIN_THRESHOLD_MM: float = 64.5  # IMD Heavy rainfall threshold: >= 64.5 mm / 24h
@@ -36,3 +42,6 @@ settings = Settings()
 settings.RAW_DATA_DIR.mkdir(parents=True, exist_ok=True)
 settings.PROCESSED_DATA_DIR.mkdir(parents=True, exist_ok=True)
 settings.FEATURE_DATA_DIR.mkdir(parents=True, exist_ok=True)
+settings.MODELS_DIR.mkdir(parents=True, exist_ok=True)
+settings.METRICS_DIR.mkdir(parents=True, exist_ok=True)
+settings.EXPERIMENTS_DIR.mkdir(parents=True, exist_ok=True)

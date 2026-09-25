@@ -1,0 +1,46 @@
+{
+  "experiment_id": "exp_rainfall_amount_7d_20260925_092726",
+  "model_name": "RidgeRegressionBaseline",
+  "model_version": "1.0.0-baseline",
+  "feature_set_version": "1.0.0",
+  "target_name": "rainfall_amount",
+  "target_version": "1.0.0",
+  "horizon_days": 7,
+  "training_period": "2024-06-01 00:00:00 to 2024-08-19 00:00:00",
+  "validation_period": "2024-08-20 00:00:00 to 2024-09-05 00:00:00",
+  "test_period": "2024-09-06 00:00:00 to 2024-09-23 00:00:00",
+  "geography": "UP_LKO_BKT",
+  "created_at": "2026-09-25T09:27:26.273235",
+  "metrics": {
+    "test": {
+      "sample_count": 18,
+      "evaluation_period": "2024-09-06 00:00:00 to 2024-09-23 00:00:00",
+      "mae": 54.83,
+      "rmse": 69.24,
+      "r2_score": -1.6808,
+      "mean_observed": 54.83,
+      "mean_predicted": 0.0,
+      "metric_notes": {}
+    }
+  },
+  "comparison_to_climatology": {
+    "model_name": "RidgeRegressionBaseline_rainfall_amount",
+    "target_name": "rainfall_amount",
+    "horizon_days": 7,
+    "evaluation_period": "2024-09-06 00:00:00 to 2024-09-23 00:00:00",
+    "sample_count": 18,
+    "model_brier_score": null,
+    "climatology_brier_score": null,
+    "brier_skill_score": null,
+    "model_mae": 54.83,
+    "climatology_mae": 39.81,
+    "mae_skill_score": -0.3774,
+    "has_skill_over_climatology": false,
+    "scientific_summary": "Model does NOT outperform climatology (MSS = -0.3774, MAE: 54.83mm vs 39.81mm)."
+  },
+  "calibration_status": "NOT_APPLICABLE",
+  "dataset_version": "1.0.0",
+  "git_commit": null,
+  "status": "EVALUATED",
+  "notes": null
+}

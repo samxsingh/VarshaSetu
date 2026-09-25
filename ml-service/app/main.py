@@ -104,3 +104,73 @@ async def trigger_ingestion(pipeline: str = Query("all", enum=["enso", "iod", "m
     else:
         results = await IngestionPipeline.run_all_pipelines()
         return {"status": "completed", "results": [r.model_dump(mode="json") for r in results]}
+
+# ====================================================================
+# PHASE 4A — SCIENTIFIC ML & BASELINE FORECASTING ENDPOINTS
+# ====================================================================
+
+from .inspection.inspector import DataInspector
+from .experiments.registry import ExperimentRegistry
+from .training.pipeline import BaselineTrainingPipeline
+
+@app.get("/inspection/datasets")
+def inspect_all_datasets() -> Dict[str, Any]:
+    """Inspect all Phase 3 processed and engineered datasets."""
+    reports = DataInspector.inspect_all()
+    return {
+        "status": "success",
+        "datasets": {k: v.model_dump(mode="json") for k, v in reports.items()}
+    }
+
+@app.get("/models/status")
+def get_models_status() -> Dict[str, Any]:
+    """Model operational readiness and Phase 4A baseline registry status."""
+    experiments = ExperimentRegistry.list_experiments()
+    return {
+        "service": settings.SERVICE_NAME,
+        "phase": "PHASE_4A_BASELINE_STAGE",
+        "operational_status": "BASELINE_EVALUATION_ACTIVE",
+        "operational_inference_available": False,
+        "message": "Forecast models are in Phase 4A baseline evaluation stage. Operational downscaling pending Phase 4B.",
+        "active_baselines": [
+            "LogisticRegressionBaseline (HEAVY_RAIN 7d, 14d)",
+            "LogisticRegressionBaseline (DRY_SPELL 7d, 14d)",
+            "RidgeRegressionBaseline (RAINFALL_AMOUNT 7d, 14d)"
+        ],
+        "total_experiments_recorded": len(experiments),
+        "latest_experiment": experiments[0].model_dump(mode="json") if experiments else None
+    }
+
+@app.get("/models/experiments")
+def list_experiments() -> Dict[str, Any]:
+    """List all recorded ML baseline experiments with metrics and climatology comparisons."""
+    experiments = ExperimentRegistry.list_experiments()
+    return {
+        "total": len(experiments),
+        "experiments": [e.model_dump(mode="json") for e in experiments]
+    }
+
+@app.get("/models/experiments/{exp_id}")
+def get_experiment_by_id(exp_id: str) -> Dict[str, Any]:
+    """Retrieve full manifest and metrics for a specific experiment."""
+    exp = ExperimentRegistry.get_experiment(exp_id)
+    if not exp:
+        raise HTTPException(status_code=404, detail=f"Experiment '{exp_id}' not found.")
+    return exp.model_dump(mode="json")
+
+@app.post("/models/baselines/train")
+def train_baseline_models(target: str = Query("ALL", enum=["HEAVY_RAIN", "DRY_SPELL", "RAINFALL_AMOUNT", "ALL"])) -> Dict[str, Any]:
+    """Trigger baseline model training and evaluation against climatology."""
+    results = []
+    if target in ["HEAVY_RAIN", "ALL"]:
+        results.append(BaselineTrainingPipeline.run_binary_baseline(target_name="HEAVY_RAIN", horizon_days=7))
+    if target in ["DRY_SPELL", "ALL"]:
+        results.append(BaselineTrainingPipeline.run_binary_baseline(target_name="DRY_SPELL", horizon_days=7))
+    if target in ["RAINFALL_AMOUNT", "ALL"]:
+        results.append(BaselineTrainingPipeline.run_continuous_baseline(target_name="rainfall_amount", horizon_days=7))
+
+    return {
+        "status": "success",
+        "experiments_completed": len(results),
+        "results": results
+    }
