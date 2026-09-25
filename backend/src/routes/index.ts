@@ -8,6 +8,7 @@ import { forecastRoutes } from './forecastRoutes';
 import { eventRoutes } from './eventRoutes';
 import { notificationRoutes } from './notificationRoutes';
 import { operationRoutes } from './operationRoutes';
+import { advisoryRoutes } from './advisoryRoutes';
 import { requireAuth } from '../middleware/authMiddleware';
 import { requireRole, requirePermission } from '../middleware/rbacMiddleware';
 import { sendSuccess } from '../utils/responseEnvelope';
@@ -25,6 +26,8 @@ apiRouter.use('/forecasts', forecastRoutes);
 apiRouter.use('/events', eventRoutes);
 apiRouter.use('/notifications', notificationRoutes);
 apiRouter.use('/operations', operationRoutes);
+apiRouter.use('/agronomy', advisoryRoutes);
+apiRouter.use('/advisories', advisoryRoutes);
 
 // RBAC demonstration & test endpoints
 apiRouter.get(

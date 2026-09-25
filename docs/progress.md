@@ -374,6 +374,64 @@
 
 ---
 
+## 10. Phase 5A: Agronomic Rules Engine & Explainable Advisory Foundation
+- **Status:** COMPLETED
+
+### Completed in Phase 5A
+- [x] **Agronomic Schema Contracts (`ml-service/app/agronomy/schemas.py`):**
+  - Controlled Enums: `CropType` (6 crops: `GENERAL`, `PADDY`, `WHEAT`, `MAIZE`, `PULSES`, `MUSTARD`), `GrowthStage` (8 stages + `ALL`), `AdvisorySeverity` (`INFO`, `WATCH`, `ELEVATED`, `HIGH`), `AdvisoryCategory` (`WEATHER_RISK`, `WATER_STRESS`, `RAINFALL_ANOMALY`, `MONSOON_STATUS`, `FIELD_CONDITION`, `GENERAL_INFORMATION`).
+  - Pydantic models: `AgronomicRule`, `AdvisoryEvidence`, `AdvisoryExplanation`, `ScientificAdvisory`, `BlockedAdvisoryResponse`, `ScenarioContract`, `ScenarioResult`.
+  - Enforced `operational_status = DIAGNOSTIC_ONLY` and `classification = SCENARIO_INDICATOR_ONLY`.
+- [x] **Controlled Crop Registry (`ml-service/app/agronomy/crops.py`):**
+  - Closed catalog mapping crop species to botanical names, supported growth stages, weather hazards, and `INFORMATIONAL_ONLY` status.
+- [x] **Agronomic Rule Catalog (`ml-service/app/agronomy/rules/`):**
+  - 9 pure deterministic evaluators:
+    1. `AGRO_HEAVY_RAIN_INFO_001`: IMD $\ge 64.5$ mm threshold, $p \ge 0.40$.
+    2. `AGRO_PADDY_HEAVY_RAIN_HARVEST_001`: Paddy maturity/harvesting heavy rain watch, $p \ge 0.45$.
+    3. `AGRO_EXTREME_RAIN_ALERT_001`: Convective alert $\ge 204.5$ mm, $p \ge 0.85$, high severity.
+    4. `AGRO_DRY_SPELL_INFO_001`: IMD $\ge 5$ consecutive dry days, $p \ge 0.45$.
+    5. `AGRO_PADDY_DRY_SPELL_VEGETATIVE_001`: Vegetative tillering moisture watch, $p \ge 0.45$.
+    6. `AGRO_MONSOON_ONSET_INFO_001`: Onset surge $\ge 25$ mm over 3 days, $p \ge 0.50$.
+    7. `AGRO_FALSE_ONSET_RISK_001`: False onset hiatus break $\ge 7$ dry days, $p \ge 0.50$.
+    8. `AGRO_RAINFALL_DEFICIT_ANOMALY_001`: Cumulative anomaly $\le -50\%$, $p \ge 0.45$.
+    9. `AGRO_RAINFALL_SURPLUS_ANOMALY_001`: Cumulative anomaly $\ge +50\%$, $p \ge 0.50$.
+- [x] **Rule Registry Engine (`ml-service/app/agronomy/registry.py`):**
+  - Filter by target meteorological event, crop type, and growth stage with deterministic priority sorting.
+- [x] **Scientific Evidence Factory (`ml-service/app/agronomy/evidence.py`):**
+  - Links generated advisories to underlying calibrated forecasts, Brier skill score, isotonic ECE, station coverage (`UP_LKO_BKT`), and freshness (`HISTORICAL_ONLY`).
+- [x] **Deterministic Agronomic Safety Gate (`ml-service/app/agronomy/safety.py`):**
+  - 13 pre-release checks blocking imperative verbs, yield predictions, revenue loss claims, commercial pesticide brands, uncalibrated raw probabilities, missing confidence intervals, and causal attribution phrasing.
+- [x] **Non-Causal Explanation Generator (`ml-service/app/agronomy/explain.py`):**
+  - Plain-language explanation with statistical correlation framing and mandatory uncertainty disclosures.
+- [x] **What-If Scenario Simulator Foundation (`ml-service/app/agronomy/simulator/scenarios.py`):**
+  - Sensitivity evaluations for Sowing Delay, Supplemental Irrigation, and Seasonal Rainfall Anomaly.
+  - Classifies outputs strictly as `SCENARIO_INDICATOR_ONLY` with prominent disclaimers on absence of crop yield models.
+- [x] **Advisory Engine & Deduplication (`ml-service/app/agronomy/advisory.py`):**
+  - Deterministic SHA-256 deduplication hashing over `(forecast_id, rule_id, crop, stage, valid_window)`.
+  - Immutable JSON artifact storage in `ml-service/artifacts/advisories/`.
+- [x] **ML Service REST API (`ml-service/app/main.py`):**
+  - Mounted `/agronomy/status`, `/agronomy/rules`, `/agronomy/rules/{id}`, `/agronomy/crops`, `/agronomy/crops/{id}`, `/agronomy/evaluate`, `/agronomy/advisories/generate`, `/agronomy/advisories`, `/agronomy/advisories/{id}`, `/agronomy/simulate`.
+  - 137/137 pytest tests passing in `ml-service/`.
+- [x] **PostgreSQL Schema & Repositories (`backend/`):**
+  - Migration `009_agronomic_advisories.sql`: tables `agronomic_advisories`, `agronomic_rule_evaluations`, `scenario_runs`. Applied via `npm run migrate`.
+  - Parameterized repository `advisoryRepository.ts` with resilience fallback.
+  - Express controller `advisoryController.ts` and routes `advisoryRoutes.ts` mounted under `/api/v1/agronomy` and `/api/v1/advisories`.
+  - RBAC: Farmers restricted to assigned block; officers/analysts/admins permitted to evaluate and generate.
+  - 74/74 backend tests passing, `tsc` zero build errors.
+- [x] **Frontend Integration & UX Hardening (`frontend/`):**
+  - Updated `advisoryService.ts` with typed methods for status, crops, rules, advisories, and scenario simulation.
+  - Upgraded `FarmerAdvisoryPage.tsx`: Crop & growth stage filters, prominent `DIAGNOSTIC_ONLY` banner, scientific evidence expandable drawer, safety gate checks panel, zero imperative commands.
+  - Upgraded `FarmerWhatIfPage.tsx`: Interactive scenario sensitivity simulator connected to backend, prominent `SCENARIO_INDICATOR_ONLY` badge, explicit disclaimer on absence of crop yield models, water stress shift and waterlogging risk change indicators.
+  - Upgraded `OfficerAdvisoriesPage.tsx`: Block-level advisory monitoring, crop & severity filters, evidence status display without competitive block rankings.
+  - Upgraded `GovernmentDashboardPage.tsx`: State Agronomic Intelligence & Safety Gate Coverage Matrix.
+  - Upgraded `ForecastLabPage.tsx`: Added "Agronomic Rules & Safety Lab" tab with live catalog, 13 safety gate check inspectors, and JSON inspection.
+  - Added unit/component tests in `AdvisoryService.test.ts`, `FarmerAdvisoryPage.test.tsx`, `FarmerWhatIfPage.test.tsx`. 52/52 frontend tests passing, Vite builds clean.
+- [x] **Documentation & Verification:**
+  - Authored comprehensive specification: `docs/agronomic-rules.md` (14 sections).
+  - Full system regression test suite: **137 ml-service + 74 backend + 52 frontend = 263/263 tests passing (100%)**.
+
+---
+
 ### Phase Status & Guardrails Summary
 - **Phase 1A:** COMPLETED
 - **Phase 1B:** COMPLETED
@@ -385,25 +443,28 @@
 - **Phase 4C:** COMPLETED
 - **Phase 4D:** COMPLETED
 - **Phase 4E:** COMPLETED
-- **Phase 4F:** **COMPLETED**
-- **Phase 5:** **NOT STARTED** (Strict sequence enforced)
+- **Phase 4F:** COMPLETED
+- **Phase 5A:** **COMPLETED**
+- **Phase 5B:** **NOT STARTED** (Strict sequence enforced)
+- **Phase 5C:** **NOT STARTED** (Strict sequence enforced)
+- **Phase 6:** **NOT STARTED** (Strict sequence enforced)
 
 ---
 
-## 10. Pending (Future Phases)
-- [ ] **Phase 5: Agronomic Rules Engine & What-If Simulator**
+## 11. Pending (Future Phases)
+- [ ] **Phase 5B: Crop-Specific Rules & Agronomic Calibrations**
   - DO NOT START UNTIL INSTRUCTED.
-  - Declarative crop rules matrix across growth stages.
-  - What-If scenario comparison calculation engine.
-  - Farmer advisory generation from downscaled forecast distributions.
+- [ ] **Phase 5C: Multi-Season Agronomic Validation**
+  - DO NOT START UNTIL INSTRUCTED.
 - [ ] **Phase 6: Voice & Dissemination Gateway**
   - Bhashini ASR/TTS contract integration.
   - WhatsApp/SMS broadcasting gateway.
 
 ---
 
-## 11. Technical Debt
-- **Zero Technical Debt Introduced:** Fully typed interfaces, zero synthetic or fabricated observations, strict chronological splitting without leakage, immutable artifact management, deterministic lifecycle state machine, cryptographic deduplication, provider-neutral delivery abstraction, and honest disclosure of single-season data limits.
+## 12. Technical Debt
+- **Zero Technical Debt Introduced:** Fully typed interfaces, zero synthetic or fabricated observations, strict chronological splitting without leakage, immutable artifact management, deterministic lifecycle state machine, cryptographic deduplication, provider-neutral delivery abstraction, 13-check deterministic safety gate, and honest disclosure of single-season data limits.
+
 
 
 

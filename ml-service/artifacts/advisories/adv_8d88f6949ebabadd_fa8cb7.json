@@ -1,0 +1,98 @@
+{
+  "advisory_id": "adv_8d88f6949ebabadd_fa8cb7",
+  "generated_at": "2026-09-25T16:05:26.924826+00:00",
+  "valid_from": "2024-09-15T00:00:00Z",
+  "valid_until": "2024-09-22T00:00:00Z",
+  "location": {
+    "block_id": "UP_LKO_BKT",
+    "spatial_resolution": "BLOCK"
+  },
+  "crop": "GENERAL",
+  "crop_stage": "ALL",
+  "severity": "WATCH",
+  "category": "WEATHER_RISK",
+  "title": "Heavy Rainfall Risk Indicator",
+  "summary": "Heavy Rainfall Risk Indicator for GENERAL (ALL) over 7-day window. Informational diagnostic indicator (Probability: 62.0%).",
+  "advisory_text": "Heavy rainfall risk indicator detected for the 7-day forecast window. Model forecasts indicate a 62.0% calibrated probability of 24h rainfall exceeding 64.5 mm.",
+  "evidence": {
+    "source": "xgboost",
+    "forecast_id": "fc_test_heavy_001",
+    "target": "HEAVY_RAIN",
+    "horizon_days": 7,
+    "probability": 0.62,
+    "point_estimate": 71.4,
+    "uncertainty": {
+      "lower": 42.1,
+      "median": null,
+      "upper": 96.2
+    },
+    "data_freshness": "HISTORICAL_ONLY",
+    "validation_status": "INSUFFICIENT_DATA",
+    "spatial_resolution": "BLOCK",
+    "features_summary": [
+      {
+        "feature": "rainfall_3d",
+        "shap_value": 0.045,
+        "description": "3-day cumulative rainfall elevates event probability"
+      }
+    ]
+  },
+  "triggered_rules": [
+    "AGRO_HEAVY_RAIN_INFO_001"
+  ],
+  "confidence_status": "NOT_OPERATIONALLY_CALIBRATED",
+  "uncertainty_description": "Forecast uncertainty range (P10-P90): 42.1 to 96.2 mm",
+  "scientific_status": "DIAGNOSTIC_ONLY",
+  "operational_status": "DIAGNOSTIC_ONLY",
+  "explanation": {
+    "why_this_advisory_exists": [
+      "Meteorological forecast probability or value met the threshold criteria for rule AGRO_HEAVY_RAIN_INFO_001.",
+      "Forecast lead horizon: 7 days.",
+      "Spatial granularity: BLOCK centroid.",
+      "Observational record freshness: HISTORICAL_ONLY.",
+      "Hindcast validation state: INSUFFICIENT_DATA (single-season record).",
+      "Operational status: DIAGNOSTIC_ONLY (operational agricultural broadcasting inactive)."
+    ],
+    "what_triggered_it": {
+      "rule_id": "AGRO_HEAVY_RAIN_INFO_001",
+      "rule_name": "Heavy Rainfall Risk Indicator",
+      "description": "Identifies elevated risk of 24h precipitation exceeding the IMD heavy rain threshold (>=64.5 mm).",
+      "target": "HEAVY_RAIN",
+      "thresholds": {
+        "probability_threshold": 0.4,
+        "rainfall_amount_threshold_mm": 64.5
+      },
+      "crop_context": "GENERAL (ALL)",
+      "scientific_source": "IMD Heavy Rainfall Standard Criteria (>= 64.5 mm / 24h)"
+    },
+    "supporting_evidence": {
+      "model_id": "xgboost",
+      "forecast_id": "fc_test_heavy_001",
+      "target_type": "HEAVY_RAIN",
+      "horizon_days": 7,
+      "forecast_probability": 0.62,
+      "point_estimate_mm": 71.4,
+      "uncertainty_range": {
+        "lower": 42.1,
+        "median": null,
+        "upper": 96.2
+      },
+      "model_associated_signals": [
+        {
+          "signal_name": "rainfall_3d",
+          "statistical_direction": "elevates_predicted_risk",
+          "non_causal_description": "Model-associated signal: 3-day cumulative rainfall elevates event probability. Note: Indicates statistical correlation with historical patterns, not causal meteorological determinism."
+        }
+      ]
+    },
+    "transparency_note": "This advisory is deterministically generated from scientific forecast outputs. It conveys informational risk and excludes imperative agronomic mandates."
+  },
+  "provenance": {
+    "rule_version": "1.0",
+    "scientific_source": "IMD Heavy Rainfall Standard Criteria (>= 64.5 mm / 24h)",
+    "dataset": "Kharif 2024 (Bakshi Ka Talab, UP_LKO_BKT)",
+    "station_coverage": "1 Station (Bakshi Ka Talab)"
+  },
+  "diagnostic_only": true,
+  "dedup_hash": "8d88f6949ebabadd"
+}

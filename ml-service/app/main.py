@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Query, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional, List, Dict, Any
-from datetime import datetime
+from datetime import datetime, timezone
 import psycopg2
 import pandas as pd
 
@@ -1086,5 +1086,167 @@ def simulate_delivery(msg: DeliveryMessage) -> Dict[str, Any]:
     """Dispatches a simulated internal notification payload."""
     res = DeliveryRouter.dispatch(msg)
     return res.model_dump(mode="json")
+
+
+# ====================================================================
+# PHASE 5A — AGRONOMIC RULES ENGINE & EXPLAINABLE ADVISORY FOUNDATION
+# ====================================================================
+
+from .agronomy.schemas import (
+    CropType,
+    GrowthStage,
+    AdvisoryEvaluationRequest,
+    AdvisoryEvaluationResponse,
+    ScenarioContract,
+    ScenarioResult,
+    ScientificAdvisory,
+)
+from .agronomy.crops import get_all_crops, get_crop
+from .agronomy.registry import rule_registry
+from .agronomy.advisory import advisory_engine
+from .agronomy.simulator.scenarios import ScenarioSimulator
+
+
+@app.get("/agronomy/status")
+def get_agronomy_status() -> Dict[str, Any]:
+    """
+    Returns agronomic engine operational status, active crop/rule counts,
+    and mandatory scientific disclosures.
+    """
+    rules = rule_registry.get_all_rules()
+    crops = get_all_crops()
+    recent_advisories = advisory_engine.list_advisories(limit=10)
+
+    return {
+        "status": "active",
+        "phase": "PHASE_5A_AGRONOMIC_RULES_FOUNDATION",
+        "operational_mode": "DIAGNOSTIC_ONLY",
+        "operational_advisory_allowed": False,
+        "active_dataset": "Kharif 2024 (Bakshi Ka Talab, UP_LKO_BKT)",
+        "station_coverage": "1 Station (Bakshi Ka Talab centroid)",
+        "total_registered_rules": len(rules),
+        "total_supported_crops": len(crops),
+        "total_active_advisories": len(recent_advisories),
+        "safety_gate": {
+            "status": "ENFORCING",
+            "evaluated_checks_count": 13,
+            "blocked_imperative_directives": True,
+        },
+        "scientific_disclosure": (
+            "Agronomic intelligence products are currently based on historical Kharif 2024 observations. "
+            "All advisories operate in informational diagnostic mode. Field-level crop interventions are not certified."
+        ),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    }
+
+
+@app.get("/agronomy/rules")
+def list_agronomy_rules(
+    target: Optional[str] = None,
+    crop: Optional[str] = None,
+    stage: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Retrieves all registered agronomic rules with optional filters."""
+    crop_enum = CropType(crop.upper()) if crop and crop.upper() in CropType.__members__ else None
+    stage_enum = GrowthStage(stage.upper()) if stage and stage.upper() in GrowthStage.__members__ else None
+
+    if crop_enum or stage_enum or target:
+        rules = rule_registry.get_applicable_rules(
+            crop=crop_enum or CropType.GENERAL,
+            stage=stage_enum or GrowthStage.ALL,
+            target=target,
+        )
+    else:
+        rules = rule_registry.get_all_rules()
+
+    return {
+        "total_rules": len(rules),
+        "rules": [r.model_dump(mode="json") for r in rules],
+    }
+
+
+@app.get("/agronomy/rules/{rule_id}")
+def get_agronomy_rule(rule_id: str) -> Dict[str, Any]:
+    """Retrieves metadata and thresholds for a specific agronomic rule."""
+    rule = rule_registry.get_rule_by_id(rule_id)
+    if not rule:
+        raise HTTPException(status_code=404, detail=f"Agronomic rule '{rule_id}' not found.")
+    return rule.model_dump(mode="json")
+
+
+@app.get("/agronomy/crops")
+def list_agronomy_crops() -> Dict[str, Any]:
+    """Retrieves the controlled vocabulary of supported crops and their growth stages."""
+    crops = get_all_crops()
+    return {
+        "total_crops": len(crops),
+        "crops": [c.model_dump(mode="json") for c in crops],
+    }
+
+
+@app.get("/agronomy/crops/{crop_id}")
+def get_agronomy_crop(crop_id: str) -> Dict[str, Any]:
+    """Retrieves metadata and supported growth stages for a specific crop."""
+    crop = get_crop(crop_id)
+    if not crop:
+        raise HTTPException(status_code=404, detail=f"Crop '{crop_id}' not found in registry.")
+    return crop.model_dump(mode="json")
+
+
+@app.post("/agronomy/evaluate")
+def evaluate_agronomic_advisories(req: AdvisoryEvaluationRequest) -> Dict[str, Any]:
+    """
+    Evaluates applicable agronomic rules against current or specified forecast products
+    for a designated crop and growth stage. Enforces 13-point Safety Gate.
+    """
+    res = advisory_engine.evaluate_request(req)
+    return res.model_dump(mode="json")
+
+
+@app.post("/agronomy/advisories/generate")
+def generate_agronomic_advisories(req: AdvisoryEvaluationRequest) -> Dict[str, Any]:
+    """Alias endpoint for evaluating and generating agronomic advisories."""
+    res = advisory_engine.evaluate_request(req)
+    return res.model_dump(mode="json")
+
+
+@app.get("/agronomy/advisories")
+def list_agronomic_advisories(
+    block_id: Optional[str] = None,
+    crop: Optional[str] = None,
+    severity: Optional[str] = None,
+    limit: int = 50,
+) -> Dict[str, Any]:
+    """Lists generated and cached agronomic advisories."""
+    advisories = advisory_engine.list_advisories(
+        block_id=block_id,
+        crop=crop,
+        severity=severity,
+        limit=limit,
+    )
+    return {
+        "total_advisories": len(advisories),
+        "advisories": [a.model_dump(mode="json") for a in advisories],
+    }
+
+
+@app.get("/agronomy/advisories/{advisory_id}")
+def get_agronomic_advisory(advisory_id: str) -> Dict[str, Any]:
+    """Retrieves a specific agronomic advisory by identifier."""
+    adv = advisory_engine.get_advisory_by_id(advisory_id)
+    if not adv:
+        raise HTTPException(status_code=404, detail=f"Advisory '{advisory_id}' not found.")
+    return adv.model_dump(mode="json")
+
+
+@app.post("/agronomy/simulate")
+def simulate_agronomic_scenario(contract: ScenarioContract) -> Dict[str, Any]:
+    """
+    Executes a What-If sensitivity scenario.
+    Classified strictly as SCENARIO_INDICATOR_ONLY (not yield predictions).
+    """
+    res = ScenarioSimulator.simulate(contract)
+    return res.model_dump(mode="json")
+
 
 

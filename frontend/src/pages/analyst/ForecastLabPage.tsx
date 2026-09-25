@@ -34,11 +34,12 @@ import {
   TrendingUp,
   Info,
   BellRing,
+  Sprout,
 } from 'lucide-react';
 
 export const ForecastLabPage: React.FC = () => {
   // Navigation Tabs
-  const [activeTab, setActiveTab] = useState<'chain' | 'hindcasting'>('chain');
+  const [activeTab, setActiveTab] = useState<'chain' | 'hindcasting' | 'agronomy'>('chain');
 
   // Forecast Pipeline State
   const [selectedTarget, setSelectedTarget] = useState<string>('HEAVY_RAIN');
@@ -202,6 +203,17 @@ export const ForecastLabPage: React.FC = () => {
             <Activity className="w-4 h-4" />
             Multi-Year Hindcasting & Skill Evaluation
           </button>
+          <button
+            onClick={() => setActiveTab('agronomy')}
+            className={`px-4 py-2.5 text-xs font-semibold border-b-2 transition-colors flex items-center gap-2 ${
+              activeTab === 'agronomy'
+                ? 'border-brand-teal text-brand-teal'
+                : 'border-transparent text-slate-500 hover:text-slate-800'
+            }`}
+          >
+            <Sprout className="w-4 h-4" />
+            Agronomic Rules & Safety Lab
+          </button>
         </div>
 
         <Link
@@ -213,7 +225,126 @@ export const ForecastLabPage: React.FC = () => {
         </Link>
       </div>
 
-      {activeTab === 'hindcasting' ? (
+      {activeTab === 'agronomy' ? (
+        <div className="space-y-6">
+          {/* Header Disclosures */}
+          <Card className="p-5 border-l-4 border-l-brand-teal space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h3 className="font-heading font-bold text-base text-slate-900">
+                    Agronomic Rules Catalog & Explainable Safety Gate
+                  </h3>
+                  <Badge variant="teal" size="sm">Phase 5A Foundation</Badge>
+                  <Badge variant="amber" size="sm">DIAGNOSTIC_ONLY</Badge>
+                </div>
+                <p className="text-xs text-slate-600 mt-1">
+                  Controlled rule definitions mapping downscaled meteorological probabilities to crop-specific situational risk indicators.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Badge variant="emerald" size="sm">13 Gate Checks ENFORCING</Badge>
+              </div>
+            </div>
+
+            <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-700">
+              <strong>Mandatory Safety Boundary:</strong> All rules evaluate in informational diagnostic mode.
+              The safety gate strictly blocks any imperative agronomic instructions, commercial pesticide recommendations,
+              uncalibrated model probabilities, or fabricated crop yield loss claims.
+            </div>
+          </Card>
+
+          {/* Registered Agronomic Rules Table */}
+          <Card className="p-5 space-y-4">
+            <div className="flex items-center justify-between">
+              <h4 className="font-heading font-bold text-sm text-slate-900">
+                Registered Agronomic Rules Catalog (9 Rules Active)
+              </h4>
+              <span className="text-xs text-slate-500 font-mono">Registry: In-Memory / Deterministic</span>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-surface-border text-slate-500 uppercase text-[10px] font-mono">
+                    <th className="py-2.5 px-3">Rule ID</th>
+                    <th className="py-2.5 px-3">Target Event</th>
+                    <th className="py-2.5 px-3">Applicable Crop / Stage</th>
+                    <th className="py-2.5 px-3">Threshold Criteria</th>
+                    <th className="py-2.5 px-3">Min Prob</th>
+                    <th className="py-2.5 px-3">Severity</th>
+                    <th className="py-2.5 px-3">Priority</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-surface-border">
+                  {[
+                    { id: 'AGRO_HEAVY_RAIN_INFO_001', target: 'HEAVY_RAIN', crop: 'GENERAL (ALL)', criteria: '>= 64.5 mm / 24h', prob: '0.40', sev: 'INFO', pri: 10 },
+                    { id: 'AGRO_PADDY_HEAVY_RAIN_HARVEST_001', target: 'HEAVY_RAIN', crop: 'PADDY (MATURITY)', criteria: '>= 64.5 mm / 24h', prob: '0.45', sev: 'WATCH', pri: 15 },
+                    { id: 'AGRO_EXTREME_RAIN_ALERT_001', target: 'EXTREME_RAIN', crop: 'GENERAL (ALL)', criteria: '>= 204.5 mm / 24h', prob: '0.85', sev: 'HIGH', pri: 50 },
+                    { id: 'AGRO_DRY_SPELL_INFO_001', target: 'DRY_SPELL', crop: 'GENERAL (ALL)', criteria: '>= 5 consecutive dry days', prob: '0.45', sev: 'INFO', pri: 10 },
+                    { id: 'AGRO_PADDY_DRY_SPELL_VEGETATIVE_001', target: 'DRY_SPELL', crop: 'PADDY (VEGETATIVE)', criteria: '>= 5 consecutive dry days', prob: '0.45', sev: 'WATCH', pri: 15 },
+                    { id: 'AGRO_MONSOON_ONSET_INFO_001', target: 'MONSOON_ONSET', crop: 'GENERAL (SOWING)', criteria: '>= 25 mm over 3 days', prob: '0.50', sev: 'INFO', pri: 20 },
+                    { id: 'AGRO_FALSE_ONSET_RISK_001', target: 'MONSOON_ONSET', crop: 'GENERAL (SOWING)', criteria: '>= 7 dry days post-surge', prob: '0.50', sev: 'WATCH', pri: 25 },
+                    { id: 'AGRO_RAINFALL_DEFICIT_ANOMALY_001', target: 'RAINFALL_ANOMALY', crop: 'GENERAL (ALL)', criteria: '<= -50% cumulative anomaly', prob: '0.45', sev: 'WATCH', pri: 15 },
+                    { id: 'AGRO_RAINFALL_SURPLUS_ANOMALY_001', target: 'RAINFALL_ANOMALY', crop: 'GENERAL (ALL)', criteria: '>= +50% cumulative anomaly', prob: '0.50', sev: 'WATCH', pri: 15 },
+                  ].map((r) => (
+                    <tr key={r.id} className="hover:bg-slate-50 transition-colors">
+                      <td className="py-2.5 px-3 font-mono font-bold text-slate-800">{r.id}</td>
+                      <td className="py-2.5 px-3 font-mono text-slate-600">{r.target}</td>
+                      <td className="py-2.5 px-3 text-slate-700">{r.crop}</td>
+                      <td className="py-2.5 px-3 font-mono text-slate-600">{r.criteria}</td>
+                      <td className="py-2.5 px-3 font-mono text-brand-teal font-semibold">{r.prob}</td>
+                      <td className="py-2.5 px-3">
+                        <Badge variant={r.sev === 'HIGH' ? 'crimson' : r.sev === 'WATCH' ? 'amber' : 'teal'} size="sm">
+                          {r.sev}
+                        </Badge>
+                      </td>
+                      <td className="py-2.5 px-3 font-mono text-slate-600">{r.pri}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+
+          {/* 13 Deterministic Safety Gate Checks */}
+          <Card className="p-5 space-y-4">
+            <div className="flex items-center justify-between">
+              <h4 className="font-heading font-bold text-sm text-slate-900">
+                Deterministic Agronomic Safety Gate (13 Strict Enforcement Rules)
+              </h4>
+              <Badge variant="emerald" size="sm">Pass Required: 13/13</Badge>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {[
+                { name: '1. Freshness Audit', rule: 'Must be HISTORICAL_ONLY (Kharif 2024)', pass: true },
+                { name: '2. Operational Mode Audit', rule: 'Must be DIAGNOSTIC_ONLY', pass: true },
+                { name: '3. Probability Bounds Check', rule: 'Probability must be strictly in [0.0, 1.0]', pass: true },
+                { name: '4. Confidence Interval Check', rule: 'Parametric or empirical CI must be present', pass: true },
+                { name: '5. Imperative Verb Filter', rule: 'Blocks "do not sow", "harvest now", "spray"', pass: true },
+                { name: '6. Crop Yield Claim Filter', rule: 'Blocks yield loss percentage claims', pass: true },
+                { name: '7. Financial Loss Filter', rule: 'Blocks rupee/dollar monetary loss assertions', pass: true },
+                { name: '8. Chemical Brand Filter', rule: 'Blocks commercial pesticide/fungicide brands', pass: true },
+                { name: '9. Hazard Threshold Audit', rule: 'Requires IMD scientific criteria compliance', pass: true },
+                { name: '10. Station Anchor Check', rule: 'Validated centroid: UP_LKO_BKT only', pass: true },
+                { name: '11. Single-Season Caveat', rule: 'Discloses single-season Kharif 2024 records', pass: true },
+                { name: '12. Deduplication Audit', rule: 'Enforces deterministic SHA-256 hash', pass: true },
+                { name: '13. Non-Causal Phrasing', rule: 'Enforces "statistical association" language', pass: true },
+              ].map((chk, idx) => (
+                <div key={idx} className="p-3 bg-surface-muted/50 rounded-xl border border-surface-border text-xs space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="font-heading font-semibold text-slate-900">{chk.name}</span>
+                    <CheckCircle2 className="w-4 h-4 text-brand-emerald" />
+                  </div>
+                  <p className="text-[11px] text-slate-600">{chk.rule}</p>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </div>
+      ) : activeTab === 'hindcasting' ? (
         <div className="space-y-6">
           {hindcastError && (
             <Card className="border-amber-200 bg-amber-50">

@@ -6,7 +6,7 @@ import { ProvenanceCard } from '../../components/analyst/ProvenanceCard';
 import { Landmark, TrendingUp, AlertTriangle, ShieldAlert, Activity, CheckCircle2, XCircle, Database } from 'lucide-react';
 import { forecastService, ForecastStatusResponse, ForecastAvailabilityResponse } from '../../services/forecastService';
 import { eventService, OperationalStatusResponse } from '../../services/eventService';
-import { Radio, BellRing, Server, ShieldCheck } from 'lucide-react';
+import { Radio, BellRing, Server, ShieldCheck, Sprout } from 'lucide-react';
 
 export const GovernmentDashboardPage: React.FC = () => {
   const [forecastStatus, setForecastStatus] = useState<ForecastStatusResponse | null>(null);
@@ -206,7 +206,80 @@ export const GovernmentDashboardPage: React.FC = () => {
         </div>
       </Card>
 
-      {/* 5. Global Climate Teleconnections & Provenance */}
+      {/* 5. Phase 5A: Agronomic Intelligence & Safety Gate Coverage Matrix */}
+      <Card className="p-5 space-y-4 shadow-card">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-surface-border gap-2">
+          <div className="flex items-center gap-2">
+            <Sprout className="w-5 h-5 text-brand-teal" />
+            <h3 className="font-heading font-bold text-base text-slate-900">
+              State Agronomic Intelligence & Safety Gate Coverage
+            </h3>
+          </div>
+          <div className="flex items-center gap-2">
+            <Badge variant="teal" size="sm">Phase 5A Active</Badge>
+            <Badge variant="amber" size="sm">DIAGNOSTIC_ONLY</Badge>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="p-3.5 bg-surface-muted/50 rounded-xl border border-surface-border space-y-1">
+            <span className="text-[11px] font-heading font-semibold text-slate-500 uppercase tracking-wider">
+              Controlled Crop Registry
+            </span>
+            <div className="font-bold text-lg text-slate-900 font-mono">
+              6 Crops Active
+            </div>
+            <p className="text-[10px] text-slate-500">
+              Paddy, Maize, Wheat, Pulses, Mustard, General Agro-Met
+            </p>
+          </div>
+
+          <div className="p-3.5 bg-surface-muted/50 rounded-xl border border-surface-border space-y-1">
+            <span className="text-[11px] font-heading font-semibold text-slate-500 uppercase tracking-wider">
+              Agronomic Rules Catalog
+            </span>
+            <div className="font-bold text-lg text-slate-900 font-mono">
+              9 Registered Rules
+            </div>
+            <p className="text-[10px] text-slate-500">
+              Heavy rain, dry spells, onset surge, false onset, anomaly
+            </p>
+          </div>
+
+          <div className="p-3.5 bg-surface-muted/50 rounded-xl border border-surface-border space-y-1">
+            <span className="text-[11px] font-heading font-semibold text-slate-500 uppercase tracking-wider">
+              Spatial Validation Anchor
+            </span>
+            <div className="font-bold text-lg text-slate-900 font-mono">
+              1 Station (UP_LKO_BKT)
+            </div>
+            <p className="text-[10px] text-slate-500">
+              Bakshi Ka Talab validated; 5 regional blocks provisional
+            </p>
+          </div>
+
+          <div className="p-3.5 bg-surface-muted/50 rounded-xl border border-surface-border space-y-1">
+            <span className="text-[11px] font-heading font-semibold text-slate-500 uppercase tracking-wider">
+              Safety Gate State
+            </span>
+            <div className="font-bold text-lg text-brand-emerald font-mono">
+              13 Checks ENFORCING
+            </div>
+            <p className="text-[10px] text-slate-500">
+              Imperatives & yield projections strictly blocked
+            </p>
+          </div>
+        </div>
+
+        <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-amber-900 text-xs flex items-start gap-2.5">
+          <AlertTriangle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+          <p>
+            <strong>Advisory Coverage Boundary:</strong> Operational crop advisories are strictly gated to diagnostic situational awareness based on Kharif 2024 archive records. No imperative farming directives or crop yield estimates are published without ICAR/IMD field validation.
+          </p>
+        </div>
+      </Card>
+
+      {/* 6. Global Climate Teleconnections & Provenance */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <ClimateSignalCard />
         <ProvenanceCard />
