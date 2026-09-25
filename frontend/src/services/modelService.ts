@@ -272,4 +272,241 @@ export const modelService = {
       body: JSON.stringify({ target_name, horizon_days, calibration_method, block_id }),
     });
   },
+
+  // ====================================================================
+  // Phase 4D Multi-Year Validation & Hindcasting Endpoints
+  // ====================================================================
+
+  async getHindcastStatus(): Promise<ApiResponse<HindcastStatusResponse>> {
+    return request<HindcastStatusResponse>('/models/hindcasting/status');
+  },
+
+  async getHindcastGate(): Promise<ApiResponse<HindcastGateResponse>> {
+    return request<HindcastGateResponse>('/models/hindcasting/gate');
+  },
+
+  async getHindcastFolds(): Promise<ApiResponse<HindcastFoldsResponse>> {
+    return request<HindcastFoldsResponse>('/models/hindcasting/folds');
+  },
+
+  async getHindcastResults(target = 'HEAVY_RAIN', horizon_days = 7): Promise<ApiResponse<HindcastResultsResponse>> {
+    return request<HindcastResultsResponse>(`/models/hindcasting/results?target=${target}&horizon_days=${horizon_days}`);
+  },
+
+  async getHindcastStability(target = 'HEAVY_RAIN', horizon_days = 7, model_id = 'xgboost'): Promise<ApiResponse<HindcastStabilityResponse>> {
+    return request<HindcastStabilityResponse>(
+      `/models/hindcasting/stability?target=${target}&horizon_days=${horizon_days}&model_id=${model_id}`
+    );
+  },
+
+  async getHindcastDrift(): Promise<ApiResponse<HindcastDriftResponse>> {
+    return request<HindcastDriftResponse>('/models/hindcasting/drift');
+  },
+
+  async getHindcastCoverage(): Promise<ApiResponse<HindcastCoverageResponse>> {
+    return request<HindcastCoverageResponse>('/models/hindcasting/coverage');
+  },
+
+  async runHindcast(payload: { target_name?: string; horizon_days?: number; block_id?: string; models?: string[] } = {}): Promise<ApiResponse<any>> {
+    return request<any>('/models/hindcasting/run', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  },
 };
+
+// ====================================================================
+// Phase 4D Hindcasting Type Definitions
+// ====================================================================
+
+export interface HindcastStatusResponse {
+  service?: string;
+  phase: string;
+  operational_validation_allowed: boolean;
+  multiyear_gate_status: string;
+  total_experiments_recorded?: number;
+  years_available?: number[];
+  complete_seasons?: number[];
+  data_reality?: {
+    available_years?: number[];
+    required_years?: number;
+  };
+  message?: string;
+  scientific_disclosure: string;
+}
+
+export interface HindcastGateReport {
+  status: string;
+  years_available: number[];
+  total_years: number;
+  complete_seasons: number[];
+  eligible_years: number[];
+  excluded_years: number[];
+  exclusion_reasons: string[];
+  schema_consistent: boolean;
+  fingerprint_consistent: boolean;
+  operational_validation_allowed: boolean;
+  scientific_notes: string;
+}
+
+export interface HindcastGateResponse {
+  gate_report: HindcastGateReport;
+}
+
+export interface HindcastFoldItem {
+  fold_id: string;
+  train_start: string;
+  train_end: string;
+  validation_start: string;
+  validation_end: string;
+  test_start: string;
+  test_end: string;
+  test_year: number;
+  training_rows: number;
+  validation_rows: number;
+  test_rows: number;
+  training_years: number[];
+  feature_cutoff: string;
+  dataset_fingerprint: string;
+  notes?: string;
+}
+
+export interface HindcastFoldsResponse {
+  total_folds: number;
+  folds: HindcastFoldItem[];
+}
+
+export interface ModelHindcastResultItem {
+  model_id: string;
+  model_name: string;
+  metrics: {
+    brier_score?: number | null;
+    brier_skill_score?: number | null;
+    log_loss?: number | null;
+    roc_auc?: number | null;
+    pr_auc?: number | null;
+    expected_calibration_error?: number | null;
+    mae?: number | null;
+    rmse?: number | null;
+    mean_skill_score?: number | null;
+    sample_count?: number;
+    test_positive_count?: number;
+    test_negative_count?: number;
+    notes?: string;
+  };
+  calibration_status: string;
+  data_status: string;
+}
+
+export interface HorizonReportItem {
+  horizon_days: number;
+  target_name: string;
+  best_model_id: string;
+  climatology_brier: number;
+  models: Record<string, any>;
+  data_gate_passed: boolean;
+  notes: string;
+}
+
+export interface HindcastExperimentResult {
+  experiment_id: string;
+  target_name: string;
+  horizon_days: number;
+  models_evaluated: string[];
+  spatial_resolution: string;
+  multi_year_gate_status?: string;
+  multiyear_gate_status?: string;
+  operational_validation_allowed: boolean;
+  model_results: ModelHindcastResultItem[];
+  horizon_reports: HorizonReportItem[];
+  warnings: string[];
+  dataset_fingerprint?: string;
+}
+
+export interface HindcastResultsResponse {
+  experiment: HindcastExperimentResult;
+}
+
+export interface YearlyStabilityReportItem {
+  year: number;
+  metric_name: string;
+  value: number;
+  sample_size: number;
+  degraded_flag: boolean;
+}
+
+export interface StabilityDistributionStats {
+  mean?: number;
+  median?: number;
+  std?: number;
+  min?: number;
+  max?: number;
+  iqr?: number;
+}
+
+export interface HindcastStabilityData {
+  target_name: string;
+  horizon_days: number;
+  model_id: string;
+  years_evaluated: number[];
+  total_years: number;
+  stability_status: string;
+  notes: string;
+  distribution_stats?: Record<string, StabilityDistributionStats>;
+  yearly_reports?: YearlyStabilityReportItem[];
+  degraded_years?: number[];
+  insufficient_seasons_flag?: boolean;
+}
+
+export interface HindcastStabilityResponse {
+  stability: HindcastStabilityData;
+}
+
+export interface DriftMetricItem {
+  feature_name: string;
+  psi: number;
+  ks_statistic: number;
+  ks_p_value: number;
+  is_drifted: boolean;
+  drift_severity: 'NEGLIGIBLE' | 'MODERATE' | 'SIGNIFICANT';
+  early_mean?: number;
+  late_mean?: number;
+}
+
+export interface HindcastDriftData {
+  status: string;
+  reference_period: string;
+  comparison_period: string;
+  total_features_evaluated: number;
+  features_with_shift: string[];
+  drift_results: DriftMetricItem[];
+  scientific_notes: string;
+}
+
+export interface HindcastDriftResponse {
+  drift_report: HindcastDriftData;
+}
+
+export interface FeatureCoverageItem {
+  feature_name: string;
+  source: string;
+  first_date: string;
+  last_date: string;
+  total_days: number;
+  missing_days: number;
+  missing_pct: number;
+  data_quality: string;
+}
+
+export interface HindcastCoverageData {
+  total_features: number;
+  features_full_coverage: number;
+  features_partial_coverage: number;
+  temporal_span: string;
+  coverage_items: FeatureCoverageItem[];
+  scientific_notes: string;
+}
+
+export interface HindcastCoverageResponse {
+  coverage_report: HindcastCoverageData;
+}

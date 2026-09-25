@@ -3,7 +3,7 @@
 
 ---
 
-#### Current Phase: PHASE 4C
+#### Current Phase: PHASE 4D
 **Status:** COMPLETED  
 **Last Updated:** September 2026
 
@@ -249,6 +249,51 @@
 
 ---
 
+## 9. Phase 4D: Multi-Year Validation, Hindcasting & Forecast Skill Evaluation
+- **Status:** COMPLETED
+
+### Completed in Phase 4D
+- [x] **Multi-Year Validation Gatekeeper (`ml-service/app/validation/multiyear_gate.py`):**
+  - Implemented `MultiYearValidationGate` checking: $\ge 5$ observation years, complete seasons, observation counts, event balance, missingness $\le 5\%$, duplicate timestamp detection, schema consistency (19 core features), and block coverage.
+  - Scientific truth evaluation: On Kharif 2024 (122 daily records), strictly returns `status: INSUFFICIENT_DATA` and `operational_validation_allowed: false`.
+  - Zero fabricated multi-year datasets or synthetic meteorological records.
+- [x] **Walk-Forward Expanding Window Folds (`ml-service/app/hindcasting/folds.py`):**
+  - Strict chronological sequencing: guarantees $\max(\text{train\_date}) < \min(\text{val\_date}) < \min(\text{test\_date})$ with zero future leakage.
+  - Multi-year mode generates seasonal expanding folds; single-season mode generates diagnostic within-season expanding folds.
+- [x] **Multi-Horizon Skill & Metric Calculator (`ml-service/app/hindcasting/metrics.py`):**
+  - Evaluates models across 1-day, 3-day, 7-day, 14-day, 21-day, and 30-day forecast horizons.
+  - Brier Score, Brier Skill Score (vs Climatology), Log Loss, Expected Calibration Error (ECE), MAE, RMSE, Mean Skill Score.
+  - Rigorous single-class test fold guardrail: ROC-AUC and PR-AUC strictly return `None` (null) when class count $< 2$.
+- [x] **Cross-Season Stability & Degradation Tracking (`ml-service/app/evaluation/stability.py`):**
+  - Non-parametric distribution statistics (`mean`, `median`, `std`, `min`, `max`, `iqr`).
+  - Degraded season detection ($>25\%$ skill degradation flag).
+  - Handles limited archives with `INSUFFICIENT_SEASONS` status flag.
+- [x] **Feature Drift Audit (`ml-service/app/validation/drift.py`):**
+  - Population Stability Index (PSI) with 10 quantile bins and 2-sample Kolmogorov-Smirnov (KS) test statistics across early vs late monsoon periods.
+- [x] **Feature Coverage & Provenance Auditing (`ml-service/app/hindcasting/coverage.py`):**
+  - Verifies date spans, total days, missing days, missingness percentages, and source attribution for all 19 features.
+- [x] **Immutable Hindcast Artifact Manager (`ml-service/app/hindcasting/artifacts.py`):**
+  - Saves reproducible JSON manifests with SHA-256 dataset fingerprints in `ml-service/artifacts/hindcasts/`.
+- [x] **Hindcast Execution Pipeline (`ml-service/app/hindcasting/runner.py`):**
+  - Multi-model orchestration: Empirical Climatology, Linear Baselines, XGBoost, LightGBM, and Platt-calibrated XGBoost.
+- [x] **Microservice Endpoints (`ml-service/app/main.py`):**
+  - Mounted 9 endpoints: `/hindcasting/status`, `/gate`, `/folds`, `/results`, `/results/{id}`, `/stability`, `/drift`, `/coverage`, `/run`.
+- [x] **Backend Integration Gateway (`backend/`):**
+  - Added controller handlers and routes in `modelController.ts` and `modelRoutes.ts`.
+  - Added 7 integration tests in `backend/tests/integration/hindcasting.test.ts` (all 45 backend tests passing).
+- [x] **Frontend Hindcast Lab & Analyst Interface (`frontend/`):**
+  - Added typed API client methods in `modelService.ts`.
+  - Built `HindcastSummaryPanel.tsx` with multi-year gate badges, scientific disclosure banner, 5 sub-tabs (Matrix, Folds, Stability, Drift, Coverage).
+  - Updated `ForecastLabPage.tsx` to connect real backend data and interactive hindcast execution.
+  - Added 7 frontend tests in `HindcastSummaryPanel.test.tsx` (all 19 frontend tests passing).
+- [x] **Verification:**
+  - `pytest ml-service/tests`: 71/71 tests passed (100%).
+  - `npm test` in `backend/`: 45/45 tests passed (100%).
+  - `npm test` in `frontend/`: 19/19 tests passed (100%).
+  - `npm run build` in `frontend/` and `backend/`: 0 errors.
+
+---
+
 ### Phase Status & Guardrails Summary
 - **Phase 1A:** COMPLETED
 - **Phase 1B:** COMPLETED
@@ -257,13 +302,17 @@
 - **Phase 3:** COMPLETED
 - **Phase 4A:** COMPLETED
 - **Phase 4B:** COMPLETED
-- **Phase 4C:** **COMPLETED**
-- **Phase 4D:** **NOT STARTED** (Strict sequence enforced)
+- **Phase 4C:** COMPLETED
+- **Phase 4D:** **COMPLETED**
+- **Phase 4E:** **NOT STARTED** (Strict sequence enforced)
+- **Phase 4F:** **NOT STARTED** (Strict sequence enforced)
 - **Phase 5:** **NOT STARTED** (Strict sequence enforced)
 
 ---
 
-## 8. Pending (Future Phases)
+## 10. Pending (Future Phases)
+- [ ] **Phase 4E: Feature Store, Real-Time Inference & Rolling Forecast Serving**
+- [ ] **Phase 4F: Explainability, Model Monitoring & Production Model Governance**
 - [ ] **Phase 5: Agronomic Rules Engine & What-If Simulator**
   - DO NOT START UNTIL INSTRUCTED.
   - Declarative crop rules matrix across growth stages.
@@ -275,7 +324,7 @@
 
 ---
 
-## 9. Technical Debt
+## 11. Technical Debt
 - **Zero Technical Debt Introduced:** Fully typed interfaces, zero synthetic or fabricated observations, strict chronological splitting without leakage, and honest disclosure of single-season data limits.
 
 

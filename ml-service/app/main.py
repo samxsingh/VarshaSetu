@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional, List, Dict, Any
 from datetime import datetime
 import psycopg2
+import pandas as pd
 
 from .config import settings
 from .ingestion.pipeline import IngestionPipeline
@@ -605,3 +606,189 @@ def validate_calibration_gate(req: ValidateCalibrationRequest) -> Dict[str, Any]
         "status": "success",
         "data_gate": gate_report.model_dump()
     }
+
+
+# ====================================================================
+# PHASE 4D — MULTI-YEAR VALIDATION, HINDCASTING & STABILITY ENDPOINTS
+# ====================================================================
+
+from .validation.multiyear_gate import MultiYearValidationGate, MultiYearGateReport
+from .validation.drift import FeatureDriftDetector, DatasetDriftReport
+from .hindcasting.schemas import HindcastExperimentManifest
+from .hindcasting.folds import generate_hindcast_folds
+from .hindcasting.artifacts import HindcastArtifactManager
+from .hindcasting.runner import HindcastRunner
+from .hindcasting.coverage import FeatureCoverageInspector
+
+
+class RunHindcastRequest(BaseModel):
+    target_name: str = "HEAVY_RAIN"
+    primary_horizon: int = 7
+    block_id: str = "UP_LKO_BKT"
+
+
+@app.get("/hindcasting/status")
+def get_hindcasting_status() -> Dict[str, Any]:
+    """
+    Returns global hindcasting status, multi-year data gate evaluation,
+    and scientific limitations disclosure.
+    """
+    df_features, _ = TreeTrainingPipeline.load_feature_matrix()
+    gate_report = MultiYearValidationGate.evaluate(df_features)
+    manifests = HindcastArtifactManager.list_manifests()
+
+    return {
+        "status": "success",
+        "service": "varshasetu-hindcasting-engine",
+        "phase": "PHASE_4D_MULTIYEAR_HINDCASTING_STAGE",
+        "operational_validation_allowed": gate_report.operational_validation_allowed,
+        "multiyear_gate_status": gate_report.status.value,
+        "total_experiments_recorded": len(manifests),
+        "years_available": gate_report.years_available,
+        "complete_seasons": gate_report.complete_seasons,
+        "message": "Multi-year validation engine active with walk-forward hindcasting and temporal drift audits.",
+        "scientific_disclosure": "Historical hindcast validation reflects only the years and variables actually available to the system. Operational multi-year validation requires >=5 complete seasons."
+    }
+
+
+@app.get("/hindcasting/gate")
+def get_multiyear_gate_report() -> Dict[str, Any]:
+    """
+    Evaluates multi-year data sufficiency gate against real observational archive.
+    """
+    df_features, _ = TreeTrainingPipeline.load_feature_matrix()
+    gate_report = MultiYearValidationGate.evaluate(df_features)
+    return {
+        "status": "success",
+        "gate_report": gate_report.model_dump(mode="json")
+    }
+
+
+@app.get("/hindcasting/folds")
+def get_hindcast_folds() -> Dict[str, Any]:
+    """
+    Returns generated chronological walk-forward folds.
+    """
+    df_features, _ = TreeTrainingPipeline.load_feature_matrix()
+    folds = generate_hindcast_folds(df_features)
+    return {
+        "status": "success",
+        "total_folds": len(folds),
+        "folds": [f.model_dump(mode="json") for f in folds]
+    }
+
+
+@app.get("/hindcasting/results")
+def get_latest_hindcast_results(target: str = "HEAVY_RAIN", horizon_days: int = 7) -> Dict[str, Any]:
+    """
+    Returns latest hindcast benchmark results across paradigms, horizons, and stability.
+    """
+    manifests = HindcastArtifactManager.list_manifests()
+    matching = [m for m in manifests if m.get("target_name") == target and m.get("horizon_days") == horizon_days]
+
+    if matching:
+        exp = HindcastArtifactManager.load_manifest(matching[0]["experiment_id"])
+        if exp:
+            return {
+                "status": "success",
+                "experiment": exp.model_dump(mode="json")
+            }
+
+    # Generate deterministic hindcast run
+    exp = HindcastRunner.run_experiment(target_name=target, primary_horizon=horizon_days)
+    return {
+        "status": "success",
+        "experiment": exp.model_dump(mode="json")
+    }
+
+
+@app.get("/hindcasting/results/{experiment_id}")
+def get_hindcast_result_by_id(experiment_id: str) -> Dict[str, Any]:
+    """
+    Retrieves full immutable manifest for a specific hindcast experiment.
+    """
+    exp = HindcastArtifactManager.load_manifest(experiment_id)
+    if not exp:
+        raise HTTPException(status_code=404, detail=f"Hindcast experiment '{experiment_id}' not found.")
+    return {
+        "status": "success",
+        "experiment": exp.model_dump(mode="json")
+    }
+
+
+@app.get("/hindcasting/stability")
+def get_hindcast_stability(target: str = "HEAVY_RAIN", horizon_days: int = 7) -> Dict[str, Any]:
+    """
+    Returns year-by-year stability analysis and cross-season variability statistics.
+    """
+    manifests = HindcastArtifactManager.list_manifests()
+    matching = [m for m in manifests if m.get("target_name") == target and m.get("horizon_days") == horizon_days]
+
+    if matching:
+        exp = HindcastArtifactManager.load_manifest(matching[0]["experiment_id"])
+        if exp and exp.stability_analysis:
+            return {
+                "status": "success",
+                "stability": exp.stability_analysis.model_dump(mode="json")
+            }
+
+    exp = HindcastRunner.run_experiment(target_name=target, primary_horizon=horizon_days)
+    return {
+        "status": "success",
+        "stability": exp.stability_analysis.model_dump(mode="json") if exp.stability_analysis else None
+    }
+
+
+@app.get("/hindcasting/drift")
+def get_feature_drift_report() -> Dict[str, Any]:
+    """
+    Runs historical feature distribution drift analysis (PSI, KS statistic, mean/variance).
+    """
+    df_features, _ = TreeTrainingPipeline.load_feature_matrix()
+    n_mid = len(df_features) // 2
+    df_ref = df_features.iloc[:n_mid]
+    df_comp = df_features.iloc[n_mid:]
+
+    ref_label = f"Early Season ({str(pd.to_datetime(df_ref['date']).min().date())} to {str(pd.to_datetime(df_ref['date']).max().date())})"
+    comp_label = f"Late Season ({str(pd.to_datetime(df_comp['date']).min().date())} to {str(pd.to_datetime(df_comp['date']).max().date())})"
+
+    drift = FeatureDriftDetector.evaluate_drift(
+        df_reference=df_ref,
+        df_comparison=df_comp,
+        reference_label=ref_label,
+        comparison_label=comp_label
+    )
+    return {
+        "status": "success",
+        "drift_report": drift.model_dump(mode="json")
+    }
+
+
+@app.get("/hindcasting/coverage")
+def get_feature_coverage_report() -> Dict[str, Any]:
+    """
+    Returns historical feature availability across the timeline and missingness.
+    """
+    df_features, _ = TreeTrainingPipeline.load_feature_matrix()
+    coverage = FeatureCoverageInspector.inspect_coverage(df_features)
+    return {
+        "status": "success",
+        "coverage_report": coverage.model_dump(mode="json")
+    }
+
+
+@app.post("/hindcasting/run")
+def run_hindcast_experiment(req: RunHindcastRequest) -> Dict[str, Any]:
+    """
+    Executes a historical hindcasting benchmark run across model paradigms and horizons.
+    """
+    exp = HindcastRunner.run_experiment(
+        target_name=req.target_name,
+        primary_horizon=req.primary_horizon,
+        block_id=req.block_id
+    )
+    return {
+        "status": "success",
+        "experiment": exp.model_dump(mode="json")
+    }
+

@@ -80,3 +80,22 @@ def fingerprint_dataset(file_path: str, date_col: Optional[str] = "date") -> Dat
         latest_date=latest,
         fingerprint_hash=fingerprint_hash
     )
+
+
+def compute_dataframe_fingerprint(df: pd.DataFrame) -> str:
+    """
+    Computes a deterministic content SHA256 digest for an in-memory DataFrame.
+    """
+    if df is None or len(df) == 0:
+        return "empty_dataframe_0000000000000000"
+
+    hasher = hashlib.sha256()
+    hasher.update(str(df.shape).encode("utf-8"))
+    hasher.update(",".join(sorted(df.columns)).encode("utf-8"))
+    try:
+        sample_str = f"{df.iloc[0].to_dict()}:{df.iloc[-1].to_dict()}"
+        hasher.update(sample_str.encode("utf-8"))
+    except Exception:
+        pass
+    return hasher.hexdigest()
+

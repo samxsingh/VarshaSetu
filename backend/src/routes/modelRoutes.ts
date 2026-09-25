@@ -22,6 +22,18 @@ modelRoutes.post('/calibration/run', modelController.runCalibration);
 modelRoutes.get('/calibration/:id/reliability', modelController.getCalibrationModelReliability);
 modelRoutes.get('/calibration/:id', modelController.getCalibrationModelById);
 
+// Phase 4D Multi-Year Validation, Hindcasting & Stability Endpoints (before /:id)
+modelRoutes.get('/hindcasting/status', modelController.getHindcastStatus);
+modelRoutes.get('/hindcasting/gate', modelController.getHindcastGate);
+modelRoutes.get('/hindcasting/folds', modelController.getHindcastFolds);
+modelRoutes.get('/hindcasting/results', modelController.getHindcastResults);
+modelRoutes.get('/hindcasting/results/:experimentId', modelController.getHindcastResultById);
+modelRoutes.get('/hindcasting/stability', modelController.getHindcastStability);
+modelRoutes.get('/hindcasting/drift', modelController.getHindcastDrift);
+modelRoutes.get('/hindcasting/coverage', modelController.getHindcastCoverage);
+modelRoutes.post('/hindcasting/run', modelController.runHindcast);
+
+
 // Baseline & Tree experiments (fixed path before /:id)
 modelRoutes.get('/experiments', modelController.listExperiments);
 modelRoutes.get('/experiments/:id', modelController.getExperimentById);

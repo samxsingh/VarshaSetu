@@ -5,9 +5,8 @@
 Phase 4B upgrades the VarshaSetu scientific forecasting foundation from linear baselines (Phase 4A) to operational gradient-boosted tree ensembles (**XGBoost** and **LightGBM**) integrated with **SHAP Tree Explainability** and rigorous spatial downscaling constraints.
 
 ### Strict Scope Boundary
-- **Phase 1A, 1B, 1C, Phase 2, Phase 3, Phase 4A**: COMPLETED.
-- **Phase 4B**: COMPLETED.
-- **Phase 5**: **NOT STARTED**. Farmer-facing final advisory engines, WhatsApp/SMS distribution, voice synthesis (Bhashini), and production agronomic rule triggers belong strictly to future phases.
+- **Phase 1A through Phase 4D**: COMPLETED.
+- **Phase 4E, Phase 4F & Phase 5**: **NOT STARTED**. Farmer-facing final advisory engines, WhatsApp/SMS distribution, voice synthesis (Bhashini), and production agronomic rule triggers belong strictly to future phases.
 
 ---
 
