@@ -15,6 +15,13 @@ modelRoutes.get('/comparison', modelController.getComparison);
 // Scientific datasets catalog & integrity checksums
 modelRoutes.get('/datasets', modelController.getDatasetsCatalog);
 
+// Phase 4C Probabilistic Calibration & Reliability Endpoints (before /:id)
+modelRoutes.get('/calibration/status', modelController.getCalibrationStatus);
+modelRoutes.get('/calibration/comparison', modelController.getCalibrationComparison);
+modelRoutes.post('/calibration/run', modelController.runCalibration);
+modelRoutes.get('/calibration/:id/reliability', modelController.getCalibrationModelReliability);
+modelRoutes.get('/calibration/:id', modelController.getCalibrationModelById);
+
 // Baseline & Tree experiments (fixed path before /:id)
 modelRoutes.get('/experiments', modelController.listExperiments);
 modelRoutes.get('/experiments/:id', modelController.getExperimentById);

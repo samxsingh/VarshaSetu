@@ -3,7 +3,7 @@
 
 ---
 
-#### Current Phase: PHASE 4A
+#### Current Phase: PHASE 4C
 **Status:** COMPLETED  
 **Last Updated:** September 2026
 
@@ -219,6 +219,36 @@
 
 ---
 
+## 8. Phase 4C: Probabilistic Calibration, Model Validation & Scientific Reliability
+- **Status:** COMPLETED
+
+### Completed in Phase 4C
+- [x] **Calibration Methods & Expanding-Window Folds (`ml-service/app/calibration/`):**
+  - `PlattCalibrator`: Univariate logistic calibration with negative log-likelihood minimization.
+  - `IsotonicCalibrator`: Non-parametric step function via Pool Adjacent Violators Algorithm (PAVA).
+  - `ModelProbabilityCalibrator`: Coordinates calibration pipelines with expanding-window chronological folds.
+- [x] **Verification & Decomposition Engine (`ml-service/app/calibration/reliability.py`):**
+  - 10-bin empirical reliability diagram calculator with Expected Calibration Error (ECE) and Maximum Calibration Error (MCE).
+  - Murphy (1973) Brier score decomposition ($BS \approx REL - RES + UNC$) with mathematical validity checks ($|\Delta| < 0.05$).
+  - Climatology reference Brier Skill Score calculation with zero-denominator guardrail.
+- [x] **Continuous Residual Uncertainty Estimation (`ml-service/app/calibration/uncertainty.py`):**
+  - Regression uncertainty intervals via empirical residual quantiles ($P_{10}, P_{50}, P_{90}$).
+  - Guardrail: sample count $< 20$ returns `INSUFFICIENT_DATA`.
+- [x] **Data Gate & Scientific Honesty Guardrails (`ml-service/app/calibration/data_gate.py`):**
+  - Gate rules: $N_{val} \ge 100$, min positive $\ge 30$, min negative $\ge 30$, min years $\ge 5$, min test $\ge 30$.
+  - Correctly evaluates Kharif 2024 dataset to `INSUFFICIENT_DATA`, gating operational calibration to `operational_calibration_active: false`.
+  - Zero fabricated calibration curves, zero synthetic 30-year histories.
+- [x] **Backend & Analyst UI Integration:**
+  - Node proxy routes in `backend/src/routes/modelRoutes.ts` and `backend/src/controllers/modelController.ts`.
+  - Analyst `CalibrationReliabilityPanel.tsx` in `frontend/src/components/analyst/` with accessible SVG reliability curve, Murphy decomposition, and raw vs calibrated benchmark table.
+- [x] **Verification:**
+  - `pytest ml-service/tests`: 50/50 tests passed (100%).
+  - `npm test` in `backend/`: 38/38 tests passed (100%).
+  - `npm test` in `frontend/`: 12/12 tests passed (100%).
+  - `npm run build` in `frontend/` and `backend/`: 0 errors.
+
+---
+
 ### Phase Status & Guardrails Summary
 - **Phase 1A:** COMPLETED
 - **Phase 1B:** COMPLETED
@@ -226,7 +256,9 @@
 - **Phase 2:** COMPLETED
 - **Phase 3:** COMPLETED
 - **Phase 4A:** COMPLETED
-- **Phase 4B:** **COMPLETED**
+- **Phase 4B:** COMPLETED
+- **Phase 4C:** **COMPLETED**
+- **Phase 4D:** **NOT STARTED** (Strict sequence enforced)
 - **Phase 5:** **NOT STARTED** (Strict sequence enforced)
 
 ---

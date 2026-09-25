@@ -198,6 +198,15 @@ def get_model_registry() -> Dict[str, Any]:
         try:
             data = joblib.load(f)
             meta = data.get("metadata") or {}
+            cal_info = meta.get("calibration") or {
+                "status": "INSUFFICIENT_DATA",
+                "method": "NONE",
+                "fitted": False,
+                "sampleCount": 0,
+                "validationPeriod": "N/A",
+                "testPeriod": "N/A",
+                "metrics": {}
+            }
             registered.append({
                 "model_id": data.get("model_id", f.stem),
                 "target_name": data.get("target_name", "unknown"),
@@ -205,6 +214,7 @@ def get_model_registry() -> Dict[str, Any]:
                 "task_type": data.get("config", {}).get("task_type", "classification"),
                 "feature_count": len(data.get("feature_names", [])),
                 "is_calibrated": meta.get("is_calibrated", False),
+                "calibration": cal_info,
                 "status": meta.get("status", "trained"),
                 "created_at": meta.get("created_at"),
                 "data_availability_status": meta.get("data_availability_status", "PARTIAL"),
@@ -359,4 +369,239 @@ def train_baseline_models(target: str = Query("ALL", enum=["HEAVY_RAIN", "DRY_SP
         "status": "success",
         "experiments_completed": len(results),
         "results": results
+    }
+
+
+# ====================================================================
+# PHASE 4C — PROBABILISTIC CALIBRATION & RELIABILITY ENDPOINTS
+# ====================================================================
+
+from .calibration.schemas import (
+    CalibrationGateStatus,
+    CalibrationDataGateReport,
+    ReliabilityReport,
+    CalibrationComparisonEntry,
+    ContinuousUncertaintyReport
+)
+from .calibration.data_gate import CalibrationDataGate
+from .calibration.reliability import ReliabilityAnalyzer
+from .calibration.pipeline import CalibrationPipeline
+
+
+class RunCalibrationRequest(BaseModel):
+    target_name: str = "HEAVY_RAIN"
+    horizon_days: int = 7
+    calibration_method: str = "PLATT"
+    block_id: str = "UP_LKO_BKT"
+
+
+class ValidateCalibrationRequest(BaseModel):
+    target_name: str = "HEAVY_RAIN"
+    horizon_days: int = 7
+    block_id: str = "UP_LKO_BKT"
+
+
+@app.get("/calibration/status")
+def get_calibration_status() -> Dict[str, Any]:
+    """Calibration operational readiness, data gate status, and data limitation disclosures."""
+    calib_dir = settings.ARTIFACTS_DIR / "calibration"
+    artifacts = [f.stem for f in calib_dir.glob("*.json")] if calib_dir.exists() else []
+
+    return {
+        "service": settings.SERVICE_NAME,
+        "phase": "PHASE_4C_CALIBRATION_STAGE",
+        "calibration_status": "INSUFFICIENT_DATA",
+        "operational_calibration_active": False,
+        "message": (
+            "Probabilistic calibration is INACTIVE for operational deployment. "
+            "Kharif 2024 (122 daily records) does not satisfy the multi-year statistical threshold "
+            "(min 100 validation samples, min 30/30 class balance, min 5 years). "
+            "Diagnostics and walk-forward evaluations remain available in diagnostic-only mode."
+        ),
+        "engineering_guardrails": {
+            "min_calibration_samples": 100,
+            "min_calibration_positive": 30,
+            "min_calibration_negative": 30,
+            "min_calibration_years": 5,
+            "min_test_samples": 30,
+            "note": "Engineering guardrails for statistical stability; not universal physical laws."
+        },
+        "available_calibration_artifacts": len(artifacts),
+        "supported_methods": ["PLATT_SCALING", "ISOTONIC_REGRESSION"]
+    }
+
+
+@app.get("/calibration/models")
+def get_calibration_models() -> Dict[str, Any]:
+    """Returns all models with their calibration status, method, and reliability metrics."""
+    models_dir = settings.ARTIFACTS_DIR / "models"
+    if not models_dir.exists():
+        return {"total_models": 0, "models": []}
+
+    registered = []
+    for f in sorted(models_dir.glob("*.joblib")):
+        try:
+            data = joblib.load(f)
+            meta = data.get("metadata") or {}
+            cal_info = meta.get("calibration") or {
+                "status": "INSUFFICIENT_DATA",
+                "method": "NONE",
+                "fitted": False,
+                "sampleCount": 0,
+                "validationPeriod": "N/A",
+                "testPeriod": "N/A",
+                "metrics": {}
+            }
+            registered.append({
+                "model_id": data.get("model_id", f.stem),
+                "target_name": data.get("target_name", "unknown"),
+                "task_type": data.get("config", {}).get("task_type", "classification"),
+                "calibration": cal_info
+            })
+        except Exception:
+            pass
+
+    return {
+        "status": "success",
+        "total_models": len(registered),
+        "models": registered
+    }
+
+
+@app.get("/calibration/models/{model_id}")
+def get_model_calibration_details(model_id: str) -> Dict[str, Any]:
+    """Retrieves specific model calibration parameters, state, and validation period."""
+    model_path = settings.ARTIFACTS_DIR / "models" / f"{model_id}.joblib"
+    if not model_path.exists():
+        raise HTTPException(status_code=404, detail=f"Model '{model_id}' not found.")
+
+    data = joblib.load(model_path)
+    meta = data.get("metadata") or {}
+    cal_info = meta.get("calibration") or {
+        "status": "INSUFFICIENT_DATA",
+        "method": "NONE",
+        "fitted": False,
+        "sampleCount": 0,
+        "validationPeriod": "N/A",
+        "testPeriod": "N/A",
+        "metrics": {}
+    }
+    return {
+        "model_id": data.get("model_id"),
+        "target_name": data.get("target_name"),
+        "calibration": cal_info
+    }
+
+
+@app.get("/calibration/models/{model_id}/reliability")
+def get_model_reliability_diagram(model_id: str) -> Dict[str, Any]:
+    """Retrieves probability reliability bins, ECE, MCE, and Brier decomposition for a model."""
+    calib_dir = settings.ARTIFACTS_DIR / "calibration"
+    # Find newest artifact matching model target or compute on-the-fly
+    matching = sorted(calib_dir.glob("*.json"), reverse=True) if calib_dir.exists() else []
+
+    if matching:
+        with open(matching[0], "r") as f:
+            artifact = json.load(f)
+            return {
+                "model_id": model_id,
+                "target_name": artifact.get("target_name", "HEAVY_RAIN"),
+                "calibration_status": artifact.get("calibration_status", "INSUFFICIENT_DATA"),
+                "expected_calibration_error": artifact.get("ece", 0.0),
+                "maximum_calibration_error": artifact.get("mce", 0.0),
+                "brier_score": artifact.get("brier_score", 0.0),
+                "log_loss": artifact.get("log_loss", 0.0),
+                "bins": artifact.get("reliability_bins", []),
+                "brier_decomposition": artifact.get("brier_decomposition"),
+                "diagnostic_only": True
+            }
+
+    # On-the-fly run if no artifact exists yet
+    res = CalibrationPipeline.run_calibration(target_name="HEAVY_RAIN", horizon_days=7)
+    rel_key = "xgboost" if "xgboost" in model_id.lower() else ("lightgbm" if "lightgbm" in model_id.lower() else "baseline_logistic")
+    rel_rep = res["reliability_reports"].get(rel_key) or list(res["reliability_reports"].values())[0]
+
+    return {
+        "model_id": model_id,
+        "target_name": res["target_name"],
+        "calibration_status": res["data_gate"]["status"],
+        "expected_calibration_error": rel_rep["expected_calibration_error"],
+        "maximum_calibration_error": rel_rep["maximum_calibration_error"],
+        "brier_score": rel_rep["brier_score"],
+        "log_loss": rel_rep["log_loss"],
+        "bins": rel_rep["bins"],
+        "brier_decomposition": res["brier_decompositions"].get(rel_key),
+        "diagnostic_only": True
+    }
+
+
+@app.get("/calibration/comparison")
+def get_calibration_comparison(
+    target: str = "HEAVY_RAIN",
+    horizon_days: int = 7,
+    method: str = "PLATT"
+) -> Dict[str, Any]:
+    """
+    Returns multi-model calibration comparison (Raw vs Calibrated Brier, Log Loss, ECE, MCE, ROC-AUC)
+    across all four paradigms on identical chronological test partition.
+    """
+    res = CalibrationPipeline.run_calibration(
+        target_name=target,
+        horizon_days=horizon_days,
+        calibration_method=method,
+        block_id="UP_LKO_BKT"
+    )
+    return {
+        "status": "success",
+        "data_gate": res["data_gate"],
+        "comparison": res["comparison"],
+        "uncertainty_reports": res["uncertainty_reports"],
+        "artifact_saved": res["artifact_saved"]
+    }
+
+
+@app.post("/calibration/run")
+def run_calibration_pipeline(req: RunCalibrationRequest) -> Dict[str, Any]:
+    """
+    Executes full calibration pipeline:
+    1. Data gate evaluation
+    2. Model fitting on train partition
+    3. Calibration fitting on validation partition
+    4. Evaluation on untouched test partition
+    5. Saves reproducible artifact
+    """
+    res = CalibrationPipeline.run_calibration(
+        target_name=req.target_name,
+        horizon_days=req.horizon_days,
+        calibration_method=req.calibration_method,
+        block_id=req.block_id
+    )
+    return {
+        "status": "success",
+        "result": res
+    }
+
+
+@app.post("/calibration/validate")
+def validate_calibration_gate(req: ValidateCalibrationRequest) -> Dict[str, Any]:
+    """Evaluates data sufficiency gate for given target and horizon without modifying models."""
+    df_features, _ = TreeTrainingPipeline.load_feature_matrix(block_id=req.block_id)
+    target_col = f"target_{req.target_name.lower()}_{req.horizon_days}d"
+    if target_col not in df_features.columns:
+        target_col = f"target_rain_sum_{req.horizon_days}d"
+
+    valid_df = df_features.dropna(subset=[target_col]).reset_index(drop=True)
+    splits = ChronologicalSplitter.split_by_ratio(valid_df, train_ratio=0.7, val_ratio=0.15, test_ratio=0.15)
+
+    gate = CalibrationDataGate()
+    gate_report = gate.evaluate(
+        train_df=splits.train,
+        val_df=splits.val,
+        test_df=splits.test,
+        target_col=target_col,
+        date_col="date"
+    )
+    return {
+        "status": "success",
+        "data_gate": gate_report.model_dump()
     }

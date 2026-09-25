@@ -1,12 +1,23 @@
 """
 VarshaSetu - Tree Model Metadata
 Structured provenance tracking for trained XGBoost / LightGBM models.
+Includes Phase 4C probabilistic calibration metadata.
 """
 
 from typing import Dict, List, Optional, Any
 from datetime import datetime, timezone
 from pydantic import BaseModel, Field
 from .config import TreeModelConfig
+
+
+class ModelCalibrationMetadata(BaseModel):
+    status: str = "INSUFFICIENT_DATA"  # NOT_ATTEMPTED, INSUFFICIENT_DATA, DIAGNOSTIC_ONLY, CALIBRATED, FAILED_VALIDATION
+    method: str = "NONE"               # NONE, PLATT, ISOTONIC
+    fitted: bool = False
+    sampleCount: int = 0
+    validationPeriod: str = "N/A"
+    testPeriod: str = "N/A"
+    metrics: Dict[str, Any] = Field(default_factory=dict)
 
 
 class TreeModelMetadata(BaseModel):
@@ -24,6 +35,7 @@ class TreeModelMetadata(BaseModel):
     test_sample_count: int
     is_calibrated: bool = False
     calibration_method: Optional[str] = None
+    calibration: ModelCalibrationMetadata = Field(default_factory=ModelCalibrationMetadata)
     metrics: Dict[str, Any] = Field(default_factory=dict)
     feature_importances: Dict[str, float] = Field(default_factory=dict)
     model_path: Optional[str] = None

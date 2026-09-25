@@ -2,7 +2,7 @@
 > *“From climate signals to confident farm decisions.”*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Status: Phase 4B Complete](https://img.shields.io/badge/Status-Phase%204B%20Complete-emerald.svg)](#roadmap)
+[![Status: Phase 4C Complete](https://img.shields.io/badge/Status-Phase%204C%20Complete-emerald.svg)](#roadmap)
 [![Stack: TypeScript & Python](https://img.shields.io/badge/Stack-TypeScript%20%7C%20Python%203.11-slate.svg)](#technology-stack)
 
 ---
@@ -28,7 +28,7 @@ cd backend
 npm install
 npm run migrate   # Applies 7 migrations (geography, auth, sources, ingestion)
 npm run seed      # Seeds demonstration administrative hierarchy & demo users
-npm test          # Runs 35 API, RBAC, and model benchmark tests
+npm test          # Runs 38 API, RBAC, downscaling, and calibration tests
 npm run dev       # Starts backend API on http://localhost:5001
 ```
 
@@ -38,7 +38,7 @@ cd ml-service
 python3.11 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-pytest            # Runs 36 provider, tree ensemble, and SHAP explainability tests
+pytest            # Runs 50 provider, tree ensemble, SHAP, and calibration tests
 uvicorn app.main:app --port 8000 --reload  # Starts ML service on http://localhost:8000
 ```
 
@@ -46,7 +46,7 @@ uvicorn app.main:app --port 8000 --reload  # Starts ML service on http://localho
 ```bash
 cd frontend
 npm install
-npm test          # Runs 9 UI, accessibility, and analyst benchmark tests
+npm test          # Runs 12 UI, accessibility, and analyst calibration tests
 npm run dev       # Starts Vite dev server on http://localhost:5173
 ```
 
@@ -57,6 +57,7 @@ npm run dev       # Starts Vite dev server on http://localhost:5173
 - **[Product Requirements (PRD)](docs/PRD.md):** 28 sections detailing user personas, 4 forecast targets, and agronomic logic.
 - **[System Architecture](docs/architecture.md):** 23 sections covering data flows, PostGIS schemas, ML ensemble architecture, and security.
 - **[ML Downscaling & Tree Ensembles](docs/ml-downscaling.md):** XGBoost/LightGBM ensembles, spatial downscaling guardrails, multi-model benchmarking, and SHAP explainability.
+- **[Probabilistic Calibration & Reliability](docs/probabilistic-calibration.md):** Platt/Isotonic calibration, reliability diagrams, Murphy (1973) Brier score decomposition, and data sufficiency gatekeepers.
 - **[Scientific Data Catalog](docs/scientific-data-catalog.md):** Specification of ENSO, IOD, MJO, and ERA5-Land variables, physical bounds QC, and derived features.
 - **[Data Pipeline Architecture](docs/data-pipeline.md):** End-to-end ingestion lifecycle, retry policies, Parquet storage, and PostgreSQL tracking.
 - **[Provider Integration Guide](docs/provider-integration.md):** Connection contracts, parsing protocols, and rate-limiting resilience for NOAA, BoM, and Open-Meteo.

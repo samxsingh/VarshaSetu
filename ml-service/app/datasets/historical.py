@@ -5,7 +5,7 @@ into multi-decade historical archives (ERA5-Land 1950-present, IMD gridded rainf
 Provides schema validation and monotonic date verification for joined archives.
 """
 
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Tuple
 from pydantic import BaseModel, Field
 import pandas as pd
 import numpy as np
@@ -64,7 +64,7 @@ def validate_and_merge_multi_year(
     slices: List[pd.DataFrame],
     required_variables: List[str],
     date_col: str = "date"
-) -> Tuple_Result:
+) -> Tuple[MultiYearValidationResult, pd.DataFrame]:
     """
     Validates and merges multi-year slice DataFrames into a unified continuous time series.
     """

@@ -12,6 +12,9 @@ vi.mock('../services/modelService', () => ({
     getDatasetsCatalog: vi.fn(),
     getExperiments: vi.fn(),
     trainTreeModel: vi.fn(),
+    getCalibrationStatus: vi.fn(),
+    getCalibrationComparison: vi.fn(),
+    getCalibrationModelReliability: vi.fn(),
   },
 }));
 
@@ -125,6 +128,56 @@ describe('ModelsPage Component (Phase 4B Tree Downscaling Stage)', () => {
       data: {
         total: 0,
         experiments: [],
+      },
+    });
+
+    vi.mocked(modelService.getCalibrationStatus).mockResolvedValue({
+      success: true,
+      data: {
+        service: 'varshasetu-calibration-engine',
+        phase: 'PHASE_4C_CALIBRATION_RELIABILITY_STAGE',
+        calibration_status: 'INSUFFICIENT_DATA',
+        operational_calibration_active: false,
+        active_calibrator_type: 'NONE',
+        gate_status: 'INSUFFICIENT_DATA',
+        diagnostics_available: true,
+        reason: 'Current dataset has 122 observations (Kharif 2024 single-season).',
+      },
+    });
+
+    vi.mocked(modelService.getCalibrationComparison).mockResolvedValue({
+      success: true,
+      data: {
+        target_name: 'HEAVY_RAIN',
+        horizon_days: 7,
+        gate_status: 'INSUFFICIENT_DATA',
+        comparison: [],
+      },
+    });
+
+    vi.mocked(modelService.getCalibrationModelReliability).mockResolvedValue({
+      success: true,
+      data: {
+        model_id: 'xgboost',
+        target_name: 'HEAVY_RAIN',
+        horizon_days: 7,
+        reliability_diagram: {
+          brier_score: 0.112,
+          brier_skill_score: 0.1937,
+          expected_calibration_error: 0.082,
+          maximum_calibration_error: 0.145,
+          sample_size: 18,
+          brier_decomposition: {
+            reliability: 0.021,
+            resolution: 0.045,
+            uncertainty: 0.136,
+            brier_score: 0.112,
+          },
+          bins: [
+            { bin_index: 0, bin_lower: 0.0, bin_upper: 0.1, mean_predicted_probability: 0.05, observed_frequency: 0.0, sample_count: 10, is_empty: false },
+            { bin_index: 1, bin_lower: 0.1, bin_upper: 0.2, mean_predicted_probability: 0.15, observed_frequency: 0.2, sample_count: 5, is_empty: false },
+          ],
+        },
       },
     });
 

@@ -77,3 +77,17 @@ Feature attributions are mapped into physical domain categories:
 | `/api/v1/models/:id/explanations`| `GET` | Retrieves global SHAP feature importances and domain driver rankings. |
 | `/api/v1/models/train` | `POST` | Triggers downscaling training pipeline and model persistence. |
 | `/api/v1/models/:id/explain` | `POST` | Generates sample-level SHAP explanation report. |
+| `/api/v1/models/calibration/status` | `GET` | Returns calibration data gate status and active calibrator disclosures. |
+| `/api/v1/models/calibration/comparison` | `GET` | Compares raw vs calibrated Brier score, ECE, MCE, and BSS across benchmarks. |
+| `/api/v1/models/calibration/:id/reliability` | `GET` | Returns 10-bin empirical reliability diagram and Murphy (1973) Brier decomposition. |
+
+---
+
+## 6. Phase 4C Calibration & Reliability Integration
+
+Model probabilities from tree ensembles undergo rigorous probabilistic calibration and empirical validation:
+- **Platt Scaling & Isotonic Calibration**: Fit exclusively on chronological validation partitions.
+- **Murphy (1973) Brier Decomposition**: Error is formally separated into Reliability (REL), Resolution (RES), and Uncertainty (UNC).
+- **Engineering Data Gate**: Evaluates sample size and extreme-event sufficiency. On the single-season Kharif 2024 dataset, operational calibration is explicitly gated as `INSUFFICIENT_DATA`, ensuring zero false operational claims.
+- See detailed documentation in [docs/probabilistic-calibration.md](file:///Users/sameersingh/Desktop/VarshaSetu/docs/probabilistic-calibration.md).
+

@@ -6,23 +6,21 @@ import {
   ModelExplanationsResponse,
   DatasetCatalogItem,
   ExperimentRecordItem,
+  CalibrationStatusResponse,
+  CalibrationComparisonResponse,
+  ReliabilityReportResponse,
 } from '../../services/modelService';
 import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
+import { CalibrationReliabilityPanel } from '../../components/analyst/CalibrationReliabilityPanel';
 import {
-  Cpu,
   AlertCircle,
-  Activity,
-  CheckCircle2,
   RefreshCw,
   FlaskConical,
   Scale,
-  Calendar,
-  Layers,
   Database,
   Compass,
-  TrendingUp,
 } from 'lucide-react';
 
 export const ModelsPage: React.FC = () => {
@@ -31,6 +29,10 @@ export const ModelsPage: React.FC = () => {
   const [explanations, setExplanations] = useState<ModelExplanationsResponse | null>(null);
   const [datasets, setDatasets] = useState<DatasetCatalogItem[]>([]);
   const [experiments, setExperiments] = useState<ExperimentRecordItem[]>([]);
+  const [calibStatus, setCalibStatus] = useState<CalibrationStatusResponse | null>(null);
+  const [calibComp, setCalibComp] = useState<CalibrationComparisonResponse | null>(null);
+  const [reliability, setReliability] = useState<ReliabilityReportResponse | null>(null);
+
   const [selectedTarget, setSelectedTarget] = useState<string>('HEAVY_RAIN');
   const [selectedHorizon, setSelectedHorizon] = useState<number>(7);
   const [loading, setLoading] = useState<boolean>(true);
@@ -41,12 +43,24 @@ export const ModelsPage: React.FC = () => {
   const fetchData = async () => {
     try {
       setError(null);
-      const [statusRes, compRes, expRes, catRes, expRecordRes] = await Promise.all([
+      const [
+        statusRes,
+        compRes,
+        expRes,
+        catRes,
+        expRecordRes,
+        calStatusRes,
+        calCompRes,
+        relRes,
+      ] = await Promise.all([
         modelService.getStatus(),
         modelService.getComparison(selectedTarget, selectedHorizon),
         modelService.getModelExplanations('xgboost_heavy_rain_7d'),
         modelService.getDatasetsCatalog(),
         modelService.getExperiments(),
+        modelService.getCalibrationStatus(),
+        modelService.getCalibrationComparison(selectedTarget, selectedHorizon),
+        modelService.getCalibrationModelReliability('xgboost'),
       ]);
 
       if (statusRes.success) setStatus(statusRes.data);
@@ -54,6 +68,9 @@ export const ModelsPage: React.FC = () => {
       if (expRes.success) setExplanations(expRes.data);
       if (catRes.success) setDatasets(catRes.data.catalog);
       if (expRecordRes.success) setExperiments(expRecordRes.data.experiments);
+      if (calStatusRes.success) setCalibStatus(calStatusRes.data);
+      if (calCompRes.success) setCalibComp(calCompRes.data);
+      if (relRes.success) setReliability(relRes.data);
     } catch (err: any) {
       setError(err?.message || 'Failed to load model registry telemetry.');
     } finally {
@@ -94,10 +111,11 @@ export const ModelsPage: React.FC = () => {
                 Operational Downscaling & Model Benchmark Registry
               </h1>
               <Badge variant="teal" size="sm">Phase 4B Ensembles</Badge>
-              <Badge variant="amber" size="sm">Block Centroid (~9km)</Badge>
+              <Badge variant="amber" size="sm">Phase 4C Calibration</Badge>
+              <Badge variant="neutral" size="sm">Block Centroid (~9km)</Badge>
             </div>
             <p className="text-xs text-slate-600 mt-1">
-              Evaluating multi-paradigm downscaling models (Climatology vs Linear Baselines vs XGBoost vs LightGBM) on identical chronological partitions with zero data leakage.
+              Evaluating multi-paradigm downscaling models (Climatology vs Linear Baselines vs XGBoost vs LightGBM) with empirical reliability diagrams and Murphy (1973) Brier score decompositions.
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -257,6 +275,14 @@ export const ModelsPage: React.FC = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* PHASE 4C: Probability Reliability & Calibration Diagnostics Panel */}
+      <CalibrationReliabilityPanel
+        status={calibStatus}
+        comparison={calibComp}
+        reliability={reliability}
+        selectedTarget={selectedTarget}
+      />
 
       {/* SHAP Feature Contribution & Explainability */}
       <Card>
