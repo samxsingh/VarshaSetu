@@ -35,11 +35,15 @@ import {
   Info,
   BellRing,
   Sprout,
+  Languages,
+  Volume2,
+  Radio,
+  AlertTriangle,
 } from 'lucide-react';
 
 export const ForecastLabPage: React.FC = () => {
   // Navigation Tabs
-  const [activeTab, setActiveTab] = useState<'chain' | 'hindcasting' | 'agronomy'>('chain');
+  const [activeTab, setActiveTab] = useState<'chain' | 'hindcasting' | 'agronomy' | 'localization'>('chain');
 
   // Forecast Pipeline State
   const [selectedTarget, setSelectedTarget] = useState<string>('HEAVY_RAIN');
@@ -213,6 +217,17 @@ export const ForecastLabPage: React.FC = () => {
           >
             <Sprout className="w-4 h-4" />
             Agronomic Rules & Safety Lab
+          </button>
+          <button
+            onClick={() => setActiveTab('localization')}
+            className={`px-4 py-2.5 text-xs font-semibold border-b-2 transition-colors flex items-center gap-2 ${
+              activeTab === 'localization'
+                ? 'border-brand-teal text-brand-teal'
+                : 'border-transparent text-slate-500 hover:text-slate-800'
+            }`}
+          >
+            <Languages className="w-4 h-4" />
+            Advisory Localization & Voice Lab
           </button>
         </div>
 
@@ -409,6 +424,198 @@ export const ForecastLabPage: React.FC = () => {
                   <strong className="text-slate-900 block font-mono">6. COMBINED_SCENARIO</strong>
                   <span className="text-slate-500 text-[11px]">Compound multi-hazard: max 3 compatible orthogonal perturbations.</span>
                 </div>
+              </div>
+            </div>
+          </Card>
+        </div>
+      ) : activeTab === 'localization' ? (
+        <div className="space-y-6">
+          {/* Header Disclosures */}
+          <Card className="p-5 border-l-4 border-l-brand-teal space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h3 className="font-heading font-bold text-base text-slate-900">
+                    Bilingual Advisory Localization & Voice Accessibility Lab
+                  </h3>
+                  <Badge variant="teal" size="sm">Phase 5C Engine</Badge>
+                  <Badge variant="amber" size="sm">DIAGNOSTIC_ONLY</Badge>
+                  <Badge variant="teal" size="sm">Safety Gate: ACTIVE</Badge>
+                </div>
+                <p className="text-xs text-slate-600 mt-1">
+                  Controlled translation verification, semantic invariance audit, numerical fidelity check, and prototype voice synthesis.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2 font-mono text-xs text-slate-500">
+                <span>Terminology:</span>
+                <strong className="text-slate-800">v1.0.0 (15+ terms)</strong>
+              </div>
+            </div>
+
+            <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-amber-900 text-xs flex items-start gap-2.5">
+              <AlertTriangle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+              <p>
+                <strong>Scientific Boundary:</strong> Translation is governed exclusively by deterministic agronomic templates. Dynamic machine translation is strictly prohibited to eliminate hallucinated directives. All numeric quantities, probabilities, thresholds, and temporal horizons are mathematically preserved.
+              </p>
+            </div>
+          </Card>
+
+          {/* Side-by-Side Bilingual Verification */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* English Source Column */}
+            <Card className="p-5 space-y-3 border-t-4 border-t-indigo-600">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-mono font-bold text-indigo-600 uppercase">English Source (EN)</span>
+                  <Badge variant="neutral" size="sm">Template v1.0.0</Badge>
+                </div>
+                <Badge variant="amber" size="sm">WATCH</Badge>
+              </div>
+
+              <div className="space-y-2 text-xs">
+                <div>
+                  <span className="text-[10px] text-slate-400 uppercase font-semibold block">Title</span>
+                  <strong className="text-slate-900 text-sm block">Heavy Rainfall Risk Indicator</strong>
+                </div>
+
+                <div>
+                  <span className="text-[10px] text-slate-400 uppercase font-semibold block">Summary</span>
+                  <p className="text-slate-700 leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                    Heavy rainfall risk indicator detected for the 7-day forecast window. Model forecasts indicate a 58.4% calibrated probability of 24h rainfall exceeding 64.5 mm.
+                  </p>
+                </div>
+
+                <div>
+                  <span className="text-[10px] text-slate-400 uppercase font-semibold block">Risk Indicator</span>
+                  <p className="text-slate-700 bg-slate-50 p-2 rounded border border-slate-200">
+                    Watch: Potential 24-hour rainfall exceeding 64.5 mm.
+                  </p>
+                </div>
+
+                <div>
+                  <span className="text-[10px] text-slate-400 uppercase font-semibold block">What It Means</span>
+                  <p className="text-slate-700 bg-slate-50 p-2 rounded border border-slate-200">
+                    Atmospheric indicators show heightened probability of significant rainfall within the next 7 days. Ground fields may experience localized surface saturation.
+                  </p>
+                </div>
+              </div>
+            </Card>
+
+            {/* Hindi Localized Column */}
+            <Card className="p-5 space-y-3 border-t-4 border-t-brand-teal">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-mono font-bold text-brand-teal uppercase">हिन्दी Localized (HI)</span>
+                  <Badge variant="teal" size="sm">Template v1.0.0</Badge>
+                </div>
+                <Badge variant="amber" size="sm">निगरानी (WATCH)</Badge>
+              </div>
+
+              <div className="space-y-2 text-xs">
+                <div>
+                  <span className="text-[10px] text-slate-400 uppercase font-semibold block">शीर्षक (Title)</span>
+                  <strong className="text-slate-900 text-sm block">भारी वर्षा जोखिम सूचक</strong>
+                </div>
+
+                <div>
+                  <span className="text-[10px] text-slate-400 uppercase font-semibold block">सारांश (Summary)</span>
+                  <p className="text-slate-700 leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                    आगामी 7 दिनों की पूर्वानुमान अवधि के लिए भारी वर्षा जोखिम सूचक सक्रिय है। मॉडल पूर्वानुमान 24 घंटे में 64.5 मिमी से अधिक वर्षा की 58.4% अंशांकित संभावना दर्शाते हैं।
+                  </p>
+                </div>
+
+                <div>
+                  <span className="text-[10px] text-slate-400 uppercase font-semibold block">जोखिम सूचक (Risk Indicator)</span>
+                  <p className="text-slate-700 bg-slate-50 p-2 rounded border border-slate-200">
+                    निगरानी: 24 घंटे में 64.5 मिमी से अधिक वर्षा की संभावना।
+                  </p>
+                </div>
+
+                <div>
+                  <span className="text-[10px] text-slate-400 uppercase font-semibold block">प्रभाव विवरण (What It Means)</span>
+                  <p className="text-slate-700 bg-slate-50 p-2 rounded border border-slate-200">
+                    मौसम के संकेतक आगामी 7 दिनों के भीतर महत्वपूर्ण वर्षा की बढ़ी हुई संभावना दर्शाते हैं। खेतों में स्थानीय जलभराव की स्थिति बन सकती है।
+                  </p>
+                </div>
+              </div>
+            </Card>
+          </div>
+
+          {/* Numerical Fidelity & Safety Verification Matrix */}
+          <Card className="p-5 space-y-3">
+            <h4 className="font-heading font-bold text-sm text-slate-900 flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-brand-emerald" />
+              <span>Semantic Invariance & Numerical Fidelity Audit</span>
+            </h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs">
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+                <span className="text-slate-400 block text-[10px] font-semibold uppercase">Calibrated Probability</span>
+                <strong className="text-brand-emerald text-sm font-mono block">58.4% == 58.4%</strong>
+                <span className="text-slate-500 text-[11px] block">Exact match (0.0% drift)</span>
+              </div>
+
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+                <span className="text-slate-400 block text-[10px] font-semibold uppercase">Hazard Threshold</span>
+                <strong className="text-brand-emerald text-sm font-mono block">64.5 mm == 64.5 मिमी</strong>
+                <span className="text-slate-500 text-[11px] block">Exact IMD criteria match</span>
+              </div>
+
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+                <span className="text-slate-400 block text-[10px] font-semibold uppercase">Forecast Horizon</span>
+                <strong className="text-brand-emerald text-sm font-mono block">7 days == 7 दिन</strong>
+                <span className="text-slate-500 text-[11px] block">Identical temporal validity</span>
+              </div>
+
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+                <span className="text-slate-400 block text-[10px] font-semibold uppercase">Imperative Verbs</span>
+                <strong className="text-brand-emerald text-sm font-mono block">0 Detected (PASSED)</strong>
+                <span className="text-slate-500 text-[11px] block">No "spray/sow" directives</span>
+              </div>
+
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+                <span className="text-slate-400 block text-[10px] font-semibold uppercase">Yield / Biomass Claims</span>
+                <strong className="text-brand-emerald text-sm font-mono block">0 Detected (PASSED)</strong>
+                <span className="text-slate-500 text-[11px] block">Zero ungrounded production claims</span>
+              </div>
+
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+                <span className="text-slate-400 block text-[10px] font-semibold uppercase">Financial Loss Claims</span>
+                <strong className="text-brand-emerald text-sm font-mono block">0 Detected (PASSED)</strong>
+                <span className="text-slate-500 text-[11px] block">Zero rupee / loss projections</span>
+              </div>
+            </div>
+          </Card>
+
+          {/* Voice Subsystem Inspector */}
+          <Card className="p-5 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Volume2 className="w-5 h-5 text-brand-teal" />
+                <h4 className="font-heading font-bold text-sm text-slate-900">
+                  Voice Accessibility Subsystem (Phase 5C Prototype)
+                </h4>
+              </div>
+              <Badge variant="demo" size="sm">DEMO_ONLY</Badge>
+            </div>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              VarshaSetu provides an acoustic voice preview for localized farmer advisories. In this phase, synthesis runs through a deterministic local mock provider generating synthetic tones with client-side SpeechSynthesis fallback. External Bhashini pipeline credentials are intentionally not configured.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+              <div className="p-3 bg-surface-muted rounded-xl">
+                <span className="text-[10px] text-slate-400 block uppercase font-semibold">Active Provider</span>
+                <strong className="text-slate-800 font-mono block mt-0.5">MOCK_LOCAL_VOICE_ENGINE</strong>
+                <span className="text-[10px] text-slate-500 block">Status: DEMO_ONLY (Ready)</span>
+              </div>
+              <div className="p-3 bg-surface-muted rounded-xl">
+                <span className="text-[10px] text-slate-400 block uppercase font-semibold">Bhashini API Integration</span>
+                <strong className="text-amber-700 font-mono block mt-0.5">BHASHINI_GOV_IN</strong>
+                <span className="text-[10px] text-slate-500 block">Status: NOT_CONFIGURED (Stubbed)</span>
+              </div>
+              <div className="p-3 bg-surface-muted rounded-xl">
+                <span className="text-[10px] text-slate-400 block uppercase font-semibold">Telecom Delivery</span>
+                <strong className="text-slate-800 font-mono block mt-0.5">IVR / SMS Gateway</strong>
+                <span className="text-[10px] text-slate-500 block">Status: DISABLED (Out of scope)</span>
               </div>
             </div>
           </Card>

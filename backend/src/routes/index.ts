@@ -10,6 +10,7 @@ import { notificationRoutes } from './notificationRoutes';
 import { operationRoutes } from './operationRoutes';
 import { advisoryRoutes } from './advisoryRoutes';
 import { scenarioRoutes } from './scenarioRoutes';
+import { localizationRoutes } from './localizationRoutes';
 import { scenarioController } from '../controllers/scenarioController';
 import { requireAuth } from '../middleware/authMiddleware';
 import { requireRole, requirePermission } from '../middleware/rbacMiddleware';
@@ -32,6 +33,8 @@ apiRouter.get('/agronomy/scenario-registry', scenarioController.getRegistry);
 apiRouter.use('/agronomy/scenarios', scenarioRoutes);
 apiRouter.use('/agronomy', advisoryRoutes);
 apiRouter.use('/advisories', advisoryRoutes);
+apiRouter.use('/localization', localizationRoutes);
+apiRouter.use('/voice', localizationRoutes);
 
 // RBAC demonstration & test endpoints
 apiRouter.get(

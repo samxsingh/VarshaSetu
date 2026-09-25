@@ -3,7 +3,7 @@
 
 ---
 
-#### Current Phase: PHASE 4E
+#### Current Phase: PHASE 5C
 **Status:** COMPLETED  
 **Last Updated:** September 2026
 
@@ -479,6 +479,45 @@
 
 ---
 
+## 12. Phase 5C: Multilingual Agronomic Advisory Delivery, Voice Accessibility & Personalization
+- **Status:** COMPLETED
+- Delivered presentation-layer transformation of scientific agronomic advisories into accessible, bilingual (English & हिन्दी), and voice-assisted formats without semantic distortion or numerical drift.
+
+### Completed in Phase 5C
+- [x] **Controlled Language Registry & Terminology Catalog (`ml-service/app/localization/`):**
+  - Controlled Language Registry supporting `EN` and `HI` via `CONTROLLED_TEMPLATE` translation.
+  - Versioned Terminology Catalog (`TERMINOLOGY_VERSION = "1.0.0"`) with 15+ core agro-meteorological concepts (`HEAVY_RAIN`, `DRY_SPELL`, `EXTREME_RAIN`, `MONSOON_ONSET`, `FALSE_ONSET`, `RAINFALL_DEFICIT`, `RAINFALL_SURPLUS`, `WATERLOGGING`, `SOIL_MOISTURE_STRESS`, `FORECAST_PROBABILITY`, etc.).
+  - Deterministic bilingual template engine covering all 9 Phase 5A rules with strict mathematical variable interpolation.
+- [x] **Localization Safety Gate (`LocalizationSafetyGate`):**
+  - 14 automated checks blocking imperative command verbs in EN and HI (`spray`, `sow`, `छिड़काव करें`, `बोआई करें`, etc.).
+  - Automated rejection of ungrounded yield and biomass claims (`yield`, `biomass`, `उपज`, `पैदावार`, etc.).
+  - Automated rejection of financial/monetary claims (`revenue`, `profit`, `रुपये`, `₹`, etc.).
+  - Automated numerical drift check verifying that all probabilities, thresholds, units, and horizons match 100% between source and localized output.
+- [x] **Voice Accessibility Subsystem (`ml-service/app/voice/`):**
+  - Uniform `VoiceProvider` interface with `VoiceStatus` (`NOT_CONFIGURED`, `DEMO_ONLY`, `READY`, `ERROR`).
+  - `MockVoiceProvider`: Generates deterministic PCM WAV audio headers, soft acoustic tone waveforms, reading duration, and transcript metadata in `DEMO_ONLY` mode.
+  - `BhashiniVoiceProvider`: Realistically checks for external credentials and reports `NOT_CONFIGURED` gracefully without fabricated keys or connections.
+  - `VoiceService` singleton dispatcher managing providers and health inspection.
+- [x] **ML Service REST API (`ml-service/app/main.py`):**
+  - Mounted: `GET /agronomy/languages`, `GET /agronomy/terminology`, `POST /agronomy/localize`, `GET /agronomy/advisories/{id}/localized`, `GET /agronomy/voice/status`, `POST /agronomy/advisories/{id}/voice`.
+  - 174/174 unit tests passing in `ml-service/`.
+- [x] **PostgreSQL Schema & Persistence (`backend/`):**
+  - Migration `011_multilingual_advisory_delivery.sql`: created `localized_advisories`, `advisory_reads`, and `voice_synthesis_logs` tables. Applied via `npm run migrate`.
+  - Repository `localizationRepository.ts` with upsert, query, and receipt logging methods.
+  - Controller `localizationController.ts` and routes `localizationRoutes.ts` mounted under `/api/v1/advisories` and `/api/v1/voice`.
+  - 85/85 backend integration tests passing, zero TypeScript build errors.
+- [x] **Frontend User Interfaces (`frontend/`):**
+  - Updated `shared/types/advisory.ts` and `advisoryService.ts` with Phase 5C data models and service methods.
+  - Upgraded `FarmerAdvisoryPage.tsx`: Bilingual toggle (`[English] [हिन्दी]`), voice audio player with playback speed controls and `DEMO_ONLY` disclosure, "Mark as Read / पढ़ा हुआ चिह्नित करें" interaction, and Controlled Terminology Glossary modal.
+  - Upgraded `OfficerAdvisoriesPage.tsx`: Added bilingual preview mode (`EN` / `HI`) and Safety Gate enforcement badge.
+  - Upgraded `GovernmentDashboardPage.tsx`: Added Multilingual Delivery & Voice Accessibility card.
+  - Upgraded `ForecastLabPage.tsx`: Added dedicated "Advisory Localization & Voice Lab" tab with side-by-side bilingual comparison, numerical fidelity audit checklist, voice provider inspector, and terminology browser.
+  - 61/61 frontend tests passing, Vite production build clean.
+- [x] **Full Regression Verification:**
+  - **174 ML Service + 85 Backend + 61 Frontend = 320 total tests passing (100%)**.
+
+---
+
 ### Phase Status & Guardrails Summary
 - **Phase 1A:** COMPLETED
 - **Phase 1B:** COMPLETED
@@ -492,17 +531,15 @@
 - **Phase 4E:** COMPLETED
 - **Phase 4F:** COMPLETED
 - **Phase 5A:** COMPLETED
-- **Phase 5B:** **COMPLETED**
-- **Phase 5C:** **NOT STARTED** (Strict sequence enforced)
+- **Phase 5B:** COMPLETED
+- **Phase 5C:** **COMPLETED**
 - **Phase 6:** **NOT STARTED** (Strict sequence enforced)
 
 ---
 
-## 12. Pending (Future Phases)
-- [ ] **Phase 5C: Multi-Season Agronomic Validation & Reliability**
-  - DO NOT START UNTIL INSTRUCTED.
+## 13. Pending (Future Phases)
 - [ ] **Phase 6: Voice & Dissemination Gateway**
-  - Bhashini ASR/TTS contract integration.
+  - Bhashini ASR/TTS production pipeline integration.
   - WhatsApp/SMS broadcasting gateway.
 
 ---

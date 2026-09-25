@@ -1383,5 +1383,161 @@ def get_scenario_provenance(scenario_id: str) -> Dict[str, Any]:
     return provenance
 
 
+# ====================================================================
+# PHASE 5C — MULTILINGUAL ADVISORY DELIVERY & VOICE ACCESSIBILITY
+# ====================================================================
+
+from .localization.schemas import (
+    LanguageCode,
+    TranslationMethod,
+    LocalizedAdvisory,
+    AdvisoryLocalizationRequest,
+    AdvisoryLocalizationResponse,
+    LanguageRegistryResponse,
+)
+from .localization.terminology import TerminologyCatalog
+from .localization.translator import AdvisoryTranslator
+from .localization.safety import LocalizationSafetyGate, LocalizationSafetyViolation
+from .voice.schemas import VoiceSynthesisRequest, VoiceSynthesisResponse, VoiceStatus
+from .voice.service import voice_service
+
+
+@app.get("/agronomy/languages")
+def get_supported_languages() -> Dict[str, Any]:
+    """Retrieves supported language catalog and deterministic translation policies."""
+    return {
+        "supported_languages": [
+            {"code": "EN", "name": "English", "native_name": "English", "status": "ACTIVE"},
+            {"code": "HI", "name": "Hindi", "native_name": "हिन्दी", "status": "ACTIVE"},
+        ],
+        "default_language": "EN",
+        "translation_engine": "CONTROLLED_DETERMINISTIC_TEMPLATES",
+        "terminology_version": TerminologyCatalog.get_version(),
+        "disclaimer": (
+            "Advisory localization is governed by strictly controlled deterministic agronomic templates. "
+            "Unvetted machine translation and hallucinated directives are strictly blocked."
+        ),
+    }
+
+
+@app.get("/agronomy/terminology")
+def get_controlled_terminology() -> Dict[str, Any]:
+    """Returns the immutable versioned bilingual agro-meteorological glossary."""
+    entries = TerminologyCatalog.get_all_entries()
+    return {
+        "version": TerminologyCatalog.get_version(),
+        "total_terms": len(entries),
+        "terms": [e.model_dump(mode="json") for e in entries],
+        "classification": "CONTROLLED_VOCABULARY",
+    }
+
+
+@app.post("/agronomy/localize")
+def localize_advisory(req: AdvisoryLocalizationRequest) -> Dict[str, Any]:
+    """
+    Localizes an advisory into the designated language (EN or HI)
+    using deterministic templates with LocalizationSafetyGate verification.
+    """
+    target_advisory = None
+    if req.advisory:
+        target_advisory = req.advisory
+    elif req.advisory_id:
+        adv_obj = advisory_engine.get_advisory_by_id(req.advisory_id)
+        if adv_obj:
+            target_advisory = adv_obj.model_dump(mode="json")
+
+    if not target_advisory:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Advisory '{req.advisory_id or 'unknown'}' not found for localization.",
+        )
+
+    try:
+        localized = AdvisoryTranslator.localize(
+            source_advisory=target_advisory,
+            target_lang=req.target_language,
+        )
+        return {
+            "localized_advisory": localized.model_dump(mode="json"),
+            "safety_gate_status": "PASSED",
+            "numerical_drift_detected": False,
+            "imperative_terms_detected": [],
+            "system_status": "DIAGNOSTIC_ONLY",
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        }
+    except LocalizationSafetyViolation as e:
+        raise HTTPException(status_code=422, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.get("/agronomy/advisories/{advisory_id}/localized")
+def get_localized_advisory(
+    advisory_id: str,
+    lang: str = Query(default="HI", pattern="^(EN|HI)$"),
+) -> Dict[str, Any]:
+    """Retrieves an existing advisory localized to the requested language (EN or HI)."""
+    adv_obj = advisory_engine.get_advisory_by_id(advisory_id)
+    if not adv_obj:
+        raise HTTPException(status_code=404, detail=f"Advisory '{advisory_id}' not found.")
+
+    target_lang = LanguageCode.HI if lang.upper() == "HI" else LanguageCode.EN
+    try:
+        localized = AdvisoryTranslator.localize(
+            source_advisory=adv_obj.model_dump(mode="json"),
+            target_lang=target_lang,
+        )
+        return localized.model_dump(mode="json")
+    except LocalizationSafetyViolation as e:
+        raise HTTPException(status_code=422, detail=str(e))
+
+
+@app.get("/agronomy/voice/status")
+def get_voice_status() -> Dict[str, Any]:
+    """Retrieves voice synthesis subsystem status and configured providers."""
+    return voice_service.get_status()
+
+
+@app.post("/agronomy/advisories/{advisory_id}/voice")
+def synthesize_advisory_voice(
+    advisory_id: str,
+    req: Optional[VoiceSynthesisRequest] = None,
+) -> Dict[str, Any]:
+    """
+    Synthesizes acoustic voice demonstration for the advisory in target language.
+    Operates strictly in prototype/demo mode.
+    """
+    adv_obj = advisory_engine.get_advisory_by_id(advisory_id)
+    if not adv_obj:
+        raise HTTPException(status_code=404, detail=f"Advisory '{advisory_id}' not found.")
+
+    target_lang_str = req.language.upper() if req and req.language else "HI"
+    target_lang = LanguageCode.HI if target_lang_str == "HI" else LanguageCode.EN
+
+    # Localize first to get spoken text
+    try:
+        localized = AdvisoryTranslator.localize(
+            source_advisory=adv_obj.model_dump(mode="json"),
+            target_lang=target_lang,
+        )
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Localization failed before speech synthesis: {e}")
+
+    spoken_text = f"{localized.title}. {localized.summary}. {localized.risk_indicator}."
+    if req and req.text:
+        spoken_text = req.text
+
+    synth_req = VoiceSynthesisRequest(
+        advisory_id=advisory_id,
+        language=target_lang.value,
+        text=spoken_text,
+        speech_rate=req.speech_rate if req else 1.0,
+    )
+
+    response = voice_service.synthesize(synth_req, spoken_text)
+    return response.model_dump(mode="json")
+
+
+
 
 

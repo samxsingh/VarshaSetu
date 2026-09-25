@@ -127,4 +127,131 @@ describe('AdvisoryService (Phase 5A & 5B Agronomic Rules & Scenario Analysis)', 
     expect(res.data?.deltas?.length).toBe(1);
     expect(res.data?.deltas?.[0].direction).toBe('INCREASED');
   });
+
+  // Phase 5C Tests
+  it('fetches supported languages registry', async () => {
+    vi.spyOn(apiClient, 'request').mockResolvedValue({
+      success: true,
+      data: {
+        supported_languages: [
+          { code: 'EN', name: 'English', native_name: 'English', status: 'ACTIVE' },
+          { code: 'HI', name: 'Hindi', native_name: 'हिन्दी', status: 'ACTIVE' },
+        ],
+        default_language: 'EN',
+        translation_engine: 'CONTROLLED_DETERMINISTIC_TEMPLATES',
+        disclaimer: 'Unvetted MT prohibited.',
+      },
+    });
+
+    const res = await advisoryService.getLanguages();
+    expect(res.success).toBe(true);
+    expect(res.data?.supported_languages.length).toBe(2);
+    expect(res.data?.translation_engine).toContain('CONTROLLED');
+  });
+
+  it('fetches controlled terminology catalog', async () => {
+    vi.spyOn(apiClient, 'request').mockResolvedValue({
+      success: true,
+      data: {
+        version: '1.0.0',
+        total_terms: 15,
+        terms: [
+          { term_key: 'HEAVY_RAIN', category: 'METEOROLOGICAL', en: 'Heavy Rainfall', hi: 'भारी वर्षा', definition: '>=64.5mm' },
+        ],
+      },
+    });
+
+    const res = await advisoryService.getTerminology();
+    expect(res.success).toBe(true);
+    expect(res.data?.version).toBe('1.0.0');
+    expect(res.data?.terms[0].hi).toBe('भारी वर्षा');
+  });
+
+  it('localizes advisory into Hindi via controlled template engine', async () => {
+    vi.spyOn(apiClient, 'request').mockResolvedValue({
+      success: true,
+      data: {
+        localized_advisory: {
+          advisory_id: 'LOC_TEST_HI',
+          source_advisory_id: 'SRC_001',
+          language: 'HI' as const,
+          title: 'भारी वर्षा जोखिम सूचक',
+          summary: 'आगामी 7 दिनों के लिए भारी वर्षा सूचक।',
+          risk_indicator: 'निगरानी',
+          what_it_means: 'खेतों में जलभराव',
+          evidence: { probability: 0.584, horizon_days: 7 },
+          confidence_statement: 'अंशांकित',
+          disclosure: 'सूचना',
+          historical_limitation_disclosure: 'सीमा',
+          classification: 'DIAGNOSTIC_ONLY',
+          translation_method: 'CONTROLLED_TEMPLATE',
+          template_version: '1.0.0',
+          terminology_version: '1.0.0',
+          localization_fingerprint: '12345678abcdef00',
+        },
+        safety_gate_status: 'PASSED',
+        numerical_drift_detected: false,
+        imperative_terms_detected: [],
+      },
+    });
+
+    const res = await advisoryService.localizeAdvisory({
+      advisory_id: 'SRC_001',
+      target_language: 'HI',
+    });
+
+    expect(res.success).toBe(true);
+    expect(res.data?.localized_advisory.language).toBe('HI');
+    expect(res.data?.localized_advisory.title).toContain('भारी वर्षा');
+    expect(res.data?.safety_gate_status).toBe('PASSED');
+  });
+
+  it('records read receipt acknowledgement', async () => {
+    vi.spyOn(apiClient, 'request').mockResolvedValue({
+      success: true,
+      data: {
+        message: 'Advisory read acknowledgement recorded.',
+        receipt: {
+          id: 'rcpt-123',
+          advisory_id: 'SRC_001',
+          user_id: null,
+          language: 'HI',
+          device_channel: 'WEB_PORTAL',
+          read_at: '2026-09-25T17:00:00Z',
+        },
+      },
+    });
+
+    const res = await advisoryService.markAdvisoryAsRead('SRC_001', 'HI');
+    expect(res.success).toBe(true);
+    expect(res.data?.receipt.advisory_id).toBe('SRC_001');
+  });
+
+  it('requests voice synthesis for advisory in DEMO_ONLY mode', async () => {
+    vi.spyOn(apiClient, 'request').mockResolvedValue({
+      success: true,
+      data: {
+        advisory_id: 'SRC_001',
+        language: 'HI',
+        status: 'DEMO_ONLY' as const,
+        provider: 'MOCK_LOCAL_VOICE_ENGINE',
+        format: 'WAV',
+        duration_seconds: 4.2,
+        sample_rate_hz: 16000,
+        audio_content_base64: 'data:audio/wav;base64,UklGRi...',
+        transcript: 'भारी वर्षा जोखिम सूचक',
+        synthesized_at: '2026-09-25T17:00:00Z',
+        disclosure: 'Demo only',
+      },
+    });
+
+    const res = await advisoryService.synthesizeVoice('SRC_001', {
+      language: 'HI',
+      speech_rate: 1.0,
+    });
+
+    expect(res.success).toBe(true);
+    expect(res.data?.status).toBe('DEMO_ONLY');
+    expect(res.data?.duration_seconds).toBe(4.2);
+  });
 });

@@ -2,7 +2,7 @@
 > *“From climate signals to confident farm decisions.”*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Status: Phase 5B Complete](https://img.shields.io/badge/Status-Phase%205B%20Complete-emerald.svg)](#roadmap)
+[![Status: Phase 5C Complete](https://img.shields.io/badge/Status-Phase%205C%20Complete-emerald.svg)](#roadmap)
 [![Stack: TypeScript & Python](https://img.shields.io/badge/Stack-TypeScript%20%7C%20Python%203.11-slate.svg)](#technology-stack)
 
 ---
@@ -26,9 +26,9 @@ Operating at the critical block and gram panchayat scale, VarshaSetu bridges the
 ```bash
 cd backend
 npm install
-npm run migrate   # Applies 10 migrations (geography, auth, sources, ingestion, lifecycle & events, agronomy, scenario analysis)
+npm run migrate   # Applies 11 migrations (geography, auth, sources, ingestion, lifecycle, agronomy, scenarios, multilingual delivery)
 npm run seed      # Seeds demonstration administrative hierarchy & demo users
-npm test          # Runs 80 API, RBAC, downscaling, calibration, hindcasting, event, advisory, and scenario tests
+npm test          # Runs 85 API, RBAC, downscaling, calibration, hindcasting, event, advisory, scenario, and localization tests
 npm run dev       # Starts backend API on http://localhost:5001
 ```
 
@@ -38,7 +38,7 @@ cd ml-service
 python3.11 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-pytest            # Runs 158 provider, tree ensemble, SHAP, calibration, hindcasting, lifecycle, event, agronomic, and scenario tests
+pytest            # Runs 174 provider, tree ensemble, SHAP, calibration, hindcasting, lifecycle, event, agronomic, scenario, and localization tests
 uvicorn app.main:app --port 8000 --reload  # Starts ML service on http://localhost:8000
 ```
 
@@ -46,7 +46,7 @@ uvicorn app.main:app --port 8000 --reload  # Starts ML service on http://localho
 ```bash
 cd frontend
 npm install
-npm test          # Runs 52 UI, accessibility, calibration, hindcasting, alert center, forecast, advisory, and scenario tests
+npm test          # Runs 61 UI, accessibility, calibration, hindcasting, alert center, forecast, advisory, scenario, and localization tests
 npm run dev       # Starts Vite dev server on http://localhost:5173
 ```
 
@@ -54,6 +54,7 @@ npm run dev       # Starts Vite dev server on http://localhost:5173
 
 ## 3. Comprehensive Documentation
 
+- **[Multilingual Advisory Delivery & Voice Accessibility](docs/multilingual-advisory.md):** 16 sections on controlled language registry, immutable terminology catalog, deterministic bilingual templates, 14-point safety gate, DEMO_ONLY voice engine, and read receipts.
 - **[Advanced What-If Scenario Analysis & Sensitivity Engine](docs/scenario-analysis.md):** 16 sections on controlled scenario catalog, deterministic sensitivity engine, comparative deltas, envelopes, checks 14–21, and zero-yield-model boundaries.
 - **[Agronomic Rules & Explainable Advisory Foundation](docs/agronomic-rules.md):** 14 sections on controlled crop registry, 9 registered rules, 13-check safety gate, What-If simulator, and non-causal phrasing.
 - **[Product Requirements (PRD)](docs/PRD.md):** 28 sections detailing user personas, 4 forecast targets, and agronomic logic.
@@ -218,9 +219,11 @@ Key environment parameters:
 - **Phase 4C (Complete):** Probabilistic Calibration, Model Validation & Scientific Forecast Reliability.
 - **Phase 4D (Complete):** Multi-Year Validation, Hindcasting & Forecast Skill Evaluation.
 - **Phase 4E (Complete):** Operational Forecast Products, Forecast API, Scientific Explainability & Multi-Tier Gating.
-- **Phase 4F (Pending):** Production Ensembling, Spatial Teleconnections & Advanced Downscaling.
-- **Phase 5 (Pending):** Agronomic Rules Engine & What-If Decision Simulator.
-- **Phase 6 (Pending):** Voice capabilities, Bhashini multilingual translation, and broadcast distribution.
+- **Phase 4F (Complete):** Operational Forecast Delivery, Alert Intelligence & Production Readiness.
+- **Phase 5A (Complete):** Agronomic Rules Engine & Explainable Advisory Foundation.
+- **Phase 5B (Complete):** Advanced What-If Scenario Analysis, Sensitivity Engine & Envelopes.
+- **Phase 5C (Complete):** Multilingual Agronomic Advisory Delivery, Voice Accessibility & Personalization.
+- **Phase 6 (Pending):** Production Voice Integration & Multi-Channel Telecom Gateway (Bhashini production, SMS, WhatsApp).
 
 ---
 

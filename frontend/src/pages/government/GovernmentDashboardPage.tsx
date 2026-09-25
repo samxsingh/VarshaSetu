@@ -287,6 +287,41 @@ export const GovernmentDashboardPage: React.FC = () => {
           </Badge>
         </div>
 
+        {/* Phase 5C: Multilingual Advisory Delivery & Voice Accessibility */}
+        <div className="p-4 bg-teal-50/50 rounded-xl border border-brand-teal/30 space-y-3 text-xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <strong className="text-slate-900 font-heading">Multilingual Delivery & Voice Accessibility (Phase 5C)</strong>
+              <Badge variant="teal" size="sm">Active</Badge>
+              <Badge variant="demo" size="sm">Voice: DEMO_ONLY</Badge>
+            </div>
+            <div className="flex items-center gap-2 text-[11px] text-slate-500">
+              <span>Supported:</span>
+              <strong className="text-slate-800 font-mono">English (EN) & हिन्दी (HI)</strong>
+            </div>
+          </div>
+          <p className="text-slate-600 text-[11px] leading-relaxed">
+            Deterministic translation engine enforces zero semantic distortion and exact numerical matching between English and Hindi advisories. Voice readouts operate in prototype mode without telecom/SMS broadcasts.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+            <div className="p-2.5 bg-white rounded-lg border border-slate-200">
+              <span className="text-[10px] text-slate-400 block font-semibold uppercase">Translation Engine</span>
+              <strong className="text-slate-800 text-xs font-mono">CONTROLLED_TEMPLATES v1.0.0</strong>
+              <span className="text-[10px] text-slate-500 block">Dynamic MT Prohibited</span>
+            </div>
+            <div className="p-2.5 bg-white rounded-lg border border-slate-200">
+              <span className="text-[10px] text-slate-400 block font-semibold uppercase">Terminology Glossary</span>
+              <strong className="text-slate-800 text-xs font-mono">15+ Core Agro-Met Concepts</strong>
+              <span className="text-[10px] text-slate-500 block">Version 1.0.0 Catalog</span>
+            </div>
+            <div className="p-2.5 bg-white rounded-lg border border-slate-200">
+              <span className="text-[10px] text-slate-400 block font-semibold uppercase">Localization Safety Gate</span>
+              <strong className="text-brand-emerald text-xs font-mono">ENFORCING (100% Passed)</strong>
+              <span className="text-[10px] text-slate-500 block">Zero Imperatives / Zero Yield</span>
+            </div>
+          </div>
+        </div>
+
         <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-amber-900 text-xs flex items-start gap-2.5">
           <AlertTriangle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
           <p>

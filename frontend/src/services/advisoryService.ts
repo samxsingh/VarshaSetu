@@ -14,6 +14,14 @@ import {
   ScenarioRegistryItem,
   ScenarioExplanation,
   ScenarioProvenance,
+  LanguageCode,
+  LanguageInfo,
+  TerminologyCatalogItem,
+  LocalizedAdvisory,
+  VoiceStatus,
+  VoiceSynthesisResult,
+  VoiceSubsystemStatus,
+  AdvisoryReadReceipt,
 } from '@shared/types';
 
 export interface AgronomyStatusResponse {
@@ -263,6 +271,101 @@ export const advisoryService = {
     return request<WhatIfSimulationResponse>('/simulations/what-if', {
       method: 'POST',
       body: JSON.stringify(req),
+    });
+  },
+
+  /**
+   * Phase 5C: Supported Languages Registry
+   */
+  async getLanguages(): Promise<
+    ApiResponse<{
+      supported_languages: LanguageInfo[];
+      default_language: string;
+      translation_engine: string;
+      disclaimer: string;
+    }>
+  > {
+    return request('/advisories/languages');
+  },
+
+  /**
+   * Phase 5C: Controlled Terminology Catalog
+   */
+  async getTerminology(): Promise<
+    ApiResponse<{
+      version: string;
+      total_terms: number;
+      terms: TerminologyCatalogItem[];
+    }>
+  > {
+    return request('/advisories/terminology');
+  },
+
+  /**
+   * Phase 5C: Localize an Advisory (Dynamic/On-the-fly)
+   */
+  async localizeAdvisory(payload: {
+    advisory_id?: string;
+    target_language: LanguageCode;
+    advisory?: any;
+  }): Promise<
+    ApiResponse<{
+      localized_advisory: LocalizedAdvisory;
+      safety_gate_status: string;
+      numerical_drift_detected: boolean;
+      imperative_terms_detected: string[];
+    }>
+  > {
+    return request('/advisories/localize', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  },
+
+  /**
+   * Phase 5C: Fetch Localized Advisory by ID
+   */
+  async getLocalizedAdvisory(
+    advisoryId: string,
+    language: LanguageCode = 'HI'
+  ): Promise<ApiResponse<LocalizedAdvisory>> {
+    return request<LocalizedAdvisory>(`/advisories/${advisoryId}/localized?lang=${language}`);
+  },
+
+  /**
+   * Phase 5C: Acknowledge & Mark Advisory as Read
+   */
+  async markAdvisoryAsRead(
+    advisoryId: string,
+    language: LanguageCode = 'HI'
+  ): Promise<ApiResponse<{ message: string; receipt: AdvisoryReadReceipt }>> {
+    return request(`/advisories/${advisoryId}/read`, {
+      method: 'POST',
+      body: JSON.stringify({ language, device_channel: 'WEB_PORTAL' }),
+    });
+  },
+
+  /**
+   * Phase 5C: Voice Subsystem Readiness & Status
+   */
+  async getVoiceStatus(): Promise<ApiResponse<VoiceSubsystemStatus>> {
+    return request<VoiceSubsystemStatus>('/advisories/voice/status');
+  },
+
+  /**
+   * Phase 5C: Synthesize Advisory Voice
+   */
+  async synthesizeVoice(
+    advisoryId: string,
+    payload: {
+      language: LanguageCode;
+      speech_rate?: number;
+      text?: string;
+    }
+  ): Promise<ApiResponse<VoiceSynthesisResult>> {
+    return request<VoiceSynthesisResult>(`/advisories/${advisoryId}/voice`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
     });
   },
 };

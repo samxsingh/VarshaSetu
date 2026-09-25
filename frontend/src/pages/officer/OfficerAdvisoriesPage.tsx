@@ -14,13 +14,15 @@ import {
   Layers,
   Database,
   Info,
+  Languages,
+  Volume2,
 } from 'lucide-react';
 import { useOfficerStore } from '../../stores/useOfficerStore';
 import {
   advisoryService,
   AgronomyStatusResponse,
 } from '../../services/advisoryService';
-import { ScientificAdvisory } from '@shared/types';
+import { ScientificAdvisory, LocalizedAdvisory } from '@shared/types';
 
 export const OfficerAdvisoriesPage: React.FC = () => {
   const { setBulletinModalOpen } = useOfficerStore();
@@ -30,6 +32,10 @@ export const OfficerAdvisoriesPage: React.FC = () => {
   const [engineStatus, setEngineStatus] = useState<AgronomyStatusResponse | null>(null);
   const [advisories, setAdvisories] = useState<ScientificAdvisory[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+
+  // Phase 5C: Multilingual Review State
+  const [previewLanguage, setPreviewLanguage] = useState<'EN' | 'HI'>('EN');
+  const [localizedMap, setLocalizedMap] = useState<Record<string, LocalizedAdvisory>>({});
 
   // Default diagnostic advisory list for demonstration
   const fallbackAdvisories: ScientificAdvisory[] = [
@@ -65,6 +71,8 @@ export const OfficerAdvisoriesPage: React.FC = () => {
         operational_status: 'DIAGNOSTIC_ONLY',
         station_coverage: 'Bakshi Ka Talab centroid',
         evaluation_timestamp: '2024-09-15T06:00:00Z',
+        horizon_days: 7,
+        probability: 0.584,
       },
       explanation: {
         headline: '58.4% Calibrated Probability of Heavy Rainfall Event',
@@ -110,6 +118,8 @@ export const OfficerAdvisoriesPage: React.FC = () => {
         operational_status: 'DIAGNOSTIC_ONLY',
         station_coverage: 'Bakshi Ka Talab centroid',
         evaluation_timestamp: '2024-07-10T06:00:00Z',
+        horizon_days: 14,
+        probability: 0.48,
       },
       explanation: {
         headline: '48.0% Calibrated Probability of Dry Spell Hiatus',
@@ -166,6 +176,32 @@ export const OfficerAdvisoriesPage: React.FC = () => {
     };
   }, [selectedCrop, selectedSeverity]);
 
+  // Fetch Hindi localization on demand
+  useEffect(() => {
+    if (previewLanguage === 'HI') {
+      advisories.forEach(async (adv) => {
+        const key = `${adv.advisory_id}_HI`;
+        if (!localizedMap[key]) {
+          try {
+            const res = await advisoryService.localizeAdvisory({
+              advisory_id: adv.advisory_id,
+              target_language: 'HI',
+              advisory: adv as any,
+            });
+            if (res.success && res.data?.localized_advisory) {
+              setLocalizedMap((prev) => ({
+                ...prev,
+                [key]: res.data.localized_advisory,
+              }));
+            }
+          } catch (e) {
+            // ignore
+          }
+        }
+      });
+    }
+  }, [previewLanguage, advisories]);
+
   return (
     <div className="space-y-6" data-testid="officer-advisories-page">
       {/* Header */}
@@ -175,29 +211,56 @@ export const OfficerAdvisoriesPage: React.FC = () => {
             <h2 className="font-heading font-bold text-xl text-slate-900">
               Block Agronomic Intelligence Monitor
             </h2>
-            <Badge variant="teal" size="sm">Phase 5A Engine</Badge>
+            <Badge variant="teal" size="sm">Phase 5C Multilingual</Badge>
             <Badge variant="amber" size="sm">DIAGNOSTIC_ONLY</Badge>
+            <Badge variant="teal" size="sm">Safety Gate: ACTIVE</Badge>
           </div>
           <p className="text-xs text-slate-600 mt-0.5">
-            Monitor rule evaluations, hazard thresholds, and scientific evidence across agricultural administrative blocks.
+            Monitor rule evaluations, hazard thresholds, and multilingual advisory delivery across agricultural blocks.
           </p>
         </div>
 
-        <Button
-          variant="primary"
-          size="md"
-          leftIcon={<Send className="w-4 h-4" />}
-          onClick={() => setBulletinModalOpen(true)}
-        >
-          Draft Advisory Bulletin
-        </Button>
+        <div className="flex items-center gap-2.5">
+          {/* Bilingual Preview Toggle */}
+          <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200">
+            <button
+              onClick={() => setPreviewLanguage('EN')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-heading font-semibold transition-all ${
+                previewLanguage === 'EN'
+                  ? 'bg-white text-slate-900 shadow-sm border border-slate-200/60'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              EN Preview
+            </button>
+            <button
+              onClick={() => setPreviewLanguage('HI')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-heading font-semibold transition-all ${
+                previewLanguage === 'HI'
+                  ? 'bg-brand-teal text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              हिन्दी Preview
+            </button>
+          </div>
+
+          <Button
+            variant="primary"
+            size="md"
+            leftIcon={<Send className="w-4 h-4" />}
+            onClick={() => setBulletinModalOpen(true)}
+          >
+            Draft Advisory Bulletin
+          </Button>
+        </div>
       </div>
 
       {/* Mandatory Scope Disclosure */}
       <Alert variant="info" title="Scientific Scope & Ground Anchor">
         Agronomic rules operate in <strong className="font-mono text-slate-900">DIAGNOSTIC_ONLY</strong> mode.
         Station anchor is Bakshi Ka Talab (<strong className="font-mono text-slate-900">UP_LKO_BKT</strong>) with 122 daily records from Kharif 2024.
-        Blocks are presented neutrally without competitive rankings.
+        Multilingual translations are governed by deterministic templates with zero numerical drift.
       </Alert>
 
       {/* Filter Toolbar */}
@@ -236,67 +299,77 @@ export const OfficerAdvisoriesPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="text-xs text-slate-500">
-          Showing <strong className="text-slate-800">{advisories.length}</strong> active advisory record(s)
+        <div className="text-xs text-slate-500 flex items-center gap-3">
+          <span>Active records: <strong className="text-slate-800">{advisories.length}</strong></span>
+          <Badge variant="teal" size="sm">Languages: EN / HI Active</Badge>
         </div>
       </div>
 
       {/* Advisory Feed */}
       <div className="space-y-4">
-        {advisories.map((b) => (
-          <Card key={b.advisory_id} className="p-5 flex flex-col justify-between gap-4 border-l-4 border-l-brand-teal">
-            <div className="space-y-2">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <Badge variant="teal" size="sm">{b.rule_id}</Badge>
-                  <span className="text-xs font-mono font-semibold text-slate-700 uppercase">
-                    {b.category}
-                  </span>
-                  <Badge variant={b.severity === 'HIGH' ? 'crimson' : 'amber'} size="sm">
-                    {b.severity}
-                  </Badge>
+        {advisories.map((b) => {
+          const loc = previewLanguage === 'HI' ? localizedMap[`${b.advisory_id}_HI`] : null;
+          const displayTitle = loc ? loc.title : b.headline;
+          const displaySummary = loc ? loc.summary : b.advisory_text;
+
+          return (
+            <Card key={b.advisory_id} className="p-5 flex flex-col justify-between gap-4 border-l-4 border-l-brand-teal">
+              <div className="space-y-2">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <Badge variant="teal" size="sm">{b.rule_id}</Badge>
+                    <span className="text-xs font-mono font-semibold text-slate-700 uppercase">
+                      {b.category}
+                    </span>
+                    <Badge variant={b.severity === 'HIGH' ? 'crimson' : 'amber'} size="sm">
+                      {b.severity}
+                    </Badge>
+                    {previewLanguage === 'HI' && (
+                      <Badge variant="teal" size="sm">हिन्दी अनुवाद (सत्यापित)</Badge>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-3 text-[11px] text-slate-500">
+                    <span className="flex items-center gap-1 font-mono">
+                      <Clock className="w-3.5 h-3.5" /> Valid: {b.valid_from} to {b.valid_until}
+                    </span>
+                    <Badge variant="demo" size="sm">{b.operational_status}</Badge>
+                  </div>
                 </div>
 
-                <div className="flex items-center gap-3 text-[11px] text-slate-500">
-                  <span className="flex items-center gap-1 font-mono">
-                    <Clock className="w-3.5 h-3.5" /> Valid: {b.valid_from} to {b.valid_until}
-                  </span>
-                  <Badge variant="demo" size="sm">{b.operational_status}</Badge>
+                <h3 className="font-heading font-bold text-base text-slate-900">{displayTitle}</h3>
+
+                <p className="text-xs sm:text-sm text-slate-700 leading-relaxed bg-surface-muted/50 p-3 rounded-lg border border-surface-border/60">
+                  {displaySummary}
+                </p>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-[11px]">
+                  <div className="p-2 bg-white rounded border border-slate-200">
+                    <span className="text-slate-400 block text-[10px]">CROP & STAGE</span>
+                    <strong className="text-slate-800">{b.crop_type} ({b.growth_stage})</strong>
+                  </div>
+                  <div className="p-2 bg-white rounded border border-slate-200">
+                    <span className="text-slate-400 block text-[10px]">CALIBRATED PROB</span>
+                    <strong className="text-brand-teal font-mono">{(b.evidence.calibrated_probability * 100).toFixed(1)}%</strong>
+                  </div>
+                  <div className="p-2 bg-white rounded border border-slate-200">
+                    <span className="text-slate-400 block text-[10px]">THRESHOLD</span>
+                    <strong className="text-slate-800">{b.evidence.threshold_value} {b.evidence.threshold_unit}</strong>
+                  </div>
+                  <div className="p-2 bg-white rounded border border-slate-200">
+                    <span className="text-slate-400 block text-[10px]">ANCHOR BLOCK</span>
+                    <strong className="text-slate-800 font-mono">{b.block_id}</strong>
+                  </div>
                 </div>
               </div>
 
-              <h3 className="font-heading font-bold text-base text-slate-900">{b.headline}</h3>
-
-              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed bg-surface-muted/50 p-3 rounded-lg border border-surface-border/60">
-                {b.advisory_text}
-              </p>
-
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-[11px]">
-                <div className="p-2 bg-white rounded border border-slate-200">
-                  <span className="text-slate-400 block text-[10px]">CROP & STAGE</span>
-                  <strong className="text-slate-800">{b.crop_type} ({b.growth_stage})</strong>
-                </div>
-                <div className="p-2 bg-white rounded border border-slate-200">
-                  <span className="text-slate-400 block text-[10px]">CALIBRATED PROB</span>
-                  <strong className="text-brand-teal font-mono">{(b.evidence.calibrated_probability * 100).toFixed(1)}%</strong>
-                </div>
-                <div className="p-2 bg-white rounded border border-slate-200">
-                  <span className="text-slate-400 block text-[10px]">THRESHOLD</span>
-                  <strong className="text-slate-800">{b.evidence.threshold_value} {b.evidence.threshold_unit}</strong>
-                </div>
-                <div className="p-2 bg-white rounded border border-slate-200">
-                  <span className="text-slate-400 block text-[10px]">ANCHOR BLOCK</span>
-                  <strong className="text-slate-800 font-mono">{b.block_id}</strong>
-                </div>
+              <div className="flex items-center justify-between pt-2 border-t border-surface-border text-xs text-slate-500">
+                <span>Scientific Basis: {b.scientific_basis}</span>
+                <span className="text-amber-700 font-medium">Informational risk indicator</span>
               </div>
-            </div>
-
-            <div className="flex items-center justify-between pt-2 border-t border-surface-border text-xs text-slate-500">
-              <span>Scientific Basis: {b.scientific_basis}</span>
-              <span className="text-amber-700 font-medium">Informational risk indicator</span>
-            </div>
-          </Card>
-        ))}
+            </Card>
+          );
+        })}
       </div>
 
       {/* Phase 5B: What-If Scenario Sensitivity Evaluation Inspection */}

@@ -151,6 +151,8 @@ export interface AdvisoryEvidence {
   operational_status: string;
   station_coverage: string;
   evaluation_timestamp: string;
+  horizon_days?: number;
+  probability?: number;
 }
 
 export interface AdvisoryExplanation {
@@ -357,5 +359,90 @@ export interface ScenarioResult {
   scientific_notes?: string[];
   computed_at?: string;
 }
+
+
+// ====================================================================
+// PHASE 5C — MULTILINGUAL ADVISORY DELIVERY & VOICE ACCESSIBILITY
+// ====================================================================
+
+export type LanguageCode = 'EN' | 'HI';
+
+export interface LanguageInfo {
+  code: LanguageCode;
+  name: string;
+  native_name: string;
+  status: string;
+}
+
+export interface TerminologyCatalogItem {
+  term_key: string;
+  category: string;
+  en: string;
+  hi: string;
+  definition: string;
+}
+
+export interface LocalizedAdvisory {
+  id?: string;
+  advisory_id: string;
+  source_advisory_id: string;
+  language: LanguageCode;
+  title: string;
+  summary: string;
+  risk_indicator: string;
+  what_it_means: string;
+  evidence: Record<string, any>;
+  confidence_statement: string;
+  disclosure: string;
+  historical_limitation_disclosure: string;
+  classification: string;
+  translation_method: string;
+  template_version: string;
+  terminology_version: string;
+  localization_fingerprint: string;
+  generated_at?: string;
+  created_at?: string;
+}
+
+export type VoiceStatus = 'NOT_CONFIGURED' | 'DEMO_ONLY' | 'READY' | 'ERROR';
+
+export interface VoiceSynthesisResult {
+  advisory_id: string;
+  language: string;
+  status: VoiceStatus;
+  provider: string;
+  format: string;
+  duration_seconds: number;
+  sample_rate_hz: number;
+  audio_url?: string | null;
+  audio_content_base64?: string | null;
+  transcript: string;
+  synthesized_at: string;
+  disclosure: string;
+}
+
+export interface VoiceSubsystemStatus {
+  active_provider: string;
+  status: {
+    provider: string;
+    status: VoiceStatus;
+    configured: boolean;
+    mode?: string;
+    disclaimer?: string;
+  };
+  system_mode: string;
+  telecom_integration: string;
+  disclosure: string;
+}
+
+export interface AdvisoryReadReceipt {
+  id: string;
+  advisory_id: string;
+  user_id: string | null;
+  language: string;
+  device_channel: string;
+  read_at: string;
+}
+
 
 
