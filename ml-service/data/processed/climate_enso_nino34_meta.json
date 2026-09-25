@@ -1,0 +1,26 @@
+{
+  "provider": "NOAA_CPC",
+  "dataset_name": "Ni\u00f1o 3.4 SST Anomaly Index",
+  "variable": "ENSO_SST_ANOMALY",
+  "source_url": "https://psl.noaa.gov/data/correlation/nina34.data",
+  "retrieval_timestamp": "2026-09-25T08:45:10.557551",
+  "coverage_start": null,
+  "coverage_end": null,
+  "spatial_resolution": "5\u00b0N-5\u00b0S, 170\u00b0W-120\u00b0W (Ni\u00f1o 3.4 region)",
+  "temporal_resolution": "MONTHLY",
+  "native_units": "Degrees Celsius anomaly",
+  "target_units": "\u00b0C",
+  "license_info": "Public Domain (U.S. Government NOAA)",
+  "processing_version": "1.0.0",
+  "quality_status": "GOOD",
+  "num_records": 920,
+  "columns": [
+    "date",
+    "nino34_sst",
+    "anomaly",
+    "enso_phase",
+    "baseline",
+    "source",
+    "quality_flag"
+  ]
+}

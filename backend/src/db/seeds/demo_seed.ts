@@ -273,6 +273,22 @@ export async function runSeeds(): Promise<void> {
         frequency: 'WEEKLY',
       },
       {
+        name: 'BoM Australia Madden-Julian Oscillation RMM',
+        provider: 'BOM_MJO',
+        type: 'MJO_RMM',
+        baseUrl: 'http://www.bom.gov.au/climate/mjo/graphics/rmm.74toRealtime.txt',
+        provenanceUrl: 'http://www.bom.gov.au/climate/mjo/',
+        frequency: 'DAILY',
+      },
+      {
+        name: 'Open-Meteo ERA5-Land Reanalysis API',
+        provider: 'OPEN_METEO_ERA5',
+        type: 'REANALYSIS_AGROMET',
+        baseUrl: 'https://archive-api.open-meteo.com/v1/era5',
+        provenanceUrl: 'https://open-meteo.com/en/docs/historical-weather-api',
+        frequency: 'DAILY',
+      },
+      {
         name: 'IMD High-Resolution Daily Gridded Rainfall (0.25°)',
         provider: 'IMD',
         type: 'GRIDDED_OBSERVATION',

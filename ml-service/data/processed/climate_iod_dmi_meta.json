@@ -1,0 +1,25 @@
+{
+  "provider": "BOM_AUSTRALIA",
+  "dataset_name": "Dipole Mode Index (IOD DMI)",
+  "variable": "IOD_DMI",
+  "source_url": "https://psl.noaa.gov/gcos_wgsp/Timeseries/Data/dmi.had.long.data",
+  "retrieval_timestamp": "2026-09-25T08:45:13.366317",
+  "coverage_start": null,
+  "coverage_end": null,
+  "spatial_resolution": "Tropical Indian Ocean gradient",
+  "temporal_resolution": "MONTHLY",
+  "native_units": "Degrees Celsius anomaly difference",
+  "target_units": "\u00b0C",
+  "license_info": "Open Scientific Research Data (BoM / UK Met Office)",
+  "processing_version": "1.0.0",
+  "quality_status": "GOOD",
+  "num_records": 917,
+  "columns": [
+    "date",
+    "dmi_value",
+    "iod_phase",
+    "baseline",
+    "source",
+    "quality_flag"
+  ]
+}

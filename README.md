@@ -2,8 +2,8 @@
 > *“From climate signals to confident farm decisions.”*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Status: Phase 2 Complete](https://img.shields.io/badge/Status-Phase%202%20Complete-teal.svg)](#roadmap)
-[![Language: TypeScript & Python](https://img.shields.io/badge/Stack-TypeScript%20%7C%20Python-slate.svg)](#technology-stack)
+[![Status: Phase 3 Complete](https://img.shields.io/badge/Status-Phase%203%20Complete-emerald.svg)](#roadmap)
+[![Stack: TypeScript & Python](https://img.shields.io/badge/Stack-TypeScript%20%7C%20Python%203.11-slate.svg)](#technology-stack)
 
 ---
 
@@ -19,42 +19,35 @@ Operating at the critical block and gram panchayat scale, VarshaSetu bridges the
 
 ### Prerequisites
 - Node.js 20+ LTS
-- PostgreSQL 16+ (with PostGIS or compatibility layer)
+- Python 3.11+
+- PostgreSQL 16+ (with PostGIS extension)
 
-### Backend Setup (Node.js / Express / PostGIS)
+### 1. Backend Core (Node.js / Express / PostGIS)
 ```bash
-# Navigate to backend
 cd backend
-
-# Install dependencies
 npm install
-
-# Run database migrations (creates 6 relational tables + PostGIS spatial layer)
-npm run migrate
-
-# Seed demonstration data (Lucknow district hierarchy, demo boundary, 5 persona users)
-npm run seed
-
-# Run backend test suite (24 tests: health, geography, spatial GIS, auth, RBAC)
-npm test
-
-# Start development server on port 5001
-npm run dev
+npm run migrate   # Applies 7 migrations (geography, auth, sources, ingestion)
+npm run seed      # Seeds demonstration administrative hierarchy & demo users
+npm test          # Runs 29 API, RBAC, and data health tests
+npm run dev       # Starts backend API on http://localhost:5001
 ```
 
-### Frontend Setup (React 18 / Vite / Tailwind)
+### 2. Meteorological ML & Ingestion Service (Python 3.11 / FastAPI)
 ```bash
-# Navigate to frontend
+cd ml-service
+python3.11 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+pytest            # Runs 10 provider, QC, and derived agromet feature tests
+uvicorn app.main:app --port 8000 --reload  # Starts ML service on http://localhost:8000
+```
+
+### 3. Frontend Web Shell (React 18 / Vite / Tailwind)
+```bash
 cd frontend
-
-# Install dependencies
 npm install
-
-# Run unit tests (7 tests: components, banners, selectors)
-npm test
-
-# Start frontend dev server on port 5173
-npm run dev
+npm test          # Runs 8 UI, accessibility, and data health tests
+npm run dev       # Starts Vite dev server on http://localhost:5173
 ```
 
 ---
@@ -63,6 +56,9 @@ npm run dev
 
 - **[Product Requirements (PRD)](docs/PRD.md):** 28 sections detailing user personas, 4 forecast targets, and agronomic logic.
 - **[System Architecture](docs/architecture.md):** 23 sections covering data flows, PostGIS schemas, ML ensemble architecture, and security.
+- **[Scientific Data Catalog](docs/scientific-data-catalog.md):** Specification of ENSO, IOD, MJO, and ERA5-Land variables, physical bounds QC, and derived features.
+- **[Data Pipeline Architecture](docs/data-pipeline.md):** End-to-end ingestion lifecycle, retry policies, Parquet storage, and PostgreSQL tracking.
+- **[Provider Integration Guide](docs/provider-integration.md):** Connection contracts, parsing protocols, and rate-limiting resilience for NOAA, BoM, and Open-Meteo.
 - **[Design System Guidelines](docs/design-system.md):** Color tokens, typography, accessibility (WCAG AA), and component hierarchy.
 - **[REST API Specification](docs/api.md):** Complete `/api/v1` endpoint guide with request/response schemas and examples.
 - **[Database & Geospatial Engine](docs/database.md):** PostgreSQL/PostGIS schemas, spatial indexing, migrations, and seed credentials.
@@ -204,12 +200,13 @@ Key environment parameters:
 ## 8. Development Roadmap
 
 - **Phase 1A (Complete):** Product specification, technical architecture, shared contracts, environment configuration, and clean scaffolding.
-- **Phase 1B:** Interactive Frontend UI Development (Beginner-friendly farmer view, officer command portal, Tailwind theme tokens, Stitch MCP wireframing).
-- **Phase 2:** Node/Express Backend Core, PostgreSQL/PostGIS migrations, administrative boundary seeding, and RBAC authentication.
-- **Phase 3:** Data Ingestion & Quality Monitoring (NOAA, BoM, IMD/ERA5 adapters).
-- **Phase 4:** Python FastAPI ML microservice, Climatology baseline, and XGBoost/LightGBM downscaling.
-- **Phase 5:** Agronomic Rules Engine & What-If Decision Simulator.
-- **Phase 6:** Voice capabilities, Bhashini multilingual translation, and broadcast distribution.
+- **Phase 1B (Complete):** Interactive Frontend UI Development (Farmer view, officer command portal, Tailwind theme tokens, Stitch MCP wireframing).
+- **Phase 1C (Complete):** Frontend refinement, UX validation, WCAG accessibility hardening, and typed API service layer.
+- **Phase 2 (Complete):** Node/Express Backend Core, PostgreSQL/PostGIS migrations, administrative boundary seeding, and RBAC authentication.
+- **Phase 3 (Complete):** Real Climate + Weather Data Ingestion (NOAA ENSO, BoM IOD/MJO, Open-Meteo ERA5-Land), QC bounds validation, and Parquet feature storage.
+- **Phase 4 (Pending):** Python FastAPI ML downscaling microservice, Climatology baseline, and XGBoost/LightGBM downscaling.
+- **Phase 5 (Pending):** Agronomic Rules Engine & What-If Decision Simulator.
+- **Phase 6 (Pending):** Voice capabilities, Bhashini multilingual translation, and broadcast distribution.
 
 ---
 

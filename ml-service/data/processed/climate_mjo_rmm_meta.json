@@ -1,0 +1,26 @@
+{
+  "provider": "BOM_AUSTRALIA",
+  "dataset_name": "Real-time Multivariate MJO Index (RMM1, RMM2)",
+  "variable": "MJO_RMM",
+  "source_url": "http://www.bom.gov.au/climate/mjo/graphics/rmm.74toRealtime.txt",
+  "retrieval_timestamp": "2026-09-25T08:45:15.480926",
+  "coverage_start": null,
+  "coverage_end": null,
+  "spatial_resolution": "Circumglobal tropical belt (15\u00b0S-15\u00b0N)",
+  "temporal_resolution": "DAILY",
+  "native_units": "Normalized EOF principal component amplitude",
+  "target_units": "unitless (RMM1, RMM2)",
+  "license_info": "Open Scientific Research (Australian Bureau of Meteorology)",
+  "processing_version": "1.0.0",
+  "quality_status": "GOOD",
+  "num_records": 17876,
+  "columns": [
+    "date",
+    "rmm1",
+    "rmm2",
+    "phase",
+    "amplitude",
+    "source",
+    "quality_flag"
+  ]
+}

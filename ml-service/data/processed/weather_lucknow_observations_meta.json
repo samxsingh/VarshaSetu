@@ -1,0 +1,30 @@
+{
+  "provider": "ECMWF_ERA5",
+  "dataset_name": "ERA5-Land Daily Agrometeorological Gridded Reanalysis",
+  "variable": "PRECIP_TEMP_PRESSURE_WIND",
+  "source_url": "https://archive-api.open-meteo.com/v1/archive",
+  "retrieval_timestamp": "2026-09-25T08:45:16.605198",
+  "coverage_start": null,
+  "coverage_end": null,
+  "spatial_resolution": "0.1\u00b0 (~9 km gridded resolution)",
+  "temporal_resolution": "DAILY",
+  "native_units": "mm/day (precip), \u00b0C (temp), hPa (pressure), m/s (wind)",
+  "target_units": "SI/Standard Agro-units (mm/day, \u00b0C, hPa, m/s)",
+  "license_info": "Open Database License (ODbL) / Copernicus Open Access",
+  "processing_version": "1.0.0",
+  "quality_status": "GOOD",
+  "num_records": 122,
+  "columns": [
+    "date",
+    "latitude",
+    "longitude",
+    "precipitation_sum_mm",
+    "temperature_2m_max_c",
+    "temperature_2m_min_c",
+    "temperature_2m_mean_c",
+    "surface_pressure_hpa",
+    "wind_speed_10m_mps",
+    "source",
+    "quality_flag"
+  ]
+}
