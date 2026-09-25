@@ -179,32 +179,72 @@
 
 ---
 
+## 7. Phase 4B: Operational Downscaling & Gradient-Boosted Ensembles
+- **Status:** COMPLETED
+
+### Completed in Phase 4B
+- [x] **Data Availability Auditor (`ml-service/app/training/data_availability.py`):**
+  - Evaluates temporal span, variable completeness, target balance, and spatial granularity.
+  - Transparently returns `status = "PARTIAL"` for single-season Kharif 2024 data (122 daily records), enforcing truthfulness and disclaiming standard 30-year WMO climatology.
+- [x] **Historical Dataset Catalog & Integrity Hashing (`ml-service/app/datasets/`):**
+  - `DatasetCatalog`: Registered metadata, spatial/temporal resolution, units, and attribution for ERA5-Land, NOAA Niño 3.4, BoM IOD, and BoM MJO.
+  - `fingerprint.py`: SHA256 checksums, content digests, and schema hash verification.
+  - `historical.py`: Ingestion & expansion pathways for multi-decadal reanalysis archives.
+- [x] **Gradient-Boosted Tree Ensembles (`ml-service/app/models/tree/`):**
+  - `BaseTreeModel`: Abstract interface for tree models.
+  - `XGBoostTreeModel`: Depth-wise boosted trees with L1/L2 regularization and early stopping.
+  - `LightGBMTreeModel`: Leaf-wise gradient boosting with adaptive sample constraints for small regional datasets.
+- [x] **Spatial Downscaling & Attribution Enforcer (`ml-service/app/spatial/`):**
+  - Geospatial coordinates and regional distance offsets for Lucknow district blocks (`UP_LKO_BKT` centroid: 26.9749°N, 80.9276°E, ~9km).
+  - `DownscalingEnforcer`: Explicitly attributes downscaling to `BLOCK` resolution. Refuses to claim panchayat/field micro-scale resolution when local micro-stations are absent.
+  - `pooling.py`: Hierarchical aggregation across blocks to district mean.
+- [x] **SHAP Tree Explainability (`ml-service/app/explainability/`):**
+  - `TreeShapExplainer`: Computes exact Shapley values via `shap.TreeExplainer`.
+  - Categorizes features into Antecedent Moisture, Global Teleconnections (ENSO, IOD, MJO), Atmospheric Thermodynamics, Synoptic Pressure, and Seasonality.
+  - Generates human-interpretable meteorological causal explanations and global feature importance rankings.
+- [x] **Multi-Model Benchmark Comparison (`ml-service/app/evaluation/benchmark.py`):**
+  - Standardized benchmark comparing all four paradigms: Historical Climatology vs Phase 4A Linear Baselines vs XGBoost vs LightGBM on the exact same chronological test slice without leakage.
+  - Computes Brier Skill Score ($BSS$), MAE Skill Score ($MSS$), Log Loss, ROC-AUC, F1, and Accuracy.
+- [x] **Artifact Management & FastAPI Endpoints (`ml-service/app/main.py`):**
+  - Models saved to `artifacts/models/` (.joblib) and SHAP reports to `artifacts/explanations/` (.json).
+  - Routes: `GET /models/status`, `GET /models/registry`, `GET /models/comparison`, `GET /models/:id`, `GET /models/:id/explanations`, `POST /models/train`, `POST /models/:id/explain`, `GET /datasets/catalog`.
+- [x] **Backend & Analyst UI Integration:**
+  - Node backend routes in `backend/src/routes/modelRoutes.ts` and `backend/src/controllers/modelController.ts`.
+  - Analyst `ModelsPage.tsx` with live multi-model benchmark table, neutral skill scores (no biased winner badges), SHAP attribution bars, and dataset catalog cards.
+- [x] **Testing & Verification:**
+  - `pytest ml-service/tests`: 36/36 tests passed (100%).
+  - `npm test` in `backend/`: 35/35 passed (100%).
+  - `npm test` in `frontend/`: 9/9 passed (100%).
+  - `npm run build` in `frontend/` and `backend/`: 0 errors.
+
+---
+
 ### Phase Status & Guardrails Summary
 - **Phase 1A:** COMPLETED
 - **Phase 1B:** COMPLETED
 - **Phase 1C:** COMPLETED
 - **Phase 2:** COMPLETED
 - **Phase 3:** COMPLETED
-- **Phase 4A:** **COMPLETED**
-- **Phase 4B:** **NOT STARTED** (Strict sequence enforced)
+- **Phase 4A:** COMPLETED
+- **Phase 4B:** **COMPLETED**
+- **Phase 5:** **NOT STARTED** (Strict sequence enforced)
 
 ---
 
-## 7. Pending (Future Phases)
-- [ ] **Phase 4B: Operational ML Downscaling & Gradient Boosted Ensembles**
-  - DO NOT START UNTIL INSTRUCTED.
-  - Will implement: Multi-decadal reanalysis ingestion, LightGBM/XGBoost probabilistic models, spatial hierarchical pooling, SHAP explainability.
+## 8. Pending (Future Phases)
 - [ ] **Phase 5: Agronomic Rules Engine & What-If Simulator**
+  - DO NOT START UNTIL INSTRUCTED.
   - Declarative crop rules matrix across growth stages.
   - What-If scenario comparison calculation engine.
+  - Farmer advisory generation from downscaled forecast distributions.
 - [ ] **Phase 6: Voice & Dissemination Gateway**
   - Bhashini ASR/TTS contract integration.
-  - Officer advisory bulletin SMS broadcast gateway.
+  - WhatsApp/SMS broadcasting gateway.
 
 ---
 
-## 8. Technical Debt
-- **Zero Technical Debt Introduced:** Fully typed interfaces, zero fabricated forecast probabilities or accuracies, strict causal feature engineering, and automated temporal leakage interception.
+## 9. Technical Debt
+- **Zero Technical Debt Introduced:** Fully typed interfaces, zero synthetic or fabricated observations, strict chronological splitting without leakage, and honest disclosure of single-season data limits.
 
 
 

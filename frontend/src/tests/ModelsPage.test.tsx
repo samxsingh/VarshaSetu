@@ -7,68 +7,139 @@ import { modelService } from '../services/modelService';
 vi.mock('../services/modelService', () => ({
   modelService: {
     getStatus: vi.fn(),
+    getComparison: vi.fn(),
+    getModelExplanations: vi.fn(),
+    getDatasetsCatalog: vi.fn(),
     getExperiments: vi.fn(),
-    trainBaselines: vi.fn(),
+    trainTreeModel: vi.fn(),
   },
 }));
 
-describe('ModelsPage Component (Phase 4A Baseline Stage)', () => {
+describe('ModelsPage Component (Phase 4B Tree Downscaling Stage)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('renders model registry header and baseline disclosure', async () => {
+  it('renders downscaling model benchmark registry and SHAP explainability panel', async () => {
     vi.mocked(modelService.getStatus).mockResolvedValue({
       success: true,
       data: {
         service: 'varshasetu-ml-service',
-        phase: 'PHASE_4A_BASELINE_STAGE',
-        operational_status: 'BASELINE_EVALUATION_ACTIVE',
-        operational_inference_available: false,
-        message: 'Forecast models are in Phase 4A baseline evaluation stage.',
-        active_baselines: ['LogisticRegressionBaseline (HEAVY_RAIN 7d, 14d)'],
-        total_experiments_recorded: 3,
+        phase: 'PHASE_4B_OPERATIONAL_DOWNSCALING_STAGE',
+        operational_status: 'DOWNSCALING_BENCHMARK_ACTIVE',
+        spatial_resolution_supported: 'BLOCK',
+        total_experiments_recorded: 4,
+      },
+    });
+
+    vi.mocked(modelService.getComparison).mockResolvedValue({
+      success: true,
+      data: {
+        benchmark_report: {
+          target_name: 'HEAVY_RAIN',
+          horizon_days: 7,
+          task_type: 'classification',
+          evaluation_period: '2024-09-13 to 2024-09-30',
+          test_sample_count: 18,
+          climatology_reference_val: 0.1667,
+          models: [
+            {
+              model_id: 'climatology',
+              model_name: 'Historical Climatology Frequency',
+              model_family: 'climatology',
+              task_type: 'classification',
+              brier_score: 0.1389,
+              brier_skill_score: 0.0,
+              accuracy: 0.8333,
+              is_calibrated: true,
+              has_skill_over_climatology: false,
+              status: 'evaluated',
+            },
+            {
+              model_id: 'xgboost',
+              model_name: 'XGBoost Gradient Boosted Trees',
+              model_family: 'xgboost',
+              task_type: 'classification',
+              brier_score: 0.112,
+              brier_skill_score: 0.1937,
+              accuracy: 0.8889,
+              is_calibrated: false,
+              has_skill_over_climatology: true,
+              status: 'evaluated',
+            },
+          ],
+          notes: [],
+        },
+        data_availability: {
+          status: 'PARTIAL',
+          has_30_year_climatology: false,
+          spatial_resolution_level: 'BLOCK',
+        },
+        downscaling_resolution: {
+          target_resolution: 'BLOCK',
+          panchayat_data_available: false,
+        },
+      },
+    });
+
+    vi.mocked(modelService.getModelExplanations).mockResolvedValue({
+      success: true,
+      data: {
+        model_id: 'xgboost_heavy_rain_7d',
+        target_name: 'HEAVY_RAIN',
+        sample_count_evaluated: 18,
+        top_driver: 'rainfall_1d',
+        secondary_driver: 'humidity',
+        teleconnection_importance_pct: 18.5,
+        global_importances: [
+          {
+            feature_name: 'rainfall_1d',
+            mean_abs_shap: 0.42,
+            relative_importance_pct: 35.0,
+            meteorological_category: 'moisture_antecedent',
+          },
+        ],
+      },
+    });
+
+    vi.mocked(modelService.getDatasetsCatalog).mockResolvedValue({
+      success: true,
+      data: {
+        status: 'success',
+        total_datasets: 1,
+        catalog: [
+          {
+            dataset_id: 'weather_lucknow_observations',
+            name: 'Lucknow Kharif 2024 Weather Observations',
+            provider: 'ERA5-Land',
+            spatial_resolution: 'Block centroid (~9 km)',
+            temporal_resolution: 'Daily',
+            qc_passed: true,
+          },
+        ],
       },
     });
 
     vi.mocked(modelService.getExperiments).mockResolvedValue({
       success: true,
       data: {
-        total: 1,
-        experiments: [
-          {
-            experiment_id: 'exp_dry_spell_7d_test',
-            model_name: 'LogisticRegressionBaseline',
-            model_version: '1.0.0-baseline',
-            feature_set_version: '1.0.0',
-            target_name: 'DRY_SPELL',
-            target_version: '1.0.0',
-            horizon_days: 7,
-            training_period: '2024-06-01 to 2024-08-20',
-            validation_period: '2024-08-21 to 2024-09-08',
-            test_period: '2024-09-09 to 2024-09-24',
-            geography: 'UP_LKO_BKT',
-            created_at: '2026-09-25T14:45:00.000Z',
-            metrics: { test: { brier_score: 0.3347, sample_count: 18 } },
-            comparison_to_climatology: { brier_skill_score: 0.0915, has_skill_over_climatology: true },
-            calibration_status: 'NOT_CALIBRATED',
-            dataset_version: '1.0.0',
-            git_commit: 'e572419',
-            status: 'EVALUATED',
-          },
-        ],
+        total: 0,
+        experiments: [],
       },
     });
 
     render(<ModelsPage />);
 
-    expect(screen.getByText(/Machine Learning Model & Experiment Registry/i)).toBeInTheDocument();
-    expect(screen.getByText(/Train Baselines/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Operational Downscaling & Model Benchmark Registry/i)
+    ).toBeInTheDocument();
+    expect(screen.getByText(/Train Tree Ensembles/i)).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(screen.getByText('PHASE_4A_BASELINE_STAGE')).toBeInTheDocument();
-      expect(screen.getByText('DRY_SPELL')).toBeInTheDocument();
-      expect(screen.getByText('0.3347')).toBeInTheDocument();
+      expect(screen.getByText('XGBoost Gradient Boosted Trees')).toBeInTheDocument();
+      expect(screen.getByText(/Historical Climatology Frequency/i)).toBeInTheDocument();
+      expect(screen.getByText(/SHAP Explainability: Feature Attributions & Teleconnections/i)).toBeInTheDocument();
+      expect(screen.getByText(/Lucknow Kharif 2024 Weather Observations/i)).toBeInTheDocument();
     });
   });
 });

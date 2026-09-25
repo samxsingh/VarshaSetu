@@ -1,0 +1,160 @@
+{
+  "model_id": "xgboost_rainfall_amount_7d",
+  "target_name": "RAINFALL_AMOUNT",
+  "sample_count_evaluated": 18,
+  "global_importances": [
+    {
+      "feature_name": "cos_doy",
+      "mean_abs_shap": 6.53071,
+      "relative_importance_pct": 38.5,
+      "meteorological_category": "seasonality"
+    },
+    {
+      "feature_name": "day_of_year",
+      "mean_abs_shap": 3.00287,
+      "relative_importance_pct": 17.7,
+      "meteorological_category": "seasonality"
+    },
+    {
+      "feature_name": "iod_dmi",
+      "mean_abs_shap": 2.36474,
+      "relative_importance_pct": 13.94,
+      "meteorological_category": "teleconnection"
+    },
+    {
+      "feature_name": "rainfall_7d",
+      "mean_abs_shap": 1.88182,
+      "relative_importance_pct": 11.09,
+      "meteorological_category": "moisture_antecedent"
+    },
+    {
+      "feature_name": "rainfall_3d",
+      "mean_abs_shap": 1.23025,
+      "relative_importance_pct": 7.25,
+      "meteorological_category": "moisture_antecedent"
+    },
+    {
+      "feature_name": "sin_doy",
+      "mean_abs_shap": 0.85573,
+      "relative_importance_pct": 5.04,
+      "meteorological_category": "seasonality"
+    },
+    {
+      "feature_name": "rainfall_14d",
+      "mean_abs_shap": 0.64874,
+      "relative_importance_pct": 3.82,
+      "meteorological_category": "moisture_antecedent"
+    },
+    {
+      "feature_name": "rainfall_1d",
+      "mean_abs_shap": 0.31641,
+      "relative_importance_pct": 1.87,
+      "meteorological_category": "moisture_antecedent"
+    },
+    {
+      "feature_name": "wind_speed_10m_mps",
+      "mean_abs_shap": 0.06407,
+      "relative_importance_pct": 0.38,
+      "meteorological_category": "boundary_layer_wind"
+    },
+    {
+      "feature_name": "consecutive_wet_days",
+      "mean_abs_shap": 0.04383,
+      "relative_importance_pct": 0.26,
+      "meteorological_category": "moisture_antecedent"
+    },
+    {
+      "feature_name": "consecutive_dry_days",
+      "mean_abs_shap": 0.02533,
+      "relative_importance_pct": 0.15,
+      "meteorological_category": "moisture_antecedent"
+    },
+    {
+      "feature_name": "rainy_days_7d",
+      "mean_abs_shap": 0.0,
+      "relative_importance_pct": 0.0,
+      "meteorological_category": "moisture_antecedent"
+    },
+    {
+      "feature_name": "temperature_2m_max_c",
+      "mean_abs_shap": 0.0,
+      "relative_importance_pct": 0.0,
+      "meteorological_category": "thermodynamics"
+    },
+    {
+      "feature_name": "temperature_2m_min_c",
+      "mean_abs_shap": 0.0,
+      "relative_importance_pct": 0.0,
+      "meteorological_category": "thermodynamics"
+    },
+    {
+      "feature_name": "diurnal_temp_range_c",
+      "mean_abs_shap": 0.0,
+      "relative_importance_pct": 0.0,
+      "meteorological_category": "thermodynamics"
+    },
+    {
+      "feature_name": "surface_pressure_hpa",
+      "mean_abs_shap": 0.0,
+      "relative_importance_pct": 0.0,
+      "meteorological_category": "synoptic_pressure"
+    },
+    {
+      "feature_name": "mjo_amplitude",
+      "mean_abs_shap": 0.0,
+      "relative_importance_pct": 0.0,
+      "meteorological_category": "teleconnection"
+    },
+    {
+      "feature_name": "mjo_phase",
+      "mean_abs_shap": 0.0,
+      "relative_importance_pct": 0.0,
+      "meteorological_category": "teleconnection"
+    },
+    {
+      "feature_name": "nino34_anomaly",
+      "mean_abs_shap": 0.0,
+      "relative_importance_pct": 0.0,
+      "meteorological_category": "teleconnection"
+    },
+    {
+      "feature_name": "spatial_latitude",
+      "mean_abs_shap": 0.0,
+      "relative_importance_pct": 0.0,
+      "meteorological_category": "spatial"
+    },
+    {
+      "feature_name": "spatial_longitude",
+      "mean_abs_shap": 0.0,
+      "relative_importance_pct": 0.0,
+      "meteorological_category": "spatial"
+    },
+    {
+      "feature_name": "spatial_elevation_m",
+      "mean_abs_shap": 0.0,
+      "relative_importance_pct": 0.0,
+      "meteorological_category": "spatial"
+    },
+    {
+      "feature_name": "spatial_dist_to_district_km",
+      "mean_abs_shap": 0.0,
+      "relative_importance_pct": 0.0,
+      "meteorological_category": "spatial"
+    },
+    {
+      "feature_name": "spatial_offset_lat",
+      "mean_abs_shap": 0.0,
+      "relative_importance_pct": 0.0,
+      "meteorological_category": "meteorological"
+    },
+    {
+      "feature_name": "spatial_offset_lon",
+      "mean_abs_shap": 0.0,
+      "relative_importance_pct": 0.0,
+      "meteorological_category": "meteorological"
+    }
+  ],
+  "top_driver": "cos_doy",
+  "secondary_driver": "day_of_year",
+  "teleconnection_importance_pct": 13.94
+}
