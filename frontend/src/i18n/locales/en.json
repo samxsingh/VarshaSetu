@@ -1,0 +1,138 @@
+{
+  "brand": {
+    "name": "VarshaSetu",
+    "hindiName": "वर्षासेतु",
+    "tagline": "From climate signals to confident farm decisions.",
+    "subtitle": "Hyperlocal Monsoon Intelligence & Agricultural Decision Support"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "howItWorks": "How It Works",
+    "farmer": "Farmer Portal",
+    "officer": "Officer Center",
+    "government": "Government",
+    "analyst": "Analyst Lab",
+    "admin": "Admin",
+    "dashboard": "Dashboard",
+    "forecast": "Forecast",
+    "advisory": "Advisory",
+    "whatIf": "What-If Simulator",
+    "profile": "Profile",
+    "map": "Risk Map",
+    "crops": "Crops",
+    "models": "Model Registry",
+    "dataHealth": "Data Health"
+  },
+  "demo": {
+    "banner": "DEMO / SIMULATED DATA",
+    "bannerSub": "All forecast metrics, maps, and advisories shown are controlled simulation models for development and demonstration purposes. No live weather APIs are active.",
+    "badge": "Simulated Model Data"
+  },
+  "common": {
+    "listen": "Listen",
+    "listening": "Playing Briefing...",
+    "stop": "Stop",
+    "back": "Back",
+    "next": "Continue",
+    "skip": "Skip for now",
+    "save": "Save Changes",
+    "search": "Search location or crop...",
+    "loading": "Loading monsoon data...",
+    "empty": "No forecast information available yet.",
+    "unavailable": "Live forecast pipeline is not connected yet.",
+    "disclaimer": "Scenario results and forecasts are model-based estimates for agricultural advisory purposes, not a yield or weather guarantee.",
+    "highConfidence": "High Confidence",
+    "moderateConfidence": "Moderate Confidence",
+    "lowConfidence": "Low Confidence",
+    "riskLow": "Low Risk",
+    "riskModerate": "Moderate Risk",
+    "riskHigh": "High Alert",
+    "verifiedLocation": "Verified GPS Location",
+    "defaultLocation": "Demonstration Default: Lucknow District, UP"
+  },
+  "farmer": {
+    "welcome": "Namaste, Farmer Friend",
+    "todayBriefing": "Today's Monsoon Briefing",
+    "audioNotice": "Audio briefing available in Hindi & Awadhi",
+    "monsoonOutlook": "Monsoon Outlook",
+    "selectHorizon": "Forecast Horizon",
+    "sevenDay": "7 Days",
+    "fourteenDay": "14 Days",
+    "twentyOneDay": "21 Days",
+    "thirtyDay": "30 Days",
+    "whatItMeans": "What this means for your crop",
+    "recommendedActions": "Recommended Actions",
+    "thingsToAvoid": "Things to Avoid",
+    "whyThisAdvice": "Why are we suggesting this?",
+    "sowingWindow": "Optimal Sowing Window",
+    "drySpellWarning": "Dry Spell Warning",
+    "heavyRainAlert": "Heavy Rain Alert",
+    "kisanCallCenter": "Kisan Call Center (Toll-Free): 1800-180-1551"
+  },
+  "onboarding": {
+    "step": "Step",
+    "step1Title": "Where is your farm?",
+    "step1Subtitle": "Select your state, district, and village so we can downscale climate signals to your fields.",
+    "step2Title": "What are you growing this season?",
+    "step2Subtitle": "Choose your primary crop to receive tailored moisture and sowing guidance.",
+    "step3Title": "Which stage is your crop currently in?",
+    "step3Subtitle": "Advisories adapt specifically to the physiological vulnerability of your crop stage.",
+    "optionalTitle": "Optional Farm Details",
+    "irrigationType": "Irrigation Facility",
+    "soilType": "Predominant Soil Type",
+    "farmSize": "Farm Landholding (Acres)",
+    "finish": "Go to My Farm Dashboard"
+  },
+  "targets": {
+    "onset": "Monsoon Onset",
+    "drySpell": "Dry Spell / Break Monsoon",
+    "heavyRain": "Heavy Rain Event",
+    "anomaly": "Rainfall Anomaly"
+  },
+  "crops": {
+    "PADDY": "Paddy (धान)",
+    "MAIZE": "Maize (मक्का)",
+    "SOYBEAN": "Soybean (सोयाबीन)",
+    "PULSES": "Pulses (दालें / अरहर / मूंग)",
+    "COTTON": "Cotton (कपास)",
+    "GROUNDNUT": "Groundnut (मूंगफली)",
+    "MILLETS": "Millets (बाजरा / ज्वार)"
+  },
+  "stages": {
+    "LAND_PREPARATION": "Land Preparation (खेत की तैयारी)",
+    "NURSERY_SOWING": "Nursery / Sowing (नर्सरी / बुवाई)",
+    "VEGETATIVE": "Vegetative Growth (वानस्पतिक वृद्धि)",
+    "FLOWERING_REPRODUCTIVE": "Flowering / Reproductive (फूल / बाली आना)",
+    "GRAIN_POD_FILLING": "Grain / Pod Filling (दाना / फली भराव)",
+    "MATURITY_HARVESTING": "Maturity / Harvesting (पकाव / कटाई)"
+  },
+  "simulator": {
+    "title": "What-If Sowing Decision Simulator",
+    "subtitle": "Compare farm outcomes under different timing decisions against projected monsoon conditions.",
+    "optionA": "Option A: Sow Now",
+    "optionB": "Option B: Wait 7 Days",
+    "riskScore": "Estimated Risk Index",
+    "waterStress": "Moisture Stress Risk",
+    "recommendation": "Recommendation Verdict"
+  },
+  "officer": {
+    "title": "Agriculture Officer Command Center",
+    "monitoredPanchayats": "Monitored Panchayats",
+    "highRiskBlocks": "High Risk Blocks",
+    "activeDrySpells": "Active Dry Spells",
+    "heavyRainAlerts": "Heavy Rain Alerts",
+    "dataFreshness": "Data Freshness",
+    "broadcastBulletin": "Broadcast Advisory Bulletin",
+    "layerControl": "Map Layers"
+  },
+  "analyst": {
+    "title": "Climate Science & Model Transparency Lab",
+    "teleconnections": "Global Teleconnections (ENSO, IOD, MJO)",
+    "modelRegistry": "Model Registry & Benchmarks",
+    "provenance": "Data Pipeline Lineage",
+    "featureWeights": "Feature Weight Importance (SHAP)",
+    "statusNotTrained": "Not Trained (Phase 1B Shell)",
+    "statusNotEvaluated": "Not Evaluated Yet"
+  }
+}

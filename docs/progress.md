@@ -3,46 +3,86 @@
 
 ---
 
-### Current Phase: PHASE 1A
+### Current Phase: PHASE 1B
 **Status:** COMPLETED  
 **Last Updated:** September 2026
 
 ---
 
 ## 1. Phase 1A: Product Definition, Architecture & Scaffolding
+- **Status:** COMPLETED
+- Delivered comprehensive [PRD.md](file:///Users/sameersingh/Desktop/VarshaSetu/docs/PRD.md) (28 sections), [architecture.md](file:///Users/sameersingh/Desktop/VarshaSetu/docs/architecture.md) (23 sections), universal TypeScript contracts in `shared/types/*`, and project directory structure.
 
-### Completed
-- [x] **Repository Assessment & Initialization:** Inspected the workspace, confirmed empty initial state, initialized clean Git repository on `main` branch with strict `.gitignore` rules for Node, Python, and OS artifacts.
-- [x] **Product Requirements Definition (`docs/PRD.md`):** Authored an exhaustive 28-section specification covering product identity, problem analysis, target personas, user journeys, forecast targets, GIS boundaries, agronomic advisories, what-if simulations, multilingual, voice, data, ML, security, accessibility, and performance requirements.
-- [x] **Technical Architecture Specification (`docs/architecture.md`):** Authored a detailed 23-section technical architecture including system diagrams, component breakdowns, PostGIS relational schemas, ML feature engineering pipelines, API route specifications, RBAC matrix, caching strategies, and architectural decision records (ADRs).
-- [x] **Universal Shared Type Contracts (`shared/types/`):** Established comprehensive TypeScript type definitions for:
-  - `core.ts`: API envelopes, `DataMode` (`REAL` | `DEMO`), ingestion statuses, pagination, provenance.
-  - `geography.ts`: Administrative hierarchy (`State` -> `District` -> `Block` -> `Panchayat` -> `Village`), PostGIS boundary geometries, coordinate interfaces.
-  - `climate.ts`: Global teleconnections (ENSO, IOD, MJO indices) and regional meteorological observation models.
-  - `forecast.ts`: Four forecast targets (`MONSOON_ONSET`, `DRY_SPELL_BREAK`, `HEAVY_RAIN`, `RAINFALL_ANOMALY`) across 7, 14, 21, and 30-day horizons, probability representations, uncertainty bounds.
-  - `advisory.ts`: Configurable crops (Paddy, Maize, Soybean, Pulses, Cotton, Groundnut, Millets), growth stages, rule matches, and what-if simulation requests/responses.
-  - `auth.ts`: Five primary roles (`FARMER`, `OFFICER`, `GOVERNMENT`, `ANALYST`, `ADMIN`) and granular permission scopes.
-  - `index.ts`: Unified barrel exports.
-- [x] **Configurable Environment Architecture (`.env.example`):** Created a template containing all required database, Redis, ML service, security, port, and geographic default parameters (`DEFAULT_DEMO_LOCATION`, `DATA_MODE`).
-- [x] **Standard Repository Directory Scaffolding:** Established clean directory structure for `frontend/`, `backend/`, `ml-service/`, `shared/`, `docs/`, `tests/`, and `scripts/`.
-- [x] **Developer Onboarding (`README.md`):** Authored a practical, production-oriented project guide outlining architecture, quickstart instructions, and development guidelines.
+---
+
+## 2. Phase 1B: Interactive UI/UX Design + Application Shell
+- **Status:** COMPLETED
+
+### Completed in Phase 1B
+- [x] **Stitch MCP UI/UX Exploration:** Explored layout rhythms, tactile utilitarianism, and component structures using Stitch MCP project `3293451152379745739` ("Agro-Meteorological Precision" design system).
+- [x] **Design Tokens & Theme Foundation:** Configured Tailwind CSS with custom palette: `#FAF7F2` (Warm Ivory Canvas), `#0F172A` (Slate 900 Text), `#0D9488` (Primary Teal), `#B45309` (Advisory Amber), `#0284C7` (Precipitation Azure), `#15803D` (Favorable Emerald), `#DC2626` (Alert Crimson).
+- [x] **Typography Scale:** Configured `Lexend` for prominent headings and numeric data clarity, paired with `Inter` for tabular and body legibility.
+- [x] **Reusable UI Component System (`src/components/ui/`):**
+  - `Button`: Multiple variants, accessible 44–48px touch targets, loading spinner.
+  - `Badge`: Categorical risk badges, pill badges, and prominent `DEMO / SIMULATED DATA` tags.
+  - `Card`: Structured containers with custom left-accent borders (`accent`, `warning`, `alert`).
+  - `Alert`: Accessible notice banners for informative, caution, and critical statements.
+  - `Tabs`: Accessible pill and underline tab switchers.
+  - `Progress`: Calibrated probability and moisture progress bars with ARIA values.
+  - `Input` & `Select`: Form controls with accessible labels, icons, and error states.
+  - `Modal`: Accessible dialog overlay with backdrop blur and escape key dismissal.
+  - `EmptyState` & `LoadingState`: Zero-data and loading indicators.
+- [x] **Shell Layouts (`src/layouts/`):**
+  - `RootLayout`: Persistent `DemoBanner`, `Navbar`, and `Footer`.
+  - `FarmerLayout`: Desktop sub-navigation tabs, mobile persistent `AudioBriefingBar`, and mobile sticky bottom navigation (`FarmerBottomNav`).
+  - `OfficerLayout`: Multi-tab officer subnavigation bar and global `BulletinModal`.
+  - `AnalystLayout`: Scientific lab subnavigation.
+- [x] **Public Experience Pages:**
+  - `LandingPage`: Rich visual storytelling covering Problem, Architecture, 4 Forecast Targets, Farmer Experience, Officer Center, and What-If preview.
+  - `AboutPage`: Institutional mission, rainfed agriculture context, and core principles.
+  - `HowItWorksPage`: Step-by-step breakdown from global teleconnections to field decisions.
+- [x] **Farmer Experience Pages:**
+  - `FarmerDashboardPage`: Location header, 7–30 day glance card, crop advisory card, and simulator card.
+  - `FarmerOnboardingPage`: Progressive 3-step intake (Where is your farm? -> What are you growing? -> Crop growth stage?) + skippable farm details.
+  - `FarmerForecastPage`: Multi-horizon timeline breakdown with progressive scientific explainability ("Why?").
+  - `FarmerAdvisoryPage`: Explainable crop-specific recommendations, avoid checklist, and KVK contact details.
+  - `FarmerWhatIfPage`: Interactive comparative decision simulator (*Sow Now* vs *Wait 7 Days*) with mandatory disclaimers.
+  - `FarmerProfilePage`: Registered farm metadata and quick configuration reset.
+- [x] **Officer Experience Pages:**
+  - `OfficerDashboardPage`: Summary stat cards, PostGIS GIS map, and Gram Panchayat drill-down panel.
+  - `OfficerMapPage`: Full-width map interface with layer toggles and risk legends.
+  - `OfficerForecastPage`: Block-level comparative probability matrix.
+  - `OfficerAdvisoriesPage`: Dissemination history and broadcast PDF viewer.
+  - `OfficerCropsPage`: Acreage vulnerability matrix for Paddy, Pulses, Maize, and Vegetables.
+- [x] **Government & Analyst Experience Pages:**
+  - `GovernmentDashboardPage`: Statewide teleconnections, drought watch, and provenance audit.
+  - `AnalystOverviewPage`: Climate teleconnection tracking (ENSO, IOD, MJO) and SHAP feature importance.
+  - `ForecastLabPage`: Hindcasting and probability calibration framework.
+  - `ModelsPage`: Model registry strictly displaying *"Not evaluated yet"* rather than fabricated metrics.
+  - `DataHealthPage`: Provider ingestion audit and freshness status monitor.
+  - `AdminDashboardPage`: System administration, user counts, and configuration review.
+- [x] **Localization Foundation:**
+  - Initialized `react-i18next` with complete English (`en.json`) and Hindi (`hi.json`) translation namespaces.
+  - Interactive language switcher toggle accessible in header and mobile drawers.
+- [x] **Scientific Transparency Standard:**
+  - Persistent `DemoBanner` at the top of every screen.
+  - Every simulated probability, map, and advisory carries explicit simulated data badging.
+  - No fabricated ML accuracy claims; un-trained models explicitly state *"Not evaluated yet"*.
+- [x] **Build & Verification:**
+  - `tsc && vite build` compiles cleanly with zero errors in 1.45 seconds.
+  - Responsive layouts validated across mobile, tablet, and desktop breakpoints.
+- [x] **Design System Documentation (`docs/design-system.md`):** Complete design tokens, typography, component philosophy, accessibility, and UX guidelines documented.
 
 ---
 
 ### In Progress
-- None (Phase 1A completed and awaiting instruction to start Phase 1B).
+- None (Phase 1B completed and awaiting instruction to start Phase 2).
 
 ---
 
 ### Pending (Future Phases)
-- [ ] **Phase 1B: Interactive UI/UX Development**
-  - Design token implementation (Tailwind CSS configuration).
-  - Stitch MCP / Wireframe exploration for primary views.
-  - Farmer mobile-first responsive layout (progressive 3-step onboarding, forecast glance card, advisory checklist, what-if simulator).
-  - Officer multi-block command dashboard and risk map interface.
-  - Localization integration with `react-i18next` for Hindi and English.
 - [ ] **Phase 2: Backend Core & Geospatial Foundation**
-  - Express.js + TypeScript server bootstrap.
+  - Node.js + Express.js API framework initialization.
   - PostgreSQL + PostGIS database migrations and connection pool.
   - Seeding administrative boundary hierarchy (demo dataset for Lucknow district: BKT, Malihabad, Mohanlalganj, Sarojininagar, Gosainganj blocks).
   - JWT Authentication, RBAC middleware, and standard response envelopes.
@@ -56,27 +96,24 @@
   - Probability calibration (Platt/Isotonic).
 - [ ] **Phase 5: Agronomic Rules Engine & What-If Simulator**
   - Declarative crop rules matrix across growth stages.
-  - What-If scenario comparison engine.
+  - What-If scenario comparison calculation engine.
 - [ ] **Phase 6: Voice & Dissemination Gateway**
-  - Bhashini ASR/TTS contract adapters.
-  - Officer advisory bulletin broadcast simulation.
+  - Bhashini ASR/TTS contract integration.
+  - Officer advisory bulletin SMS broadcast gateway.
 
 ---
 
-## 2. Known Limitations (Phase 1A)
-1. **Design Mockups & Visual Assets:** Visual mockups and interactive components will be built in Phase 1B using Stitch MCP wireframes.
-2. **Mocked / Simulated Geometries:** Administrative boundaries will use validated GeoJSON for demonstration until full national PostGIS shapefiles are ingested.
-3. **No Active External Connections:** In accordance with Phase 1A constraints, live weather APIs, production ML inferences, and database connections are deferred to subsequent phases.
+## 3. Known Limitations (Phase 1B)
+1. **Interactive Demo Data:** Data surfaced in the UI reflects controlled development fixtures calibrated for Lucknow District rather than live operational meteorology (as required by Phase 1B constraints).
+2. **Audio Voice Synthesis:** The audio player displays waveform animation and status toggles; live Bhashini TTS synthesis will be integrated in Phase 6.
+3. **No Active Backend API:** The frontend runs as a standalone client shell ready to wire into the Node.js/PostGIS API in Phase 2.
 
 ---
 
-## 3. Technical Debt
-- **Zero Technical Debt Introduced:** The codebase currently contains pure contracts, specifications, and architecture documentation without hackathon shortcuts or premature coupling.
+## 4. Technical Debt
+- **Zero Technical Debt Introduced:** Clean TypeScript code with strict type contracts, reusable modular components, and no hackathon shortcuts.
 
 ---
 
-## 4. Next Phase
-- **Phase 1B: Frontend UI/UX Scaffolding & Design System Alignment**
-  - Initialize Vite React + TypeScript frontend.
-  - Configure Tailwind design tokens matching the warm ivory/editorial scientific aesthetic.
-  - Build out beginner-friendly mobile-first farmer interfaces and desktop officer views.
+## 5. Next Phase
+- **Phase 2: Node/Express Backend Core, PostgreSQL/PostGIS migrations & RBAC API.**
