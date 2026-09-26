@@ -30,7 +30,7 @@ export const HorizonSelector: React.FC<HorizonSelectorProps> = ({
       role="tablist"
       aria-label="Forecast horizon selection"
       className={cn(
-        'inline-flex items-center bg-surface-muted p-1 rounded-full border border-surface-border overflow-x-auto no-scrollbar max-w-full',
+        'inline-flex items-center bg-[#EAF0F2] p-1.5 rounded-xl border-2 border-[#102A43] overflow-x-auto no-scrollbar max-w-full shadow-[2px_2px_0px_#102A43] gap-1',
         className
       )}
     >
@@ -44,11 +44,11 @@ export const HorizonSelector: React.FC<HorizonSelectorProps> = ({
             aria-selected={isActive}
             onClick={() => onChange(days)}
             className={cn(
-              'flex items-center justify-center font-heading font-semibold transition-all rounded-full whitespace-nowrap select-none min-h-[36px]',
+              'flex items-center justify-center font-heading font-bold transition-all rounded-lg whitespace-nowrap select-none min-h-[36px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0E7490]',
               size === 'sm' ? 'px-3 py-1 text-xs' : 'px-4 py-1.5 text-xs sm:text-sm',
               isActive
-                ? 'bg-brand-teal text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
+                ? 'bg-[#0E7490] text-white border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43]'
+                : 'text-[#486581] hover:text-[#102A43] hover:bg-white/70 border-2 border-transparent active:translate-x-0.5 active:translate-y-0.5'
             )}
           >
             <span>{label}</span>

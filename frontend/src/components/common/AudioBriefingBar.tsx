@@ -23,8 +23,8 @@ export const AudioBriefingBar: React.FC<AudioBriefingBarProps> = ({
   return (
     <div
       className={cn(
-        'bg-brand-azure-tint border border-brand-azure-border rounded-2xl p-4 flex items-center justify-between gap-4 shadow-sm',
-        isAudioBriefingPlaying && 'ring-2 ring-brand-azure/50',
+        'bg-[#DBEAFE]/40 border-2 border-[#102A43] rounded-2xl p-4 flex items-center justify-between gap-4 shadow-[3px_3px_0px_#102A43]',
+        isAudioBriefingPlaying && 'ring-2 ring-[#2563EB]',
         className
       )}
     >
@@ -32,7 +32,7 @@ export const AudioBriefingBar: React.FC<AudioBriefingBarProps> = ({
         <button
           onClick={toggleAudioBriefing}
           aria-label={isAudioBriefingPlaying ? 'Pause audio briefing' : 'Play audio briefing'}
-          className="w-12 h-12 rounded-full bg-brand-azure hover:bg-brand-azure-dark text-white flex items-center justify-center shrink-0 shadow-md transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-azure"
+          className="w-12 h-12 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white border-2 border-[#102A43] flex items-center justify-center shrink-0 shadow-[2px_2px_0px_#102A43] transition-all active:translate-x-0.5 active:translate-y-0.5 active:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]"
         >
           {isAudioBriefingPlaying ? (
             <Pause className="w-5 h-5 fill-current" />
@@ -43,17 +43,17 @@ export const AudioBriefingBar: React.FC<AudioBriefingBarProps> = ({
 
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <h4 className="font-heading font-semibold text-sm text-slate-900 truncate">
+            <h4 className="font-heading font-extrabold text-sm text-[#102A43] truncate">
               {displayTitle}
             </h4>
             {isAudioBriefingPlaying && (
-              <span className="flex items-center gap-1 text-[11px] font-bold text-brand-azure uppercase">
+              <span className="flex items-center gap-1 text-[11px] font-mono font-bold text-[#2563EB] uppercase">
                 <Radio className="w-3 h-3 animate-pulse" />
                 Audio Preview
               </span>
             )}
           </div>
-          <p className="text-xs text-slate-600 truncate mt-0.5">
+          <p className="text-xs text-[#486581] truncate mt-0.5 font-sans">
             {t('common.simulatedAudioNotice')}
           </p>
         </div>
@@ -66,7 +66,7 @@ export const AudioBriefingBar: React.FC<AudioBriefingBarProps> = ({
             key={i}
             className={cn(
               'w-1 rounded-full transition-all duration-300',
-              isAudioBriefingPlaying ? 'bg-brand-azure animate-pulse' : 'bg-brand-azure/30'
+              isAudioBriefingPlaying ? 'bg-[#2563EB] animate-pulse' : 'bg-[#2563EB]/30'
             )}
             style={{
               height: isAudioBriefingPlaying ? `${height}%` : '8px',
@@ -78,7 +78,7 @@ export const AudioBriefingBar: React.FC<AudioBriefingBarProps> = ({
 
       <button
         onClick={toggleAudioBriefing}
-        className="px-3 py-1.5 rounded-full bg-white/80 hover:bg-white text-brand-azure-dark border border-brand-azure-border text-xs font-semibold font-heading shrink-0 flex items-center gap-1.5 shadow-xs"
+        className="px-4 py-2 min-h-[44px] rounded-xl bg-white hover:bg-[#EAF0F2] text-[#102A43] border-2 border-[#102A43] text-xs font-bold font-heading shrink-0 flex items-center gap-1.5 shadow-[2px_2px_0px_#102A43] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0E7490]"
       >
         {isAudioBriefingPlaying ? (
           <>

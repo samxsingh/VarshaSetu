@@ -232,19 +232,19 @@ export const MapContainer: React.FC = () => {
       {/* Floating Hover Tooltip */}
       {hoveredBlock && (
         <div
-          className="absolute z-30 pointer-events-none bg-slate-900/90 backdrop-blur-md text-white text-xs p-3 rounded-xl shadow-floating space-y-1 transform -translate-x-1/2 -translate-y-full mb-3"
+          className="absolute z-30 pointer-events-none bg-[#102A43] border-2 border-[#0891B2] text-white text-xs p-3 rounded-xl shadow-[3px_3px_0px_#000000] space-y-1 transform -translate-x-1/2 -translate-y-full mb-3"
           style={{ left: `${mousePos.x}px`, top: `${mousePos.y}px` }}
         >
-          <div className="font-heading font-bold text-sm flex items-center gap-1.5">
-            <MapPin className="w-3.5 h-3.5 text-brand-teal-light" />
+          <div className="font-heading font-extrabold text-sm flex items-center gap-1.5">
+            <MapPin className="w-3.5 h-3.5 text-[#0891B2]" />
             <span>{hoveredBlock.name}</span>
           </div>
-          <p className="text-slate-300 text-[11px]">{hoveredBlock.hindiName}</p>
-          <div className="pt-1.5 border-t border-slate-700/80 space-y-0.5 text-[11px]">
+          <p className="text-[#EAF0F2] text-[11px] font-sans">{hoveredBlock.hindiName}</p>
+          <div className="pt-1.5 border-t border-[#155E75] space-y-0.5 text-[11px] font-mono">
             <div>Gram Panchayats: <strong className="text-white">{hoveredBlock.panchayatsCount}</strong></div>
-            <div>Dry Spell Risk: <strong className="text-amber-300">{hoveredBlock.drySpellProb}%</strong></div>
-            <div>Onset Likelihood: <strong className="text-teal-300">{hoveredBlock.onsetProb}%</strong></div>
-            <div>Heavy Rain Alert: <strong className="text-sky-300">{hoveredBlock.heavyRainProb}%</strong></div>
+            <div>Dry Spell Risk: <strong className="text-[#FEF3C7]">{hoveredBlock.drySpellProb}%</strong></div>
+            <div>Onset Likelihood: <strong className="text-[#0891B2]">{hoveredBlock.onsetProb}%</strong></div>
+            <div>Heavy Rain Alert: <strong className="text-[#DBEAFE]">{hoveredBlock.heavyRainProb}%</strong></div>
           </div>
         </div>
       )}

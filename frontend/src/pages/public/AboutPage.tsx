@@ -27,7 +27,7 @@ export const AboutPage: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white border-2 border-[#102A43] rounded-2xl p-6 shadow-[4px_4px_0px_#102A43] hover:-translate-y-0.5 transition-all">
+        <div className="bg-white border-2 border-[#102A43] rounded-2xl p-6 shadow-[4px_4px_0px_#102A43]">
           <ShieldCheck className="w-6 h-6 text-[#0E7490] mb-3" />
           <h4 className="font-heading font-black text-[#102A43] text-base mb-1.5">Scientific Integrity</h4>
           <p className="text-xs text-[#486581] leading-relaxed">
@@ -35,7 +35,7 @@ export const AboutPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="bg-white border-2 border-[#102A43] rounded-2xl p-6 shadow-[4px_4px_0px_#102A43] hover:-translate-y-0.5 transition-all">
+        <div className="bg-white border-2 border-[#102A43] rounded-2xl p-6 shadow-[4px_4px_0px_#102A43]">
           <HeartHandshake className="w-6 h-6 text-[#3F7D58] mb-3" />
           <h4 className="font-heading font-black text-[#102A43] text-base mb-1.5">Farmer-First UX</h4>
           <p className="text-xs text-[#486581] leading-relaxed">
@@ -43,7 +43,7 @@ export const AboutPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="bg-white border-2 border-[#102A43] rounded-2xl p-6 shadow-[4px_4px_0px_#102A43] hover:-translate-y-0.5 transition-all">
+        <div className="bg-white border-2 border-[#102A43] rounded-2xl p-6 shadow-[4px_4px_0px_#102A43]">
           <Eye className="w-6 h-6 text-[#0E7490] mb-3" />
           <h4 className="font-heading font-black text-[#102A43] text-base mb-1.5">Open Provenance</h4>
           <p className="text-xs text-[#486581] leading-relaxed">

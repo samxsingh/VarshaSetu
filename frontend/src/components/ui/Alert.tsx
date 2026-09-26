@@ -16,20 +16,20 @@ export const Alert: React.FC<AlertProps> = ({
 }) => {
   const configs = {
     info: {
-      container: 'bg-brand-azure-tint/60 border-brand-azure-border text-brand-azure-dark',
-      icon: <Info className="w-5 h-5 text-brand-azure shrink-0 mt-0.5" />,
+      container: 'bg-[#DBEAFE] border-2 border-[#102A43] text-[#1E40AF] shadow-[2px_2px_0px_#102A43]',
+      icon: <Info className="w-5 h-5 text-[#2563EB] shrink-0 mt-0.5" />,
     },
     warning: {
-      container: 'bg-brand-amber-tint/70 border-brand-amber-border text-brand-amber-dark',
-      icon: <AlertTriangle className="w-5 h-5 text-brand-amber shrink-0 mt-0.5" />,
+      container: 'bg-[#FEF3C7] border-2 border-[#102A43] text-[#B45309] shadow-[2px_2px_0px_#102A43]',
+      icon: <AlertTriangle className="w-5 h-5 text-[#D97706] shrink-0 mt-0.5" />,
     },
     danger: {
-      container: 'bg-brand-crimson-tint/70 border-brand-crimson-border text-brand-crimson-dark',
-      icon: <AlertCircle className="w-5 h-5 text-brand-crimson shrink-0 mt-0.5" />,
+      container: 'bg-[#FEF2F2] border-2 border-[#102A43] text-[#DC2626] shadow-[2px_2px_0px_#102A43]',
+      icon: <AlertCircle className="w-5 h-5 text-[#DC2626] shrink-0 mt-0.5" />,
     },
     success: {
-      container: 'bg-brand-emerald-tint/70 border-brand-emerald-border text-brand-emerald-dark',
-      icon: <CheckCircle2 className="w-5 h-5 text-brand-emerald shrink-0 mt-0.5" />,
+      container: 'bg-[#EBF5EE] border-2 border-[#102A43] text-[#3F7D58] shadow-[2px_2px_0px_#102A43]',
+      icon: <CheckCircle2 className="w-5 h-5 text-[#3F7D58] shrink-0 mt-0.5" />,
     },
   };
 
@@ -39,7 +39,7 @@ export const Alert: React.FC<AlertProps> = ({
     <div
       role="alert"
       className={cn(
-        'flex gap-3 p-4 rounded-xl border text-sm leading-relaxed',
+        'flex gap-3 p-4 rounded-xl text-sm leading-relaxed',
         current.container,
         className
       )}
@@ -47,8 +47,8 @@ export const Alert: React.FC<AlertProps> = ({
     >
       {current.icon}
       <div className="flex-1">
-        {title && <h5 className="font-heading font-semibold text-slate-900 mb-1">{title}</h5>}
-        <div className="text-slate-800">{children}</div>
+        {title && <h5 className="font-heading font-extrabold text-[#102A43] text-sm mb-1">{title}</h5>}
+        <div className="leading-relaxed">{children}</div>
       </div>
     </div>
   );

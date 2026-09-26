@@ -93,9 +93,9 @@ export const Navbar: React.FC = () => {
                   if (link.role) setRole(link.role as any);
                 }}
                 className={cn(
-                  'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-heading transition-all duration-200 select-none min-h-[34px]',
+                  'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-heading transition-all duration-200 select-none min-h-[36px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0E7490] active:translate-x-0.5 active:translate-y-0.5',
                   isActive
-                    ? 'bg-[#0E7490] text-white font-semibold shadow-[1.5px_1.5px_0px_#102A43]'
+                    ? 'bg-[#0E7490] text-white font-bold shadow-[1.5px_1.5px_0px_#102A43]'
                     : 'text-[#102A43] hover:text-[#0E7490] hover:bg-white/80 font-medium'
                 )}
               >
@@ -111,7 +111,7 @@ export const Navbar: React.FC = () => {
           <LanguageToggle />
           <Link
             to="/admin"
-            className="p-1.5 text-[#486581] hover:text-[#102A43] rounded-lg hover:bg-[#EAF0F2] border border-transparent hover:border-[#B8C5CC] transition-colors"
+            className="p-2 text-[#486581] hover:text-[#102A43] rounded-lg hover:bg-[#EAF0F2] border border-transparent hover:border-[#B8C5CC] transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0E7490]"
             title={t('nav.admin', { defaultValue: 'Admin Portal' })}
             aria-label={t('nav.admin', { defaultValue: 'Admin Portal' })}
           >
@@ -124,7 +124,7 @@ export const Navbar: React.FC = () => {
           <LanguageToggle />
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-lg text-[#102A43] hover:bg-[#EAF0F2] border border-[#B8C5CC] min-h-[40px] min-w-[40px] flex items-center justify-center transition-colors"
+            className="p-2 rounded-lg text-[#102A43] hover:bg-[#EAF0F2] border border-[#B8C5CC] min-h-[48px] min-w-[48px] flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0E7490]"
             aria-label="Toggle navigation menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}

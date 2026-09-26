@@ -47,25 +47,25 @@ export const Modal: React.FC<ModalProps> = ({
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#102A43]/60 backdrop-blur-xs animate-fadeIn"
       onClick={onClose}
     >
       <div
         className={cn(
-          'w-full bg-white rounded-2xl shadow-floating border border-surface-border p-6 overflow-hidden flex flex-col max-h-[90vh]',
+          'w-full bg-white rounded-2xl shadow-[6px_6px_0px_#102A43] border-2 border-[#102A43] p-5 sm:p-6 overflow-hidden flex flex-col max-h-[90vh]',
           maxWidths[maxWidth]
         )}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-start justify-between pb-4 border-b border-surface-border/80">
+        <div className="flex items-start justify-between pb-4 border-b-2 border-[#102A43]/10">
           <div>
-            {title && <h3 className="font-heading font-bold text-xl text-slate-900">{title}</h3>}
-            {description && <p className="text-sm text-slate-600 mt-0.5">{description}</p>}
+            {title && <h3 className="font-heading font-extrabold text-lg sm:text-xl text-[#102A43] tracking-tight">{title}</h3>}
+            {description && <p className="text-xs sm:text-sm text-[#486581] mt-0.5">{description}</p>}
           </div>
           <button
             onClick={onClose}
             aria-label="Close modal"
-            className="p-1 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100 transition-colors"
+            className="p-1.5 text-[#486581] hover:text-[#102A43] rounded-lg hover:bg-[#EAF0F2] border border-transparent hover:border-[#102A43]/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0E7490] min-h-[40px] min-w-[40px] flex items-center justify-center"
           >
             <X className="w-5 h-5" />
           </button>

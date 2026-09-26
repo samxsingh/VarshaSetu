@@ -336,7 +336,7 @@ export const OfficerAdvisoriesPage: React.FC = () => {
           return (
             <div
               key={b.advisory_id}
-              className="bg-white border-2 border-[#102A43] rounded-2xl p-5 shadow-[4px_4px_0px_#102A43] space-y-4 hover:-translate-y-0.5 transition-transform"
+              className="bg-white border-2 border-[#102A43] rounded-2xl p-5 shadow-[4px_4px_0px_#102A43] space-y-4"
             >
               {/* Header meta */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b-2 border-[#102A43]/10">

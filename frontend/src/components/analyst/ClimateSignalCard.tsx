@@ -6,105 +6,107 @@ import { Badge } from '../ui/Badge';
 export const ClimateSignalCard: React.FC = () => {
   return (
     <Card className="mb-6">
-      <CardHeader className="pb-3 border-b border-surface-border">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="p-2 rounded-lg bg-brand-teal-tint text-brand-teal">
+      <CardHeader className="pb-3 border-b-2 border-[#102A43]/10">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-xl bg-[#E8F4F6] text-[#0E7490] border border-[#0891B2]/30">
               <Globe2 className="w-5 h-5" />
             </div>
             <div>
-              <CardTitle>Large-Scale Global Climate Teleconnections</CardTitle>
-              <p className="text-xs text-slate-500">
+              <CardTitle className="text-base sm:text-lg font-heading font-extrabold text-[#102A43]">
+                Large-Scale Global Climate Teleconnections
+              </CardTitle>
+              <p className="text-xs text-[#486581]">
                 Planetary drivers modulating regional moisture flux across the Indian subcontinent
               </p>
             </div>
           </div>
-          <Badge variant="demo" size="sm">
-            Simulated Indicators
-          </Badge>
+          <span className="px-2.5 py-1 rounded-md bg-[#FEF3C7] border border-[#D97706] text-[#B45309] text-[10px] font-mono font-bold self-start sm:self-auto">
+            DIAGNOSTIC TELEMETRY
+          </span>
         </div>
       </CardHeader>
 
       <CardContent className="pt-4 space-y-4">
-        <div className="bg-amber-50 border border-amber-200 p-2.5 rounded-lg text-xs text-amber-900">
-          <strong>Pipeline Status:</strong> Teleconnection values shown below are simulated development indicators. Live FTP/NetCDF ingestion pipelines from NOAA CPC and Australia BoM connect in Phase 3.
+        <div className="bg-[#FEF3C7] border-2 border-[#D97706] p-3 rounded-xl text-xs text-[#B45309] shadow-[2px_2px_0px_#102A43]">
+          <strong className="text-[#102A43]">Pipeline Status:</strong> Teleconnection values shown below are simulated development indicators. Live FTP/NetCDF ingestion pipelines from NOAA CPC and Australia BoM connect in Phase 3.
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* ENSO (Niño 3.4) */}
-          <div className="bg-surface-muted/60 p-4 rounded-xl border border-surface-border flex flex-col justify-between">
+          <div className="bg-[#F3F6F7] p-4 rounded-xl border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] flex flex-col justify-between">
             <div className="flex items-start justify-between">
-              <div className="flex items-center gap-2 text-slate-800">
-                <Waves className="w-4 h-4 text-brand-teal" />
-                <span className="font-heading font-semibold text-xs uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-[#102A43]">
+                <Waves className="w-4 h-4 text-[#0E7490]" />
+                <span className="font-heading font-extrabold text-xs uppercase tracking-wider">
                   ENSO / Niño 3.4
                 </span>
               </div>
-              <Badge variant="emerald" size="sm">
+              <span className="px-2 py-0.5 rounded bg-white text-[#0E7490] border border-[#102A43]/20 font-mono text-[10px] font-bold">
                 ENSO Neutral
-              </Badge>
+              </span>
             </div>
             <div className="my-3">
-              <div className="font-heading font-bold text-2xl text-slate-900">
+              <div className="font-mono font-black text-3xl text-[#102A43] tracking-tight">
                 -0.34 °C
               </div>
-              <p className="text-xs text-slate-600 mt-0.5">
+              <p className="text-xs text-[#486581] mt-0.5 font-sans">
                 SST Anomaly (Pacific Equatorial)
               </p>
             </div>
-            <div className="text-[11px] text-slate-500 border-t border-surface-border pt-2">
+            <div className="text-[11px] text-[#486581] border-t border-[#102A43]/10 pt-2 font-sans leading-relaxed">
               No adverse El Niño suppression detected; favorable for normal onset dynamics.
             </div>
           </div>
 
           {/* IOD (Dipole Mode Index) */}
-          <div className="bg-surface-muted/60 p-4 rounded-xl border border-surface-border flex flex-col justify-between">
+          <div className="bg-[#F3F6F7] p-4 rounded-xl border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] flex flex-col justify-between">
             <div className="flex items-start justify-between">
-              <div className="flex items-center gap-2 text-slate-800">
-                <Activity className="w-4 h-4 text-brand-azure" />
-                <span className="font-heading font-semibold text-xs uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-[#102A43]">
+                <Activity className="w-4 h-4 text-[#2563EB]" />
+                <span className="font-heading font-extrabold text-xs uppercase tracking-wider">
                   Indian Ocean Dipole
                 </span>
               </div>
-              <Badge variant="azure" size="sm">
+              <span className="px-2 py-0.5 rounded bg-[#DBEAFE] text-[#1E40AF] border border-[#2563EB]/30 font-mono text-[10px] font-bold">
                 Neutral-Positive
-              </Badge>
+              </span>
             </div>
             <div className="my-3">
-              <div className="font-heading font-bold text-2xl text-slate-900">
+              <div className="font-mono font-black text-3xl text-[#102A43] tracking-tight">
                 +0.28 °C
               </div>
-              <p className="text-xs text-slate-600 mt-0.5">
+              <p className="text-xs text-[#486581] mt-0.5 font-sans">
                 DMI Gradient (Western vs Eastern IO)
               </p>
             </div>
-            <div className="text-[11px] text-slate-500 border-t border-surface-border pt-2">
+            <div className="text-[11px] text-[#486581] border-t border-[#102A43]/10 pt-2 font-sans leading-relaxed">
               Enhances Arabian Sea cross-equatorial low-level jet moisture convergence.
             </div>
           </div>
 
           {/* MJO (Madden-Julian Oscillation) */}
-          <div className="bg-surface-muted/60 p-4 rounded-xl border border-surface-border flex flex-col justify-between">
+          <div className="bg-[#F3F6F7] p-4 rounded-xl border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] flex flex-col justify-between">
             <div className="flex items-start justify-between">
-              <div className="flex items-center gap-2 text-slate-800">
-                <Wind className="w-4 h-4 text-brand-amber" />
-                <span className="font-heading font-semibold text-xs uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-[#102A43]">
+                <Wind className="w-4 h-4 text-[#D97706]" />
+                <span className="font-heading font-extrabold text-xs uppercase tracking-wider">
                   MJO (Wheeler-Hendon)
                 </span>
               </div>
-              <Badge variant="teal" size="sm">
+              <span className="px-2 py-0.5 rounded bg-[#E8F4F6] text-[#0E7490] border border-[#0891B2]/30 font-mono text-[10px] font-bold">
                 Phase 3 (Active)
-              </Badge>
+              </span>
             </div>
             <div className="my-3">
-              <div className="font-heading font-bold text-2xl text-slate-900">
+              <div className="font-mono font-black text-3xl text-[#102A43] tracking-tight">
                 Amp 1.42
               </div>
-              <p className="text-xs text-slate-600 mt-0.5">
+              <p className="text-xs text-[#486581] mt-0.5 font-sans">
                 Equatorial Indian Ocean Convection
               </p>
             </div>
-            <div className="text-[11px] text-slate-500 border-t border-surface-border pt-2">
+            <div className="text-[11px] text-[#486581] border-t border-[#102A43]/10 pt-2 font-sans leading-relaxed">
               Active eastward propagating convective envelope triggering northern monsoon pulse.
             </div>
           </div>

@@ -83,7 +83,7 @@ export const OfficerCropsPage: React.FC = () => {
         {cropVulnerabilities.map((c) => (
           <div
             key={c.name}
-            className="bg-white border-2 border-[#102A43] rounded-2xl p-5 shadow-[4px_4px_0px_#102A43] flex flex-col justify-between space-y-4 hover:-translate-y-0.5 transition-transform"
+            className="bg-white border-2 border-[#102A43] rounded-2xl p-5 shadow-[4px_4px_0px_#102A43] flex flex-col justify-between space-y-4"
           >
             <div className="space-y-3">
               <div className="flex items-start justify-between pb-3 border-b-2 border-[#102A43]/10">

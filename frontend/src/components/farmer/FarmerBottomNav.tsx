@@ -27,7 +27,7 @@ export const FarmerBottomNav: React.FC = () => {
             to={tab.to}
             className={({ isActive }) =>
               cn(
-                'flex flex-col items-center justify-center flex-1 py-1.5 px-1 rounded-lg text-[10px] font-heading font-bold transition-all min-h-[48px] min-w-[48px]',
+                'flex flex-col items-center justify-center flex-1 py-1.5 px-1 rounded-lg text-[10px] font-heading font-bold transition-all min-h-[48px] min-w-[48px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0E7490] active:translate-x-0.5 active:translate-y-0.5',
                 isActive
                   ? 'bg-[#0E7490] text-white border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43]'
                   : 'text-[#486581] hover:text-[#102A43] active:bg-[#102A43]/5'

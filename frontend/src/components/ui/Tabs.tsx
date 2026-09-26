@@ -27,8 +27,8 @@ export const Tabs: React.FC<TabsProps> = ({
     <div
       role="tablist"
       className={cn(
-        'flex items-center gap-1 overflow-x-auto no-scrollbar',
-        variant === 'pill' ? 'bg-surface-muted p-1 rounded-full border border-surface-border' : 'border-b border-surface-border',
+        'flex items-center gap-1.5 overflow-x-auto no-scrollbar',
+        variant === 'pill' ? 'bg-[#EAF0F2] p-1.5 rounded-xl border-2 border-[#102A43]/20' : 'border-b-2 border-[#102A43]/20',
         className
       )}
     >
@@ -41,14 +41,14 @@ export const Tabs: React.FC<TabsProps> = ({
             aria-selected={isActive}
             onClick={() => onChange(item.id)}
             className={cn(
-              'flex items-center gap-2 px-4 py-2 text-sm font-medium font-heading transition-all whitespace-nowrap min-h-[40px]',
+              'flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-heading font-bold transition-all whitespace-nowrap min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0E7490] active:translate-x-0.5 active:translate-y-0.5',
               variant === 'pill'
                 ? isActive
-                  ? 'bg-brand-teal text-white rounded-full shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900 rounded-full hover:bg-white/50'
+                  ? 'bg-[#0E7490] text-white border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] rounded-lg'
+                  : 'text-[#486581] hover:text-[#102A43] hover:bg-white rounded-lg border-2 border-transparent'
                 : isActive
-                ? 'border-b-2 border-brand-teal text-brand-teal font-semibold'
-                : 'text-slate-500 hover:text-slate-800 border-b-2 border-transparent'
+                ? 'border-b-2 border-[#0E7490] text-[#0E7490] -mb-[2px]'
+                : 'text-[#486581] hover:text-[#102A43] border-b-2 border-transparent'
             )}
           >
             {item.icon && <span className="inline-flex shrink-0">{item.icon}</span>}
@@ -56,8 +56,8 @@ export const Tabs: React.FC<TabsProps> = ({
             {item.badge !== undefined && (
               <span
                 className={cn(
-                  'text-[10px] px-1.5 py-0.5 rounded-full font-bold',
-                  isActive ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'
+                  'text-[10px] px-1.5 py-0.5 rounded font-mono font-bold',
+                  isActive ? 'bg-white/20 text-white' : 'bg-[#102A43]/10 text-[#102A43]'
                 )}
               >
                 {item.badge}

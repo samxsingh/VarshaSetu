@@ -19,11 +19,11 @@ export const Progress: React.FC<ProgressProps> = ({
   const clampedValue = Math.min(100, Math.max(0, value));
 
   const colors = {
-    teal: 'bg-brand-teal',
-    amber: 'bg-brand-amber',
-    azure: 'bg-brand-azure',
-    emerald: 'bg-brand-emerald',
-    crimson: 'bg-brand-crimson',
+    teal: 'bg-[#0E7490]',
+    amber: 'bg-[#D97706]',
+    azure: 'bg-[#2563EB]',
+    emerald: 'bg-[#3F7D58]',
+    crimson: 'bg-[#DC2626]',
   };
 
   const heights = {
@@ -34,20 +34,20 @@ export const Progress: React.FC<ProgressProps> = ({
 
   return (
     <div className={cn('w-full', className)} {...props}>
-      <div className={cn('w-full bg-slate-200/80 rounded-full overflow-hidden', heights[height])}>
+      <div className={cn('w-full bg-[#EAF0F2] border border-[#102A43]/20 rounded-full overflow-hidden', heights[height])}>
         <div
           role="progressbar"
           aria-valuenow={clampedValue}
           aria-valuemin={0}
           aria-valuemax={100}
-          className={cn('h-full transition-all duration-500 rounded-full', colors[color])}
+          className={cn('h-full transition-all duration-300 rounded-full', colors[color])}
           style={{ width: `${clampedValue}%` }}
         />
       </div>
       {showLabel && (
-        <div className="flex justify-between items-center text-xs font-medium text-slate-600 mt-1">
+        <div className="flex justify-between items-center text-xs font-mono text-[#829AB1] mt-1">
           <span>0%</span>
-          <span className="font-heading font-semibold text-slate-900">{clampedValue}%</span>
+          <span className="font-heading font-bold text-[#102A43]">{clampedValue}%</span>
           <span>100%</span>
         </div>
       )}

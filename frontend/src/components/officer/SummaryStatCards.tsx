@@ -45,7 +45,7 @@ export const SummaryStatCards: React.FC = () => {
       {stats.map((s, i) => (
         <div
           key={i}
-          className="bg-white border-2 border-[#102A43] rounded-xl p-4 shadow-[2px_2px_0px_#102A43] flex flex-col justify-between hover:-translate-y-0.5 transition-transform"
+          className="bg-white border-2 border-[#102A43] rounded-xl p-4 shadow-[2px_2px_0px_#102A43] flex flex-col justify-between"
         >
           <div className="flex items-start justify-between gap-2 pb-2">
             <span className="text-[10px] font-heading font-extrabold uppercase tracking-wider text-[#829AB1]">

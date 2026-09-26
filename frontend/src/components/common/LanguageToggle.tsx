@@ -18,18 +18,18 @@ export const LanguageToggle: React.FC<{ className?: string }> = ({ className }) 
       role="group"
       aria-label="Language selector"
       className={cn(
-        'inline-flex items-center bg-surface-muted border border-surface-border rounded-full p-0.5 text-xs font-heading font-medium',
+        'inline-flex items-center bg-[#EAF0F2] border border-[#B8C5CC] rounded-xl p-0.5 text-xs font-heading font-medium',
         className
       )}
     >
-      <Languages className="w-3.5 h-3.5 ml-2 text-slate-500 mr-1" />
+      <Languages className="w-3.5 h-3.5 ml-2 text-[#486581] mr-1" />
       <button
         onClick={() => handleToggle('en')}
         className={cn(
-          'px-2.5 py-1 rounded-full transition-all min-h-[32px]',
+          'px-2.5 py-1 rounded-lg transition-all min-h-[34px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0E7490]',
           language === 'en'
-            ? 'bg-brand-teal text-white shadow-xs font-semibold'
-            : 'text-slate-600 hover:text-slate-900'
+            ? 'bg-[#0E7490] text-white shadow-[1px_1px_0px_#102A43] font-bold'
+            : 'text-[#102A43] hover:text-[#0E7490] hover:bg-white/80 font-medium'
         )}
         aria-pressed={language === 'en'}
       >
@@ -38,10 +38,10 @@ export const LanguageToggle: React.FC<{ className?: string }> = ({ className }) 
       <button
         onClick={() => handleToggle('hi')}
         className={cn(
-          'px-2.5 py-1 rounded-full transition-all min-h-[32px]',
+          'px-2.5 py-1 rounded-lg transition-all min-h-[34px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0E7490]',
           language === 'hi'
-            ? 'bg-brand-teal text-white shadow-xs font-semibold'
-            : 'text-slate-600 hover:text-slate-900'
+            ? 'bg-[#0E7490] text-white shadow-[1px_1px_0px_#102A43] font-bold'
+            : 'text-[#102A43] hover:text-[#0E7490] hover:bg-white/80 font-medium'
         )}
         aria-pressed={language === 'hi'}
       >

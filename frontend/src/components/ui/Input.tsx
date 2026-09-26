@@ -15,13 +15,13 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full flex flex-col space-y-1.5">
         {label && (
-          <label htmlFor={inputId} className="text-xs font-semibold uppercase tracking-wider text-slate-700">
+          <label htmlFor={inputId} className="text-xs font-heading font-extrabold uppercase tracking-wider text-[#102A43]">
             {label}
           </label>
         )}
         <div className="relative flex items-center">
           {leftIcon && (
-            <div className="absolute left-3.5 text-slate-400 pointer-events-none">
+            <div className="absolute left-3.5 text-[#829AB1] pointer-events-none">
               {leftIcon}
             </div>
           )}
@@ -29,16 +29,16 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             ref={ref}
             className={cn(
-              'w-full bg-white border border-surface-border text-slate-900 rounded-lg px-3.5 py-2.5 text-sm transition-all focus:border-brand-teal focus:ring-1 focus:ring-brand-teal focus:outline-none min-h-[44px]',
+              'w-full bg-white border-2 border-[#102A43] text-[#102A43] rounded-xl px-3.5 py-2.5 text-sm transition-all focus:border-[#0E7490] focus:ring-2 focus:ring-[#0E7490]/20 focus:outline-none min-h-[44px] shadow-[2px_2px_0px_#102A43]',
               leftIcon && 'pl-10',
-              error && 'border-brand-crimson focus:border-brand-crimson focus:ring-brand-crimson',
+              error && 'border-[#DC2626] focus:border-[#DC2626] focus:ring-[#DC2626]/20',
               className
             )}
             {...props}
           />
         </div>
-        {error && <span className="text-xs text-brand-crimson font-medium">{error}</span>}
-        {!error && helperText && <span className="text-xs text-slate-500">{helperText}</span>}
+        {error && <span className="text-xs text-[#DC2626] font-medium font-sans">{error}</span>}
+        {!error && helperText && <span className="text-xs text-[#829AB1] font-sans">{helperText}</span>}
       </div>
     );
   }

@@ -45,7 +45,7 @@ export const HowItWorksPage: React.FC = () => {
 
       <div className="space-y-4">
         {steps.map((s) => (
-          <div key={s.step} className="bg-white border-2 border-[#102A43] rounded-2xl p-5 sm:p-6 flex items-start gap-4 shadow-[4px_4px_0px_#102A43] hover:-translate-y-0.5 transition-all">
+          <div key={s.step} className="bg-white border-2 border-[#102A43] rounded-2xl p-5 sm:p-6 flex items-start gap-4 shadow-[4px_4px_0px_#102A43]">
             <div className="w-12 h-12 rounded-xl bg-[#F3F6F7] border-2 border-[#102A43] text-[#102A43] font-mono font-black text-lg flex items-center justify-center shrink-0 shadow-[2px_2px_0px_#102A43]">
               {s.step}
             </div>
@@ -54,7 +54,7 @@ export const HowItWorksPage: React.FC = () => {
                 {s.icon}
                 <h4 className="font-heading font-black text-base text-[#102A43]">{s.title}</h4>
               </div>
-              <p className="text-sm text-slate-700 leading-relaxed font-normal">{s.desc}</p>
+              <p className="text-sm text-[#486581] leading-relaxed font-normal">{s.desc}</p>
             </div>
           </div>
         ))}

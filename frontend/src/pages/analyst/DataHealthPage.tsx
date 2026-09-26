@@ -147,48 +147,48 @@ export const DataHealthPage: React.FC = () => {
 
       {/* Overview Metric Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-2xl border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] p-4 transition-all hover:-translate-y-0.5">
+        <div className="bg-white rounded-2xl border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] p-4 transition-all">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-slate-500">Pipeline Status</span>
+            <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-[#829AB1]">Pipeline Status</span>
             <Activity className="w-4 h-4 text-[#0E7490]" />
           </div>
           <div className="mt-2 text-xl font-heading font-black text-[#102A43]">
             {overview ? getStatusBadge(overview.overallHealth) : 'Not available'}
           </div>
-          <span className="text-[11px] text-slate-600 mt-2 block font-medium">
+          <span className="text-[11px] text-[#486581] mt-2 block font-medium font-sans">
             {overview ? `${overview.freshSources} of ${overview.totalSources} sources active` : 'Telemetry pending'}
           </span>
         </div>
 
-        <div className="bg-white rounded-2xl border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] p-4 transition-all hover:-translate-y-0.5">
+        <div className="bg-white rounded-2xl border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] p-4 transition-all">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-slate-500">Ingestion Runs</span>
+            <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-[#829AB1]">Ingestion Runs</span>
             <Database className="w-4 h-4 text-[#0E7490]" />
           </div>
           <div className="mt-2 text-2xl font-mono font-black text-[#102A43]">
             {overview ? overview.totalRuns : '—'}
           </div>
-          <span className="text-[11px] text-slate-600 mt-2 block font-medium">
+          <span className="text-[11px] text-[#486581] mt-2 block font-medium font-sans">
             {overview ? `${overview.successfulRuns} successful, ${overview.failedRuns} failed` : '—'}
           </span>
         </div>
 
-        <div className="bg-white rounded-2xl border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] p-4 transition-all hover:-translate-y-0.5">
+        <div className="bg-white rounded-2xl border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] p-4 transition-all">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-slate-500">Quality Assured</span>
+            <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-[#829AB1]">Quality Assured</span>
             <FileCheck2 className="w-4 h-4 text-[#0891B2]" />
           </div>
           <div className="mt-2 text-2xl font-mono font-black text-[#0891B2]">
             100%
           </div>
-          <span className="text-[11px] text-slate-600 mt-2 block font-medium">
+          <span className="text-[11px] text-[#486581] mt-2 block font-medium font-sans">
             Bounds QC & Deduplication audited
           </span>
         </div>
 
-        <div className="bg-white rounded-2xl border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] p-4 transition-all hover:-translate-y-0.5">
+        <div className="bg-white rounded-2xl border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] p-4 transition-all">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-slate-500">Last Sync Time</span>
+            <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-[#829AB1]">Last Sync Time</span>
             <Clock className="w-4 h-4 text-[#D97706]" />
           </div>
           <div className="mt-2 text-xs font-mono font-bold text-[#102A43] truncate">

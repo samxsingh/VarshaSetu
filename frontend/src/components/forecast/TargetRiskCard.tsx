@@ -33,65 +33,76 @@ export const TargetRiskCard: React.FC<TargetRiskCardProps> = ({
 
   const variantStyles = {
     teal: {
-      bg: 'bg-brand-teal-tint/40 border-brand-teal-border/70',
-      text: 'text-brand-teal-dark',
+      bg: 'bg-[#E8F4F6]/50',
+      text: 'text-[#0E7490]',
+      badge: 'bg-[#E8F4F6] text-[#0E7490] border-[#0E7490]/40',
     },
     amber: {
-      bg: 'bg-brand-amber-tint/40 border-brand-amber-border/70',
-      text: 'text-brand-amber-dark',
+      bg: 'bg-[#FEF3C7]/60',
+      text: 'text-[#D97706]',
+      badge: 'bg-[#FEF3C7] text-[#B45309] border-[#D97706]/40',
     },
     azure: {
-      bg: 'bg-brand-azure-tint/40 border-brand-azure-border/70',
-      text: 'text-brand-azure-dark',
+      bg: 'bg-[#DBEAFE]/40',
+      text: 'text-[#2563EB]',
+      badge: 'bg-[#DBEAFE] text-[#1E40AF] border-[#2563EB]/40',
     },
     emerald: {
-      bg: 'bg-brand-emerald-tint/40 border-brand-emerald-border/70',
-      text: 'text-brand-emerald-dark',
+      bg: 'bg-[#EBF5EE]',
+      text: 'text-[#3F7D58]',
+      badge: 'bg-[#EBF5EE] text-[#3F7D58] border-[#3F7D58]/40',
     },
     crimson: {
-      bg: 'bg-brand-crimson-tint/40 border-brand-crimson-border/70',
-      text: 'text-brand-crimson-dark',
+      bg: 'bg-[#FEF2F2]',
+      text: 'text-[#DC2626]',
+      badge: 'bg-[#FEF2F2] text-[#DC2626] border-[#DC2626]/40',
     },
   };
 
   const style = variantStyles[variant];
 
   return (
-    <Card className={cn('p-4 flex flex-col justify-between border', style.bg, className)}>
+    <div
+      className={cn(
+        'bg-white rounded-2xl border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] p-5 flex flex-col justify-between',
+        style.bg,
+        className
+      )}
+    >
       <div>
         <div className="flex items-start justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <div className={cn('p-1.5 rounded-lg bg-white/80 border border-surface-border/60', style.text)}>
+          <div className="flex items-center gap-2.5">
+            <div className={cn('p-2 rounded-xl bg-white border border-[#102A43]/20 shadow-[1px_1px_0px_#102A43]', style.text)}>
               {icon}
             </div>
             <div>
-              <h4 className="font-heading font-semibold text-xs uppercase tracking-wider text-slate-900">
+              <h4 className="font-heading font-extrabold text-xs uppercase tracking-wider text-[#102A43]">
                 {title}
               </h4>
               {timeframeText && (
-                <span className="text-[10px] text-slate-500 font-medium block">
+                <span className="text-[10px] text-[#486581] font-mono block mt-0.5">
                   {timeframeText}
                 </span>
               )}
             </div>
           </div>
 
-          <Badge variant={variant} size="sm">
+          <span className={cn('px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase border', style.badge)}>
             {statusLabel}
-          </Badge>
+          </span>
         </div>
 
-        <div className="my-3">
+        <div className="my-3.5">
           <div className="flex items-baseline gap-1.5">
-            <span className="font-heading font-bold text-3xl text-slate-900">
+            <span className="font-heading font-black text-3xl sm:text-4xl text-[#102A43] tracking-tight">
               {roundedPercent}%
             </span>
-            <span className="text-xs text-slate-500 font-medium">probability</span>
+            <span className="text-xs text-[#829AB1] font-medium font-sans">probability</span>
           </div>
 
           {confidenceText && (
-            <span className="text-[11px] text-slate-600 font-medium block mt-0.5">
-              Confidence: {confidenceText}
+            <span className="text-[11px] text-[#486581] font-medium font-sans block mt-0.5">
+              Confidence: <strong className="text-[#102A43]">{confidenceText}</strong>
             </span>
           )}
         </div>
@@ -99,18 +110,20 @@ export const TargetRiskCard: React.FC<TargetRiskCardProps> = ({
         <Progress value={roundedPercent} color={variant} height="sm" />
 
         {description && (
-          <p className="text-xs text-slate-700 mt-2.5 leading-relaxed bg-white/70 p-2 rounded-lg border border-surface-border/50">
+          <p className="text-xs text-[#486581] font-sans mt-3 leading-relaxed bg-white p-2.5 rounded-xl border border-[#102A43]/15">
             {description}
           </p>
         )}
       </div>
 
       {isSimulated && (
-        <div className="mt-3 pt-2 border-t border-surface-border/50 flex justify-between items-center text-[10px] text-slate-500">
-          <span>Demo Model Calibration</span>
-          <span className="font-semibold text-amber-800">SIMULATED DATA</span>
+        <div className="mt-3.5 pt-2.5 border-t border-[#102A43]/10 flex justify-between items-center text-[10px] font-mono text-[#829AB1]">
+          <span>Diagnostic Prior</span>
+          <span className="px-1.5 py-0.5 rounded bg-[#FEF3C7] border border-[#D97706]/40 text-[#B45309] font-bold">
+            SIMULATED DATA
+          </span>
         </div>
       )}
-    </Card>
+    </div>
   );
 };
