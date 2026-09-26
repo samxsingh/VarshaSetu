@@ -139,7 +139,7 @@ Verifies database connectivity and storage directory readiness. Returns `200 OK`
     "version": "1.0.0",
     "phase": "PHASE_6_PRODUCTION_READY",
     "environment": "development",
-    "git_commit": "2fee6d1",
+    "git_commit": "d72d8de",
     "ground_anchor": "UP_LKO_BKT",
     "observational_season": "Kharif 2024",
     "status": "PRODUCTION_HARDENED"

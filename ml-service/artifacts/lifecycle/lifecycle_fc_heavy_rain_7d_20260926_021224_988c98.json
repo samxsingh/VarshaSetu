@@ -1,0 +1,31 @@
+{
+  "forecast_id": "fc_heavy_rain_7d_20260926_021224_988c98",
+  "current_status": "ACTIVE",
+  "updated_at": "2026-09-26T02:12:24.219116+00:00",
+  "transitions": [
+    {
+      "transition_id": "trans_6549dbb06a14",
+      "forecast_id": "fc_heavy_rain_7d_20260926_021224_988c98",
+      "previous_status": "GENERATED",
+      "new_status": "GENERATED",
+      "timestamp": "2026-09-26T02:12:24.219088+00:00",
+      "reason": "Forecast product initial generation",
+      "model_version": "1.0.0",
+      "dataset_fingerprint": "f60e1d12bd2802c7",
+      "actor": "SYSTEM",
+      "metadata": {}
+    },
+    {
+      "transition_id": "trans_7582926a9384",
+      "forecast_id": "fc_heavy_rain_7d_20260926_021224_988c98",
+      "previous_status": "GENERATED",
+      "new_status": "ACTIVE",
+      "timestamp": "2026-09-26T02:12:24.219100+00:00",
+      "reason": "Automatic activation upon passing initial gates",
+      "model_version": "1.0.0",
+      "dataset_fingerprint": "f60e1d12bd2802c7",
+      "actor": "SYSTEM",
+      "metadata": {}
+    }
+  ]
+}

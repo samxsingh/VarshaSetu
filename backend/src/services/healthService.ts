@@ -122,7 +122,7 @@ export const healthService = {
       version: '1.0.0',
       phase: 'PHASE_6_PRODUCTION_READY',
       environment: env.NODE_ENV,
-      git_commit: '2fee6d1',
+      git_commit: process.env.GIT_COMMIT || 'd72d8de',
       ground_anchor: 'UP_LKO_BKT',
       observational_season: 'Kharif 2024',
       status: 'PRODUCTION_HARDENED',
