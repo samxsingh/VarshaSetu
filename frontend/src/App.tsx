@@ -58,6 +58,7 @@ export function App() {
               <Route path="onboarding" element={<FarmerOnboardingPage />} />
               <Route path="forecast" element={<FarmerForecastPage />} />
               <Route path="advisory" element={<FarmerAdvisoryPage />} />
+              <Route path="advisories" element={<Navigate to="/farmer/advisory" replace />} />
               <Route path="what-if" element={<FarmerWhatIfPage />} />
               <Route path="profile" element={<FarmerProfilePage />} />
             </Route>
@@ -75,12 +76,15 @@ export function App() {
             <Route path="government">
               <Route index element={<Navigate to="command-center" replace />} />
               <Route path="command-center" element={<GovernmentDashboardPage />} />
+              <Route path="dashboard" element={<Navigate to="/government/command-center" replace />} />
             </Route>
 
             {/* Analyst Lab Routes */}
             <Route path="analyst" element={<AnalystLayout />}>
               <Route index element={<AnalystOverviewPage />} />
               <Route path="forecast-lab" element={<ForecastLabPage />} />
+              <Route path="lab" element={<Navigate to="/analyst/forecast-lab" replace />} />
+              <Route path="forecast" element={<Navigate to="/analyst/forecast-lab" replace />} />
               <Route path="models" element={<ModelsPage />} />
               <Route path="data-health" element={<DataHealthPage />} />
               <Route path="alerts" element={<AlertCenterPage />} />

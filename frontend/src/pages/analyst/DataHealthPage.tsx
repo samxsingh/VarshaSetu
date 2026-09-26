@@ -139,9 +139,17 @@ export const DataHealthPage: React.FC = () => {
 
       {/* Error Banner */}
       {error && (
-        <div className="p-4 bg-[#FEF2F2] border-2 border-[#DC2626] rounded-xl flex items-center gap-3 text-[#DC2626] text-xs shadow-[2px_2px_0px_#102A43]">
-          <AlertCircle className="w-4 h-4 shrink-0 text-[#DC2626]" />
-          <span className="font-medium">{error}</span>
+        <div className="p-4 bg-[#FEF2F2] border-2 border-[#DC2626] rounded-xl flex items-center justify-between gap-3 text-[#DC2626] text-xs shadow-[2px_2px_0px_#102A43]">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0 text-[#DC2626]" />
+            <span className="font-medium">{error}</span>
+          </div>
+          <button
+            onClick={() => fetchData()}
+            className="px-3 py-1 rounded-lg bg-white border border-[#DC2626] text-[#DC2626] font-mono font-bold hover:bg-[#FEF2F2] transition-colors"
+          >
+            RETRY
+          </button>
         </div>
       )}
 

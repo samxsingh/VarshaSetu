@@ -68,34 +68,50 @@ export const GovernmentDashboardPage: React.FC = () => {
         />
 
         {/* 2. Command Intelligence Metrics Strip */}
-        <GovIntelligenceStrip
-          forecastStatus={forecastStatus}
-          availability={availability}
-        />
+        <div id="overview" className="scroll-mt-24">
+          <GovIntelligenceStrip
+            forecastStatus={forecastStatus}
+            availability={availability}
+          />
+        </div>
 
         {/* 3. Regional Intelligence GIS Map */}
-        <GovRegionalMapWorkspace />
+        <div id="map" className="scroll-mt-24">
+          <GovRegionalMapWorkspace />
+        </div>
 
         {/* 4. Regional Signal Matrix */}
-        <GovRegionalSignalMatrix />
+        <div id="signals" className="scroll-mt-24">
+          <GovRegionalSignalMatrix />
+        </div>
 
         {/* 5. Forecast Monitoring Workspace */}
-        <GovForecastWorkspace />
+        <div id="forecasts" className="scroll-mt-24">
+          <GovForecastWorkspace />
+        </div>
 
         {/* 6. Agronomic Risk Overview */}
-        <GovAgronomicRiskPanel />
+        <div id="agronomy" className="scroll-mt-24">
+          <GovAgronomicRiskPanel />
+        </div>
 
         {/* 7. Advisory Oversight */}
-        <GovAdvisoryOversight />
+        <div id="advisories" className="scroll-mt-24">
+          <GovAdvisoryOversight />
+        </div>
 
         {/* 8. Alert Lifecycle */}
-        <GovAlertLifecycle events={events} />
+        <div id="alerts" className="scroll-mt-24">
+          <GovAlertLifecycle events={events} />
+        </div>
 
         {/* 9. Scientific Integrity Panel */}
         <GovScientificIntegrityPanel />
 
         {/* 10. System Status & Technical Telemetry */}
-        <GovSystemStatus opStatus={opStatus} />
+        <div id="system" className="scroll-mt-24">
+          <GovSystemStatus opStatus={opStatus} />
+        </div>
 
         {/* 11. Large-Scale Climate Teleconnections & Scientific Provenance */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-2">

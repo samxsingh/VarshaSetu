@@ -341,7 +341,7 @@ export const FarmerForecastPage: React.FC = () => {
           </div>
           <h4 className="font-heading font-black text-sm text-[#102A43]">NO OBSERVATIONS FOR SELECTED WINDOW</h4>
           <p className="text-xs text-[#486581] max-w-md mx-auto leading-relaxed">
-            The historical Kharif 2024 archive currently does not have active risk forecasts generated for the {horizon}-day horizon window. Select a 3-day or 7-day window to view calibrated model outputs.
+            The historical Kharif 2024 archive currently does not have active risk forecasts generated for the {horizon}-day horizon window. Select a 7-day or 14-day window to view calibrated model outputs.
           </p>
         </div>
       )}

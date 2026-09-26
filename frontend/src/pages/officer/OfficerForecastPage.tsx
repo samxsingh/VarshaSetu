@@ -6,6 +6,7 @@ import { ForecastHorizonDays } from '@shared/types';
 import { forecastService, ScientificForecastRecord } from '../../services/forecastService';
 import { eventService, ForecastEvent, OperationalStatusResponse } from '../../services/eventService';
 import { ScientificIntegrityStrip } from '../../components/officer/ScientificIntegrityStrip';
+import { useOfficerStore } from '../../stores/useOfficerStore';
 import {
   Info,
   MapPin,
@@ -24,7 +25,9 @@ import {
 } from 'lucide-react';
 
 export const OfficerForecastPage: React.FC = () => {
-  const [horizon, setHorizon] = useState<ForecastHorizonDays>(7);
+  const { selectedHorizon, setSelectedHorizon } = useOfficerStore();
+  const horizon = selectedHorizon;
+  const setHorizon = (h: ForecastHorizonDays) => setSelectedHorizon(h as any);
   const [forecasts, setForecasts] = useState<ScientificForecastRecord[]>([]);
   const [events, setEvents] = useState<ForecastEvent[]>([]);
   const [opStatus, setOpStatus] = useState<OperationalStatusResponse | null>(null);

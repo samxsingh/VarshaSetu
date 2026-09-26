@@ -82,8 +82,11 @@ export const Navbar: React.FC = () => {
         <nav className="hidden lg:flex items-center gap-1 bg-[#EAF0F2] p-1 rounded-xl border border-[#B8C5CC]">
           {navLinks.map((link) => {
             const isActive =
-              location.pathname === link.to ||
-              (link.to !== '/' && location.pathname.startsWith(link.to));
+              link.to === '/'
+                ? location.pathname === '/'
+                : link.role
+                ? location.pathname.startsWith(`/${link.role.toLowerCase()}`) || location.pathname.startsWith(link.to)
+                : location.pathname.startsWith(link.to);
 
             return (
               <Link
@@ -137,8 +140,11 @@ export const Navbar: React.FC = () => {
         <div className="sm:hidden mt-2 max-w-7xl mx-auto rounded-xl border border-[#B8C5CC] bg-white p-3 space-y-1.5 shadow-[0_8px_24px_rgba(16,42,67,0.12)] animate-fade-in">
           {navLinks.map((link) => {
             const isActive =
-              location.pathname === link.to ||
-              (link.to !== '/' && location.pathname.startsWith(link.to));
+              link.to === '/'
+                ? location.pathname === '/'
+                : link.role
+                ? location.pathname.startsWith(`/${link.role.toLowerCase()}`) || location.pathname.startsWith(link.to)
+                : location.pathname.startsWith(link.to);
 
             return (
               <Link

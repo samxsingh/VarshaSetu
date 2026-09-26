@@ -640,7 +640,7 @@ export const FarmerAdvisoryPage: React.FC = () => {
                       {isPlaying ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5 text-[#0E7490]" />}
                       <span>
                         {isLoadingAudio ? (
-                          'Loading...'
+                          selectedLanguage === 'HI' ? 'ऑडियो तैयार हो रहा है...' : 'Synthesizing...'
                         ) : isPlaying ? (
                           selectedLanguage === 'HI' ? 'रोकें' : 'Stop'
                         ) : (

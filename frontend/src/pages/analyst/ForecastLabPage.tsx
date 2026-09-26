@@ -754,7 +754,7 @@ export const ForecastLabPage: React.FC = () => {
 
               <div>
                 <label className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#102A43] block mb-1.5">
-                  Model Family
+                  Forecast Run Model
                 </label>
                 <select
                   value={selectedModel}

@@ -24,7 +24,7 @@ export const useOfficerStore = create<OfficerState>((set) => ({
   selectedPanchayat: 'Bhaisamau',
   activeRiskLayer: 'DRY_SPELL',
   isBulletinModalOpen: false,
-  selectedHorizon: 14,
+  selectedHorizon: 7,
 
   setSelectedDistrict: (selectedDistrict) => set({ selectedDistrict }),
   setSelectedBlock: (selectedBlock) => set({ selectedBlock }),
