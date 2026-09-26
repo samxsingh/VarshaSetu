@@ -1,7 +1,9 @@
-import React from 'react';
-import { CloudRain, SunMedium, TrendingUp, AlertTriangle, Droplets, MapPin, CheckCircle2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { CloudRain, SunMedium, TrendingUp, AlertTriangle, Droplets, MapPin, CheckCircle2, Database } from 'lucide-react';
+import { ProvenanceDrawer } from '../visualization/ProvenanceDrawer';
 
 export const GovRegionalSignalMatrix: React.FC = () => {
+  const [selectedSignal, setSelectedSignal] = useState<any | null>(null);
   const signalRows = [
     {
       signal: 'HEAVY RAINFALL',
@@ -109,6 +111,7 @@ export const GovRegionalSignalMatrix: React.FC = () => {
                 <th className="py-3 px-3 text-right font-extrabold">Probability</th>
                 <th className="py-3 px-4 font-extrabold">Data Status</th>
                 <th className="py-3 px-3 font-extrabold">Timeframe</th>
+                <th className="py-3 px-3 font-extrabold text-right">Traceability</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#102A43]/10 font-sans text-xs">
@@ -142,12 +145,46 @@ export const GovRegionalSignalMatrix: React.FC = () => {
                   <td className="py-3.5 px-3 font-mono text-[11px] text-[#829AB1]">
                     {r.timeframe}
                   </td>
+                  <td className="py-3.5 px-3 text-right">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedSignal(r)}
+                      className="text-[10px] font-mono font-bold text-[#0E7490] hover:text-[#102A43] bg-[#E8F4F6] hover:bg-[#F3F6F7] px-2 py-0.5 rounded border border-[#0E7490]/30 transition-colors cursor-pointer"
+                    >
+                      PROVENANCE →
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       </div>
+
+      {/* Signal Provenance Drawer */}
+      <ProvenanceDrawer
+        isOpen={!!selectedSignal}
+        onClose={() => setSelectedSignal(null)}
+        title={selectedSignal ? `Signal Provenance: ${selectedSignal.signal} (${selectedSignal.area})` : 'Signal Provenance'}
+        provenance={
+          selectedSignal
+            ? {
+                dataSource: 'IMD Lucknow Mesonet (AWS) + ERA5 Reanalysis Downscaling',
+                spatialResolution: '0.25° (~27 km) to Administrative Block Centroid',
+                stationsCovered: selectedSignal.area.includes('BKT') ? 'Bakshi Ka Talab AWS (Ground Anchor)' : 'Interpolated Regional Prior',
+                temporalCoverage: 'Kharif 2024 Reference Climatology',
+                observationTimestamp: '2024-09-15T06:00:00Z',
+                freshnessLatency: 'HISTORICAL_DATASET',
+                modelPipeline: 'VarshaSetu Ensemble Engine v2.3 (Calibrated Probabilities)',
+                calibrator: 'Isotonic Probability Calibrator',
+                eceScore: '0.038',
+                brierScore: '+0.28 BSS',
+                validationStatus: selectedSignal.area.includes('BKT') ? 'ASSIMILATED_GROUND_ANCHOR' : 'SPATIAL_PRIOR_UNASSIMILATED',
+                pipelineNotes: `Active trigger criteria: ${selectedSignal.indicator}. Dissemination blocked pending multi-year validation gate.`,
+              }
+            : undefined
+        }
+      />
     </section>
   );
 };

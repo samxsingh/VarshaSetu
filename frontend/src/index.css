@@ -111,12 +111,6 @@
   animation: floatReverse 6s ease-in-out infinite;
 }
 
-/* Atmospheric subtle observation texture */
-
-.bg-subtle-contour {
-  background-image: radial-gradient(#0E7490 0.5px, transparent 0.5px);
-  background-size: 28px 28px;
-}
 
 /* Interactive Neo-brutalist buttons */
 .btn-brutal-teal {

@@ -6,3 +6,7 @@ export * from './ForecastTimeline';
 export * from './SkillMetricCard';
 export * from './ConfidenceBand';
 export * from './DataQualityIndicator';
+export * from './ConfidenceIndicator';
+export * from './SignalExplanation';
+export * from './ProvenanceDrawer';
+export * from './ScientificEvidencePanel';
