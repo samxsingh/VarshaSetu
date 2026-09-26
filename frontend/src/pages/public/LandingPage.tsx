@@ -22,6 +22,7 @@ import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
 import { RoleGatewaySection } from '../../components/landing/RoleGatewaySection';
+import { ScientificGroundingSection } from '../../components/landing/ScientificGroundingSection';
 
 export const LandingPage: React.FC = () => {
   const { t } = useTranslation();
@@ -236,6 +237,9 @@ export const LandingPage: React.FC = () => {
  
       {/* 2. ROLE GATEWAY & CAPABILITIES SECTION (PHASE 2) */}
       <RoleGatewaySection />
+ 
+      {/* 3. SCIENTIFIC GROUNDING & PLATFORM STATUS SECTION (PHASE 3) */}
+      <ScientificGroundingSection />
 
       {/* 2. THE PROBLEM */}
       <section className="py-16 border-b border-surface-border bg-white">
