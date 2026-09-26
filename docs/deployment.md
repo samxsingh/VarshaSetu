@@ -61,6 +61,34 @@ cp frontend/.env.example frontend/.env
 - In production (`NODE_ENV=production`), `JWT_SECRET` in `backend/.env` **must** be set to a secure, random string $\ge 32$ characters. Startup will fail if the development default is detected.
 - `CORS_ORIGIN` must explicitly define permitted hostnames (no wildcard `*`).
 
+### 3.3 Optional External Integrations
+All third-party services and APIs are strictly optional. Missing credentials default safely to `NOT_CONFIGURED` or `DEMO_ONLY` and never crash service startup.
+
+| Provider | Purpose | Environment Variables | Default Status |
+| :--- | :--- | :--- | :--- |
+| **OpenWeather** | Live surface meteorological data | `OPENWEATHER_API_KEY` | Disabled (`ENABLE_EXTERNAL_WEATHER=false`) |
+| **WeatherAPI** | Secondary surface meteorological data | `WEATHERAPI_KEY` | Disabled (`ENABLE_EXTERNAL_WEATHER=false`) |
+| **Tomorrow.io** | High-resolution precipitation nowcasting | `TOMORROW_IO_API_KEY` | Disabled (`ENABLE_EXTERNAL_WEATHER=false`) |
+| **Meteomatics** | High-precision agro-weather API | `METEOMATICS_USERNAME`, `METEOMATICS_PASSWORD` | Disabled (`ENABLE_EXTERNAL_WEATHER=false`) |
+| **Copernicus CDS** | ERA5 climate reanalysis & hindcasting | `CDS_API_URL`, `CDS_API_KEY` | Disabled (`ENABLE_CDS_DATA=false`) |
+| **NASA Earthdata** | Satellite precipitation (IMERG/GPM) | `NASA_EARTHDATA_USERNAME`, `NASA_EARTHDATA_PASSWORD`, `NASA_EARTHDATA_TOKEN` | Disabled |
+| **Sentinel Hub** | Satellite multispectral remote sensing | `SENTINEL_HUB_CLIENT_ID`, `SENTINEL_HUB_CLIENT_SECRET` | Disabled (`ENABLE_SATELLITE_DATA=false`) |
+| **Google Earth Engine** | Planetary-scale geospatial analysis | `GOOGLE_EARTH_ENGINE_PROJECT`, `GOOGLE_EARTH_ENGINE_SERVICE_ACCOUNT`, `GOOGLE_EARTH_ENGINE_PRIVATE_KEY` | Disabled (`ENABLE_SATELLITE_DATA=false`) |
+| **Bhashini** | Indic language translation & voice pipelines | `BHASHINI_API_BASE_URL`, `BHASHINI_API_KEY`, `BHASHINI_USER_ID`, `BHASHINI_PIPELINE_ID` | `NOT_CONFIGURED` (`ENABLE_BHASHINI=false`) |
+| **Google Cloud TTS** | Cloud neural text-to-speech fallback | `GOOGLE_CLOUD_PROJECT_ID`, `GOOGLE_APPLICATION_CREDENTIALS` | `DEMO_ONLY` (`ENABLE_EXTERNAL_VOICE=false`) |
+| **Azure Speech** | Cognitive Services neural speech fallback | `AZURE_SPEECH_KEY`, `AZURE_SPEECH_REGION` | `DEMO_ONLY` (`ENABLE_EXTERNAL_VOICE=false`) |
+| **ElevenLabs** | Multilingual generative voice fallback | `ELEVENLABS_API_KEY` | `DEMO_ONLY` (`ENABLE_EXTERNAL_VOICE=false`) |
+| **Twilio SMS** | Outbound SMS alert dispatch | `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_PHONE_NUMBER` | `NOT_CONFIGURED` (`ENABLE_SMS=false`) |
+| **Twilio WhatsApp** | Outbound WhatsApp messaging | `TWILIO_WHATSAPP_FROM` | `NOT_CONFIGURED` (`ENABLE_WHATSAPP=false`) |
+| **Meta WhatsApp** | Cloud API for direct WhatsApp dispatch | `META_WHATSAPP_ACCESS_TOKEN`, `META_WHATSAPP_PHONE_NUMBER_ID`, `META_WHATSAPP_BUSINESS_ACCOUNT_ID`, `META_WHATSAPP_API_VERSION` | `NOT_CONFIGURED` (`ENABLE_WHATSAPP=false`) |
+| **SMTP / Resend / SendGrid** | Transactional email delivery | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM`, `RESEND_API_KEY`, `SENDGRID_API_KEY` | `NOT_CONFIGURED` (`ENABLE_EMAIL=false`) |
+| **Mapbox** | Optional vector tiles (OSM is default) | `MAPBOX_ACCESS_TOKEN`, `VITE_MAPBOX_PUBLIC_TOKEN` | Fallback (Leaflet/OSM active) |
+| **Google Maps** | Map rendering & geocoding alternative | `GOOGLE_MAPS_API_KEY` | Fallback |
+| **Nominatim** | OpenStreetMap reverse geocoding | `NOMINATIM_BASE_URL` | Active default (`https://nominatim.openstreetmap.org`) |
+| **OpenAI / Gemini / Anthropic** | Auxiliary explanation formatting (Placeholders) | `OPENAI_API_KEY`, `GEMINI_API_KEY`, `OPENROUTER_API_KEY`, `ANTHROPIC_API_KEY` | Disabled (`ENABLE_EXTERNAL_LLM=false`) |
+| **Sentry / OpenTelemetry** | APM monitoring & distributed tracing | `SENTRY_DSN`, `OTEL_EXPORTER_OTLP_ENDPOINT`, `OTEL_SERVICE_NAME` | Disabled |
+
+
 ---
 
 ## 4. Database Setup & Migration Execution
