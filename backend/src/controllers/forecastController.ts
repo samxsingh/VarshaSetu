@@ -3,6 +3,7 @@ import { sendSuccess, sendError } from '../utils/responseEnvelope';
 import { mlGatewayService } from '../services/ml/mlGatewayService';
 import { Forecast } from '../models/Forecast';
 import { isDatabaseConnected } from '../config/database';
+import { realtimeService } from '../realtime';
 
 export const forecastController = {
   async getStatus(req: Request, res: Response, next: NextFunction) {
@@ -141,6 +142,31 @@ export const forecastController = {
   async generateForecast(req: Request, res: Response, next: NextFunction) {
     try {
       const record = await mlGatewayService.generateForecast(req.body || {});
+
+      // Emit realtime forecast update to authorized rooms
+      try {
+        realtimeService.emitForecastUpdated({
+          forecastId: record.forecast_id,
+          blockId: record.location?.block_id || 'UP_LKO_BKT',
+          targetType: record.target?.target_type || 'HEAVY_RAIN',
+          horizonDays: record.horizon?.horizon_days || 7,
+          validFrom: record.valid_from,
+          validUntil: record.valid_until,
+          probability: record.prediction?.probability ?? null,
+          predictedValue: (record.prediction as any)?.expected_value_mm ?? (record.prediction as any)?.predicted_value ?? null,
+          unit: record.target?.unit || 'mm',
+          severity: (record.prediction?.category as any) || 'WATCH',
+          confidenceStatus: record.calibration?.status || 'MODERATE_CONFIDENCE',
+          operationalStatus: 'DIAGNOSTIC_ONLY',
+          dataFreshness: record.data?.freshness_status || 'HISTORICAL_ONLY',
+          modelId: record.model?.model_id || 'lightgbm',
+          modelVersion: record.model?.model_version || '1.0.0',
+          generatedAt: record.generated_at || new Date().toISOString(),
+        });
+      } catch {
+        // Non-blocking realtime emission
+      }
+
       return sendSuccess(res, record, undefined, 201);
     } catch (error: any) {
       if (error?.name === 'ZodError') {

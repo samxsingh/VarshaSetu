@@ -18,6 +18,7 @@ import { HorizonSelector } from '../../components/forecast/HorizonSelector';
 import { forecastService, ScientificForecastRecord } from '../../services/forecastService';
 import { eventService, ForecastEvent } from '../../services/eventService';
 import { ScientificStatusBadge } from '../../components/farmer/ScientificStatusBadge';
+import { useRealtimeStore } from '../../stores/useRealtimeStore';
 import {
   ConfidenceIndicator,
   ProvenanceDrawer,
@@ -33,6 +34,8 @@ export const FarmerForecastPage: React.FC = () => {
   const [forecasts, setForecasts] = useState<ScientificForecastRecord[]>([]);
   const [activeEvents, setActiveEvents] = useState<ForecastEvent[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+
+  const lastEventAt = useRealtimeStore((s) => s.lastEventAt);
 
   const toggleWhy = (id: string) => {
     setOpenWhyId(openWhyId === id ? null : id);
@@ -65,7 +68,7 @@ export const FarmerForecastPage: React.FC = () => {
       }
     };
     fetchForecastsAndEvents();
-  }, [horizon]);
+  }, [horizon, lastEventAt]);
 
   const getTargetIcon = (target: string) => {
     switch (target) {

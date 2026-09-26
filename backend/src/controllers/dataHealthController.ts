@@ -3,6 +3,7 @@ import { dataSourceRepository } from '../repositories/dataSourceRepository';
 import { dataIngestionRepository } from '../repositories/dataIngestionRepository';
 import { sendSuccess, sendError } from '../utils/responseEnvelope';
 import { mlGatewayClient } from '../services/ml';
+import { realtimeService } from '../realtime';
 
 export const dataHealthController = {
   async getOverview(req: Request, res: Response, next: NextFunction) {
@@ -61,6 +62,17 @@ export const dataHealthController = {
     try {
       try {
         const data = await mlGatewayClient.post('/ingestion/run', req.body || {}, { timeoutMs: 60000 });
+        try {
+          realtimeService.emitDataHealthUpdated({
+            status: 'HEALTHY',
+            datasetName: req.body?.dataset_name || 'all',
+            recordsProcessed: (data as any)?.records_processed || 0,
+            lastSyncTime: new Date().toISOString(),
+            message: `Ingestion run initiated for ${req.body?.dataset_name || 'all datasets'}`,
+          });
+        } catch {
+          // Non-blocking emission
+        }
         return sendSuccess(res, data, undefined, 202);
       } catch (fetchErr: any) {
         if (fetchErr.name === 'GatewayResponseError') {

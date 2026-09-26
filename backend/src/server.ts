@@ -2,9 +2,13 @@ import { app } from './app';
 import { env } from './config/env';
 import { closeDbPool, checkDbHealth } from './db/pool';
 import { connectDatabase, closeDatabase, isDatabaseConnected } from './config/database';
+import { initSocketServer, closeSocketServer } from './realtime';
 import http from 'http';
 
 const server = http.createServer(app);
+
+// Initialize real-time Socket.IO server on the authoritative HTTP server
+const io = initSocketServer(server);
 
 async function startServer(): Promise<void> {
   try {
@@ -31,6 +35,7 @@ async function startServer(): Promise<void> {
 
     server.listen(env.PORT, () => {
       console.log(`🚀 VarshaSetu API server listening on http://localhost:${env.PORT}/api/v1`);
+      console.log(`⚡ Real-time Socket.IO gateway active on ws://localhost:${env.PORT}`);
       console.log(`🩺 Health check available at: http://localhost:${env.PORT}/api/v1/health`);
     });
   } catch (error) {
@@ -53,6 +58,10 @@ async function handleGracefulShutdown(signal: string): Promise<void> {
     console.log('🛑 HTTP server closed.');
 
     try {
+      // Close Socket.IO connections
+      await closeSocketServer();
+      console.log('🛑 Socket.IO server closed.');
+
       // Close MongoDB connection
       await closeDatabase();
       // Drain and close database pool

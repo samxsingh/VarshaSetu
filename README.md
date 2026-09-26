@@ -2,7 +2,7 @@
 > *From climate signals to confident farm decisions.*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Tests: 400 Passing](https://img.shields.io/badge/Tests-400%20Passing-brightgreen.svg)](#testing)
+[![Tests: 473 Passing](https://img.shields.io/badge/Tests-473%20Passing-brightgreen.svg)](#testing)
 [![Stack: MERN + Python FastAPI](https://img.shields.io/badge/Stack-React%20%7C%20Node%20%7C%20MongoDB%20%7C%20FastAPI-0E7490.svg)](#technology-stack)
 [![Architecture: One Scientific Layer](https://img.shields.io/badge/Architecture-One%20Scientific%20Layer-102A43.svg)](#core-architecture)
 
@@ -114,13 +114,15 @@ VarshaSetu is built on transparency and scientific accountability, answering fou
 │   • Vite, TypeScript, Tailwind CSS, React Router v6, Zustand, i18next  │
 │   • Neo-Brutalist Climate Intelligence Editorial Theme                 │
 │   • Leaflet GIS Maps, Phase 7 Triad & Phase 9 Trust Components         │
+│   • Real-Time Socket.IO Client with Auto-Reconnection & Status Badges  │
 └───────────────────────────────────┬────────────────────────────────────┘
-                                    │ HTTP REST / WebSocket (/api/v1)
+                                    │ HTTP REST (/api/v1) & WSS (/socket.io)
                                     ▼
 ┌────────────────────────────────────────────────────────────────────────┐
 │               APPLICATION GATEWAY TIER (Node.js + Express)             │
-│   • Express REST API Gateway, TypeScript Runtime                       │
-│   • Authoritative Role-Based Access Control (RBAC) & JWT Auth          │
+│   • Express REST API Gateway & Socket.IO Real-Time Server Engine       │
+│   • Authoritative Role-Based Access Control (RBAC) & Handshake Auth    │
+│   • Authoritative Room Segmentation (user, role, block, system)        │
 │   • Mongoose 8.x ODM with GeoJSON 2dsphere Spatial Indexing            │
 │   • Security Hardening (Helmet, Rate Limiting, Zod Request Validation) │
 └───────────────────┬────────────────────────────────┬───────────────────┘
@@ -140,12 +142,12 @@ VarshaSetu is built on transparency and scientific accountability, answering fou
 
 ## Technology Stack
 
-- **Frontend:** React 18, Vite, TypeScript, Tailwind CSS, React Router v6, Zustand, Axios, Leaflet, Lucide React, i18next, Vitest.
-- **Backend:** Node.js (>=20.0.0), Express, TypeScript, Mongoose (MongoDB ODM), Zod, JSON Web Tokens (JWT), bcryptjs, Helmet, Morgan, Vitest.
+- **Frontend:** React 18, Vite, TypeScript, Tailwind CSS, React Router v6, Zustand, Axios, Socket.IO Client, Leaflet, Lucide React, i18next, Vitest.
+- **Backend:** Node.js (>=20.0.0), Express, Socket.IO Server, TypeScript, Mongoose (MongoDB ODM), Zod, JSON Web Tokens (JWT), bcryptjs, Helmet, Morgan, Vitest.
 - **Database:** MongoDB 7.0+ (GeoJSON `2dsphere` spatial indexing, document embedding, schema validation).
 - **Scientific ML Microservice:** Python 3.11, FastAPI, Uvicorn, LightGBM, XGBoost, Scikit-learn, SHAP, NumPy, Pandas, NetCDF4, Pytest.
 - **Maps & Visualization:** Leaflet GIS with GeoJSON choropleth layers, custom SVG uncertainty bands, and probability density curves.
-- **Security & Authorization:** Cryptographic JWT tokens, bcrypt password hashing, granular RBAC middlewares, and Helmet HTTP protections.
+- **Security & Authorization:** Cryptographic JWT tokens, bcrypt password hashing, granular RBAC middlewares, Socket handshake auth, and Helmet HTTP protections.
 
 ---
 
@@ -162,22 +164,23 @@ VarshaSetu/
 │   │   │   └── seeds/           # MongoDB development seed script (mongoSeed.ts)
 │   │   ├── middleware/          # requireAuth, requireRole, rateLimit, error handling
 │   │   ├── models/              # 16 Mongoose Schemas (User, Geography, Forecast, etc.)
+│   │   ├── realtime/            # Socket.IO server, handshake auth, room segmentation, events
 │   │   ├── repositories/        # Persistence repositories
 │   │   ├── routes/              # Express API route modules (/api/v1/*)
-│   │   └── server.ts            # Application bootstrap
-│   └── tests/                   # Backend Vitest integration & unit test suites
+│   │   └── server.ts            # Application bootstrap with Socket.IO attachment
+│   └── tests/                   # Backend Vitest integration & unit test suites (154 tests)
 │
 ├── frontend/                    # React 18 + Vite Web Application
 │   ├── src/
-│   │   ├── components/          # 68 modular components (ui, viz, maps, landing, personas)
+│   │   ├── components/          # Modular components (ui, viz, maps, landing, personas, realtime)
 │   │   ├── layouts/             # RootLayout, FarmerLayout, OfficerLayout, AnalystLayout
 │   │   ├── pages/               # Persona pages (public, farmer, officer, gov, analyst)
-│   │   ├── services/            # Frontend API client & domain services
-│   │   ├── stores/              # Zustand stores (useAppStore, useFarmerStore, useOfficerStore)
-│   │   └── tests/               # Frontend Vitest suites
+│   │   ├── services/            # Frontend API client, socketClient singleton & domain services
+│   │   ├── stores/              # Zustand stores (useAppStore, useFarmerStore, useRealtimeStore)
+│   │   └── tests/               # Frontend Vitest suites (117 tests)
 │   └── vite.config.ts
 │
-├── ml-service/                  # Scientific Python FastAPI Microservice
+├── ml-service/                  # Scientific Python FastAPI Microservice (202 tests)
 │   ├── app/
 │   │   ├── agronomy/            # Phenological rules & advisory generator
 │   │   ├── calibration/         # Platt Scaling & Isotonic Regression engines
@@ -345,11 +348,11 @@ VarshaSetu adheres to a strict **Zero-Fabrication Policy**:
 VarshaSetu maintains a comprehensive test suite across all three tiers:
 
 ```bash
-# Run Backend Tests (110 Tests Passing)
+# Run Backend Tests (154 Tests Passing across 15 suites)
 cd backend
 npm test -- --run
 
-# Run Frontend Tests (88 Tests Passing)
+# Run Frontend Tests (117 Tests Passing across 21 suites)
 cd frontend
 npm test -- --run
 
@@ -359,7 +362,7 @@ source venv/bin/activate
 pytest
 ```
 
-**Total Automated Coverage:** **400 Automated Tests (100% Passing)** across the repository.
+**Total Automated Coverage:** **473 Automated Tests (100% Passing)** across the repository.
 
 ---
 
@@ -368,10 +371,12 @@ pytest
 - [x] **Global Visual Theme & Editorial System** — Neo-brutalist climate intelligence design system with accessible contrast and touch targets.
 - [x] **Scientific Visualization Framework** — Phase 7 triad metrics, uncertainty spreads, and timeline instrumentation.
 - [x] **Evidence & Explainability Trust Layer** — Phase 9 WHAT, WHY, WHERE, and HOW CONFIDENT ledger and slide-out provenance drawers.
-- [x] **Repository Audit & Migration Blueprint** — Complete Phase 0 architectural audit (`docs/MERN-MIGRATION-AUDIT.md`).
+- [x] **Repository Audit & Migration Blueprint (Phase 0)** — Complete architectural audit (`docs/MERN-MIGRATION-AUDIT.md`).
 - [x] **MongoDB Persistence Layer (Phase 1)** — 16 Mongoose models, GeoJSON 2dsphere indexing, controlled seed pipeline, and unit tests (`docs/MONGO-DATA-MODEL.md`).
-- [ ] **Node.js/Express API Gateway & RBAC (Phase 2)** — Under active migration.
-- [ ] **Real-Time Event Engine (Phase 5)** — Scheduled for Socket.IO integration.
+- [x] **Node.js/Express API Gateway & RBAC (Phase 2)** — Authoritative REST API gateway with 5-role RBAC (`docs/PHASE-2-API-MIGRATION.md`).
+- [x] **Scientific ML Service Gateway (Phase 3)** — Express gateway proxy to Python FastAPI ML computation engine (`docs/PHASE-3-ML-GATEWAY.md`).
+- [x] **Frontend MERN Integration (Phase 4)** — React/Vite migration with Axios API client, Zustand stores, and full persona alignment (`docs/PHASE-4-FRONTEND-MIGRATION.md`).
+- [x] **Real-Time Operational Infrastructure (Phase 5)** — Socket.IO bidirectional event sync, room segmentation, and reactive telemetry (`docs/PHASE-5-REALTIME.md`).
 
 ---
 

@@ -2,6 +2,7 @@ import { Response, NextFunction } from 'express';
 import { sendSuccess, sendError } from '../utils/responseEnvelope';
 import { AuthenticatedRequest } from '../types';
 import { notificationRepository } from '../repositories/notificationRepository';
+import { realtimeService } from '../realtime';
 
 export const notificationController = {
   async getStatus(req: AuthenticatedRequest, res: Response, next: NextFunction) {
@@ -16,6 +17,22 @@ export const notificationController = {
         audit_storage: 'POSTGRESQL_AND_ARTIFACTS',
         scientific_disclosure:
           'Automated broadcast delivery (SMS/WhatsApp/Bhashini voice) is strictly not active in Phase 4F. Notification actions represent simulated internal dispatches.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async getInbox(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    try {
+      if (!req.user) {
+        return sendError(res, 'UNAUTHORIZED', 'Authentication required.', 401);
+      }
+      const limit = parseInt((req.query.limit as string) || '20', 10);
+      const items = await notificationRepository.getDeliveriesByUserId(req.user.id, limit);
+      return sendSuccess(res, {
+        total: items.length,
+        notifications: items,
       });
     } catch (error) {
       next(error);
@@ -110,6 +127,25 @@ export const notificationController = {
         body: body || 'Simulated advisory alert dispatch',
         details: { event_type, severity, simulated: true },
       });
+
+      // Emit realtime notification to recipient user room
+      try {
+        realtimeService.emitNotification(req.user.id, {
+          id: deliveryId,
+          deliveryId,
+          userId: req.user.id,
+          title: title || 'Agro-Meteorological Advisory Alert',
+          body: body || 'Simulated advisory alert dispatch',
+          severity: severity || 'WATCH',
+          channel: 'IN_APP',
+          status: 'DELIVERED',
+          timestamp: new Date().toISOString(),
+          metadata: { event_type, simulated: true },
+        });
+      } catch {
+        // Non-blocking emission
+      }
+
       return sendSuccess(res, {
         simulated: true,
         deliveryId,

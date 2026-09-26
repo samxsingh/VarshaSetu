@@ -13,6 +13,7 @@ import { ClimateSignalCard } from '../../components/analyst/ClimateSignalCard';
 import { ProvenanceCard } from '../../components/analyst/ProvenanceCard';
 import { forecastService, ForecastStatusResponse, ForecastAvailabilityResponse } from '../../services/forecastService';
 import { eventService, OperationalStatusResponse, ForecastEvent } from '../../services/eventService';
+import { useRealtimeStore } from '../../stores/useRealtimeStore';
 
 export const GovernmentDashboardPage: React.FC = () => {
   const [activeSection, setActiveSection] = useState<string>('overview');
@@ -20,6 +21,8 @@ export const GovernmentDashboardPage: React.FC = () => {
   const [availability, setAvailability] = useState<ForecastAvailabilityResponse | null>(null);
   const [opStatus, setOpStatus] = useState<OperationalStatusResponse | null>(null);
   const [events, setEvents] = useState<ForecastEvent[]>([]);
+
+  const lastEventAt = useRealtimeStore((s) => s.lastEventAt);
 
   useEffect(() => {
     let isMounted = true;
@@ -45,7 +48,7 @@ export const GovernmentDashboardPage: React.FC = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [lastEventAt]);
 
   const handleSelectSection = (sectionId: string) => {
     setActiveSection(sectionId);

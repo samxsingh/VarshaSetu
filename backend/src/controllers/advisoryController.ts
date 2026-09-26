@@ -3,6 +3,7 @@ import { sendSuccess, sendError } from '../utils/responseEnvelope';
 import { AuthenticatedRequest } from '../types';
 import { advisoryRepository } from '../repositories/advisoryRepository';
 import { mlGatewayClient, GatewayResponseError } from '../services/ml';
+import { realtimeService } from '../realtime';
 
 export const advisoryController = {
   async getStatus(req: Request, res: Response, next: NextFunction) {
@@ -306,6 +307,21 @@ export const advisoryController = {
       if (!updated) {
         return sendError(res, 'UPDATE_FAILED', `Advisory '${id}' not found or could not be updated.`, 404);
       }
+
+      try {
+        realtimeService.emitAdvisoryUpdated({
+          advisoryId: (updated as any).advisory_id || id,
+          blockId: (updated as any).block_id || 'UP_LKO_BKT',
+          cropType: (updated as any).crop_type || 'PADDY',
+          severity: (updated as any).severity || 'WATCH',
+          status: 'DISMISSED',
+          headline: (updated as any).headline || `Advisory dismissed`,
+          updatedAt: new Date().toISOString(),
+        });
+      } catch {
+        // Non-blocking emission
+      }
+
       return sendSuccess(res, {
         message: `Advisory '${id}' marked as DISMISSED.`,
         advisory: updated,

@@ -1,8 +1,38 @@
 import { Request, Response, NextFunction } from 'express';
 import { sendSuccess, sendError } from '../utils/responseEnvelope';
 import { AuthenticatedRequest } from '../types';
-import { eventRepository } from '../repositories/eventRepository';
+import { eventRepository, ForecastEventRow } from '../repositories/eventRepository';
 import { mlGatewayClient } from '../services/ml';
+import { realtimeService, ScientificEventDTO } from '../realtime';
+
+function toEventDTO(ev: any): ScientificEventDTO {
+  return {
+    eventId: ev.event_id || ev.eventId,
+    eventType: ev.event_type || ev.eventType,
+    forecastId: ev.forecast_id || ev.forecastId,
+    blockId: ev.block_id || ev.blockId,
+    detectedAt: ev.detected_at instanceof Date ? ev.detected_at.toISOString() : String(ev.detected_at || new Date().toISOString()),
+    validFrom: ev.valid_from instanceof Date ? ev.valid_from.toISOString() : String(ev.valid_from || new Date().toISOString()),
+    validUntil: ev.valid_until instanceof Date ? ev.valid_until.toISOString() : String(ev.valid_until || new Date().toISOString()),
+    probability: Number(ev.probability) || 0,
+    threshold: Number(ev.threshold) || 0,
+    unit: ev.unit || 'mm',
+    severity: ev.severity || 'WATCH',
+    confidenceStatus: ev.confidence_status || ev.confidenceStatus || 'CALIBRATED',
+    operationalStatus: ev.operational_status || ev.operationalStatus || 'DIAGNOSTIC_ONLY',
+    dataFreshness: ev.data_freshness || ev.dataFreshness || 'HISTORICAL_ONLY',
+    validationStatus: ev.validation_status || ev.validationStatus || 'INSUFFICIENT_DATA',
+    explanationReference: ev.explanation_reference || ev.explanationReference || null,
+    state: ev.state || 'DETECTED',
+    description: ev.description || '',
+    deduplicationHash: ev.deduplication_hash || ev.deduplicationHash || '',
+    acknowledgedBy: ev.acknowledged_by || ev.acknowledgedBy || null,
+    acknowledgedAt: ev.acknowledged_at ? (ev.acknowledged_at instanceof Date ? ev.acknowledged_at.toISOString() : String(ev.acknowledged_at)) : null,
+    resolvedBy: ev.resolved_by || ev.resolvedBy || null,
+    resolvedAt: ev.resolved_at ? (ev.resolved_at instanceof Date ? ev.resolved_at.toISOString() : String(ev.resolved_at)) : null,
+    metadata: ev.metadata || {},
+  };
+}
 
 export const eventController = {
   async listEvents(req: AuthenticatedRequest, res: Response, next: NextFunction) {
@@ -119,15 +149,17 @@ export const eventController = {
           cooldown_hours: cooldown_hours || 24,
         });
 
-        // Sync detected events into database if available
+        // Sync detected events into database if available and emit realtime events
         if (Array.isArray(data.detected_events)) {
           for (const ev of data.detected_events) {
             await eventRepository.upsertEvent(ev).catch(() => null);
+            realtimeService.emitEventCreated(toEventDTO(ev));
           }
         }
         if (Array.isArray(data.updated_events)) {
           for (const ev of data.updated_events) {
             await eventRepository.upsertEvent(ev).catch(() => null);
+            realtimeService.emitEventUpdated(toEventDTO(ev));
           }
         }
         return sendSuccess(res, data);
@@ -162,7 +194,8 @@ export const eventController = {
           reason: reason || 'Duty officer acknowledged event notice.',
           metadata: metadata || {},
         });
-        await eventRepository.updateEventState(eventId, 'ACKNOWLEDGED', actor, 'acknowledge').catch(() => null);
+        const updated = await eventRepository.updateEventState(eventId, 'ACKNOWLEDGED', actor, 'acknowledge').catch(() => null);
+        realtimeService.emitEventAcknowledged(toEventDTO(updated || data));
         return sendSuccess(res, data);
       } catch (e) {
         // Fallback
@@ -184,6 +217,7 @@ export const eventController = {
         metadata,
       }).catch(() => null);
 
+      realtimeService.emitEventAcknowledged(toEventDTO(updated));
       return sendSuccess(res, updated);
     } catch (error) {
       next(error);
@@ -203,7 +237,8 @@ export const eventController = {
           reason: reason || 'Event resolution completed.',
           metadata: metadata || {},
         });
-        await eventRepository.updateEventState(eventId, 'RESOLVED', actor, 'resolve').catch(() => null);
+        const updated = await eventRepository.updateEventState(eventId, 'RESOLVED', actor, 'resolve').catch(() => null);
+        realtimeService.emitEventResolved(toEventDTO(updated || data));
         return sendSuccess(res, data);
       } catch (e) {
         // Fallback
@@ -225,6 +260,7 @@ export const eventController = {
         metadata,
       }).catch(() => null);
 
+      realtimeService.emitEventResolved(toEventDTO(updated));
       return sendSuccess(res, updated);
     } catch (error) {
       next(error);

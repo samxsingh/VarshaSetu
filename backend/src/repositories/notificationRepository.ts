@@ -211,4 +211,46 @@ export const notificationRepository = {
       return null;
     }
   },
+
+  async getDeliveriesByUserId(userId: string, limit = 20): Promise<NotificationDeliveryRow[]> {
+    if (isDatabaseConnected()) {
+      try {
+        const userFilter = mongoose.isValidObjectId(userId)
+          ? { userId: new mongoose.Types.ObjectId(userId) }
+          : { userId };
+        const doc = await Notification.findOne(userFilter);
+        if (doc && doc.deliveries) {
+          return doc.deliveries
+            .slice(-limit)
+            .reverse()
+            .map((d: any) => ({
+              id: d.deliveryId,
+              delivery_id: d.deliveryId,
+              message_id: d.messageId,
+              event_id: d.eventId || null,
+              recipient_id: userId,
+              channel: d.channel,
+              status: d.status,
+              provider_name: 'IN_APP',
+              title: d.title,
+              body: d.body,
+              details: d.details || {},
+              created_at: d.dispatchedAt || new Date(),
+            }));
+        }
+      } catch (err) {
+        // Fallback
+      }
+    }
+
+    try {
+      const res = await query<NotificationDeliveryRow>(
+        'SELECT * FROM notification_deliveries WHERE recipient_id = $1 ORDER BY created_at DESC LIMIT $2',
+        [userId, limit]
+      );
+      return res.rows;
+    } catch {
+      return [];
+    }
+  },
 };

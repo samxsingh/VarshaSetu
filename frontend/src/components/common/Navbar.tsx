@@ -15,6 +15,8 @@ import {
   User,
 } from 'lucide-react';
 import { LanguageToggle } from './LanguageToggle';
+import { RealtimeStatusBadge } from './RealtimeStatusBadge';
+import { NotificationDrawer } from './NotificationDrawer';
 import { useAppStore } from '../../stores/useAppStore';
 import { useAuthStore } from '../../stores/useAuthStore';
 import { cn } from '../../utils/cn';
@@ -114,8 +116,10 @@ export const Navbar: React.FC = () => {
           })}
         </nav>
 
-        {/* RIGHT: Language Switcher, Auth Persona & Controls */}
-        <div className="hidden sm:flex items-center gap-2.5">
+        {/* RIGHT: Language Switcher, Realtime Status, Alerts & Controls */}
+        <div className="hidden sm:flex items-center gap-2">
+          <RealtimeStatusBadge />
+          <NotificationDrawer />
           <LanguageToggle />
 
           {user ? (
@@ -159,6 +163,8 @@ export const Navbar: React.FC = () => {
 
         {/* Mobile Header Controls */}
         <div className="flex sm:hidden items-center gap-1.5">
+          <RealtimeStatusBadge compact />
+          <NotificationDrawer />
           <LanguageToggle />
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

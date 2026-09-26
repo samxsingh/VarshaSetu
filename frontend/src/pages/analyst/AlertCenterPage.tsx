@@ -6,6 +6,7 @@ import {
   ScientificEventItem,
   EventTransitionItem,
 } from '../../services/eventService';
+import { useRealtimeStore } from '../../stores/useRealtimeStore';
 import {
   AlertCircle,
   Bell,
@@ -62,9 +63,11 @@ export const AlertCenterPage: React.FC = () => {
     }
   };
 
+  const lastEventAt = useRealtimeStore((s) => s.lastEventAt);
+
   useEffect(() => {
     fetchEvents();
-  }, [typeFilter, severityFilter, stateFilter]);
+  }, [typeFilter, severityFilter, stateFilter, lastEventAt]);
 
   const handleDetectEvents = async () => {
     try {

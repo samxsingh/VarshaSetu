@@ -5,6 +5,7 @@ import {
   DataSourceItem,
   DataIngestionRunItem,
 } from '../../services/dataHealthService';
+import { useRealtimeStore } from '../../stores/useRealtimeStore';
 import {
   Database,
   Clock,
@@ -44,9 +45,11 @@ export const DataHealthPage: React.FC = () => {
     }
   };
 
+  const latestDataHealth = useRealtimeStore((s) => s.latestDataHealth);
+
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [latestDataHealth]);
 
   const handleRefresh = () => {
     setRefreshing(true);

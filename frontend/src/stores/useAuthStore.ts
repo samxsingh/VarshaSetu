@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { UserEntity, UserRole } from '@shared/types';
 import { authService, LoginPayload, RegisterPayload } from '../services/authService';
 import { useAppStore } from './useAppStore';
+import { socketClient } from '../services/socketClient';
 
 export type AuthStatus = 'IDLE' | 'AUTH_INITIALIZING' | 'AUTHENTICATED' | 'UNAUTHENTICATED';
 
@@ -70,6 +71,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           });
           // Synchronize role with AppStore for operational perspective consistency
           useAppStore.getState().setRole(user.role);
+          try {
+            socketClient.connect(existingToken);
+          } catch {}
           return;
         }
       }
@@ -87,12 +91,18 @@ export const useAuthStore = create<AuthState>((set, get) => ({
             error: null,
           });
           useAppStore.getState().setRole(user.role);
+          try {
+            socketClient.connect(token);
+          } catch {}
           return;
         }
       }
 
       // If both fail
       authService.clearTokens();
+      try {
+        socketClient.disconnect();
+      } catch {}
       set({
         user: null,
         token: null,
@@ -102,6 +112,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       });
     } catch (err: any) {
       authService.clearTokens();
+      try {
+        socketClient.disconnect();
+      } catch {}
       set({
         user: null,
         token: null,
@@ -131,6 +144,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
       // Synchronize operational perspective
       useAppStore.getState().setRole(user.role);
+      try {
+        socketClient.connect(token);
+      } catch {}
       return user;
     } catch (err: any) {
       const msg = err?.message || 'Login failed';
@@ -157,6 +173,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       });
 
       useAppStore.getState().setRole(user.role);
+      try {
+        socketClient.connect(token);
+      } catch {}
       return user;
     } catch (err: any) {
       const msg = err?.message || 'Registration failed';
@@ -170,6 +189,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       await authService.logout();
     } finally {
       authService.clearTokens();
+      try {
+        socketClient.disconnect();
+      } catch {}
       set({
         user: null,
         token: null,
@@ -193,6 +215,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 // Setup global event listeners to sync store with Axios interceptor
 if (typeof window !== 'undefined') {
   window.addEventListener('varshasetu:unauthorized', () => {
+    try {
+      socketClient.disconnect();
+    } catch {}
     useAuthStore.setState({
       user: null,
       token: null,
@@ -209,6 +234,9 @@ if (typeof window !== 'undefined') {
         user: detail.user || state.user,
         authStatus: 'AUTHENTICATED',
       }));
+      try {
+        socketClient.connect(detail.token);
+      } catch {}
     }
   });
 }
