@@ -69,14 +69,14 @@ export const DataHealthPage: React.FC = () => {
     const s = status.toUpperCase();
     if (s === 'FRESH' || s === 'SUCCESS' || s === 'HEALTHY') {
       return (
-        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-mono font-bold uppercase tracking-wider bg-[#2F7D4A]/10 text-[#2F7D4A] border border-[#2F7D4A]/40">
+        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-mono font-bold uppercase tracking-wider bg-[#3F7D58]/10 text-[#3F7D58] border border-[#3F7D58]/40">
           ● {status}
         </span>
       );
     }
     if (s === 'STALE' || s === 'PARTIAL' || s === 'DEGRADED' || s === 'WARNING') {
       return (
-        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-mono font-bold uppercase tracking-wider bg-[#E5A33D]/15 text-[#B45309] border border-[#E5A33D]/50">
+        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-mono font-bold uppercase tracking-wider bg-[#D97706]/15 text-[#B45309] border border-[#D97706]/50">
           ▲ {status}
         </span>
       );
@@ -98,18 +98,18 @@ export const DataHealthPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Page Header */}
-      <div className="bg-white rounded-2xl border-2 border-[#0B1726] shadow-[4px_4px_0px_#0B1726] p-6 transition-all">
+      <div className="bg-white rounded-2xl border-2 border-[#102A43] shadow-[4px_4px_0px_#102A43] p-6 transition-all">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2.5 flex-wrap">
-              <span className="px-2.5 py-0.5 rounded text-[11px] font-mono font-bold uppercase tracking-wider bg-[#008F83] text-white border border-[#0B1726]">
+              <span className="px-2.5 py-0.5 rounded text-[11px] font-mono font-bold uppercase tracking-wider bg-[#0E7490] text-white border border-[#102A43]">
                 Telemetry Lab
               </span>
-              <span className="px-2 py-0.5 rounded text-[11px] font-mono font-semibold uppercase tracking-wider bg-[#2F7D4A]/10 text-[#2F7D4A] border border-[#2F7D4A]/30">
+              <span className="px-2 py-0.5 rounded text-[11px] font-mono font-semibold uppercase tracking-wider bg-[#3F7D58]/10 text-[#3F7D58] border border-[#3F7D58]/30">
                 Phase 3 Live Data
               </span>
             </div>
-            <h1 className="font-heading font-black text-2xl md:text-3xl text-[#0B1726] tracking-tight mt-2">
+            <h1 className="font-heading font-black text-2xl md:text-3xl text-[#102A43] tracking-tight mt-2">
               Data Pipeline & Telemetry Health
             </h1>
             <p className="text-xs md:text-sm text-slate-600 mt-1 max-w-3xl leading-relaxed">
@@ -120,7 +120,7 @@ export const DataHealthPage: React.FC = () => {
             <button
               onClick={handleRefresh}
               disabled={refreshing || loading}
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider bg-white text-[#0B1726] border-2 border-[#0B1726] shadow-[2px_2px_0px_#0B1726] hover:bg-[#F7F3EA] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all disabled:opacity-50"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider bg-white text-[#102A43] border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] hover:bg-[#F3F6F7] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all disabled:opacity-50"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
               Refresh Status
@@ -128,7 +128,7 @@ export const DataHealthPage: React.FC = () => {
             <button
               onClick={handleTriggerSync}
               disabled={triggering}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider bg-[#008F83] text-white border-2 border-[#0B1726] shadow-[2px_2px_0px_#0B1726] hover:bg-[#007b70] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all disabled:opacity-50"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider bg-[#0E7490] text-white border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] hover:bg-[#007b70] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all disabled:opacity-50"
             >
               <Activity className="w-3.5 h-3.5" />
               {triggering ? 'Ingesting Feeds...' : 'Trigger Pipeline Ingestion'}
@@ -147,12 +147,12 @@ export const DataHealthPage: React.FC = () => {
 
       {/* Overview Metric Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-2xl border-2 border-[#0B1726] shadow-[3px_3px_0px_#0B1726] p-4 transition-all hover:-translate-y-0.5">
+        <div className="bg-white rounded-2xl border-2 border-[#102A43] shadow-[3px_3px_0px_#102A43] p-4 transition-all hover:-translate-y-0.5">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-slate-500">Pipeline Status</span>
-            <Activity className="w-4 h-4 text-[#2F7D4A]" />
+            <Activity className="w-4 h-4 text-[#3F7D58]" />
           </div>
-          <div className="mt-2 text-xl font-heading font-black text-[#0B1726]">
+          <div className="mt-2 text-xl font-heading font-black text-[#102A43]">
             {overview ? getStatusBadge(overview.overallHealth) : 'Not available'}
           </div>
           <span className="text-[11px] text-slate-600 mt-2 block font-medium">
@@ -160,12 +160,12 @@ export const DataHealthPage: React.FC = () => {
           </span>
         </div>
 
-        <div className="bg-white rounded-2xl border-2 border-[#0B1726] shadow-[3px_3px_0px_#0B1726] p-4 transition-all hover:-translate-y-0.5">
+        <div className="bg-white rounded-2xl border-2 border-[#102A43] shadow-[3px_3px_0px_#102A43] p-4 transition-all hover:-translate-y-0.5">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-slate-500">Ingestion Runs</span>
-            <Database className="w-4 h-4 text-[#008F83]" />
+            <Database className="w-4 h-4 text-[#0E7490]" />
           </div>
-          <div className="mt-2 text-2xl font-mono font-black text-[#0B1726]">
+          <div className="mt-2 text-2xl font-mono font-black text-[#102A43]">
             {overview ? overview.totalRuns : '—'}
           </div>
           <span className="text-[11px] text-slate-600 mt-2 block font-medium">
@@ -173,12 +173,12 @@ export const DataHealthPage: React.FC = () => {
           </span>
         </div>
 
-        <div className="bg-white rounded-2xl border-2 border-[#0B1726] shadow-[3px_3px_0px_#0B1726] p-4 transition-all hover:-translate-y-0.5">
+        <div className="bg-white rounded-2xl border-2 border-[#102A43] shadow-[3px_3px_0px_#102A43] p-4 transition-all hover:-translate-y-0.5">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-slate-500">Quality Assured</span>
-            <FileCheck2 className="w-4 h-4 text-[#2F7D4A]" />
+            <FileCheck2 className="w-4 h-4 text-[#3F7D58]" />
           </div>
-          <div className="mt-2 text-2xl font-mono font-black text-[#2F7D4A]">
+          <div className="mt-2 text-2xl font-mono font-black text-[#3F7D58]">
             100%
           </div>
           <span className="text-[11px] text-slate-600 mt-2 block font-medium">
@@ -186,12 +186,12 @@ export const DataHealthPage: React.FC = () => {
           </span>
         </div>
 
-        <div className="bg-white rounded-2xl border-2 border-[#0B1726] shadow-[3px_3px_0px_#0B1726] p-4 transition-all hover:-translate-y-0.5">
+        <div className="bg-white rounded-2xl border-2 border-[#102A43] shadow-[3px_3px_0px_#102A43] p-4 transition-all hover:-translate-y-0.5">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-slate-500">Last Sync Time</span>
-            <Clock className="w-4 h-4 text-[#E5A33D]" />
+            <Clock className="w-4 h-4 text-[#D97706]" />
           </div>
-          <div className="mt-2 text-xs font-mono font-bold text-[#0B1726] truncate">
+          <div className="mt-2 text-xs font-mono font-bold text-[#102A43] truncate">
             {overview?.lastSyncTime
               ? new Date(overview.lastSyncTime).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'short', timeStyle: 'short' })
               : 'Not available'}
@@ -203,15 +203,15 @@ export const DataHealthPage: React.FC = () => {
       </div>
 
       {/* Data Sources Provenance Table */}
-      <div className="bg-white rounded-2xl border-2 border-[#0B1726] shadow-[4px_4px_0px_#0B1726] overflow-hidden">
-        <div className="p-5 border-b-2 border-[#0B1726] bg-[#F7F3EA]/60">
+      <div className="bg-white rounded-2xl border-2 border-[#102A43] shadow-[4px_4px_0px_#102A43] overflow-hidden">
+        <div className="p-5 border-b-2 border-[#102A43] bg-[#F3F6F7]/60">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-white border-2 border-[#0B1726] shadow-[2px_2px_0px_#0B1726] text-[#0B1726]">
+              <div className="p-2 rounded-xl bg-white border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] text-[#102A43]">
                 <Database className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="font-heading font-black text-base text-[#0B1726]">
+                <h3 className="font-heading font-black text-base text-[#102A43]">
                   Configured Scientific Data Sources
                 </h3>
                 <p className="text-xs text-slate-600">
@@ -219,7 +219,7 @@ export const DataHealthPage: React.FC = () => {
                 </p>
               </div>
             </div>
-            <span className="inline-flex items-center px-2.5 py-1 rounded text-[11px] font-mono font-bold uppercase tracking-wider bg-white text-[#0B1726] border border-[#0B1726] shadow-[2px_2px_0px_#0B1726] self-start sm:self-auto">
+            <span className="inline-flex items-center px-2.5 py-1 rounded text-[11px] font-mono font-bold uppercase tracking-wider bg-white text-[#102A43] border border-[#102A43] shadow-[2px_2px_0px_#102A43] self-start sm:self-auto">
               PostgreSQL Registered
             </span>
           </div>
@@ -227,7 +227,7 @@ export const DataHealthPage: React.FC = () => {
         <div className="p-5 overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="border-b-2 border-[#0B1726]/20 text-[#0B1726] font-mono font-bold uppercase tracking-wider text-[11px]">
+              <tr className="border-b-2 border-[#102A43]/20 text-[#102A43] font-mono font-bold uppercase tracking-wider text-[11px]">
                 <th className="pb-3 px-2">Data Feed</th>
                 <th className="pb-3 px-2">Provider ID</th>
                 <th className="pb-3 px-2">Frequency</th>
@@ -245,8 +245,8 @@ export const DataHealthPage: React.FC = () => {
                 </tr>
               ) : (
                 sources.map((s) => (
-                  <tr key={s.id} className="hover:bg-[#F7F3EA]/40 transition-colors">
-                    <td className="py-3 px-2 font-heading font-bold text-[#0B1726]">{s.name}</td>
+                  <tr key={s.id} className="hover:bg-[#F3F6F7]/40 transition-colors">
+                    <td className="py-3 px-2 font-heading font-bold text-[#102A43]">{s.name}</td>
                     <td className="py-3 px-2 font-mono text-[11px] text-slate-600">{s.provider}</td>
                     <td className="py-3 px-2 font-mono text-[11px] text-slate-700">{s.update_frequency || 'DAILY'}</td>
                     <td className="py-3 px-2">{getStatusBadge(s.status)}</td>
@@ -261,7 +261,7 @@ export const DataHealthPage: React.FC = () => {
                           href={s.provenance_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-[#008F83] hover:underline font-mono font-bold text-[11px]"
+                          className="inline-flex items-center gap-1 text-[#0E7490] hover:underline font-mono font-bold text-[11px]"
                         >
                           Source Ref ↗
                         </a>
@@ -278,15 +278,15 @@ export const DataHealthPage: React.FC = () => {
       </div>
 
       {/* Ingestion Runs History Table */}
-      <div className="bg-white rounded-2xl border-2 border-[#0B1726] shadow-[4px_4px_0px_#0B1726] overflow-hidden">
-        <div className="p-5 border-b-2 border-[#0B1726] bg-[#F7F3EA]/60">
+      <div className="bg-white rounded-2xl border-2 border-[#102A43] shadow-[4px_4px_0px_#102A43] overflow-hidden">
+        <div className="p-5 border-b-2 border-[#102A43] bg-[#F3F6F7]/60">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-white border-2 border-[#0B1726] shadow-[2px_2px_0px_#0B1726] text-[#0B1726]">
+              <div className="p-2 rounded-xl bg-white border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] text-[#102A43]">
                 <Layers className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="font-heading font-black text-base text-[#0B1726]">
+                <h3 className="font-heading font-black text-base text-[#102A43]">
                   Recent Data Pipeline Ingestion Runs
                 </h3>
                 <p className="text-xs text-slate-600">
@@ -294,7 +294,7 @@ export const DataHealthPage: React.FC = () => {
                 </p>
               </div>
             </div>
-            <span className="inline-flex items-center px-2.5 py-1 rounded text-[11px] font-mono font-bold uppercase tracking-wider bg-white text-[#0B1726] border border-[#0B1726] shadow-[2px_2px_0px_#0B1726] self-start sm:self-auto">
+            <span className="inline-flex items-center px-2.5 py-1 rounded text-[11px] font-mono font-bold uppercase tracking-wider bg-white text-[#102A43] border border-[#102A43] shadow-[2px_2px_0px_#102A43] self-start sm:self-auto">
               Audited Runs: {runs.length}
             </span>
           </div>
@@ -302,7 +302,7 @@ export const DataHealthPage: React.FC = () => {
         <div className="p-5 overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="border-b-2 border-[#0B1726]/20 text-[#0B1726] font-mono font-bold uppercase tracking-wider text-[11px]">
+              <tr className="border-b-2 border-[#102A43]/20 text-[#102A43] font-mono font-bold uppercase tracking-wider text-[11px]">
                 <th className="pb-3 px-2">Dataset Name</th>
                 <th className="pb-3 px-2">Provider</th>
                 <th className="pb-3 px-2">Status</th>
@@ -321,11 +321,11 @@ export const DataHealthPage: React.FC = () => {
                 </tr>
               ) : (
                 runs.map((r) => (
-                  <tr key={r.id} className="hover:bg-[#F7F3EA]/40 transition-colors">
-                    <td className="py-3 px-2 font-heading font-bold text-[#0B1726]">{r.dataset_name}</td>
+                  <tr key={r.id} className="hover:bg-[#F3F6F7]/40 transition-colors">
+                    <td className="py-3 px-2 font-heading font-bold text-[#102A43]">{r.dataset_name}</td>
                     <td className="py-3 px-2 font-mono text-[11px] text-slate-600">{r.provider}</td>
                     <td className="py-3 px-2">{getStatusBadge(r.status)}</td>
-                    <td className="py-3 px-2 font-mono font-black text-[#2F7D4A]">
+                    <td className="py-3 px-2 font-mono font-black text-[#3F7D58]">
                       {r.records_processed.toLocaleString()}
                     </td>
                     <td className="py-3 px-2 font-mono text-slate-600">

@@ -71,20 +71,20 @@ export const GovRegionalMapWorkspace: React.FC = () => {
   return (
     <section id="map" className="space-y-4">
       {/* Workspace Header */}
-      <div className="bg-white border-2 border-[#0B1726] rounded-2xl p-5 shadow-[4px_4px_0px_#0B1726] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white border-2 border-[#102A43] rounded-2xl p-5 shadow-[4px_4px_0px_#102A43] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-md bg-[#008F83] text-white text-[10px] font-mono font-bold uppercase tracking-wider">
+            <span className="px-2.5 py-0.5 rounded-md bg-[#0E7490] text-white text-[10px] font-mono font-bold uppercase tracking-wider">
               REGIONAL INTELLIGENCE
             </span>
-            <span className="px-2 py-0.5 rounded-md bg-[#DCEFF0] text-[#006B65] text-[10px] font-mono font-bold border border-[#008F83]/30">
+            <span className="px-2 py-0.5 rounded-md bg-[#E8F4F6] text-[#155E75] text-[10px] font-mono font-bold border border-[#0E7490]/30">
               LUCKNOW REGION • EPSG:4326
             </span>
           </div>
-          <h2 className="font-heading font-extrabold text-xl text-[#0B1726] mt-1 tracking-tight">
+          <h2 className="font-heading font-extrabold text-xl text-[#102A43] mt-1 tracking-tight">
             Block-Level Diagnostic Geographic View
           </h2>
-          <p className="text-xs text-[#435466]">
+          <p className="text-xs text-[#486581]">
             Interactive GIS choropleths, downscaled hazard exposures, and administrative centroids across 6 blocks
           </p>
         </div>
@@ -98,75 +98,75 @@ export const GovRegionalMapWorkspace: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Map Panel */}
         <div className="lg:col-span-2 space-y-3">
-          <div className="bg-white border-2 border-[#0B1726] rounded-2xl p-2 sm:p-3 shadow-[4px_4px_0px_#0B1726]">
+          <div className="bg-white border-2 border-[#102A43] rounded-2xl p-2 sm:p-3 shadow-[4px_4px_0px_#102A43]">
             <MapContainer />
           </div>
           <MapLegend />
         </div>
 
         {/* Selected Area Regional Inspection Panel */}
-        <div className="bg-white border-2 border-[#0B1726] rounded-2xl p-5 shadow-[4px_4px_0px_#0B1726] flex flex-col justify-between space-y-4">
+        <div className="bg-white border-2 border-[#102A43] rounded-2xl p-5 shadow-[4px_4px_0px_#102A43] flex flex-col justify-between space-y-4">
           <div className="space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b-2 border-[#0B1726]/10">
+            <div className="flex items-center justify-between pb-3 border-b-2 border-[#102A43]/10">
               <div className="flex items-center gap-2">
-                <div className="p-2 rounded-xl bg-[#DCEFF0] text-[#006B65] border border-[#008F83]/30">
+                <div className="p-2 rounded-xl bg-[#E8F4F6] text-[#155E75] border border-[#0E7490]/30">
                   <MapPin className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="font-heading font-extrabold text-sm text-[#0B1726]">
+                  <h3 className="font-heading font-extrabold text-sm text-[#102A43]">
                     {selectedBlock} Block
                   </h3>
-                  <span className="text-[11px] font-mono text-[#62768A]">
+                  <span className="text-[11px] font-mono text-[#829AB1]">
                     Administrative Unit • Lucknow District
                   </span>
                 </div>
               </div>
-              <span className="px-2 py-0.5 rounded-md bg-[#FEF6E9] border border-[#E5A33D] text-[#9A6218] text-[10px] font-mono font-bold">
+              <span className="px-2 py-0.5 rounded-md bg-[#FEF3C7] border border-[#D97706] text-[#B45309] text-[10px] font-mono font-bold">
                 DIAGNOSTIC
               </span>
             </div>
 
             {/* Signal Metrics for this Block */}
             <div className="space-y-2.5 text-xs">
-              <div className="p-3 bg-[#F7F3EA] rounded-xl border border-[#0B1726]/10 flex items-center justify-between">
-                <span className="text-[#435466] font-medium">Dry Spell Exposure:</span>
-                <strong className="text-[#0B1726] font-mono">{currentBlockData.drySpellRisk}</strong>
+              <div className="p-3 bg-[#F3F6F7] rounded-xl border border-[#102A43]/10 flex items-center justify-between">
+                <span className="text-[#486581] font-medium">Dry Spell Exposure:</span>
+                <strong className="text-[#102A43] font-mono">{currentBlockData.drySpellRisk}</strong>
               </div>
 
-              <div className="p-3 bg-[#F7F3EA] rounded-xl border border-[#0B1726]/10 flex items-center justify-between">
-                <span className="text-[#435466] font-medium">Heavy Rainfall Signal:</span>
-                <strong className="text-[#008F83] font-mono">{currentBlockData.heavyRainRisk}</strong>
+              <div className="p-3 bg-[#F3F6F7] rounded-xl border border-[#102A43]/10 flex items-center justify-between">
+                <span className="text-[#486581] font-medium">Heavy Rainfall Signal:</span>
+                <strong className="text-[#0E7490] font-mono">{currentBlockData.heavyRainRisk}</strong>
               </div>
 
-              <div className="p-3 bg-[#F7F3EA] rounded-xl border border-[#0B1726]/10 flex items-center justify-between">
-                <span className="text-[#435466] font-medium">Onset Likelihood:</span>
-                <strong className="text-[#2F7D4A] font-mono">{currentBlockData.onsetStatus}</strong>
+              <div className="p-3 bg-[#F3F6F7] rounded-xl border border-[#102A43]/10 flex items-center justify-between">
+                <span className="text-[#486581] font-medium">Onset Likelihood:</span>
+                <strong className="text-[#3F7D58] font-mono">{currentBlockData.onsetStatus}</strong>
               </div>
 
-              <div className="p-3 bg-[#F7F3EA] rounded-xl border border-[#0B1726]/10 flex items-center justify-between">
-                <span className="text-[#435466] font-medium flex items-center gap-1.5">
-                  <Droplets className="w-3.5 h-3.5 text-[#008F83]" />
+              <div className="p-3 bg-[#F3F6F7] rounded-xl border border-[#102A43]/10 flex items-center justify-between">
+                <span className="text-[#486581] font-medium flex items-center gap-1.5">
+                  <Droplets className="w-3.5 h-3.5 text-[#0E7490]" />
                   Topsoil Saturation:
                 </span>
-                <strong className="text-[#0B1726] font-mono">{currentBlockData.soilSaturation}</strong>
+                <strong className="text-[#102A43] font-mono">{currentBlockData.soilSaturation}</strong>
               </div>
             </div>
 
             {/* Scientific Provenance for Selected Block */}
-            <div className="p-3.5 bg-[#FDFBF7] rounded-xl border-2 border-[#0B1726]/15 space-y-1.5 text-xs">
-              <div className="flex items-center gap-1.5 text-[#0B1726]">
-                <Database className="w-3.5 h-3.5 text-[#008F83]" />
+            <div className="p-3.5 bg-[#FFFFFF] rounded-xl border-2 border-[#102A43]/15 space-y-1.5 text-xs">
+              <div className="flex items-center gap-1.5 text-[#102A43]">
+                <Database className="w-3.5 h-3.5 text-[#0E7490]" />
                 <span className="font-heading font-extrabold uppercase text-[10px] tracking-wider">
                   Scientific Provenance
                 </span>
               </div>
-              <p className="text-[11px] text-[#435466] leading-relaxed">
+              <p className="text-[11px] text-[#486581] leading-relaxed">
                 {currentBlockData.provenance}. Downscaled to ~9 km centroid. Gated by Kharif 2024 empirical archive.
               </p>
             </div>
           </div>
 
-          <div className="pt-3 border-t border-[#0B1726]/10 text-[11px] text-[#62768A] font-mono flex items-center justify-between">
+          <div className="pt-3 border-t border-[#102A43]/10 text-[11px] text-[#829AB1] font-mono flex items-center justify-between">
             <span>Centroid Active</span>
             <span>Advisories: {currentBlockData.advisoryCount} Active</span>
           </div>

@@ -8,79 +8,106 @@ export default {
     extend: {
       colors: {
         // ---------------------------------------------------------
-        // VarshaSetu Editorial & Neo-Brutalist Design Tokens
+        // VarshaSetu Climate Intelligence & Monsoon Observatory Design Tokens
         // ---------------------------------------------------------
-        ivory: {
-          DEFAULT: '#F7F3EA',
-          50: '#FDFBF7',
-          100: '#F7F3EA',
-          200: '#EFE7D8',
-          300: '#E2D5BE',
+        canvas: {
+          DEFAULT: '#F3F6F7',
+          secondary: '#EAF0F2',
         },
-        ink: {
-          DEFAULT: '#0B1726',
-          primary: '#0B1726',
-          secondary: '#435466',
-          muted: '#62768A',
-          border: '#D8D3C5',
-          dark: '#08101C',
-        },
-        teal: {
-          DEFAULT: '#008F83',
-          deep: '#006B65',
-          primary: '#008F83',
-          dark: '#006B65',
-          light: '#14A396',
-          soft: '#DCEFF0',
-        },
-        agri: {
-          green: '#2F7D4A',
-          soft: '#DDEBDD',
-        },
-        amber: {
-          warm: '#E5A33D',
-          soft: '#F7E8C7',
-        },
-        sky: {
-          soft: '#DCEFF0',
-        },
-
-        // Backward-compatible tokens for existing pages
-        canvas: '#F7F3EA',
         surface: {
           DEFAULT: '#FFFFFF',
-          muted: '#F5F1EA',
-          border: '#E2DDD2',
-          dark: '#0B1726',
+          muted: '#EAF0F2',
+          highlight: '#E8F4F6',
+          border: '#B8C5CC',
+          dark: '#102A43',
+          storm: '#0B1F33',
+        },
+        ink: {
+          DEFAULT: '#102A43',
+          primary: '#102A43',
+          secondary: '#486581',
+          muted: '#829AB1',
+          border: '#B8C5CC',
+          dark: '#0B1F33',
+        },
+        climate: {
+          DEFAULT: '#0E7490',
+          deep: '#155E75',
+          cyan: '#0891B2',
+          soft: '#E8F4F6',
+        },
+        atmosphere: {
+          DEFAULT: '#0891B2',
+          cyan: '#0891B2',
+          soft: '#E8F4F6',
+        },
+        storm: {
+          DEFAULT: '#102A43',
+          navy: '#102A43',
+          deep: '#0B1F33',
+        },
+        rain: {
+          DEFAULT: '#2563EB',
+          soft: '#DBEAFE',
+        },
+        amber: {
+          DEFAULT: '#D97706',
+          warm: '#D97706',
+          soft: '#FEF3C7',
+        },
+        agri: {
+          DEFAULT: '#3F7D58',
+          green: '#3F7D58',
+          soft: '#E4F0E8',
+        },
+
+        // Backward-compatible mapping for previous palette names
+        ivory: {
+          DEFAULT: '#F3F6F7',
+          50: '#F8FAFA',
+          100: '#F3F6F7',
+          200: '#EAF0F2',
+          300: '#D5DFE4',
+        },
+        teal: {
+          DEFAULT: '#0E7490',
+          deep: '#155E75',
+          primary: '#0E7490',
+          dark: '#155E75',
+          light: '#0891B2',
+          soft: '#E8F4F6',
+        },
+        sky: {
+          soft: '#E8F4F6',
         },
         brand: {
           teal: {
-            DEFAULT: '#008F83',
-            dark: '#006B65',
-            light: '#14A396',
-            tint: '#DCEFF0',
-            border: '#99E1DC',
+            DEFAULT: '#0E7490',
+            dark: '#155E75',
+            light: '#0891B2',
+            tint: '#E8F4F6',
+            border: '#0891B2',
           },
           amber: {
-            DEFAULT: '#E5A33D',
-            dark: '#B87A1E',
-            light: '#F3B555',
-            tint: '#F7E8C7',
-            border: '#ECD096',
+            DEFAULT: '#D97706',
+            dark: '#B45309',
+            light: '#F59E0B',
+            tint: '#FEF3C7',
+            border: '#FCD34D',
           },
           azure: {
-            DEFAULT: '#0284C7',
-            dark: '#0369A1',
-            light: '#38BDF8',
-            tint: '#E0F2FE',
-            border: '#BAE6FD',
+            DEFAULT: '#2563EB',
+            dark: '#1D4ED8',
+            light: '#3B82F6',
+            tint: '#DBEAFE',
+            border: '#93C5FD',
           },
           emerald: {
-            DEFAULT: '#2F7D4A',
-            dark: '#1F5E35',
-            light: '#3EA362',
-            tint: '#DDEBDD',
-            border: '#B7D6B7',
+            DEFAULT: '#3F7D58',
+            dark: '#2D5A3E',
+            light: '#4E9A6D',
+            tint: '#E4F0E8',
+            border: '#A5D6B5',
           },
           crimson: {
             DEFAULT: '#DC2626',
@@ -96,15 +123,16 @@ export default {
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
-        // Neo-brutalist crisp offset shadows & editorial elevation
-        'brutal-sm': '2px 2px 0px #0B1726',
-        'brutal': '3px 3px 0px #0B1726',
-        'brutal-lg': '5px 5px 0px #0B1726',
-        'brutal-teal': '3px 3px 0px #006B65',
-        'glass-card': '0 8px 30px rgba(11, 23, 38, 0.06)',
-        card: '0 1px 3px rgba(11, 23, 38, 0.05), 0 1px 2px rgba(11, 23, 38, 0.03)',
-        elevated: '0 4px 12px rgba(11, 23, 38, 0.08)',
-        floating: '0 12px 32px -4px rgba(11, 23, 38, 0.12)',
+        // Neo-brutalist crisp offset shadows & scientific elevation
+        'brutal-sm': '2px 2px 0px #102A43',
+        'brutal': '3px 3px 0px #102A43',
+        'brutal-lg': '4px 4px 0px #102A43',
+        'brutal-teal': '3px 3px 0px #155E75',
+        'brutal-climate': '3px 3px 0px #155E75',
+        'glass-card': '0 8px 30px rgba(16, 42, 67, 0.06)',
+        card: '0 1px 3px rgba(16, 42, 67, 0.05), 0 1px 2px rgba(16, 42, 67, 0.03)',
+        elevated: '0 4px 12px rgba(16, 42, 67, 0.08)',
+        floating: '0 12px 32px -4px rgba(16, 42, 67, 0.12)',
       }
     },
   },

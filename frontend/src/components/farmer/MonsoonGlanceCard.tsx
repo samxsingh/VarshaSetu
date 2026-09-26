@@ -77,18 +77,18 @@ export const MonsoonGlanceCard: React.FC = () => {
   const current = demoOutlookData[horizon];
 
   return (
-    <div className="bg-white rounded-2xl border-2 border-[#0B1726] shadow-[4px_4px_0px_#0B1726] mb-6 overflow-hidden">
+    <div className="bg-white rounded-2xl border-2 border-[#102A43] shadow-[4px_4px_0px_#102A43] mb-6 overflow-hidden">
       {/* Header */}
-      <div className="p-5 sm:p-6 border-b-2 border-[#0B1726]/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="p-5 sm:p-6 border-b-2 border-[#102A43]/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2.5 flex-wrap">
-            <h3 className="font-heading font-black text-xl text-[#0B1726]">
+            <h3 className="font-heading font-black text-xl text-[#102A43]">
               {t('farmer.monsoonOutlook') || 'Monsoon Outlook'}
             </h3>
             <ScientificStatusBadge status="DIAGNOSTIC ARCHIVE" size="sm" />
           </div>
-          <p className="text-xs text-[#435466] mt-1 font-sans">
-            {current.dates} • <span className="font-heading font-bold text-[#008F83]">{current.phaseLabel}</span>
+          <p className="text-xs text-[#486581] mt-1 font-sans">
+            {current.dates} • <span className="font-heading font-bold text-[#0E7490]">{current.phaseLabel}</span>
           </p>
         </div>
 
@@ -101,45 +101,45 @@ export const MonsoonGlanceCard: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           
           {/* 1. Monsoon Onset */}
-          <div className="bg-[#DCEFF0]/50 border-2 border-[#0B1726] rounded-xl p-5 shadow-[3px_3px_0px_#0B1726] flex flex-col justify-between">
+          <div className="bg-[#E8F4F6]/50 border-2 border-[#102A43] rounded-xl p-5 shadow-[3px_3px_0px_#102A43] flex flex-col justify-between">
             <div className="flex items-start justify-between">
-              <div className="flex items-center gap-2 text-[#006B65]">
-                <CloudRain className="w-5 h-5 text-[#008F83]" />
+              <div className="flex items-center gap-2 text-[#155E75]">
+                <CloudRain className="w-5 h-5 text-[#0E7490]" />
                 <span className="text-xs font-heading font-extrabold uppercase tracking-wider">
                   {t('targets.onset') || 'Monsoon Onset'}
                 </span>
               </div>
-              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-[#DCEFF0] border border-[#008F83]/40 text-[#006B65]">
+              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-[#E8F4F6] border border-[#0E7490]/40 text-[#155E75]">
                 Favorable
               </span>
             </div>
 
             <div className="my-4">
               <div className="flex items-baseline gap-1.5">
-                <span className="font-heading font-black text-4xl text-[#0B1726]">
+                <span className="font-heading font-black text-4xl text-[#102A43]">
                   {current.onsetProb}%
                 </span>
-                <span className="text-xs text-[#62768A] font-medium font-sans">likelihood</span>
+                <span className="text-xs text-[#829AB1] font-medium font-sans">likelihood</span>
               </div>
-              <p className="text-xs text-[#435466] mt-1 font-sans">
-                Window: June 26–28 • <span className="font-medium text-[#006B65]">{current.confidence}</span>
+              <p className="text-xs text-[#486581] mt-1 font-sans">
+                Window: June 26–28 • <span className="font-medium text-[#155E75]">{current.confidence}</span>
               </p>
             </div>
 
             {/* Neo-brutalist Progress Bar */}
-            <div className="w-full bg-white h-2.5 rounded-full border border-[#0B1726]/30 overflow-hidden">
+            <div className="w-full bg-white h-2.5 rounded-full border border-[#102A43]/30 overflow-hidden">
               <div
-                className="bg-[#008F83] h-full transition-all duration-300"
+                className="bg-[#0E7490] h-full transition-all duration-300"
                 style={{ width: `${current.onsetProb}%` }}
               />
             </div>
           </div>
 
           {/* 2. Dry Spell Break Risk */}
-          <div className="bg-[#FEF6E9]/60 border-2 border-[#0B1726] rounded-xl p-5 shadow-[3px_3px_0px_#0B1726] flex flex-col justify-between">
+          <div className="bg-[#FEF3C7]/60 border-2 border-[#102A43] rounded-xl p-5 shadow-[3px_3px_0px_#102A43] flex flex-col justify-between">
             <div className="flex items-start justify-between">
-              <div className="flex items-center gap-2 text-[#9A6218]">
-                <SunMedium className="w-5 h-5 text-[#E5A33D]" />
+              <div className="flex items-center gap-2 text-[#B45309]">
+                <SunMedium className="w-5 h-5 text-[#D97706]" />
                 <span className="text-xs font-heading font-extrabold uppercase tracking-wider">
                   {t('targets.drySpell') || 'Dry Spell Break'}
                 </span>
@@ -147,8 +147,8 @@ export const MonsoonGlanceCard: React.FC = () => {
               <span
                 className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase border ${
                   current.drySpellRisk > 50
-                    ? 'bg-[#FEF6E9] border-[#E5A33D] text-[#9A6218]'
-                    : 'bg-[#EBF5EE] border-[#2F7D4A] text-[#2F7D4A]'
+                    ? 'bg-[#FEF3C7] border-[#D97706] text-[#B45309]'
+                    : 'bg-[#EBF5EE] border-[#3F7D58] text-[#3F7D58]'
                 }`}
               >
                 {current.drySpellRisk > 50 ? t('common.riskHigh') || 'High Risk' : t('common.riskLow') || 'Low Risk'}
@@ -157,21 +157,21 @@ export const MonsoonGlanceCard: React.FC = () => {
 
             <div className="my-4">
               <div className="flex items-baseline gap-1.5">
-                <span className="font-heading font-black text-4xl text-[#0B1726]">
+                <span className="font-heading font-black text-4xl text-[#102A43]">
                   {current.drySpellRisk}%
                 </span>
-                <span className="text-xs text-[#62768A] font-medium font-sans">break risk</span>
+                <span className="text-xs text-[#829AB1] font-medium font-sans">break risk</span>
               </div>
-              <p className="text-xs text-[#435466] mt-1 font-sans">
+              <p className="text-xs text-[#486581] mt-1 font-sans">
                 {current.drySpellRisk > 50 ? 'hiatus expected after day 6' : 'consistent moisture continuity'}
               </p>
             </div>
 
             {/* Progress Bar */}
-            <div className="w-full bg-white h-2.5 rounded-full border border-[#0B1726]/30 overflow-hidden">
+            <div className="w-full bg-white h-2.5 rounded-full border border-[#102A43]/30 overflow-hidden">
               <div
                 className={`h-full transition-all duration-300 ${
-                  current.drySpellRisk > 50 ? 'bg-[#E5A33D]' : 'bg-[#2F7D4A]'
+                  current.drySpellRisk > 50 ? 'bg-[#D97706]' : 'bg-[#3F7D58]'
                 }`}
                 style={{ width: `${current.drySpellRisk}%` }}
               />
@@ -179,7 +179,7 @@ export const MonsoonGlanceCard: React.FC = () => {
           </div>
 
           {/* 3. Heavy Rain Alert */}
-          <div className="bg-[#EFF6FF]/60 border-2 border-[#0B1726] rounded-xl p-5 shadow-[3px_3px_0px_#0B1726] flex flex-col justify-between">
+          <div className="bg-[#EFF6FF]/60 border-2 border-[#102A43] rounded-xl p-5 shadow-[3px_3px_0px_#102A43] flex flex-col justify-between">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-2 text-[#1E3A8A]">
                 <CloudLightning className="w-5 h-5 text-[#3B82F6]" />
@@ -194,18 +194,18 @@ export const MonsoonGlanceCard: React.FC = () => {
 
             <div className="my-4">
               <div className="flex items-baseline gap-1.5">
-                <span className="font-heading font-black text-4xl text-[#0B1726]">
+                <span className="font-heading font-black text-4xl text-[#102A43]">
                   {current.heavyRainProb}%
                 </span>
-                <span className="text-xs text-[#62768A] font-medium font-sans">probability</span>
+                <span className="text-xs text-[#829AB1] font-medium font-sans">probability</span>
               </div>
-              <p className="text-xs text-[#435466] mt-1 font-sans">
+              <p className="text-xs text-[#486581] mt-1 font-sans">
                 Peak convective event: June 27 evening
               </p>
             </div>
 
             {/* Progress Bar */}
-            <div className="w-full bg-white h-2.5 rounded-full border border-[#0B1726]/30 overflow-hidden">
+            <div className="w-full bg-white h-2.5 rounded-full border border-[#102A43]/30 overflow-hidden">
               <div
                 className="bg-[#3B82F6] h-full transition-all duration-300"
                 style={{ width: `${current.heavyRainProb}%` }}
@@ -216,16 +216,16 @@ export const MonsoonGlanceCard: React.FC = () => {
         </div>
 
         {/* Cumulative Rainfall Strip */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-[#F7F3EA] rounded-xl border border-[#0B1726]/20 text-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-[#F3F6F7] rounded-xl border border-[#102A43]/20 text-xs">
           <div className="flex items-center gap-3">
-            <div className="p-1.5 rounded-lg bg-white border border-[#0B1726]/10 text-[#008F83]">
+            <div className="p-1.5 rounded-lg bg-white border border-[#102A43]/10 text-[#0E7490]">
               <TrendingUp className="w-4 h-4" />
             </div>
             <div>
-              <span className="font-heading font-bold text-[#0B1726]">
+              <span className="font-heading font-bold text-[#102A43]">
                 Projected Rainfall: {current.expectedRainfallMm}
               </span>
-              <span className="text-[#62768A] block sm:inline sm:ml-2">
+              <span className="text-[#829AB1] block sm:inline sm:ml-2">
                 ({current.departureText})
               </span>
             </div>
@@ -233,7 +233,7 @@ export const MonsoonGlanceCard: React.FC = () => {
 
           <Link
             to="/farmer/forecast"
-            className="inline-flex items-center gap-1.5 font-heading font-bold text-[#008F83] hover:text-[#006B65] transition-colors"
+            className="inline-flex items-center gap-1.5 font-heading font-bold text-[#0E7490] hover:text-[#155E75] transition-colors"
           >
             <span>Detailed Forecast View</span>
             <ChevronRight className="w-3.5 h-3.5" />

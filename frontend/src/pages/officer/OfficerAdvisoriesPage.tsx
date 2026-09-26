@@ -214,37 +214,37 @@ export const OfficerAdvisoriesPage: React.FC = () => {
   return (
     <div className="space-y-6" data-testid="officer-advisories-page">
       {/* 1. Header Strip */}
-      <div className="bg-white border-2 border-[#0B1726] rounded-2xl p-5 sm:p-6 shadow-[4px_4px_0px_#0B1726]">
+      <div className="bg-white border-2 border-[#102A43] rounded-2xl p-5 sm:p-6 shadow-[4px_4px_0px_#102A43]">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="px-2.5 py-0.5 rounded-md bg-[#008F83] text-white text-[10px] font-mono font-bold uppercase tracking-wider">
+              <span className="px-2.5 py-0.5 rounded-md bg-[#0E7490] text-white text-[10px] font-mono font-bold uppercase tracking-wider">
                 ADVISORY INTELLIGENCE
               </span>
-              <span className="px-2 py-0.5 rounded-md bg-[#FEF6E9] border border-[#E5A33D] text-[#9A6218] text-[10px] font-mono font-bold">
+              <span className="px-2 py-0.5 rounded-md bg-[#FEF3C7] border border-[#D97706] text-[#B45309] text-[10px] font-mono font-bold">
                 DIAGNOSTIC ONLY
               </span>
-              <span className="px-2 py-0.5 rounded-md bg-[#EBF5EE] text-[#2F7D4A] border border-[#2F7D4A]/30 text-[10px] font-mono font-bold">
+              <span className="px-2 py-0.5 rounded-md bg-[#EBF5EE] text-[#3F7D58] border border-[#3F7D58]/30 text-[10px] font-mono font-bold">
                 Safety Gate: ACTIVE
               </span>
             </div>
-            <h2 className="font-heading font-extrabold text-xl sm:text-2xl text-[#0B1726] tracking-tight">
+            <h2 className="font-heading font-extrabold text-xl sm:text-2xl text-[#102A43] tracking-tight">
               Block Agronomic Intelligence Monitor
             </h2>
-            <p className="text-xs text-[#435466] max-w-2xl leading-relaxed">
+            <p className="text-xs text-[#486581] max-w-2xl leading-relaxed">
               Synthesizing downscaled weather signals, crop phenological stages, and empirical thresholds into non-causal agronomic advisories across Lucknow District.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2.5">
             {/* Bilingual Preview Toggle */}
-            <div className="flex items-center bg-[#F7F3EA] p-1 rounded-xl border-2 border-[#0B1726]">
+            <div className="flex items-center bg-[#F3F6F7] p-1 rounded-xl border-2 border-[#102A43]">
               <button
                 onClick={() => setPreviewLanguage('EN')}
                 className={`px-3 py-1.5 rounded-lg text-xs font-heading font-bold transition-all ${
                   previewLanguage === 'EN'
-                    ? 'bg-[#008F83] text-white shadow-xs'
-                    : 'text-[#435466] hover:text-[#0B1726]'
+                    ? 'bg-[#0E7490] text-white shadow-xs'
+                    : 'text-[#486581] hover:text-[#102A43]'
                 }`}
               >
                 EN Preview
@@ -253,8 +253,8 @@ export const OfficerAdvisoriesPage: React.FC = () => {
                 onClick={() => setPreviewLanguage('HI')}
                 className={`px-3 py-1.5 rounded-lg text-xs font-heading font-bold transition-all ${
                   previewLanguage === 'HI'
-                    ? 'bg-[#008F83] text-white shadow-xs'
-                    : 'text-[#435466] hover:text-[#0B1726]'
+                    ? 'bg-[#0E7490] text-white shadow-xs'
+                    : 'text-[#486581] hover:text-[#102A43]'
                 }`}
               >
                 हिन्दी Preview
@@ -263,7 +263,7 @@ export const OfficerAdvisoriesPage: React.FC = () => {
 
             <button
               onClick={() => setBulletinModalOpen(true)}
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#008F83] text-white border-2 border-[#0B1726] shadow-[2px_2px_0px_#0B1726] hover:-translate-y-0.5 active:translate-y-0 transition-all text-xs font-heading font-bold min-h-[40px]"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0E7490] text-white border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] hover:-translate-y-0.5 active:translate-y-0 transition-all text-xs font-heading font-bold min-h-[40px]"
             >
               <Send className="w-3.5 h-3.5" />
               <span>Draft Bulletin</span>
@@ -272,24 +272,24 @@ export const OfficerAdvisoriesPage: React.FC = () => {
         </div>
 
         {/* Scope disclosure bar */}
-        <div className="mt-4 pt-3 border-t border-[#0B1726]/10 flex flex-wrap items-center justify-between gap-2 text-xs text-[#435466]">
+        <div className="mt-4 pt-3 border-t border-[#102A43]/10 flex flex-wrap items-center justify-between gap-2 text-xs text-[#486581]">
           <div className="flex items-center gap-2">
-            <Info className="w-3.5 h-3.5 text-[#008F83]" />
+            <Info className="w-3.5 h-3.5 text-[#0E7490]" />
             <span>Station Anchor: <strong>UP_LKO_BKT</strong> (122 Kharif 2024 Records). Deterministic templates guarantee 0% numerical drift in Hindi.</span>
           </div>
-          <span className="text-[10px] font-mono text-[#62768A]">Rules Loaded: 9 Verified</span>
+          <span className="text-[10px] font-mono text-[#829AB1]">Rules Loaded: 9 Verified</span>
         </div>
       </div>
 
       {/* 2. Filter Toolbar */}
-      <div className="bg-white border-2 border-[#0B1726] rounded-xl p-4 shadow-[3px_3px_0px_#0B1726] flex flex-wrap items-center justify-between gap-4">
+      <div className="bg-white border-2 border-[#102A43] rounded-xl p-4 shadow-[3px_3px_0px_#102A43] flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-4 flex-wrap">
           <div className="flex items-center gap-2">
-            <label className="text-xs font-heading font-bold text-[#0B1726]">Filter Crop:</label>
+            <label className="text-xs font-heading font-bold text-[#102A43]">Filter Crop:</label>
             <select
               value={selectedCrop}
               onChange={(e) => setSelectedCrop(e.target.value)}
-              className="px-3 py-1.5 bg-[#F7F3EA] rounded-lg text-xs font-bold text-[#0B1726] border-2 border-[#0B1726]/20 focus:border-[#008F83] focus:outline-none"
+              className="px-3 py-1.5 bg-[#F3F6F7] rounded-lg text-xs font-bold text-[#102A43] border-2 border-[#102A43]/20 focus:border-[#0E7490] focus:outline-none"
             >
               <option value="ALL">All Registered Crops</option>
               <option value="PADDY">Paddy (धान)</option>
@@ -302,11 +302,11 @@ export const OfficerAdvisoriesPage: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            <label className="text-xs font-heading font-bold text-[#0B1726]">Severity:</label>
+            <label className="text-xs font-heading font-bold text-[#102A43]">Severity:</label>
             <select
               value={selectedSeverity}
               onChange={(e) => setSelectedSeverity(e.target.value)}
-              className="px-3 py-1.5 bg-[#F7F3EA] rounded-lg text-xs font-bold text-[#0B1726] border-2 border-[#0B1726]/20 focus:border-[#008F83] focus:outline-none"
+              className="px-3 py-1.5 bg-[#F3F6F7] rounded-lg text-xs font-bold text-[#102A43] border-2 border-[#102A43]/20 focus:border-[#0E7490] focus:outline-none"
             >
               <option value="ALL">All Severities</option>
               <option value="HIGH">High Risk</option>
@@ -317,9 +317,9 @@ export const OfficerAdvisoriesPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="text-xs text-[#62768A] flex items-center gap-3 font-mono">
-          <span>Active records: <strong className="text-[#0B1726]">{advisories.length}</strong></span>
-          <span className="px-2 py-0.5 rounded bg-[#DCEFF0] text-[#006B65] border border-[#008F83]/30 text-[10px]">
+        <div className="text-xs text-[#829AB1] flex items-center gap-3 font-mono">
+          <span>Active records: <strong className="text-[#102A43]">{advisories.length}</strong></span>
+          <span className="px-2 py-0.5 rounded bg-[#E8F4F6] text-[#155E75] border border-[#0E7490]/30 text-[10px]">
             Languages: EN / HI Active
           </span>
         </div>
@@ -336,15 +336,15 @@ export const OfficerAdvisoriesPage: React.FC = () => {
           return (
             <div
               key={b.advisory_id}
-              className="bg-white border-2 border-[#0B1726] rounded-2xl p-5 shadow-[4px_4px_0px_#0B1726] space-y-4 hover:-translate-y-0.5 transition-transform"
+              className="bg-white border-2 border-[#102A43] rounded-2xl p-5 shadow-[4px_4px_0px_#102A43] space-y-4 hover:-translate-y-0.5 transition-transform"
             >
               {/* Header meta */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b-2 border-[#0B1726]/10">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b-2 border-[#102A43]/10">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="px-2 py-0.5 rounded-md bg-[#F7F3EA] border border-[#0B1726]/20 text-[#0B1726] text-[10px] font-mono font-bold">
+                  <span className="px-2 py-0.5 rounded-md bg-[#F3F6F7] border border-[#102A43]/20 text-[#102A43] text-[10px] font-mono font-bold">
                     {b.rule_id}
                   </span>
-                  <span className="text-[10px] font-mono font-bold text-[#62768A] uppercase">
+                  <span className="text-[10px] font-mono font-bold text-[#829AB1] uppercase">
                     {b.category}
                   </span>
                   <span
@@ -352,25 +352,25 @@ export const OfficerAdvisoriesPage: React.FC = () => {
                       b.severity === 'ELEVATED'
                         ? 'bg-[#FEF2F2] text-[#DC2626] border-[#DC2626]/30'
                         : b.severity === 'WATCH'
-                        ? 'bg-[#FEF6E9] text-[#9A6218] border-[#E5A33D]/40'
+                        ? 'bg-[#FEF3C7] text-[#B45309] border-[#D97706]/40'
                         : 'bg-[#EFF6FF] text-[#1D4ED8] border-[#3B82F6]/30'
                     }`}
                   >
                     {b.severity}
                   </span>
                   {previewLanguage === 'HI' && (
-                    <span className="px-2 py-0.5 rounded bg-[#EBF5EE] text-[#2F7D4A] border border-[#2F7D4A]/30 text-[10px] font-mono font-bold">
+                    <span className="px-2 py-0.5 rounded bg-[#EBF5EE] text-[#3F7D58] border border-[#3F7D58]/30 text-[10px] font-mono font-bold">
                       हिन्दी अनुवाद (सत्यापित)
                     </span>
                   )}
                 </div>
 
-                <div className="flex items-center gap-3 text-[11px] text-[#62768A] font-mono">
+                <div className="flex items-center gap-3 text-[11px] text-[#829AB1] font-mono">
                   <span className="flex items-center gap-1">
-                    <Clock className="w-3.5 h-3.5 text-[#008F83]" />
+                    <Clock className="w-3.5 h-3.5 text-[#0E7490]" />
                     Valid: {b.valid_from} to {b.valid_until}
                   </span>
-                  <span className="px-2 py-0.5 rounded bg-[#FEF6E9] border border-[#E5A33D] text-[#9A6218] text-[9px] font-bold">
+                  <span className="px-2 py-0.5 rounded bg-[#FEF3C7] border border-[#D97706] text-[#B45309] text-[9px] font-bold">
                     {b.operational_status}
                   </span>
                 </div>
@@ -378,10 +378,10 @@ export const OfficerAdvisoriesPage: React.FC = () => {
 
               {/* Title & Core Advisory */}
               <div>
-                <h3 className="font-heading font-extrabold text-base sm:text-lg text-[#0B1726]">
+                <h3 className="font-heading font-extrabold text-base sm:text-lg text-[#102A43]">
                   {displayTitle}
                 </h3>
-                <p className="text-xs sm:text-sm text-[#435466] leading-relaxed bg-[#F7F3EA] p-3.5 rounded-xl border border-[#0B1726]/10 mt-2">
+                <p className="text-xs sm:text-sm text-[#486581] leading-relaxed bg-[#F3F6F7] p-3.5 rounded-xl border border-[#102A43]/10 mt-2">
                   {displaySummary}
                 </p>
               </div>
@@ -389,63 +389,63 @@ export const OfficerAdvisoriesPage: React.FC = () => {
               {/* 3-Step Scientific Hierarchy: Signal → Indicator → Explanation */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
                 {/* Step 1: Weather Signal */}
-                <div className="bg-[#FDFBF7] p-3 rounded-xl border border-[#0B1726]/15 space-y-1">
-                  <div className="flex items-center gap-1.5 text-[#008F83]">
+                <div className="bg-[#FFFFFF] p-3 rounded-xl border border-[#102A43]/15 space-y-1">
+                  <div className="flex items-center gap-1.5 text-[#0E7490]">
                     <CloudRain className="w-3.5 h-3.5" />
-                    <span className="font-heading font-bold text-[10px] uppercase tracking-wider text-[#0B1726]">
+                    <span className="font-heading font-bold text-[10px] uppercase tracking-wider text-[#102A43]">
                       1. Weather Signal
                     </span>
                   </div>
-                  <div className="text-[11px] text-[#435466] pt-1">
-                    Probability: <strong className="text-[#008F83] font-mono font-bold">{(b.evidence.calibrated_probability * 100).toFixed(1)}%</strong>
+                  <div className="text-[11px] text-[#486581] pt-1">
+                    Probability: <strong className="text-[#0E7490] font-mono font-bold">{(b.evidence.calibrated_probability * 100).toFixed(1)}%</strong>
                   </div>
-                  <div className="text-[11px] text-[#435466]">
-                    Threshold: <strong className="text-[#0B1726] font-mono">{b.evidence.threshold_value} {b.evidence.threshold_unit}</strong>
+                  <div className="text-[11px] text-[#486581]">
+                    Threshold: <strong className="text-[#102A43] font-mono">{b.evidence.threshold_value} {b.evidence.threshold_unit}</strong>
                   </div>
-                  <div className="text-[10px] text-[#62768A] pt-0.5">
+                  <div className="text-[10px] text-[#829AB1] pt-0.5">
                     Model: {b.evidence.model_name}
                   </div>
                 </div>
 
                 {/* Step 2: Agronomic Indicator */}
-                <div className="bg-[#FDFBF7] p-3 rounded-xl border border-[#0B1726]/15 space-y-1">
-                  <div className="flex items-center gap-1.5 text-[#2F7D4A]">
+                <div className="bg-[#FFFFFF] p-3 rounded-xl border border-[#102A43]/15 space-y-1">
+                  <div className="flex items-center gap-1.5 text-[#3F7D58]">
                     <Sprout className="w-3.5 h-3.5" />
-                    <span className="font-heading font-bold text-[10px] uppercase tracking-wider text-[#0B1726]">
+                    <span className="font-heading font-bold text-[10px] uppercase tracking-wider text-[#102A43]">
                       2. Agronomic Indicator
                     </span>
                   </div>
-                  <div className="text-[11px] text-[#435466] pt-1">
-                    Target Crop: <strong className="text-[#0B1726] font-bold">{b.crop_type}</strong>
+                  <div className="text-[11px] text-[#486581] pt-1">
+                    Target Crop: <strong className="text-[#102A43] font-bold">{b.crop_type}</strong>
                   </div>
-                  <div className="text-[11px] text-[#435466]">
-                    Phenology: <strong className="text-[#0B1726] font-mono">{b.growth_stage}</strong>
+                  <div className="text-[11px] text-[#486581]">
+                    Phenology: <strong className="text-[#102A43] font-mono">{b.growth_stage}</strong>
                   </div>
-                  <div className="text-[10px] text-[#62768A] pt-0.5">
+                  <div className="text-[10px] text-[#829AB1] pt-0.5">
                     Anchor: {b.block_id}
                   </div>
                 </div>
 
                 {/* Step 3: Scientific Explanation */}
-                <div className="bg-[#FDFBF7] p-3 rounded-xl border border-[#0B1726]/15 space-y-1">
-                  <div className="flex items-center gap-1.5 text-[#E5A33D]">
+                <div className="bg-[#FFFFFF] p-3 rounded-xl border border-[#102A43]/15 space-y-1">
+                  <div className="flex items-center gap-1.5 text-[#D97706]">
                     <ShieldAlert className="w-3.5 h-3.5" />
-                    <span className="font-heading font-bold text-[10px] uppercase tracking-wider text-[#0B1726]">
+                    <span className="font-heading font-bold text-[10px] uppercase tracking-wider text-[#102A43]">
                       3. Scientific Explanation
                     </span>
                   </div>
-                  <p className="text-[11px] text-[#435466] pt-1 leading-snug">
+                  <p className="text-[11px] text-[#486581] pt-1 leading-snug">
                     {b.explanation?.evidence_summary || b.scientific_basis}
                   </p>
-                  <div className="text-[10px] text-[#9A6218] font-medium pt-0.5">
+                  <div className="text-[10px] text-[#B45309] font-medium pt-0.5">
                     {b.uncertainty_caveat}
                   </div>
                 </div>
               </div>
 
               {/* Action / Review Strip */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-3 border-t border-[#0B1726]/10 text-xs">
-                <span className="text-[#62768A] text-[11px]">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-3 border-t border-[#102A43]/10 text-xs">
+                <span className="text-[#829AB1] text-[11px]">
                   Scientific Basis: {b.scientific_basis}
                 </span>
 
@@ -454,8 +454,8 @@ export const OfficerAdvisoriesPage: React.FC = () => {
                     onClick={() => toggleAcknowledge(b.advisory_id)}
                     className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-heading font-bold transition-all border ${
                       isAcked
-                        ? 'bg-[#EBF5EE] text-[#2F7D4A] border-[#2F7D4A]/40'
-                        : 'bg-white text-[#435466] border-[#0B1726]/20 hover:border-[#0B1726] hover:text-[#0B1726]'
+                        ? 'bg-[#EBF5EE] text-[#3F7D58] border-[#3F7D58]/40'
+                        : 'bg-white text-[#486581] border-[#102A43]/20 hover:border-[#102A43] hover:text-[#102A43]'
                     }`}
                   >
                     <CheckCircle2 className="w-3.5 h-3.5" />
@@ -469,40 +469,40 @@ export const OfficerAdvisoriesPage: React.FC = () => {
       </div>
 
       {/* 4. What-If Agro-Meteorological Sensitivity Monitor (Phase 5B) */}
-      <div className="bg-white border-2 border-[#0B1726] rounded-2xl p-5 sm:p-6 shadow-[4px_4px_0px_#0B1726] space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b-2 border-[#0B1726]/10">
+      <div className="bg-white border-2 border-[#102A43] rounded-2xl p-5 sm:p-6 shadow-[4px_4px_0px_#102A43] space-y-4">
+        <div className="flex items-center justify-between pb-3 border-b-2 border-[#102A43]/10">
           <div className="flex items-center gap-2">
-            <Layers className="w-5 h-5 text-[#008F83]" />
-            <h3 className="font-heading font-extrabold text-base text-[#0B1726]">
+            <Layers className="w-5 h-5 text-[#0E7490]" />
+            <h3 className="font-heading font-extrabold text-base text-[#102A43]">
               What-If Agro-Meteorological Sensitivity Monitor (Phase 5B)
             </h3>
           </div>
-          <span className="px-2.5 py-0.5 rounded-md bg-[#FEF6E9] border border-[#E5A33D] text-[#9A6218] text-[10px] font-mono font-bold">
+          <span className="px-2.5 py-0.5 rounded-md bg-[#FEF3C7] border border-[#D97706] text-[#B45309] text-[10px] font-mono font-bold">
             SCENARIO_INDICATOR_ONLY
           </span>
         </div>
 
-        <p className="text-xs text-[#435466] leading-relaxed">
+        <p className="text-xs text-[#486581] leading-relaxed">
           Extension officers can review scenario-derived sensitivity response envelopes for <strong>Bakshi Ka Talab (UP_LKO_BKT)</strong>.
           Evaluations operate strictly on meteorological indicators (moisture stress, waterlogging risk) and explicitly exclude yield predictions.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-          <div className="p-3 bg-[#F7F3EA] rounded-xl border border-[#0B1726]/15">
-            <span className="font-heading font-bold text-[#0B1726] block">Sowing Delay Analysis</span>
-            <span className="text-[#62768A] block text-[11px] mt-0.5 font-mono">Evaluated range: [1, 21 days]</span>
-            <span className="text-[#008F83] font-mono font-bold block mt-1.5">Monotonic moisture stress increase</span>
+          <div className="p-3 bg-[#F3F6F7] rounded-xl border border-[#102A43]/15">
+            <span className="font-heading font-bold text-[#102A43] block">Sowing Delay Analysis</span>
+            <span className="text-[#829AB1] block text-[11px] mt-0.5 font-mono">Evaluated range: [1, 21 days]</span>
+            <span className="text-[#0E7490] font-mono font-bold block mt-1.5">Monotonic moisture stress increase</span>
           </div>
 
-          <div className="p-3 bg-[#F7F3EA] rounded-xl border border-[#0B1726]/15">
-            <span className="font-heading font-bold text-[#0B1726] block">Supplemental Irrigation</span>
-            <span className="text-[#62768A] block text-[11px] mt-0.5 font-mono">Evaluated intervals: [1, 7 days]</span>
-            <span className="text-[#2F7D4A] font-mono font-bold block mt-1.5">Stress attenuation up to -35%</span>
+          <div className="p-3 bg-[#F3F6F7] rounded-xl border border-[#102A43]/15">
+            <span className="font-heading font-bold text-[#102A43] block">Supplemental Irrigation</span>
+            <span className="text-[#829AB1] block text-[11px] mt-0.5 font-mono">Evaluated intervals: [1, 7 days]</span>
+            <span className="text-[#3F7D58] font-mono font-bold block mt-1.5">Stress attenuation up to -35%</span>
           </div>
 
-          <div className="p-3 bg-[#F7F3EA] rounded-xl border border-[#0B1726]/15">
-            <span className="font-heading font-bold text-[#0B1726] block">Precipitation Concentration</span>
-            <span className="text-[#62768A] block text-[11px] mt-0.5 font-mono">Evaluated multiplier: [1.0x, 2.5x]</span>
+          <div className="p-3 bg-[#F3F6F7] rounded-xl border border-[#102A43]/15">
+            <span className="font-heading font-bold text-[#102A43] block">Precipitation Concentration</span>
+            <span className="text-[#829AB1] block text-[11px] mt-0.5 font-mono">Evaluated multiplier: [1.0x, 2.5x]</span>
             <span className="text-[#DC2626] font-mono font-bold block mt-1.5">Waterlogging risk escalation</span>
           </div>
         </div>

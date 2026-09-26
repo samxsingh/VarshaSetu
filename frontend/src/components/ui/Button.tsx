@@ -27,21 +27,21 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      'inline-flex items-center justify-center font-medium font-heading transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none min-h-[44px]';
+      'inline-flex items-center justify-center font-heading font-bold transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0E7490] focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none min-h-[44px]';
 
     const variants = {
       primary:
-        'bg-brand-teal text-white hover:bg-brand-teal-dark active:bg-brand-teal-dark shadow-sm border border-transparent rounded-full',
+        'bg-[#0E7490] text-white border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] hover:bg-[#155E75] hover:shadow-[4px_4px_0px_#102A43] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#102A43] rounded-xl',
       secondary:
-        'bg-white text-slate-900 border border-surface-border hover:bg-surface-muted hover:border-slate-300 shadow-sm rounded-full',
+        'bg-white text-[#102A43] border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] hover:bg-[#EAF0F2] hover:shadow-[4px_4px_0px_#102A43] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#102A43] rounded-xl',
       outline:
-        'bg-transparent text-brand-teal-dark border border-brand-teal hover:bg-brand-teal-tint rounded-full',
+        'bg-transparent text-[#102A43] border-2 border-[#102A43] hover:bg-[#EAF0F2] rounded-xl',
       ghost:
-        'bg-transparent text-slate-700 hover:bg-slate-100 rounded-lg min-h-[40px]',
+        'bg-transparent text-[#486581] hover:text-[#102A43] hover:bg-[#EAF0F2] rounded-xl min-h-[40px]',
       amber:
-        'bg-brand-amber text-white hover:bg-brand-amber-dark active:bg-brand-amber-dark shadow-sm border border-transparent rounded-full',
+        'bg-[#D97706] text-white border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] hover:bg-[#B45309] hover:shadow-[4px_4px_0px_#102A43] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#102A43] rounded-xl',
       danger:
-        'bg-brand-crimson text-white hover:bg-brand-crimson-dark active:bg-brand-crimson-dark shadow-sm border border-transparent rounded-full',
+        'bg-[#DC2626] text-white border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] hover:bg-[#991B1B] hover:shadow-[4px_4px_0px_#102A43] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#102A43] rounded-xl',
     };
 
     const sizes = {

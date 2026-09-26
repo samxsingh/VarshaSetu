@@ -5,26 +5,26 @@ export const GovRegionalSignalMatrix: React.FC = () => {
   const signalRows = [
     {
       signal: 'HEAVY RAINFALL',
-      signalIcon: <CloudRain className="w-3.5 h-3.5 text-[#008F83]" />,
+      signalIcon: <CloudRain className="w-3.5 h-3.5 text-[#0E7490]" />,
       area: 'Bakshi Ka Talab (UP_LKO_BKT)',
       indicator: 'Threshold Exceedance >= 64.5 mm / 24h',
       severity: 'WATCH',
-      severityColor: 'bg-[#FEF6E9] text-[#9A6218] border-[#E5A33D]/40',
+      severityColor: 'bg-[#FEF3C7] text-[#B45309] border-[#D97706]/40',
       probability: '58.4%',
       status: 'ASSIMILATED GROUND ANCHOR',
-      statusColor: 'bg-[#EBF5EE] text-[#2F7D4A] border-[#2F7D4A]/30',
+      statusColor: 'bg-[#EBF5EE] text-[#3F7D58] border-[#3F7D58]/30',
       timeframe: '7-Day Window',
     },
     {
       signal: 'DRY SPELL BREAK',
-      signalIcon: <SunMedium className="w-3.5 h-3.5 text-[#E5A33D]" />,
+      signalIcon: <SunMedium className="w-3.5 h-3.5 text-[#D97706]" />,
       area: 'Malihabad (UP_LKO_MLH)',
       indicator: '>= 5 Consecutive Dry Days (< 2.5 mm)',
       severity: 'ELEVATED',
       severityColor: 'bg-[#FEF2F2] text-[#DC2626] border-[#DC2626]/30',
       probability: '74.0%',
       status: 'SPATIAL PRIOR INTERPOLATED',
-      statusColor: 'bg-white text-[#435466] border-[#0B1726]/20',
+      statusColor: 'bg-white text-[#486581] border-[#102A43]/20',
       timeframe: '14-Day Window',
     },
     {
@@ -33,34 +33,34 @@ export const GovRegionalSignalMatrix: React.FC = () => {
       area: 'Sarojininagar (UP_LKO_SRJ)',
       indicator: 'Heavy Soil Saturation > 80% with Pulse Inflow',
       severity: 'WATCH',
-      severityColor: 'bg-[#FEF6E9] text-[#9A6218] border-[#E5A33D]/40',
+      severityColor: 'bg-[#FEF3C7] text-[#B45309] border-[#D97706]/40',
       probability: '42.0%',
       status: 'SPATIAL PRIOR INTERPOLATED',
-      statusColor: 'bg-white text-[#435466] border-[#0B1726]/20',
+      statusColor: 'bg-white text-[#486581] border-[#102A43]/20',
       timeframe: '7-Day Window',
     },
     {
       signal: 'MONSOON ONSET SURGE',
-      signalIcon: <CloudRain className="w-3.5 h-3.5 text-[#2F7D4A]" />,
+      signalIcon: <CloudRain className="w-3.5 h-3.5 text-[#3F7D58]" />,
       area: 'Mohanlalganj (UP_LKO_MHL)',
       indicator: 'Active Trough Axis Convergence (> 25 mm soaking)',
       severity: 'FAVORABLE',
-      severityColor: 'bg-[#EBF5EE] text-[#2F7D4A] border-[#2F7D4A]/30',
+      severityColor: 'bg-[#EBF5EE] text-[#3F7D58] border-[#3F7D58]/30',
       probability: '84.0%',
       status: 'SPATIAL PRIOR INTERPOLATED',
-      statusColor: 'bg-white text-[#435466] border-[#0B1726]/20',
+      statusColor: 'bg-white text-[#486581] border-[#102A43]/20',
       timeframe: 'June 26–28 Window',
     },
     {
       signal: 'RAINFALL DEPARTURE',
-      signalIcon: <TrendingUp className="w-3.5 h-3.5 text-[#008F83]" />,
+      signalIcon: <TrendingUp className="w-3.5 h-3.5 text-[#0E7490]" />,
       area: 'Chinhat (UP_LKO_CHN)',
       indicator: 'Positive Departure vs Normal (+14% Anomaly)',
       severity: 'NORMAL/EXCESS',
-      severityColor: 'bg-[#DCEFF0] text-[#006B65] border-[#008F83]/30',
+      severityColor: 'bg-[#E8F4F6] text-[#155E75] border-[#0E7490]/30',
       probability: '85.0%',
       status: 'SPATIAL PRIOR INTERPOLATED',
-      statusColor: 'bg-white text-[#435466] border-[#0B1726]/20',
+      statusColor: 'bg-white text-[#486581] border-[#102A43]/20',
       timeframe: 'Cumulative Kharif',
     },
     {
@@ -69,10 +69,10 @@ export const GovRegionalSignalMatrix: React.FC = () => {
       area: 'Gosainganj (UP_LKO_GSN)',
       indicator: 'Gomti Riverine Influx with 40.5 mm Event Potential',
       severity: 'WATCH',
-      severityColor: 'bg-[#FEF6E9] text-[#9A6218] border-[#E5A33D]/40',
+      severityColor: 'bg-[#FEF3C7] text-[#B45309] border-[#D97706]/40',
       probability: '36.0%',
       status: 'SPATIAL PRIOR INTERPOLATED',
-      statusColor: 'bg-white text-[#435466] border-[#0B1726]/20',
+      statusColor: 'bg-white text-[#486581] border-[#102A43]/20',
       timeframe: '7-Day Window',
     },
   ];
@@ -82,25 +82,25 @@ export const GovRegionalSignalMatrix: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-md bg-[#008F83] text-white text-[10px] font-mono font-bold uppercase tracking-wider">
+            <span className="px-2.5 py-0.5 rounded-md bg-[#0E7490] text-white text-[10px] font-mono font-bold uppercase tracking-wider">
               REGIONAL SIGNAL MATRIX
             </span>
-            <span className="text-[11px] font-mono text-[#62768A]">6 Centroids Monitored</span>
+            <span className="text-[11px] font-mono text-[#829AB1]">6 Centroids Monitored</span>
           </div>
-          <h2 className="font-heading font-extrabold text-lg sm:text-xl text-[#0B1726] mt-0.5">
+          <h2 className="font-heading font-extrabold text-lg sm:text-xl text-[#102A43] mt-0.5">
             Geographic Hazard Signals & Meteorological Indicators
           </h2>
         </div>
 
-        <span className="px-3 py-1 rounded-xl bg-[#F7F3EA] border border-[#0B1726]/15 text-xs font-mono text-[#435466] self-start sm:self-auto">
+        <span className="px-3 py-1 rounded-xl bg-[#F3F6F7] border border-[#102A43]/15 text-xs font-mono text-[#486581] self-start sm:self-auto">
           Baseline: Kharif 2024 Archive
         </span>
       </div>
 
-      <div className="bg-white border-2 border-[#0B1726] rounded-2xl shadow-[4px_4px_0px_#0B1726] overflow-hidden">
+      <div className="bg-white border-2 border-[#102A43] rounded-2xl shadow-[4px_4px_0px_#102A43] overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-[#F7F3EA] border-b-2 border-[#0B1726]/15 font-heading text-[#0B1726] uppercase tracking-wider text-[11px]">
+            <thead className="bg-[#F3F6F7] border-b-2 border-[#102A43]/15 font-heading text-[#102A43] uppercase tracking-wider text-[11px]">
               <tr>
                 <th className="py-3 px-4 font-extrabold">Meteorological Signal</th>
                 <th className="py-3 px-3 font-extrabold">Administrative Area</th>
@@ -111,19 +111,19 @@ export const GovRegionalSignalMatrix: React.FC = () => {
                 <th className="py-3 px-3 font-extrabold">Timeframe</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#0B1726]/10 font-sans text-xs">
+            <tbody className="divide-y divide-[#102A43]/10 font-sans text-xs">
               {signalRows.map((r, i) => (
-                <tr key={i} className="hover:bg-[#FDFBF7] transition-colors">
-                  <td className="py-3.5 px-4 font-heading font-bold text-[#0B1726]">
+                <tr key={i} className="hover:bg-[#FFFFFF] transition-colors">
+                  <td className="py-3.5 px-4 font-heading font-bold text-[#102A43]">
                     <div className="flex items-center gap-2">
                       {r.signalIcon}
                       <span>{r.signal}</span>
                     </div>
                   </td>
-                  <td className="py-3.5 px-3 font-medium text-[#0B1726]">
+                  <td className="py-3.5 px-3 font-medium text-[#102A43]">
                     <div>{r.area}</div>
                   </td>
-                  <td className="py-3.5 px-3 text-[#435466] text-[11px] leading-tight">
+                  <td className="py-3.5 px-3 text-[#486581] text-[11px] leading-tight">
                     {r.indicator}
                   </td>
                   <td className="py-3.5 px-3">
@@ -131,7 +131,7 @@ export const GovRegionalSignalMatrix: React.FC = () => {
                       {r.severity}
                     </span>
                   </td>
-                  <td className="py-3.5 px-3 text-right font-mono font-bold text-[#0B1726]">
+                  <td className="py-3.5 px-3 text-right font-mono font-bold text-[#102A43]">
                     {r.probability}
                   </td>
                   <td className="py-3.5 px-4">
@@ -139,7 +139,7 @@ export const GovRegionalSignalMatrix: React.FC = () => {
                       {r.status}
                     </span>
                   </td>
-                  <td className="py-3.5 px-3 font-mono text-[11px] text-[#62768A]">
+                  <td className="py-3.5 px-3 font-mono text-[11px] text-[#829AB1]">
                     {r.timeframe}
                   </td>
                 </tr>

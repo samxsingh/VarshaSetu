@@ -10,7 +10,7 @@ export const GovAgronomicRiskPanel: React.FC = () => {
       stage: 'Maturity / Harvest Window',
       acreage: '72,000 Ha',
       severity: 'WATCH',
-      severityColor: 'bg-[#FEF6E9] text-[#9A6218] border-[#E5A33D]/40',
+      severityColor: 'bg-[#FEF3C7] text-[#B45309] border-[#D97706]/40',
       explanation:
         'Sustained wet surface conditions may induce pre-harvest grain sprouting and field machine tractability impairment. Non-causal diagnostic indicator.',
       ruleId: 'AGRO_PADDY_HEAVY_RAIN_HARVEST_001',
@@ -34,7 +34,7 @@ export const GovAgronomicRiskPanel: React.FC = () => {
       stage: 'Seedling Emergence',
       acreage: '18,500 Ha',
       severity: 'WATCH',
-      severityColor: 'bg-[#FEF6E9] text-[#9A6218] border-[#E5A33D]/40',
+      severityColor: 'bg-[#FEF3C7] text-[#B45309] border-[#D97706]/40',
       explanation:
         'Heavy textured soils in Bakshi Ka Talab demonstrate elevated ponding exposure during onset episodic rainfall peaks.',
       ruleId: 'AGRO_PULSES_WATERLOGGING_002',
@@ -56,25 +56,25 @@ export const GovAgronomicRiskPanel: React.FC = () => {
   return (
     <section id="agronomy" className="space-y-4">
       {/* Header */}
-      <div className="bg-white border-2 border-[#0B1726] rounded-2xl p-5 shadow-[4px_4px_0px_#0B1726] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white border-2 border-[#102A43] rounded-2xl p-5 shadow-[4px_4px_0px_#102A43] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-md bg-[#008F83] text-white text-[10px] font-mono font-bold uppercase tracking-wider">
+            <span className="px-2.5 py-0.5 rounded-md bg-[#0E7490] text-white text-[10px] font-mono font-bold uppercase tracking-wider">
               AGRONOMIC OVERSIGHT
             </span>
-            <span className="px-2 py-0.5 rounded-md bg-[#DCEFF0] text-[#006B65] text-[10px] font-mono font-bold border border-[#008F83]/30">
+            <span className="px-2 py-0.5 rounded-md bg-[#E8F4F6] text-[#155E75] text-[10px] font-mono font-bold border border-[#0E7490]/30">
               PHASE 5A/5B RULES CATALOG
             </span>
           </div>
-          <h2 className="font-heading font-extrabold text-xl text-[#0B1726] mt-1 tracking-tight">
+          <h2 className="font-heading font-extrabold text-xl text-[#102A43] mt-1 tracking-tight">
             Agronomic Sensitivity & Risk Chain Oversight
           </h2>
-          <p className="text-xs text-[#435466]">
+          <p className="text-xs text-[#486581]">
             Transparent 4-step translation from downscaled meteorological signals to crop phenological vulnerability indicators
           </p>
         </div>
 
-        <span className="px-3 py-1 rounded-xl bg-[#F7F3EA] border border-[#0B1726]/15 text-xs font-mono text-[#0B1726]">
+        <span className="px-3 py-1 rounded-xl bg-[#F3F6F7] border border-[#102A43]/15 text-xs font-mono text-[#102A43]">
           Non-Imperative Safety Model
         </span>
       </div>
@@ -84,10 +84,10 @@ export const GovAgronomicRiskPanel: React.FC = () => {
         {riskWorkflows.map((r) => (
           <div
             key={r.ruleId}
-            className="bg-white border-2 border-[#0B1726] rounded-2xl p-5 shadow-[4px_4px_0px_#0B1726] flex flex-col justify-between space-y-3.5 hover:-translate-y-0.5 transition-transform"
+            className="bg-white border-2 border-[#102A43] rounded-2xl p-5 shadow-[4px_4px_0px_#102A43] flex flex-col justify-between space-y-3.5 hover:-translate-y-0.5 transition-transform"
           >
-            <div className="flex items-center justify-between pb-2 border-b border-[#0B1726]/10">
-              <span className="text-[10px] font-mono font-bold text-[#62768A]">
+            <div className="flex items-center justify-between pb-2 border-b border-[#102A43]/10">
+              <span className="text-[10px] font-mono font-bold text-[#829AB1]">
                 {r.ruleId}
               </span>
               <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold border ${r.severityColor}`}>
@@ -97,49 +97,49 @@ export const GovAgronomicRiskPanel: React.FC = () => {
 
             {/* 4-Step Chain Visual */}
             <div className="space-y-2 text-xs">
-              <div className="p-2.5 bg-[#F7F3EA] rounded-xl border border-[#0B1726]/10">
-                <span className="text-[9px] font-heading font-bold uppercase tracking-wider text-[#62768A] block">
+              <div className="p-2.5 bg-[#F3F6F7] rounded-xl border border-[#102A43]/10">
+                <span className="text-[9px] font-heading font-bold uppercase tracking-wider text-[#829AB1] block">
                   1. Meteorological Signal
                 </span>
-                <strong className="text-[#0B1726] text-xs font-heading font-bold block mt-0.5">
+                <strong className="text-[#102A43] text-xs font-heading font-bold block mt-0.5">
                   {r.weatherSignal}
                 </strong>
               </div>
 
-              <div className="p-2.5 bg-[#F7F3EA] rounded-xl border border-[#0B1726]/10">
-                <span className="text-[9px] font-heading font-bold uppercase tracking-wider text-[#62768A] block">
+              <div className="p-2.5 bg-[#F3F6F7] rounded-xl border border-[#102A43]/10">
+                <span className="text-[9px] font-heading font-bold uppercase tracking-wider text-[#829AB1] block">
                   2. Agronomic Indicator
                 </span>
-                <strong className="text-[#008F83] text-xs font-heading font-bold block mt-0.5">
+                <strong className="text-[#0E7490] text-xs font-heading font-bold block mt-0.5">
                   {r.agronomicIndicator}
                 </strong>
               </div>
 
-              <div className="p-2.5 bg-[#F7F3EA] rounded-xl border border-[#0B1726]/10 flex items-center justify-between">
+              <div className="p-2.5 bg-[#F3F6F7] rounded-xl border border-[#102A43]/10 flex items-center justify-between">
                 <div>
-                  <span className="text-[9px] font-heading font-bold uppercase tracking-wider text-[#62768A] block">
+                  <span className="text-[9px] font-heading font-bold uppercase tracking-wider text-[#829AB1] block">
                     3. Affected Crop & Stage
                   </span>
-                  <strong className="text-[#0B1726] text-xs block mt-0.5">
-                    {r.crop} • <span className="font-mono text-[11px] text-[#435466]">{r.stage}</span>
+                  <strong className="text-[#102A43] text-xs block mt-0.5">
+                    {r.crop} • <span className="font-mono text-[11px] text-[#486581]">{r.stage}</span>
                   </strong>
                 </div>
-                <span className="text-[10px] font-mono bg-white px-2 py-0.5 rounded border border-[#0B1726]/15 text-[#0B1726]">
+                <span className="text-[10px] font-mono bg-white px-2 py-0.5 rounded border border-[#102A43]/15 text-[#102A43]">
                   {r.acreage}
                 </span>
               </div>
 
-              <div className="p-2.5 bg-[#FDFBF7] rounded-xl border border-[#0B1726]/15">
-                <span className="text-[9px] font-heading font-bold uppercase tracking-wider text-[#E5A33D] block">
+              <div className="p-2.5 bg-[#FFFFFF] rounded-xl border border-[#102A43]/15">
+                <span className="text-[9px] font-heading font-bold uppercase tracking-wider text-[#D97706] block">
                   4. Scientific Explanation & Disclosure
                 </span>
-                <p className="text-[#435466] text-[11px] leading-relaxed mt-0.5">
+                <p className="text-[#486581] text-[11px] leading-relaxed mt-0.5">
                   {r.explanation}
                 </p>
               </div>
             </div>
 
-            <div className="pt-2 border-t border-[#0B1726]/10 text-[10px] font-mono text-[#62768A] flex justify-between">
+            <div className="pt-2 border-t border-[#102A43]/10 text-[10px] font-mono text-[#829AB1] flex justify-between">
               <span>Anchor: UP_LKO_BKT</span>
               <span>Yield Estimates: PROHIBITED</span>
             </div>

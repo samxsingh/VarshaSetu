@@ -12,7 +12,7 @@ export const GovAdvisoryOversight: React.FC = () => {
       crop: 'PADDY (धान)',
       stage: 'MATURITY',
       severity: 'WATCH',
-      severityColor: 'bg-[#FEF6E9] text-[#9A6218] border-[#E5A33D]/40',
+      severityColor: 'bg-[#FEF3C7] text-[#B45309] border-[#D97706]/40',
       status: 'ACTIVE',
       languageSupport: 'EN / HI (Deterministic)',
       reviewState: 'Duty Officer Reviewed',
@@ -52,30 +52,30 @@ export const GovAdvisoryOversight: React.FC = () => {
   return (
     <section id="advisories" className="space-y-4">
       {/* Header */}
-      <div className="bg-white border-2 border-[#0B1726] rounded-2xl p-5 shadow-[4px_4px_0px_#0B1726] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white border-2 border-[#102A43] rounded-2xl p-5 shadow-[4px_4px_0px_#102A43] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-md bg-[#008F83] text-white text-[10px] font-mono font-bold uppercase tracking-wider">
+            <span className="px-2.5 py-0.5 rounded-md bg-[#0E7490] text-white text-[10px] font-mono font-bold uppercase tracking-wider">
               ADVISORY OVERSIGHT
             </span>
-            <span className="px-2 py-0.5 rounded-md bg-[#DCEFF0] text-[#006B65] text-[10px] font-mono font-bold border border-[#008F83]/30">
+            <span className="px-2 py-0.5 rounded-md bg-[#E8F4F6] text-[#155E75] text-[10px] font-mono font-bold border border-[#0E7490]/30">
               MULTILINGUAL DELIVERY
             </span>
           </div>
-          <h2 className="font-heading font-extrabold text-xl text-[#0B1726] mt-1 tracking-tight">
+          <h2 className="font-heading font-extrabold text-xl text-[#102A43] mt-1 tracking-tight">
             Government Advisory Catalog & Translation Audit
           </h2>
-          <p className="text-xs text-[#435466]">
+          <p className="text-xs text-[#486581]">
             Review published agronomic bulletins, controlled deterministic translations, and extension officer verification logs
           </p>
         </div>
 
         {/* Bilingual Selector */}
-        <div className="flex items-center bg-[#F7F3EA] p-1 rounded-xl border-2 border-[#0B1726] self-start sm:self-auto">
+        <div className="flex items-center bg-[#F3F6F7] p-1 rounded-xl border-2 border-[#102A43] self-start sm:self-auto">
           <button
             onClick={() => setLang('EN')}
             className={`px-3 py-1.5 rounded-lg text-xs font-heading font-bold transition-all ${
-              lang === 'EN' ? 'bg-[#008F83] text-white shadow-xs' : 'text-[#435466]'
+              lang === 'EN' ? 'bg-[#0E7490] text-white shadow-xs' : 'text-[#486581]'
             }`}
           >
             English View
@@ -83,7 +83,7 @@ export const GovAdvisoryOversight: React.FC = () => {
           <button
             onClick={() => setLang('HI')}
             className={`px-3 py-1.5 rounded-lg text-xs font-heading font-bold transition-all ${
-              lang === 'HI' ? 'bg-[#008F83] text-white shadow-xs' : 'text-[#435466]'
+              lang === 'HI' ? 'bg-[#0E7490] text-white shadow-xs' : 'text-[#486581]'
             }`}
           >
             हिन्दी View
@@ -92,10 +92,10 @@ export const GovAdvisoryOversight: React.FC = () => {
       </div>
 
       {/* Oversight Table */}
-      <div className="bg-white border-2 border-[#0B1726] rounded-2xl shadow-[4px_4px_0px_#0B1726] overflow-hidden">
+      <div className="bg-white border-2 border-[#102A43] rounded-2xl shadow-[4px_4px_0px_#102A43] overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-[#F7F3EA] border-b-2 border-[#0B1726]/15 font-heading text-[#0B1726] uppercase tracking-wider text-[11px]">
+            <thead className="bg-[#F3F6F7] border-b-2 border-[#102A43]/15 font-heading text-[#102A43] uppercase tracking-wider text-[11px]">
               <tr>
                 <th className="py-3 px-4 font-extrabold">Advisory Title ({lang})</th>
                 <th className="py-3 px-3 font-extrabold">Target Crop</th>
@@ -106,17 +106,17 @@ export const GovAdvisoryOversight: React.FC = () => {
                 <th className="py-3 px-4 font-extrabold">Scientific Basis</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#0B1726]/10 font-sans text-xs">
+            <tbody className="divide-y divide-[#102A43]/10 font-sans text-xs">
               {advisories.map((adv) => (
-                <tr key={adv.id} className="hover:bg-[#FDFBF7] transition-colors">
-                  <td className="py-3.5 px-4 font-heading font-bold text-[#0B1726]">
+                <tr key={adv.id} className="hover:bg-[#FFFFFF] transition-colors">
+                  <td className="py-3.5 px-4 font-heading font-bold text-[#102A43]">
                     <div>{lang === 'EN' ? adv.titleEN : adv.titleHI}</div>
-                    <div className="text-[10px] font-mono text-[#62768A] font-normal">{adv.id}</div>
+                    <div className="text-[10px] font-mono text-[#829AB1] font-normal">{adv.id}</div>
                   </td>
-                  <td className="py-3.5 px-3 font-bold text-[#0B1726]">
+                  <td className="py-3.5 px-3 font-bold text-[#102A43]">
                     {adv.crop}
                   </td>
-                  <td className="py-3.5 px-3 font-mono text-[#435466]">
+                  <td className="py-3.5 px-3 font-mono text-[#486581]">
                     {adv.stage}
                   </td>
                   <td className="py-3.5 px-3">
@@ -124,16 +124,16 @@ export const GovAdvisoryOversight: React.FC = () => {
                       {adv.severity}
                     </span>
                   </td>
-                  <td className="py-3.5 px-3 font-mono text-[11px] text-[#008F83]">
+                  <td className="py-3.5 px-3 font-mono text-[11px] text-[#0E7490]">
                     {adv.languageSupport}
                   </td>
                   <td className="py-3.5 px-3">
-                    <span className="inline-flex items-center gap-1 text-[11px] text-[#2F7D4A] font-medium">
+                    <span className="inline-flex items-center gap-1 text-[11px] text-[#3F7D58] font-medium">
                       <CheckCircle2 className="w-3.5 h-3.5" />
                       {adv.reviewState}
                     </span>
                   </td>
-                  <td className="py-3.5 px-4 text-[#435466] text-[11px] leading-tight max-w-xs">
+                  <td className="py-3.5 px-4 text-[#486581] text-[11px] leading-tight max-w-xs">
                     {adv.scientificSource}
                   </td>
                 </tr>

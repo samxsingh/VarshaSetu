@@ -15,7 +15,7 @@ export const AnalystBottomNav: React.FC = () => {
   return (
     <nav
       aria-label="Climate Analyst mobile navigation"
-      className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#F7F3EA]/95 backdrop-blur-md border-t-2 border-[#0B1726] shadow-[0_-4px_12px_rgba(11,23,38,0.08)] px-2 py-1.5"
+      className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#F3F6F7]/95 backdrop-blur-md border-t-2 border-[#102A43] shadow-[0_-4px_12px_rgba(16, 42, 67,0.08)] px-2 py-1.5"
     >
       <div className="flex items-center justify-around gap-1 max-w-md mx-auto">
         {links.map((link) => (
@@ -27,8 +27,8 @@ export const AnalystBottomNav: React.FC = () => {
               cn(
                 'flex flex-col items-center justify-center flex-1 py-1.5 px-1 rounded-lg text-[10px] font-heading font-bold transition-all min-h-[48px] min-w-[48px]',
                 isActive
-                  ? 'bg-[#008F83] text-white border-2 border-[#0B1726] shadow-[2px_2px_0px_#0B1726]'
-                  : 'text-[#435466] hover:text-[#0B1726] active:bg-[#0B1726]/5'
+                  ? 'bg-[#0E7490] text-white border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43]'
+                  : 'text-[#486581] hover:text-[#102A43] active:bg-[#102A43]/5'
               )
             }
           >

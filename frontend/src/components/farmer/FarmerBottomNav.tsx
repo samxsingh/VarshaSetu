@@ -18,7 +18,7 @@ export const FarmerBottomNav: React.FC = () => {
   return (
     <nav
       aria-label="Farmer mobile navigation"
-      className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#F7F3EA] border-t-2 border-[#0B1726] px-2 py-1.5 shadow-[0px_-2px_10px_rgba(11,23,38,0.1)]"
+      className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#F3F6F7] border-t-2 border-[#102A43] px-2 py-1.5 shadow-[0px_-2px_10px_rgba(16, 42, 67,0.1)]"
     >
       <div className="flex items-center justify-around">
         {tabs.map((tab) => (
@@ -29,8 +29,8 @@ export const FarmerBottomNav: React.FC = () => {
               cn(
                 'flex flex-col items-center justify-center py-1 px-1.5 rounded-xl text-[10px] font-heading font-bold transition-all min-h-[48px] min-w-[56px]',
                 isActive
-                  ? 'text-[#008F83]'
-                  : 'text-[#435466] hover:text-[#0B1726]'
+                  ? 'text-[#0E7490]'
+                  : 'text-[#486581] hover:text-[#102A43]'
               )
             }
           >
@@ -40,8 +40,8 @@ export const FarmerBottomNav: React.FC = () => {
                   className={cn(
                     'p-1 rounded-lg transition-colors border',
                     isActive
-                      ? 'bg-[#008F83] text-white border-[#0B1726] shadow-[1.5px_1.5px_0px_#0B1726]'
-                      : 'bg-white text-[#435466] border-transparent'
+                      ? 'bg-[#0E7490] text-white border-[#102A43] shadow-[1.5px_1.5px_0px_#102A43]'
+                      : 'bg-white text-[#486581] border-transparent'
                   )}
                 >
                   {tab.icon}

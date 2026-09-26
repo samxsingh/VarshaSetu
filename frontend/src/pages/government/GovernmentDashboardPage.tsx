@@ -57,7 +57,7 @@ export const GovernmentDashboardPage: React.FC = () => {
 
   return (
     <div
-      className="min-h-screen bg-[#F7F3EA] text-[#0B1726] font-sans pb-16 relative"
+      className="min-h-screen bg-[#F3F6F7] text-[#102A43] font-sans pb-16 relative"
       data-testid="government-dashboard-page"
     >
       {/* Subtle contour texture */}
@@ -102,10 +102,10 @@ export const GovernmentDashboardPage: React.FC = () => {
 
         {/* 11. Large-Scale Climate Teleconnections & Scientific Provenance */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-2">
-          <div className="bg-white border-2 border-[#0B1726] rounded-2xl p-4 shadow-[4px_4px_0px_#0B1726]">
+          <div className="bg-white border-2 border-[#102A43] rounded-2xl p-4 shadow-[4px_4px_0px_#102A43]">
             <ClimateSignalCard />
           </div>
-          <div className="bg-white border-2 border-[#0B1726] rounded-2xl p-4 shadow-[4px_4px_0px_#0B1726]">
+          <div className="bg-white border-2 border-[#102A43] rounded-2xl p-4 shadow-[4px_4px_0px_#102A43]">
             <ProvenanceCard />
           </div>
         </div>

@@ -129,11 +129,11 @@ export const FarmerWhatIfPage: React.FC = () => {
   const getSeverityBadgeVariant = (severity: string) => {
     switch (severity) {
       case 'LOW':
-        return 'bg-[#EBF5EE] text-[#2F7D4A] border border-[#2F7D4A]';
+        return 'bg-[#EBF5EE] text-[#3F7D58] border border-[#3F7D58]';
       case 'MODERATE':
-        return 'bg-[#DCEFF0] text-[#006B65] border border-[#008F83]';
+        return 'bg-[#E8F4F6] text-[#155E75] border border-[#0E7490]';
       case 'HIGH':
-        return 'bg-[#FEF6E9] text-[#9A6218] border border-[#E5A33D]';
+        return 'bg-[#FEF3C7] text-[#B45309] border border-[#D97706]';
       case 'SEVERE':
         return 'bg-[#FEF2F2] text-[#E53E3E] border border-[#E53E3E]';
       default:
@@ -143,27 +143,27 @@ export const FarmerWhatIfPage: React.FC = () => {
 
   const renderDirectionIcon = (direction: string) => {
     if (direction === 'INCREASED') return <TrendingUp className="w-3.5 h-3.5 text-[#E53E3E]" />;
-    if (direction === 'DECREASED') return <TrendingDown className="w-3.5 h-3.5 text-[#2F7D4A]" />;
-    return <Minus className="w-3.5 h-3.5 text-[#62768A]" />;
+    if (direction === 'DECREASED') return <TrendingDown className="w-3.5 h-3.5 text-[#3F7D58]" />;
+    return <Minus className="w-3.5 h-3.5 text-[#829AB1]" />;
   };
 
   return (
     <div className="space-y-6" data-testid="farmer-whatif-page">
       {/* 1. Header & Mandatory Classification */}
-      <div className="bg-white rounded-2xl border-2 border-[#0B1726] p-6 shadow-[4px_4px_0px_#0B1726]">
+      <div className="bg-white rounded-2xl border-2 border-[#102A43] p-6 shadow-[4px_4px_0px_#102A43]">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1.5">
             <div className="flex items-center gap-2.5 flex-wrap">
-              <h1 className="font-heading font-black text-2xl sm:text-3xl text-[#0B1726] flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-[#008F83]" />
+              <h1 className="font-heading font-black text-2xl sm:text-3xl text-[#102A43] flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-[#0E7490]" />
                 <span>What-If Agro-Climate Scenario Simulator</span>
               </h1>
               <ScientificStatusBadge status="SCENARIO_INDICATOR_ONLY" size="sm" />
-              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-[#F7F3EA] border border-[#0B1726]/20 text-[#0B1726]">
+              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-[#F3F6F7] border border-[#102A43]/20 text-[#102A43]">
                 Phase 5B Engine
               </span>
             </div>
-            <p className="text-xs text-[#435466] font-sans">
+            <p className="text-xs text-[#486581] font-sans">
               Explore how meteorological conditions change under different scenarios for {location.block || 'Bakshi Ka Talab'} (UP_LKO_BKT, Kharif 2024 Ground Anchor).
             </p>
           </div>
@@ -171,29 +171,29 @@ export const FarmerWhatIfPage: React.FC = () => {
       </div>
 
       {/* 2. Mandatory Strict Scientific Boundary Notice */}
-      <div className="p-5 bg-[#FEF6E9] border-2 border-[#0B1726] rounded-xl shadow-[3px_3px_0px_#0B1726] text-xs text-[#7A4B00] space-y-1.5 font-sans leading-relaxed">
-        <div className="font-heading font-black text-xs text-[#0B1726] uppercase tracking-wider flex items-center gap-1.5">
-          <AlertTriangle className="w-4 h-4 text-[#E5A33D]" />
+      <div className="p-5 bg-[#FEF3C7] border-2 border-[#102A43] rounded-xl shadow-[3px_3px_0px_#102A43] text-xs text-[#7A4B00] space-y-1.5 font-sans leading-relaxed">
+        <div className="font-heading font-black text-xs text-[#102A43] uppercase tracking-wider flex items-center gap-1.5">
+          <AlertTriangle className="w-4 h-4 text-[#D97706]" />
           <span>Strict Scientific Boundary: Sensitivity Indicators Only</span>
         </div>
         <p>
-          What-If scenario analyses are strictly classified as <strong className="font-mono text-[#0B1726]">SCENARIO_INDICATOR_ONLY</strong>.
+          What-If scenario analyses are strictly classified as <strong className="font-mono text-[#102A43]">SCENARIO_INDICATOR_ONLY</strong>.
           This engine models deterministic sensitivity indicators (moisture stress exposure, waterlogging risk, dry spell duration) relative to the verified Kharif 2024 meteorological baseline.
-          <strong className="text-[#0B1726] block mt-1">
+          <strong className="text-[#102A43] block mt-1">
             VarshaSetu does NOT predict crop yields, biomass production, quintals per hectare, or monetary/revenue outcomes.
           </strong>
         </p>
       </div>
 
       {/* 3. Scenario Type Selection Tabs (All 6 Types) */}
-      <div className="bg-white p-6 rounded-2xl border-2 border-[#0B1726] shadow-[4px_4px_0px_#0B1726] space-y-5">
-        <div className="flex items-center justify-between border-b-2 border-[#0B1726]/10 pb-3">
-          <span className="text-xs font-heading font-black text-[#0B1726] uppercase tracking-wider block">
+      <div className="bg-white p-6 rounded-2xl border-2 border-[#102A43] shadow-[4px_4px_0px_#102A43] space-y-5">
+        <div className="flex items-center justify-between border-b-2 border-[#102A43]/10 pb-3">
+          <span className="text-xs font-heading font-black text-[#102A43] uppercase tracking-wider block">
             WHAT-IF SCENARIOS (EXPLORATION MODES)
           </span>
           <button
             onClick={resetParameters}
-            className="flex items-center gap-1 text-[11px] font-heading font-bold text-[#62768A] hover:text-[#0B1726] transition-colors"
+            className="flex items-center gap-1 text-[11px] font-heading font-bold text-[#829AB1] hover:text-[#102A43] transition-colors"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>Reset Instrument Parameters</span>
@@ -221,12 +221,12 @@ export const FarmerWhatIfPage: React.FC = () => {
                 }}
                 className={`flex flex-col items-start p-3 rounded-xl text-left transition-all min-h-[56px] border-2 ${
                   isSelected
-                    ? 'bg-brand-teal text-white border-[#0B1726] shadow-[2px_2px_0px_#0B1726]'
-                    : 'bg-[#F7F3EA] text-[#435466] border-[#0B1726]/20 hover:border-[#0B1726] hover:bg-white'
+                    ? 'bg-brand-teal text-white border-[#102A43] shadow-[2px_2px_0px_#102A43]'
+                    : 'bg-[#F3F6F7] text-[#486581] border-[#102A43]/20 hover:border-[#102A43] hover:bg-white'
                 }`}
               >
                 <div className="flex items-center justify-between w-full">
-                  <span className={`text-[10px] font-mono font-bold ${isSelected ? 'text-[#DCEFF0]' : 'text-[#62768A]'}`}>
+                  <span className={`text-[10px] font-mono font-bold ${isSelected ? 'text-[#E8F4F6]' : 'text-[#829AB1]'}`}>
                     {scen.num}
                   </span>
                   <Icon className="w-3.5 h-3.5" />
@@ -240,15 +240,15 @@ export const FarmerWhatIfPage: React.FC = () => {
         </div>
 
         {/* Input Parameters Controls Styled as Scientific Instruments */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-end pt-2 border-t-2 border-[#0B1726]/10">
-          <div className="p-3 bg-[#F7F3EA] rounded-xl border border-[#0B1726]/15">
-            <label className="text-[11px] font-heading font-bold text-[#62768A] uppercase tracking-wider block mb-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-end pt-2 border-t-2 border-[#102A43]/10">
+          <div className="p-3 bg-[#F3F6F7] rounded-xl border border-[#102A43]/15">
+            <label className="text-[11px] font-heading font-bold text-[#829AB1] uppercase tracking-wider block mb-1">
               Crop Focus
             </label>
             <select
               value={selectedCrop}
               onChange={(e) => setSelectedCrop(e.target.value)}
-              className="w-full px-3 py-2 bg-white rounded-lg text-xs font-semibold text-[#0B1726] border border-[#0B1726]/30 focus:outline-none focus:ring-2 focus:ring-[#008F83]"
+              className="w-full px-3 py-2 bg-white rounded-lg text-xs font-semibold text-[#102A43] border border-[#102A43]/30 focus:outline-none focus:ring-2 focus:ring-[#0E7490]"
             >
               <option value="PADDY">Paddy (धान)</option>
               <option value="MAIZE">Maize (मक्का)</option>
@@ -258,14 +258,14 @@ export const FarmerWhatIfPage: React.FC = () => {
             </select>
           </div>
 
-          <div className="p-3 bg-[#F7F3EA] rounded-xl border border-[#0B1726]/15">
-            <label className="text-[11px] font-heading font-bold text-[#62768A] uppercase tracking-wider block mb-1">
+          <div className="p-3 bg-[#F3F6F7] rounded-xl border border-[#102A43]/15">
+            <label className="text-[11px] font-heading font-bold text-[#829AB1] uppercase tracking-wider block mb-1">
               Growth Stage
             </label>
             <select
               value={selectedStage}
               onChange={(e) => setSelectedStage(e.target.value)}
-              className="w-full px-3 py-2 bg-white rounded-lg text-xs font-semibold text-[#0B1726] border border-[#0B1726]/30 focus:outline-none focus:ring-2 focus:ring-[#008F83]"
+              className="w-full px-3 py-2 bg-white rounded-lg text-xs font-semibold text-[#102A43] border border-[#102A43]/30 focus:outline-none focus:ring-2 focus:ring-[#0E7490]"
             >
               <option value="SOWING">Sowing</option>
               <option value="GERMINATION">Germination</option>
@@ -278,12 +278,12 @@ export const FarmerWhatIfPage: React.FC = () => {
 
           {/* Conditional Parameter Sliders Conforming to Scientific Limits */}
           {activeScenario === 'SOWING_DELAY' && (
-            <div className="p-3 bg-[#F7F3EA] rounded-xl border border-[#0B1726]/15">
+            <div className="p-3 bg-[#F3F6F7] rounded-xl border border-[#102A43]/15">
               <div className="flex justify-between items-baseline mb-1">
-                <span className="text-[11px] font-heading font-bold text-[#62768A] uppercase tracking-wider">
+                <span className="text-[11px] font-heading font-bold text-[#829AB1] uppercase tracking-wider">
                   Sowing Delay:
                 </span>
-                <span className="font-mono text-base font-black text-[#008F83]">{delayDays} days</span>
+                <span className="font-mono text-base font-black text-[#0E7490]">{delayDays} days</span>
               </div>
               <input
                 type="range"
@@ -291,19 +291,19 @@ export const FarmerWhatIfPage: React.FC = () => {
                 max="21"
                 value={delayDays}
                 onChange={(e) => setDelayDays(parseInt(e.target.value, 10))}
-                className="w-full h-2 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-[#008F83]"
+                className="w-full h-2 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-[#0E7490]"
               />
-              <span className="text-[9px] text-[#62768A] font-mono block mt-1">Instrument Range: [1 – 21 days]</span>
+              <span className="text-[9px] text-[#829AB1] font-mono block mt-1">Instrument Range: [1 – 21 days]</span>
             </div>
           )}
 
           {activeScenario === 'SEASONAL_ANOMALY' && (
-            <div className="p-3 bg-[#F7F3EA] rounded-xl border border-[#0B1726]/15">
+            <div className="p-3 bg-[#F3F6F7] rounded-xl border border-[#102A43]/15">
               <div className="flex justify-between items-baseline mb-1">
-                <span className="text-[11px] font-heading font-bold text-[#62768A] uppercase tracking-wider">
+                <span className="text-[11px] font-heading font-bold text-[#829AB1] uppercase tracking-wider">
                   Rainfall Anomaly:
                 </span>
-                <span className="font-mono text-base font-black text-[#008F83]">{rainfallAnomaly}%</span>
+                <span className="font-mono text-base font-black text-[#0E7490]">{rainfallAnomaly}%</span>
               </div>
               <input
                 type="range"
@@ -312,19 +312,19 @@ export const FarmerWhatIfPage: React.FC = () => {
                 step="5"
                 value={rainfallAnomaly}
                 onChange={(e) => setRainfallAnomaly(parseInt(e.target.value, 10))}
-                className="w-full h-2 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-[#008F83]"
+                className="w-full h-2 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-[#0E7490]"
               />
-              <span className="text-[9px] text-[#62768A] font-mono block mt-1">Instrument Range: [-60% to +60%]</span>
+              <span className="text-[9px] text-[#829AB1] font-mono block mt-1">Instrument Range: [-60% to +60%]</span>
             </div>
           )}
 
           {activeScenario === 'RAINFALL_TIMING_SHIFT' && (
-            <div className="p-3 bg-[#F7F3EA] rounded-xl border border-[#0B1726]/15">
+            <div className="p-3 bg-[#F3F6F7] rounded-xl border border-[#102A43]/15">
               <div className="flex justify-between items-baseline mb-1">
-                <span className="text-[11px] font-heading font-bold text-[#62768A] uppercase tracking-wider">
+                <span className="text-[11px] font-heading font-bold text-[#829AB1] uppercase tracking-wider">
                   Pulse Shift:
                 </span>
-                <span className="font-mono text-base font-black text-[#008F83]">{shiftDays > 0 ? `+${shiftDays}` : shiftDays} days</span>
+                <span className="font-mono text-base font-black text-[#0E7490]">{shiftDays > 0 ? `+${shiftDays}` : shiftDays} days</span>
               </div>
               <input
                 type="range"
@@ -332,19 +332,19 @@ export const FarmerWhatIfPage: React.FC = () => {
                 max="14"
                 value={shiftDays}
                 onChange={(e) => setShiftDays(parseInt(e.target.value, 10))}
-                className="w-full h-2 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-[#008F83]"
+                className="w-full h-2 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-[#0E7490]"
               />
-              <span className="text-[9px] text-[#62768A] font-mono block mt-1">Shift window: [-14 to +14 days]</span>
+              <span className="text-[9px] text-[#829AB1] font-mono block mt-1">Shift window: [-14 to +14 days]</span>
             </div>
           )}
 
           {activeScenario === 'HEAVY_RAIN_CONCENTRATION' && (
-            <div className="p-3 bg-[#F7F3EA] rounded-xl border border-[#0B1726]/15">
+            <div className="p-3 bg-[#F3F6F7] rounded-xl border border-[#102A43]/15">
               <div className="flex justify-between items-baseline mb-1">
-                <span className="text-[11px] font-heading font-bold text-[#62768A] uppercase tracking-wider">
+                <span className="text-[11px] font-heading font-bold text-[#829AB1] uppercase tracking-wider">
                   Concentration:
                 </span>
-                <span className="font-mono text-base font-black text-[#008F83]">{concentrationFactor}x</span>
+                <span className="font-mono text-base font-black text-[#0E7490]">{concentrationFactor}x</span>
               </div>
               <input
                 type="range"
@@ -353,19 +353,19 @@ export const FarmerWhatIfPage: React.FC = () => {
                 step="0.1"
                 value={concentrationFactor}
                 onChange={(e) => setConcentrationFactor(parseFloat(e.target.value))}
-                className="w-full h-2 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-[#008F83]"
+                className="w-full h-2 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-[#0E7490]"
               />
-              <span className="text-[9px] text-[#62768A] font-mono block mt-1">Multiplier: [1.0x – 2.5x]</span>
+              <span className="text-[9px] text-[#829AB1] font-mono block mt-1">Multiplier: [1.0x – 2.5x]</span>
             </div>
           )}
 
           {activeScenario === 'IRRIGATION_INTERVENTION' && (
-            <div className="p-3 bg-[#F7F3EA] rounded-xl border border-[#0B1726]/15">
+            <div className="p-3 bg-[#F3F6F7] rounded-xl border border-[#102A43]/15">
               <div className="flex justify-between items-baseline mb-1">
-                <span className="text-[11px] font-heading font-bold text-[#62768A] uppercase tracking-wider">
+                <span className="text-[11px] font-heading font-bold text-[#829AB1] uppercase tracking-wider">
                   Start Day:
                 </span>
-                <span className="font-mono text-base font-black text-[#008F83]">Day {interventionStart}</span>
+                <span className="font-mono text-base font-black text-[#0E7490]">Day {interventionStart}</span>
               </div>
               <input
                 type="range"
@@ -373,19 +373,19 @@ export const FarmerWhatIfPage: React.FC = () => {
                 max="30"
                 value={interventionStart}
                 onChange={(e) => setInterventionStart(parseInt(e.target.value, 10))}
-                className="w-full h-2 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-[#008F83]"
+                className="w-full h-2 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-[#0E7490]"
               />
-              <span className="text-[9px] text-[#62768A] font-mono block mt-1">Window: Day 1 to 30</span>
+              <span className="text-[9px] text-[#829AB1] font-mono block mt-1">Window: Day 1 to 30</span>
             </div>
           )}
 
           {activeScenario === 'COMBINED_SCENARIO' && (
-            <div className="p-3 bg-[#F7F3EA] rounded-xl border border-[#0B1726]/15">
+            <div className="p-3 bg-[#F3F6F7] rounded-xl border border-[#102A43]/15">
               <div className="flex justify-between items-baseline mb-1">
-                <span className="text-[11px] font-heading font-bold text-[#62768A] uppercase tracking-wider">
+                <span className="text-[11px] font-heading font-bold text-[#829AB1] uppercase tracking-wider">
                   Delay & Anomaly:
                 </span>
-                <span className="font-mono text-xs font-black text-[#008F83]">{delayDays}d / {rainfallAnomaly}%</span>
+                <span className="font-mono text-xs font-black text-[#0E7490]">{delayDays}d / {rainfallAnomaly}%</span>
               </div>
               <div className="flex gap-2">
                 <input
@@ -394,7 +394,7 @@ export const FarmerWhatIfPage: React.FC = () => {
                   max="21"
                   value={delayDays}
                   onChange={(e) => setDelayDays(parseInt(e.target.value, 10))}
-                  className="w-1/2 h-2 bg-slate-300 rounded-lg accent-[#008F83]"
+                  className="w-1/2 h-2 bg-slate-300 rounded-lg accent-[#0E7490]"
                 />
                 <input
                   type="range"
@@ -402,10 +402,10 @@ export const FarmerWhatIfPage: React.FC = () => {
                   max="60"
                   value={rainfallAnomaly}
                   onChange={(e) => setRainfallAnomaly(parseInt(e.target.value, 10))}
-                  className="w-1/2 h-2 bg-slate-300 rounded-lg accent-[#008F83]"
+                  className="w-1/2 h-2 bg-slate-300 rounded-lg accent-[#0E7490]"
                 />
               </div>
-              <span className="text-[9px] text-[#62768A] font-mono block mt-1">Max 3 orthogonal dimensions</span>
+              <span className="text-[9px] text-[#829AB1] font-mono block mt-1">Max 3 orthogonal dimensions</span>
             </div>
           )}
 
@@ -413,7 +413,7 @@ export const FarmerWhatIfPage: React.FC = () => {
             <button
               onClick={() => runSimulation(activeScenario)}
               disabled={isSimulating}
-              className="w-full px-5 py-3 min-h-[44px] rounded-xl bg-[#008F83] text-white border-2 border-[#0B1726] font-heading font-bold text-xs shadow-[2px_2px_0px_#0B1726] hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_#0B1726] transition-all disabled:opacity-50"
+              className="w-full px-5 py-3 min-h-[44px] rounded-xl bg-[#0E7490] text-white border-2 border-[#102A43] font-heading font-bold text-xs shadow-[2px_2px_0px_#102A43] hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_#102A43] transition-all disabled:opacity-50"
             >
               {isSimulating ? (
                 <span className="flex items-center gap-1.5 justify-center">
@@ -436,22 +436,22 @@ export const FarmerWhatIfPage: React.FC = () => {
       {/* 4. Results Section: Baseline vs Scenario Comparative Deltas Table */}
       {simResult && (
         <div className="space-y-6">
-          <div className="bg-white rounded-2xl border-2 border-[#0B1726] p-6 shadow-[4px_4px_0px_#0B1726] space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b-2 border-[#0B1726]/10 gap-3">
+          <div className="bg-white rounded-2xl border-2 border-[#102A43] p-6 shadow-[4px_4px_0px_#102A43] space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b-2 border-[#102A43]/10 gap-3">
               <div>
-                <span className="text-[10px] font-mono text-[#62768A] uppercase">
+                <span className="text-[10px] font-mono text-[#829AB1] uppercase">
                   Scenario Execution ID: {simResult.scenario_id}
                 </span>
-                <h3 className="font-heading font-black text-xl text-[#0B1726] mt-0.5">
+                <h3 className="font-heading font-black text-xl text-[#102A43] mt-0.5">
                   Comparative Delta Evaluation: {simResult.scenario_type.replace(/_/g, ' ')}
                 </h3>
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="px-2.5 py-1 rounded-md bg-[#DCEFF0] border border-[#008F83]/40 text-[#006B65] text-xs font-mono font-bold uppercase">
+                <span className="px-2.5 py-1 rounded-md bg-[#E8F4F6] border border-[#0E7490]/40 text-[#155E75] text-xs font-mono font-bold uppercase">
                   {simResult.applicability || 'APPLICABLE'}
                 </span>
-                <span className="px-2.5 py-1 rounded-md bg-[#FEF6E9] border border-[#E5A33D] text-[#9A6218] text-xs font-mono font-bold uppercase">
+                <span className="px-2.5 py-1 rounded-md bg-[#FEF3C7] border border-[#D97706] text-[#B45309] text-xs font-mono font-bold uppercase">
                   {simResult.classification}
                 </span>
               </div>
@@ -462,7 +462,7 @@ export const FarmerWhatIfPage: React.FC = () => {
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse text-xs">
                   <thead>
-                    <tr className="bg-[#F7F3EA] border-b-2 border-[#0B1726]/20 text-[#0B1726] font-heading font-black">
+                    <tr className="bg-[#F3F6F7] border-b-2 border-[#102A43]/20 text-[#102A43] font-heading font-black">
                       <th className="py-3 px-3">Indicator</th>
                       <th className="py-3 px-3 text-right">Baseline</th>
                       <th className="py-3 px-3 text-right">Scenario</th>
@@ -474,26 +474,26 @@ export const FarmerWhatIfPage: React.FC = () => {
                       <th className="py-3 px-3">Scientific Interpretation</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#0B1726]/10">
+                  <tbody className="divide-y divide-[#102A43]/10">
                     {simResult.deltas.map((d: IndicatorDelta, idx: number) => (
-                      <tr key={idx} className="hover:bg-[#FDFBF7] transition-colors">
-                        <td className="py-3 px-3 font-heading font-bold text-[#0B1726]">
+                      <tr key={idx} className="hover:bg-[#FFFFFF] transition-colors">
+                        <td className="py-3 px-3 font-heading font-bold text-[#102A43]">
                           {d.indicator_name.replace(/_/g, ' ')}
                         </td>
-                        <td className="py-3 px-3 text-right font-mono text-[#62768A]">
+                        <td className="py-3 px-3 text-right font-mono text-[#829AB1]">
                           {d.baseline_value.toFixed(1)}
                         </td>
-                        <td className="py-3 px-3 text-right font-mono font-bold text-[#0B1726]">
+                        <td className="py-3 px-3 text-right font-mono font-bold text-[#102A43]">
                           {d.scenario_value.toFixed(1)}
                         </td>
                         <td className="py-3 px-3 text-right font-mono font-bold">
-                          <span className={d.absolute_delta > 0 ? 'text-[#E53E3E]' : d.absolute_delta < 0 ? 'text-[#2F7D4A]' : 'text-[#62768A]'}>
+                          <span className={d.absolute_delta > 0 ? 'text-[#E53E3E]' : d.absolute_delta < 0 ? 'text-[#3F7D58]' : 'text-[#829AB1]'}>
                             {d.absolute_delta > 0 ? `+${d.absolute_delta.toFixed(1)}` : d.absolute_delta.toFixed(1)}
                           </span>
                         </td>
                         <td className="py-3 px-3 text-right font-mono font-bold">
                           {d.relative_delta_pct !== null && d.relative_delta_pct !== undefined ? (
-                            <span className={d.relative_delta_pct > 0 ? 'text-[#E53E3E]' : d.relative_delta_pct < 0 ? 'text-[#2F7D4A]' : 'text-[#62768A]'}>
+                            <span className={d.relative_delta_pct > 0 ? 'text-[#E53E3E]' : d.relative_delta_pct < 0 ? 'text-[#3F7D58]' : 'text-[#829AB1]'}>
                               {d.relative_delta_pct > 0 ? `+${d.relative_delta_pct.toFixed(1)}%` : `${d.relative_delta_pct.toFixed(1)}%`}
                             </span>
                           ) : (
@@ -516,7 +516,7 @@ export const FarmerWhatIfPage: React.FC = () => {
                             <span>{d.direction}</span>
                           </div>
                         </td>
-                        <td className="py-3 px-3 text-[#435466] text-[11px] leading-relaxed max-w-xs font-sans">
+                        <td className="py-3 px-3 text-[#486581] text-[11px] leading-relaxed max-w-xs font-sans">
                           {d.scientific_interpretation}
                         </td>
                       </tr>
@@ -528,23 +528,23 @@ export const FarmerWhatIfPage: React.FC = () => {
 
             {/* Scenario Envelope Card */}
             {simResult.envelope && (
-              <div className="p-5 bg-[#F7F3EA] rounded-xl border-2 border-[#0B1726] space-y-3">
+              <div className="p-5 bg-[#F3F6F7] rounded-xl border-2 border-[#102A43] space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <BarChart2 className="w-4 h-4 text-[#008F83]" />
-                    <h4 className="font-heading font-black text-xs text-[#0B1726] uppercase tracking-wider">
+                    <BarChart2 className="w-4 h-4 text-[#0E7490]" />
+                    <h4 className="font-heading font-black text-xs text-[#102A43] uppercase tracking-wider">
                       Parameter Range Envelope: {simResult.envelope.indicator_name.replace(/_/g, ' ')}
                     </h4>
                   </div>
-                  <span className="text-[10px] text-[#62768A] font-mono">
+                  <span className="text-[10px] text-[#829AB1] font-mono">
                     Deterministic Extremes & Central Tendency
                   </span>
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-                  <div className="bg-white p-3 rounded-xl border border-[#0B1726]/15">
-                    <span className="text-[10px] text-[#62768A] uppercase font-heading font-bold block">Minimum Boundary</span>
-                    <strong className="text-base font-mono text-[#0B1726]">{simResult.envelope.min_value.toFixed(1)}</strong>
+                  <div className="bg-white p-3 rounded-xl border border-[#102A43]/15">
+                    <span className="text-[10px] text-[#829AB1] uppercase font-heading font-bold block">Minimum Boundary</span>
+                    <strong className="text-base font-mono text-[#102A43]">{simResult.envelope.min_value.toFixed(1)}</strong>
                     <div className="mt-1">
                       <span className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold ${getSeverityBadgeVariant(simResult.envelope.min_category)}`}>
                         {simResult.envelope.min_category}
@@ -552,9 +552,9 @@ export const FarmerWhatIfPage: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="bg-white p-3 rounded-xl border border-[#0B1726]/15">
-                    <span className="text-[10px] text-[#62768A] uppercase font-heading font-bold block">Baseline Reference</span>
-                    <strong className="text-base font-mono text-[#008F83]">{simResult.envelope.baseline_value.toFixed(1)}</strong>
+                  <div className="bg-white p-3 rounded-xl border border-[#102A43]/15">
+                    <span className="text-[10px] text-[#829AB1] uppercase font-heading font-bold block">Baseline Reference</span>
+                    <strong className="text-base font-mono text-[#0E7490]">{simResult.envelope.baseline_value.toFixed(1)}</strong>
                     <div className="mt-1">
                       <span className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold ${getSeverityBadgeVariant(simResult.envelope.baseline_category)}`}>
                         {simResult.envelope.baseline_category}
@@ -562,9 +562,9 @@ export const FarmerWhatIfPage: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="bg-white p-3 rounded-xl border border-[#0B1726]/15">
-                    <span className="text-[10px] text-[#62768A] uppercase font-heading font-bold block">Median Envelope</span>
-                    <strong className="text-base font-mono text-[#0B1726]">{simResult.envelope.median_value.toFixed(1)}</strong>
+                  <div className="bg-white p-3 rounded-xl border border-[#102A43]/15">
+                    <span className="text-[10px] text-[#829AB1] uppercase font-heading font-bold block">Median Envelope</span>
+                    <strong className="text-base font-mono text-[#102A43]">{simResult.envelope.median_value.toFixed(1)}</strong>
                     <div className="mt-1">
                       <span className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold ${getSeverityBadgeVariant(simResult.envelope.median_category)}`}>
                         {simResult.envelope.median_category}
@@ -572,8 +572,8 @@ export const FarmerWhatIfPage: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="bg-white p-3 rounded-xl border border-[#0B1726]/15">
-                    <span className="text-[10px] text-[#62768A] uppercase font-heading font-bold block">Maximum Boundary</span>
+                  <div className="bg-white p-3 rounded-xl border border-[#102A43]/15">
+                    <span className="text-[10px] text-[#829AB1] uppercase font-heading font-bold block">Maximum Boundary</span>
                     <strong className="text-base font-mono text-[#E53E3E]">{simResult.envelope.max_value.toFixed(1)}</strong>
                     <div className="mt-1">
                       <span className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold ${getSeverityBadgeVariant(simResult.envelope.max_category)}`}>
@@ -587,31 +587,31 @@ export const FarmerWhatIfPage: React.FC = () => {
 
             {/* Deterministic Sensitivity Response Curve Data */}
             {sensitivityResult && sensitivityResult.curve_points && sensitivityResult.curve_points.length > 0 && (
-              <div className="p-5 bg-white rounded-xl border-2 border-[#0B1726] space-y-3">
+              <div className="p-5 bg-white rounded-xl border-2 border-[#102A43] space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Activity className="w-4 h-4 text-[#008F83]" />
-                    <h4 className="font-heading font-black text-xs text-[#0B1726] uppercase tracking-wider">
+                    <Activity className="w-4 h-4 text-[#0E7490]" />
+                    <h4 className="font-heading font-black text-xs text-[#102A43] uppercase tracking-wider">
                       Deterministic Parameter Response Curve ({sensitivityResult.parameter_name})
                     </h4>
                   </div>
-                  <span className="text-[10px] text-[#62768A] font-mono">
+                  <span className="text-[10px] text-[#829AB1] font-mono">
                     Step-Wise Perturbation Points (No ML Fitting)
                   </span>
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5">
                   {sensitivityResult.curve_points.map((pt, idx) => (
-                    <div key={idx} className="bg-[#F7F3EA] p-3 rounded-xl border border-[#0B1726]/15 text-center space-y-1">
-                      <span className="text-[10px] font-mono text-[#62768A] block">{pt.parameter_label}</span>
-                      <strong className="text-xs font-mono text-[#0B1726] block">
+                    <div key={idx} className="bg-[#F3F6F7] p-3 rounded-xl border border-[#102A43]/15 text-center space-y-1">
+                      <span className="text-[10px] font-mono text-[#829AB1] block">{pt.parameter_label}</span>
+                      <strong className="text-xs font-mono text-[#102A43] block">
                         {pt.indicator_values?.moisture_stress_pct !== undefined
                           ? `${pt.indicator_values.moisture_stress_pct.toFixed(1)}%`
                           : pt.indicator_values?.waterlogging_risk_pct !== undefined
                           ? `${pt.indicator_values.waterlogging_risk_pct.toFixed(1)}%`
                           : '—'}
                       </strong>
-                      <span className="text-[9px] text-[#62768A] font-mono block">
+                      <span className="text-[9px] text-[#829AB1] font-mono block">
                         Δ {pt.deltas?.moisture_stress_pct !== undefined ? `${pt.deltas.moisture_stress_pct > 0 ? '+' : ''}${pt.deltas.moisture_stress_pct.toFixed(1)}%` : '—'}
                       </span>
                     </div>
@@ -622,21 +622,21 @@ export const FarmerWhatIfPage: React.FC = () => {
 
             {/* Non-Causal Explanation & Assumptions */}
             {simResult.explanation && (
-              <div className="p-4 bg-[#F7F3EA] rounded-xl border border-[#0B1726]/15 space-y-2 text-xs">
-                <div className="flex items-center gap-1.5 font-heading font-bold text-[#0B1726]">
-                  <FileText className="w-4 h-4 text-[#008F83]" />
+              <div className="p-4 bg-[#F3F6F7] rounded-xl border border-[#102A43]/15 space-y-2 text-xs">
+                <div className="flex items-center gap-1.5 font-heading font-bold text-[#102A43]">
+                  <FileText className="w-4 h-4 text-[#0E7490]" />
                   <span>Scientific Explanation & Non-Causal Attribution</span>
                 </div>
-                <p className="text-[#435466] leading-relaxed">
-                  <strong className="text-[#0B1726]">Baseline Observation:</strong> {simResult.explanation.baseline_description}
+                <p className="text-[#486581] leading-relaxed">
+                  <strong className="text-[#102A43]">Baseline Observation:</strong> {simResult.explanation.baseline_description}
                 </p>
-                <p className="text-[#435466] leading-relaxed">
-                  <strong className="text-[#0B1726]">Perturbations Applied:</strong> {simResult.explanation.perturbations_applied.join(', ')}
+                <p className="text-[#486581] leading-relaxed">
+                  <strong className="text-[#102A43]">Perturbations Applied:</strong> {simResult.explanation.perturbations_applied.join(', ')}
                 </p>
-                <p className="text-[#435466] leading-relaxed">
-                  <strong className="text-[#0B1726]">Indicator Shift Summary:</strong> {simResult.explanation.indicator_shift_summary}
+                <p className="text-[#486581] leading-relaxed">
+                  <strong className="text-[#102A43]">Indicator Shift Summary:</strong> {simResult.explanation.indicator_shift_summary}
                 </p>
-                <div className="p-3 bg-white rounded-lg border border-[#0B1726]/10 text-[11px] text-[#435466] italic font-sans">
+                <div className="p-3 bg-white rounded-lg border border-[#102A43]/10 text-[11px] text-[#486581] italic font-sans">
                   "{simResult.explanation.non_causal_statement}"
                 </div>
               </div>
@@ -644,15 +644,15 @@ export const FarmerWhatIfPage: React.FC = () => {
 
             {/* Cryptographic Lineage & Provenance */}
             {simResult.provenance && (
-              <div className="p-4 bg-[#0B1726] text-white rounded-xl font-mono text-[10px] space-y-1.5">
+              <div className="p-4 bg-[#102A43] text-white rounded-xl font-mono text-[10px] space-y-1.5">
                 <div className="flex items-center justify-between text-[#94A3B8] border-b border-white/10 pb-1 mb-1">
                   <span className="flex items-center gap-1">
-                    <Database className="w-3 h-3 text-[#008F83]" /> Cryptographic Provenance & Lineage Fingerprint
+                    <Database className="w-3 h-3 text-[#0E7490]" /> Cryptographic Provenance & Lineage Fingerprint
                   </span>
                   <span>Version {simResult.provenance.scenario_version}</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1">
-                  <div>Parameter SHA-256: <span className="text-[#99E1DC]">{simResult.provenance.parameter_hash.substring(0, 16)}...</span></div>
+                  <div>Parameter SHA-256: <span className="text-[#0891B2]">{simResult.provenance.parameter_hash.substring(0, 16)}...</span></div>
                   <div>Dataset Fingerprint: <span className="text-white">{simResult.provenance.dataset_fingerprint}</span></div>
                   <div>Ground Anchor: <span className="text-white">{simResult.provenance.baseline_reference}</span></div>
                   <div>Engine Release: <span className="text-white">{simResult.provenance.engine_version}</span></div>
@@ -661,10 +661,10 @@ export const FarmerWhatIfPage: React.FC = () => {
             )}
 
             {/* Explicit Disclaimer Notice */}
-            <div className="p-4 bg-[#FEF6E9] rounded-xl border border-[#E5A33D] text-[#7A4B00] text-xs flex items-start gap-3">
-              <AlertTriangle className="w-4 h-4 text-[#E5A33D] shrink-0 mt-0.5" />
+            <div className="p-4 bg-[#FEF3C7] rounded-xl border border-[#D97706] text-[#7A4B00] text-xs flex items-start gap-3">
+              <AlertTriangle className="w-4 h-4 text-[#D97706] shrink-0 mt-0.5" />
               <div>
-                <strong className="block font-heading font-black text-[#0B1726]">Mandatory Scientific Boundary</strong>
+                <strong className="block font-heading font-black text-[#102A43]">Mandatory Scientific Boundary</strong>
                 <p className="text-[11px] text-[#7A4B00] leading-relaxed mt-0.5">
                   {simResult.scientific_disclaimer}
                 </p>

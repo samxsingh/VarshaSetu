@@ -108,27 +108,27 @@ export const ModelsPage: React.FC = () => {
   return (
     <div className="space-y-6" data-testid="models-page">
       {/* 1. Page Header */}
-      <div className="bg-white border-2 border-[#0B1726] rounded-2xl p-5 sm:p-6 shadow-[4px_4px_0px_#0B1726]">
+      <div className="bg-white border-2 border-[#102A43] rounded-2xl p-5 sm:p-6 shadow-[4px_4px_0px_#102A43]">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="px-2.5 py-0.5 rounded-md bg-[#008F83] text-white text-[10px] font-mono font-bold uppercase tracking-wider">
+              <span className="px-2.5 py-0.5 rounded-md bg-[#0E7490] text-white text-[10px] font-mono font-bold uppercase tracking-wider">
                 03 MODEL REGISTRY
               </span>
-              <span className="px-2.5 py-0.5 rounded-md bg-[#DCEFF0] text-[#006B65] text-[10px] font-mono font-bold border border-[#008F83]/30">
+              <span className="px-2.5 py-0.5 rounded-md bg-[#E8F4F6] text-[#155E75] text-[10px] font-mono font-bold border border-[#0E7490]/30">
                 Phase 4B Ensembles
               </span>
-              <span className="px-2.5 py-0.5 rounded-md bg-[#FEF6E9] border border-[#E5A33D] text-[#9A6218] text-[10px] font-mono font-bold">
+              <span className="px-2.5 py-0.5 rounded-md bg-[#FEF3C7] border border-[#D97706] text-[#B45309] text-[10px] font-mono font-bold">
                 Phase 4C Calibration
               </span>
-              <span className="px-2.5 py-0.5 rounded-md bg-white border border-[#0B1726]/20 text-[#0B1726] text-[10px] font-mono font-bold">
+              <span className="px-2.5 py-0.5 rounded-md bg-white border border-[#102A43]/20 text-[#102A43] text-[10px] font-mono font-bold">
                 Block Centroid (~9km)
               </span>
             </div>
-            <h1 className="font-heading font-extrabold text-2xl sm:text-3xl text-[#0B1726] tracking-tight">
+            <h1 className="font-heading font-extrabold text-2xl sm:text-3xl text-[#102A43] tracking-tight">
               Operational Downscaling & Model Benchmark Registry
             </h1>
-            <p className="text-xs sm:text-sm text-[#435466] max-w-3xl leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#486581] max-w-3xl leading-relaxed">
               Evaluating multi-paradigm downscaling models (Climatology vs Linear Baselines vs XGBoost vs LightGBM) with empirical reliability diagrams and Murphy (1973) Brier score decompositions.
             </p>
           </div>
@@ -137,7 +137,7 @@ export const ModelsPage: React.FC = () => {
             <button
               onClick={handleRefresh}
               disabled={refreshing || loading}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-heading font-bold bg-[#F7F3EA] text-[#0B1726] border-2 border-[#0B1726] shadow-[2px_2px_0px_#0B1726] hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-50 min-h-[40px]"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-heading font-bold bg-[#F3F6F7] text-[#102A43] border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-50 min-h-[40px]"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
               <span>Refresh</span>
@@ -145,7 +145,7 @@ export const ModelsPage: React.FC = () => {
             <button
               onClick={handleTrain}
               disabled={training}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-heading font-bold bg-[#008F83] text-white border-2 border-[#0B1726] shadow-[2px_2px_0px_#0B1726] hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-50 min-h-[40px]"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-heading font-bold bg-[#0E7490] text-white border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-50 min-h-[40px]"
             >
               <FlaskConical className={`w-3.5 h-3.5 ${training ? 'animate-spin' : ''}`} />
               <span>{training ? 'Benchmarking...' : 'Train Tree Ensembles'}</span>
@@ -155,10 +155,10 @@ export const ModelsPage: React.FC = () => {
       </div>
 
       {/* 2. Scientific Limitation & Provenance Disclosure */}
-      <div className="p-4 bg-[#FEF6E9] border-2 border-[#E5A33D] rounded-xl text-xs text-[#9A6218] flex items-start gap-3 shadow-[2px_2px_0px_#0B1726]">
-        <AlertCircle className="w-5 h-5 text-[#E5A33D] shrink-0 mt-0.5" />
+      <div className="p-4 bg-[#FEF3C7] border-2 border-[#D97706] rounded-xl text-xs text-[#B45309] flex items-start gap-3 shadow-[2px_2px_0px_#102A43]">
+        <AlertCircle className="w-5 h-5 text-[#D97706] shrink-0 mt-0.5" />
         <div className="space-y-1 leading-relaxed">
-          <p className="font-heading font-extrabold text-[#9A6218]">
+          <p className="font-heading font-extrabold text-[#B45309]">
             Data Availability & Spatial Resolution Guardrail:
           </p>
           <p>
@@ -175,8 +175,8 @@ export const ModelsPage: React.FC = () => {
       )}
 
       {/* 3. Target Selector Bar */}
-      <div className="bg-white border-2 border-[#0B1726] rounded-xl p-3 shadow-[3px_3px_0px_#0B1726] flex flex-wrap items-center gap-3">
-        <span className="text-xs font-heading font-extrabold uppercase tracking-wider text-[#0B1726]">
+      <div className="bg-white border-2 border-[#102A43] rounded-xl p-3 shadow-[3px_3px_0px_#102A43] flex flex-wrap items-center gap-3">
+        <span className="text-xs font-heading font-extrabold uppercase tracking-wider text-[#102A43]">
           Benchmark Target:
         </span>
         <div className="flex flex-wrap gap-2">
@@ -186,8 +186,8 @@ export const ModelsPage: React.FC = () => {
               onClick={() => setSelectedTarget(tgt)}
               className={`px-3 py-1.5 rounded-lg text-xs font-heading font-bold border-2 transition-all ${
                 selectedTarget === tgt
-                  ? 'bg-[#008F83] text-white border-[#0B1726] shadow-[2px_2px_0px_#0B1726]'
-                  : 'bg-[#F7F3EA] text-[#435466] border-[#0B1726]/15 hover:border-[#0B1726]'
+                  ? 'bg-[#0E7490] text-white border-[#102A43] shadow-[2px_2px_0px_#102A43]'
+                  : 'bg-[#F3F6F7] text-[#486581] border-[#102A43]/15 hover:border-[#102A43]'
               }`}
             >
               {tgt === 'HEAVY_RAIN' ? 'Heavy Rain (>64.5mm)' : tgt === 'DRY_SPELL' ? 'Dry Spell (>=5d)' : 'Rainfall Sum (mm)'}
@@ -195,30 +195,30 @@ export const ModelsPage: React.FC = () => {
           ))}
         </div>
         <div className="flex items-center gap-1.5 ml-auto">
-          <span className="text-xs text-[#62768A] font-mono">Horizon:</span>
-          <span className="px-2 py-0.5 rounded bg-[#F7F3EA] border border-[#0B1726]/20 font-mono font-bold text-xs text-[#0B1726]">
+          <span className="text-xs text-[#829AB1] font-mono">Horizon:</span>
+          <span className="px-2 py-0.5 rounded bg-[#F3F6F7] border border-[#102A43]/20 font-mono font-bold text-xs text-[#102A43]">
             {selectedHorizon} Days
           </span>
         </div>
       </div>
 
       {/* 4. Multi-Model Benchmark Comparison Table */}
-      <div className="bg-white border-2 border-[#0B1726] rounded-2xl shadow-[4px_4px_0px_#0B1726] overflow-hidden">
-        <div className="p-4 border-b-2 border-[#0B1726]/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-[#FDFBF7]">
+      <div className="bg-white border-2 border-[#102A43] rounded-2xl shadow-[4px_4px_0px_#102A43] overflow-hidden">
+        <div className="p-4 border-b-2 border-[#102A43]/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-[#FFFFFF]">
           <div className="flex items-center gap-2">
-            <Scale className="w-4 h-4 text-[#008F83]" />
-            <h3 className="font-heading font-extrabold text-sm text-[#0B1726]">
+            <Scale className="w-4 h-4 text-[#0E7490]" />
+            <h3 className="font-heading font-extrabold text-sm text-[#102A43]">
               Multi-Paradigm Benchmark: Identical Test Partition
             </h3>
           </div>
-          <span className="text-xs text-[#62768A] font-mono">
+          <span className="text-xs text-[#829AB1] font-mono">
             Evaluated on {comparison?.benchmark_report?.test_sample_count || 18} samples ({comparison?.benchmark_report?.evaluation_period || '2024-09-13 to 2024-09-30'})
           </span>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-[#F7F3EA] border-b-2 border-[#0B1726]/15 font-heading text-[#0B1726] uppercase tracking-wider text-[11px]">
+            <thead className="bg-[#F3F6F7] border-b-2 border-[#102A43]/15 font-heading text-[#102A43] uppercase tracking-wider text-[11px]">
               <tr>
                 <th className="py-3 px-3.5 font-extrabold">Model Paradigm</th>
                 <th className="py-3 px-3 font-extrabold">Family</th>
@@ -230,34 +230,34 @@ export const ModelsPage: React.FC = () => {
                 <th className="py-3 px-3.5 font-extrabold">Evaluation Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#0B1726]/10 font-sans text-xs">
+            <tbody className="divide-y divide-[#102A43]/10 font-sans text-xs">
               {comparison?.benchmark_report?.models?.map((m) => (
-                <tr key={m.model_id} className="hover:bg-[#FDFBF7] transition-colors">
-                  <td className="py-3 px-3.5 font-heading font-bold text-[#0B1726]">
+                <tr key={m.model_id} className="hover:bg-[#FFFFFF] transition-colors">
+                  <td className="py-3 px-3.5 font-heading font-bold text-[#102A43]">
                     {m.model_name}
                   </td>
-                  <td className="py-3 px-3 font-mono text-[#62768A]">
-                    <span className="capitalize px-2 py-0.5 bg-[#F7F3EA] rounded border border-[#0B1726]/10 text-[11px]">
+                  <td className="py-3 px-3 font-mono text-[#829AB1]">
+                    <span className="capitalize px-2 py-0.5 bg-[#F3F6F7] rounded border border-[#102A43]/10 text-[11px]">
                       {m.model_family.replace('_', ' ')}
                     </span>
                   </td>
-                  <td className="py-3 px-3 font-mono font-bold text-[#0B1726]">
+                  <td className="py-3 px-3 font-mono font-bold text-[#102A43]">
                     {m.brier_score !== undefined ? m.brier_score.toFixed(4) : m.mae !== undefined ? `${m.mae.toFixed(2)} mm` : '—'}
                   </td>
                   <td className="py-3 px-3 font-mono">
                     {m.brier_skill_score !== undefined ? (
-                      <span className={m.brier_skill_score > 0 ? 'text-[#2F7D4A] font-bold' : 'text-[#62768A]'}>
+                      <span className={m.brier_skill_score > 0 ? 'text-[#3F7D58] font-bold' : 'text-[#829AB1]'}>
                         {m.brier_skill_score > 0 ? `+${(m.brier_skill_score * 100).toFixed(1)}% BSS` : `${(m.brier_skill_score * 100).toFixed(1)}% BSS`}
                       </span>
                     ) : m.mae_skill_score !== undefined ? (
-                      <span className={m.mae_skill_score > 0 ? 'text-[#2F7D4A] font-bold' : 'text-[#62768A]'}>
+                      <span className={m.mae_skill_score > 0 ? 'text-[#3F7D58] font-bold' : 'text-[#829AB1]'}>
                         {m.mae_skill_score > 0 ? `+${(m.mae_skill_score * 100).toFixed(1)}% MSS` : `${(m.mae_skill_score * 100).toFixed(1)}% MSS`}
                       </span>
                     ) : (
                       '0.0% (Ref)'
                     )}
                   </td>
-                  <td className="py-3 px-3 font-mono text-[#435466]">
+                  <td className="py-3 px-3 font-mono text-[#486581]">
                     {m.roc_auc !== undefined ? (
                       <span>AUC: {m.roc_auc.toFixed(3)}</span>
                     ) : m.rmse !== undefined ? (
@@ -266,7 +266,7 @@ export const ModelsPage: React.FC = () => {
                       '—'
                     )}
                   </td>
-                  <td className="py-3 px-3 font-mono text-[#435466]">
+                  <td className="py-3 px-3 font-mono text-[#486581]">
                     {m.accuracy !== undefined ? (
                       <span>{(m.accuracy * 100).toFixed(1)}% (F1: {m.f1_score?.toFixed(2) || '0.00'})</span>
                     ) : (
@@ -277,14 +277,14 @@ export const ModelsPage: React.FC = () => {
                     <span
                       className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold border ${
                         m.is_calibrated
-                          ? 'bg-[#EBF5EE] text-[#2F7D4A] border-[#2F7D4A]/30'
-                          : 'bg-[#F7F3EA] text-[#62768A] border-[#0B1726]/15'
+                          ? 'bg-[#EBF5EE] text-[#3F7D58] border-[#3F7D58]/30'
+                          : 'bg-[#F3F6F7] text-[#829AB1] border-[#102A43]/15'
                       }`}
                     >
                       {m.is_calibrated ? 'Calibrated' : 'Uncalibrated'}
                     </span>
                   </td>
-                  <td className="py-3 px-3.5 text-[#435466] text-[11px]">
+                  <td className="py-3 px-3.5 text-[#486581] text-[11px]">
                     {m.has_skill_over_climatology ? 'Demonstrates Skill' : 'Baseline Reference'}
                   </td>
                 </tr>
@@ -303,25 +303,25 @@ export const ModelsPage: React.FC = () => {
       />
 
       {/* 6. SHAP Feature Contribution & Explainability */}
-      <div className="bg-white border-2 border-[#0B1726] rounded-2xl p-5 sm:p-6 shadow-[4px_4px_0px_#0B1726] space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b-2 border-[#0B1726]/10 gap-2">
+      <div className="bg-white border-2 border-[#102A43] rounded-2xl p-5 sm:p-6 shadow-[4px_4px_0px_#102A43] space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b-2 border-[#102A43]/10 gap-2">
           <div className="flex items-center gap-2">
-            <Compass className="w-5 h-5 text-[#008F83]" />
-            <h3 className="font-heading font-extrabold text-base text-[#0B1726]">
+            <Compass className="w-5 h-5 text-[#0E7490]" />
+            <h3 className="font-heading font-extrabold text-base text-[#102A43]">
               SHAP Explainability: Feature Attributions & Teleconnections
             </h3>
           </div>
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-md bg-[#DCEFF0] text-[#006B65] text-[10px] font-mono font-bold border border-[#008F83]/30">
+            <span className="px-2.5 py-0.5 rounded-md bg-[#E8F4F6] text-[#155E75] text-[10px] font-mono font-bold border border-[#0E7490]/30">
               Teleconnections: {explanations?.teleconnection_importance_pct || 18.5}% Impact
             </span>
-            <span className="px-2.5 py-0.5 rounded-md bg-[#F7F3EA] border border-[#0B1726]/20 text-[#0B1726] text-[10px] font-mono font-bold">
+            <span className="px-2.5 py-0.5 rounded-md bg-[#F3F6F7] border border-[#102A43]/20 text-[#102A43] text-[10px] font-mono font-bold">
               Top Driver: {explanations?.top_driver || 'rainfall_1d'}
             </span>
           </div>
         </div>
 
-        <p className="text-xs text-[#435466] leading-relaxed">
+        <p className="text-xs text-[#486581] leading-relaxed">
           Tree SHAP attributions quantify the marginal empirical contribution of each antecedent meteorological variable and global teleconnection index to the downscaled forecast without establishing causal determinism.
         </p>
 
@@ -329,23 +329,23 @@ export const ModelsPage: React.FC = () => {
           {explanations?.global_importances?.slice(0, 6).map((item) => (
             <div
               key={item.feature_name}
-              className="p-3.5 bg-[#F7F3EA] border-2 border-[#0B1726]/15 rounded-xl space-y-2"
+              className="p-3.5 bg-[#F3F6F7] border-2 border-[#102A43]/15 rounded-xl space-y-2"
             >
               <div className="flex items-center justify-between">
-                <span className="font-mono text-xs font-bold text-[#0B1726]">
+                <span className="font-mono text-xs font-bold text-[#102A43]">
                   {item.feature_name}
                 </span>
-                <span className="text-xs font-mono font-black text-[#008F83]">
+                <span className="text-xs font-mono font-black text-[#0E7490]">
                   {item.relative_importance_pct.toFixed(1)}%
                 </span>
               </div>
-              <div className="w-full bg-white rounded-full h-2 overflow-hidden border border-[#0B1726]/15">
+              <div className="w-full bg-white rounded-full h-2 overflow-hidden border border-[#102A43]/15">
                 <div
-                  className="bg-[#008F83] h-full rounded-full"
+                  className="bg-[#0E7490] h-full rounded-full"
                   style={{ width: `${Math.min(100, item.relative_importance_pct * 2.5)}%` }}
                 />
               </div>
-              <div className="flex items-center justify-between text-[10px] font-mono text-[#62768A]">
+              <div className="flex items-center justify-between text-[10px] font-mono text-[#829AB1]">
                 <span className="capitalize">{item.meteorological_category.replace('_', ' ')}</span>
                 <span>Mean |SHAP|: {item.mean_abs_shap.toFixed(3)}</span>
               </div>
@@ -355,10 +355,10 @@ export const ModelsPage: React.FC = () => {
       </div>
 
       {/* 7. Scientific Dataset Catalog */}
-      <div className="bg-white border-2 border-[#0B1726] rounded-2xl p-5 sm:p-6 shadow-[4px_4px_0px_#0B1726] space-y-4">
-        <div className="flex items-center gap-2 pb-3 border-b-2 border-[#0B1726]/10">
-          <Database className="w-5 h-5 text-[#2F7D4A]" />
-          <h3 className="font-heading font-extrabold text-base text-[#0B1726]">
+      <div className="bg-white border-2 border-[#102A43] rounded-2xl p-5 sm:p-6 shadow-[4px_4px_0px_#102A43] space-y-4">
+        <div className="flex items-center gap-2 pb-3 border-b-2 border-[#102A43]/10">
+          <Database className="w-5 h-5 text-[#3F7D58]" />
+          <h3 className="font-heading font-extrabold text-base text-[#102A43]">
             Scientific Dataset Catalog & Integrity Hashing
           </h3>
         </div>
@@ -367,22 +367,22 @@ export const ModelsPage: React.FC = () => {
           {datasets.map((ds) => (
             <div
               key={ds.dataset_id}
-              className="p-3.5 bg-[#F7F3EA] border-2 border-[#0B1726]/15 rounded-xl space-y-2"
+              className="p-3.5 bg-[#F3F6F7] border-2 border-[#102A43]/15 rounded-xl space-y-2"
             >
               <div className="flex items-start justify-between gap-1">
-                <h4 className="font-heading font-bold text-xs text-[#0B1726] leading-snug">{ds.name}</h4>
+                <h4 className="font-heading font-bold text-xs text-[#102A43] leading-snug">{ds.name}</h4>
                 <span
                   className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold border ${
                     ds.qc_passed
-                      ? 'bg-[#EBF5EE] text-[#2F7D4A] border-[#2F7D4A]/30'
-                      : 'bg-[#FEF6E9] text-[#9A6218] border-[#E5A33D]/40'
+                      ? 'bg-[#EBF5EE] text-[#3F7D58] border-[#3F7D58]/30'
+                      : 'bg-[#FEF3C7] text-[#B45309] border-[#D97706]/40'
                   }`}
                 >
                   {ds.qc_passed ? 'QC Passed' : 'Pending'}
                 </span>
               </div>
-              <p className="text-[11px] text-[#435466] line-clamp-2">{ds.provider}</p>
-              <div className="pt-2 border-t border-[#0B1726]/10 text-[10px] font-mono text-[#62768A] space-y-0.5">
+              <p className="text-[11px] text-[#486581] line-clamp-2">{ds.provider}</p>
+              <div className="pt-2 border-t border-[#102A43]/10 text-[10px] font-mono text-[#829AB1] space-y-0.5">
                 <div><span>Resolution:</span> {ds.spatial_resolution}</div>
                 <div><span>Cadence:</span> {ds.temporal_resolution}</div>
               </div>

@@ -4,18 +4,39 @@
 
 @layer base {
   :root {
-    --canvas: #F7F3EA;
-    --text-primary: #0B1726;
-    --text-secondary: #435466;
-    --teal-primary: #008F83;
-    --teal-deep: #006B65;
-    --agri-green: #2F7D4A;
-    --amber-warm: #E5A33D;
+    --vs-canvas: #F3F6F7;
+    --vs-canvas-secondary: #EAF0F2;
+    --vs-surface: #FFFFFF;
+    --vs-surface-muted: #EAF0F2;
+    --vs-surface-highlight: #E8F4F6;
+    --vs-ink: #102A43;
+    --vs-ink-secondary: #486581;
+    --vs-ink-muted: #829AB1;
+    --vs-climate: #0E7490;
+    --vs-climate-deep: #155E75;
+    --vs-atmosphere: #0891B2;
+    --vs-storm: #102A43;
+    --vs-storm-deep: #0B1F33;
+    --vs-rain: #2563EB;
+    --vs-rain-soft: #DBEAFE;
+    --vs-amber: #D97706;
+    --vs-amber-soft: #FEF3C7;
+    --vs-agri: #3F7D58;
+    --vs-agri-soft: #E4F0E8;
+
+    /* Legacy compatibility variables */
+    --canvas: #F3F6F7;
+    --text-primary: #102A43;
+    --text-secondary: #486581;
+    --teal-primary: #0E7490;
+    --teal-deep: #155E75;
+    --agri-green: #3F7D58;
+    --amber-warm: #D97706;
   }
 
   body {
-    background-color: #F7F3EA;
-    color: #0B1726;
+    background-color: #F3F6F7;
+    color: #102A43;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -28,13 +49,13 @@
 
   /* Focus styling for keyboard accessibility */
   *:focus-visible {
-    outline: 2px solid #008F83;
+    outline: 2px solid #0E7490;
     outline-offset: 2px;
   }
 }
 
 /* -------------------------------------------------------------
-   Editorial & Neo-Brutalist Utility Classes & Keyframes
+   Climate Intelligence & Neo-Brutalist Utility Classes & Keyframes
    ------------------------------------------------------------- */
 @keyframes fadeUp {
   from {
@@ -90,53 +111,53 @@
   animation: floatReverse 6s ease-in-out infinite;
 }
 
-/* Editorial subtle paper grain / geo texture */
+/* Atmospheric subtle observation texture */
 .bg-editorial-grain {
-  background-color: #F7F3EA;
+  background-color: #F3F6F7;
   background-image: 
-    radial-gradient(at 0% 0%, rgba(220, 239, 240, 0.5) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(247, 232, 199, 0.4) 0px, transparent 50%),
-    radial-gradient(at 50% 50%, rgba(221, 235, 221, 0.3) 0px, transparent 60%);
+    radial-gradient(at 0% 0%, rgba(14, 116, 144, 0.05) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(37, 99, 235, 0.04) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(234, 240, 242, 0.5) 0px, transparent 60%);
 }
 
 .bg-subtle-contour {
-  background-image: radial-gradient(#008F83 0.6px, transparent 0.6px);
+  background-image: radial-gradient(#0E7490 0.5px, transparent 0.5px);
   background-size: 28px 28px;
 }
 
 /* Interactive Neo-brutalist buttons */
 .btn-brutal-teal {
-  background-color: #008F83;
+  background-color: #0E7490;
   color: #FFFFFF;
-  border: 1px solid #006B65;
-  box-shadow: 2px 2px 0px #0B1726;
+  border: 2px solid #102A43;
+  box-shadow: 2px 2px 0px #102A43;
   transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .btn-brutal-teal:hover {
   transform: translate(-1.5px, -1.5px);
-  box-shadow: 4px 4px 0px #0B1726;
-  background-color: #007D73;
+  box-shadow: 4px 4px 0px #102A43;
+  background-color: #155E75;
 }
 .btn-brutal-teal:active {
   transform: translate(1px, 1px);
-  box-shadow: 1px 1px 0px #0B1726;
+  box-shadow: 1px 1px 0px #102A43;
 }
 
 .btn-brutal-secondary {
   background-color: #FFFFFF;
-  color: #0B1726;
-  border: 1px solid #0B1726;
-  box-shadow: 2px 2px 0px #0B1726;
+  color: #102A43;
+  border: 2px solid #102A43;
+  box-shadow: 2px 2px 0px #102A43;
   transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .btn-brutal-secondary:hover {
   transform: translate(-1.5px, -1.5px);
-  box-shadow: 4px 4px 0px #0B1726;
-  background-color: #FDFBF7;
+  box-shadow: 4px 4px 0px #102A43;
+  background-color: #EAF0F2;
 }
 .btn-brutal-secondary:active {
   transform: translate(1px, 1px);
-  box-shadow: 1px 1px 0px #0B1726;
+  box-shadow: 1px 1px 0px #102A43;
 }
 
 /* Reduced motion accessibility support */
@@ -155,12 +176,12 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #F7F3EA;
+  background: #F3F6F7;
 }
 ::-webkit-scrollbar-thumb {
-  background: #D8D3C5;
+  background: #B8C5CC;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #435466;
+  background: #486581;
 }

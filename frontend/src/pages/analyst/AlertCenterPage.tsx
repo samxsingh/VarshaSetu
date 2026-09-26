@@ -141,21 +141,21 @@ export const AlertCenterPage: React.FC = () => {
   return (
     <div className="space-y-6" data-testid="alert-center-page">
       {/* 1. Header & Actions */}
-      <div className="bg-white border-2 border-[#0B1726] rounded-2xl p-5 sm:p-6 shadow-[4px_4px_0px_#0B1726]">
+      <div className="bg-white border-2 border-[#102A43] rounded-2xl p-5 sm:p-6 shadow-[4px_4px_0px_#102A43]">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2 flex-wrap">
-              <h2 className="font-heading font-extrabold text-xl sm:text-2xl text-[#0B1726] tracking-tight">
+              <h2 className="font-heading font-extrabold text-xl sm:text-2xl text-[#102A43] tracking-tight">
                 Alert Intelligence & Scientific Event Center
               </h2>
-              <span className="px-2.5 py-0.5 rounded-md bg-[#FEF6E9] border border-[#E5A33D] text-[#9A6218] text-[10px] font-mono font-bold">
+              <span className="px-2.5 py-0.5 rounded-md bg-[#FEF3C7] border border-[#D97706] text-[#B45309] text-[10px] font-mono font-bold">
                 DIAGNOSTIC_ONLY
               </span>
-              <span className="px-2.5 py-0.5 rounded-md bg-[#F7F3EA] border border-[#0B1726]/20 text-[#0B1726] text-[10px] font-mono font-bold">
+              <span className="px-2.5 py-0.5 rounded-md bg-[#F3F6F7] border border-[#102A43]/20 text-[#102A43] text-[10px] font-mono font-bold">
                 Historical Archive (Kharif 2024)
               </span>
             </div>
-            <p className="text-xs text-[#435466]">
+            <p className="text-xs text-[#486581]">
               Deterministic threshold detection and alert lifecycle management for Bakshi Ka Talab (UP_LKO_BKT). Non-operational diagnostic advisory mode.
             </p>
           </div>
@@ -164,7 +164,7 @@ export const AlertCenterPage: React.FC = () => {
             <button
               onClick={handleDetectEvents}
               disabled={isDetecting}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-heading font-bold bg-[#008F83] text-white border-2 border-[#0B1726] shadow-[2px_2px_0px_#0B1726] hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-50 min-h-[40px]"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-heading font-bold bg-[#0E7490] text-white border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-50 min-h-[40px]"
             >
               {isDetecting ? (
                 <>
@@ -182,7 +182,7 @@ export const AlertCenterPage: React.FC = () => {
             <button
               onClick={handleProcessExpiry}
               disabled={isExpiring}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-heading font-bold bg-[#F7F3EA] text-[#0B1726] border-2 border-[#0B1726] shadow-[2px_2px_0px_#0B1726] hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-50 min-h-[40px]"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-heading font-bold bg-[#F3F6F7] text-[#102A43] border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-50 min-h-[40px]"
             >
               {isExpiring ? (
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -196,10 +196,10 @@ export const AlertCenterPage: React.FC = () => {
       </div>
 
       {/* 2. Operational Gating Disclosure */}
-      <div className="p-4 bg-[#F7F3EA] border-2 border-[#0B1726] rounded-xl text-xs text-[#435466] shadow-[2px_2px_0px_#0B1726] flex items-start gap-3">
-        <Info className="w-4 h-4 text-[#008F83] shrink-0 mt-0.5" />
+      <div className="p-4 bg-[#F3F6F7] border-2 border-[#102A43] rounded-xl text-xs text-[#486581] shadow-[2px_2px_0px_#102A43] flex items-start gap-3">
+        <Info className="w-4 h-4 text-[#0E7490] shrink-0 mt-0.5" />
         <p className="leading-relaxed">
-          <strong className="text-[#0B1726]">Scientific Integrity Notice:</strong> Events are detected directly from statistical downscaling outputs using Phase 4A meteorological thresholds (e.g. Heavy Rain ≥ 64.5mm/24h, Dry Spell ≥ 5 days). Because data reflects single-season historical archives, all events are designated <code>DIAGNOSTIC_ONLY</code>. Telecommunication broadcasting (SMS/WhatsApp) is disabled; deliveries operate in internal simulation mode.
+          <strong className="text-[#102A43]">Scientific Integrity Notice:</strong> Events are detected directly from statistical downscaling outputs using Phase 4A meteorological thresholds (e.g. Heavy Rain ≥ 64.5mm/24h, Dry Spell ≥ 5 days). Because data reflects single-season historical archives, all events are designated <code>DIAGNOSTIC_ONLY</code>. Telecommunication broadcasting (SMS/WhatsApp) is disabled; deliveries operate in internal simulation mode.
         </p>
       </div>
 
@@ -211,16 +211,16 @@ export const AlertCenterPage: React.FC = () => {
       )}
 
       {/* 3. Filters Bar */}
-      <div className="bg-white border-2 border-[#0B1726] rounded-xl p-4 shadow-[3px_3px_0px_#0B1726]">
+      <div className="bg-white border-2 border-[#102A43] rounded-xl p-4 shadow-[3px_3px_0px_#102A43]">
         <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3 items-center">
           <div>
-            <label className="text-[11px] font-heading font-bold text-[#0B1726] block mb-1">
+            <label className="text-[11px] font-heading font-bold text-[#102A43] block mb-1">
               Event Type
             </label>
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="w-full text-xs font-medium border-2 border-[#0B1726]/20 rounded-lg p-2 bg-[#F7F3EA] text-[#0B1726] focus:outline-none focus:border-[#008F83]"
+              className="w-full text-xs font-medium border-2 border-[#102A43]/20 rounded-lg p-2 bg-[#F3F6F7] text-[#102A43] focus:outline-none focus:border-[#0E7490]"
             >
               <option value="ALL">All Event Types</option>
               <option value="HEAVY_RAIN_RISK">Heavy Rain Risk (≥64.5mm)</option>
@@ -233,13 +233,13 @@ export const AlertCenterPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="text-[11px] font-heading font-bold text-[#0B1726] block mb-1">
+            <label className="text-[11px] font-heading font-bold text-[#102A43] block mb-1">
               Severity Tier
             </label>
             <select
               value={severityFilter}
               onChange={(e) => setSeverityFilter(e.target.value)}
-              className="w-full text-xs font-medium border-2 border-[#0B1726]/20 rounded-lg p-2 bg-[#F7F3EA] text-[#0B1726] focus:outline-none focus:border-[#008F83]"
+              className="w-full text-xs font-medium border-2 border-[#102A43]/20 rounded-lg p-2 bg-[#F3F6F7] text-[#102A43] focus:outline-none focus:border-[#0E7490]"
             >
               <option value="ALL">All Severities</option>
               <option value="CRITICAL">Critical</option>
@@ -250,13 +250,13 @@ export const AlertCenterPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="text-[11px] font-heading font-bold text-[#0B1726] block mb-1">
+            <label className="text-[11px] font-heading font-bold text-[#102A43] block mb-1">
               Lifecycle State
             </label>
             <select
               value={stateFilter}
               onChange={(e) => setStateFilter(e.target.value)}
-              className="w-full text-xs font-medium border-2 border-[#0B1726]/20 rounded-lg p-2 bg-[#F7F3EA] text-[#0B1726] focus:outline-none focus:border-[#008F83]"
+              className="w-full text-xs font-medium border-2 border-[#102A43]/20 rounded-lg p-2 bg-[#F3F6F7] text-[#102A43] focus:outline-none focus:border-[#0E7490]"
             >
               <option value="ALL">All States</option>
               <option value="DETECTED">Detected</option>
@@ -268,32 +268,32 @@ export const AlertCenterPage: React.FC = () => {
           </div>
 
           <div className="sm:self-end pt-1">
-            <span className="text-xs text-[#62768A] font-mono">
-              Total Events: <strong className="text-[#0B1726]">{events.length}</strong>
+            <span className="text-xs text-[#829AB1] font-mono">
+              Total Events: <strong className="text-[#102A43]">{events.length}</strong>
             </span>
           </div>
         </div>
       </div>
 
       {/* 4. Events Matrix Table */}
-      <div className="bg-white border-2 border-[#0B1726] rounded-2xl shadow-[4px_4px_0px_#0B1726] overflow-hidden">
+      <div className="bg-white border-2 border-[#102A43] rounded-2xl shadow-[4px_4px_0px_#102A43] overflow-hidden">
         {loading ? (
-          <div className="flex flex-col items-center justify-center p-12 text-[#62768A]">
-            <Loader2 className="w-8 h-8 animate-spin mb-3 text-[#008F83]" />
+          <div className="flex flex-col items-center justify-center p-12 text-[#829AB1]">
+            <Loader2 className="w-8 h-8 animate-spin mb-3 text-[#0E7490]" />
             <span className="text-xs font-mono font-bold">Scanning Alert Intelligence Registry...</span>
           </div>
         ) : events.length === 0 ? (
-          <div className="text-center p-12 text-[#62768A] space-y-2">
-            <Bell className="w-8 h-8 mx-auto text-[#0B1726]/30" />
-            <p className="text-sm font-heading font-bold text-[#0B1726]">No active events matching filter criteria</p>
-            <p className="text-xs text-[#435466]">
+          <div className="text-center p-12 text-[#829AB1] space-y-2">
+            <Bell className="w-8 h-8 mx-auto text-[#102A43]/30" />
+            <p className="text-sm font-heading font-bold text-[#102A43]">No active events matching filter criteria</p>
+            <p className="text-xs text-[#486581]">
               Click &quot;Detect Events&quot; above to run a threshold evaluation pass over current forecast products.
             </p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-[#F7F3EA] border-b-2 border-[#0B1726]/15 font-heading text-[#0B1726] uppercase tracking-wider text-[11px]">
+              <thead className="bg-[#F3F6F7] border-b-2 border-[#102A43]/15 font-heading text-[#102A43] uppercase tracking-wider text-[11px]">
                 <tr>
                   <th className="py-3 px-4 font-extrabold">Event & Type</th>
                   <th className="py-3 px-3 font-extrabold">Severity</th>
@@ -304,12 +304,12 @@ export const AlertCenterPage: React.FC = () => {
                   <th className="py-3 px-4 text-center font-extrabold">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#0B1726]/10 font-mono text-xs">
+              <tbody className="divide-y divide-[#102A43]/10 font-mono text-xs">
                 {events.map((ev) => (
-                  <tr key={ev.event_id} className="hover:bg-[#FDFBF7] transition-colors">
+                  <tr key={ev.event_id} className="hover:bg-[#FFFFFF] transition-colors">
                     <td className="py-3.5 px-4 font-sans">
-                      <div className="font-heading font-bold text-[#0B1726]">{ev.event_type}</div>
-                      <div className="text-[10px] font-mono text-[#62768A]">
+                      <div className="font-heading font-bold text-[#102A43]">{ev.event_type}</div>
+                      <div className="text-[10px] font-mono text-[#829AB1]">
                         {ev.event_id} • Block: {ev.block_id}
                       </div>
                     </td>
@@ -320,7 +320,7 @@ export const AlertCenterPage: React.FC = () => {
                           ev.severity === 'CRITICAL'
                             ? 'bg-[#FEF2F2] text-[#DC2626] border-[#DC2626]/30'
                             : ev.severity === 'WARNING'
-                            ? 'bg-[#FEF6E9] text-[#9A6218] border-[#E5A33D]/40'
+                            ? 'bg-[#FEF3C7] text-[#B45309] border-[#D97706]/40'
                             : 'bg-[#EFF6FF] text-[#1D4ED8] border-[#3B82F6]/30'
                         }`}
                       >
@@ -328,16 +328,16 @@ export const AlertCenterPage: React.FC = () => {
                       </span>
                     </td>
 
-                    <td className="py-3.5 px-3 text-right font-bold text-[#0B1726]">
+                    <td className="py-3.5 px-3 text-right font-bold text-[#102A43]">
                       {(ev.probability * 100).toFixed(1)}%
                     </td>
 
-                    <td className="py-3.5 px-3 font-sans text-[#435466] text-[11px]">
+                    <td className="py-3.5 px-3 font-sans text-[#486581] text-[11px]">
                       {ev.valid_from} to {ev.valid_until}
                     </td>
 
                     <td className="py-3.5 px-3 font-sans">
-                      <span className="text-[10px] bg-[#FEF6E9] text-[#9A6218] border border-[#E5A33D] px-2 py-0.5 rounded font-mono font-bold">
+                      <span className="text-[10px] bg-[#FEF3C7] text-[#B45309] border border-[#D97706] px-2 py-0.5 rounded font-mono font-bold">
                         {ev.operational_status}
                       </span>
                     </td>
@@ -346,10 +346,10 @@ export const AlertCenterPage: React.FC = () => {
                       <span
                         className={`text-[11px] font-bold px-2 py-0.5 rounded font-mono ${
                           ev.state === 'RESOLVED'
-                            ? 'bg-[#EBF5EE] text-[#2F7D4A]'
+                            ? 'bg-[#EBF5EE] text-[#3F7D58]'
                             : ev.state === 'ACKNOWLEDGED'
                             ? 'bg-[#EFF6FF] text-[#1D4ED8]'
-                            : 'bg-[#F7F3EA] text-[#0B1726]'
+                            : 'bg-[#F3F6F7] text-[#102A43]'
                         }`}
                       >
                         {ev.state}
@@ -361,7 +361,7 @@ export const AlertCenterPage: React.FC = () => {
                         {ev.state === 'DETECTED' && (
                           <button
                             onClick={() => handleAcknowledge(ev.event_id)}
-                            className="px-2.5 py-1 text-[11px] font-heading font-bold bg-[#EBF5EE] hover:bg-[#2F7D4A] hover:text-white text-[#2F7D4A] rounded-lg border border-[#2F7D4A]/30 transition"
+                            className="px-2.5 py-1 text-[11px] font-heading font-bold bg-[#EBF5EE] hover:bg-[#3F7D58] hover:text-white text-[#3F7D58] rounded-lg border border-[#3F7D58]/30 transition"
                           >
                             Acknowledge
                           </button>
@@ -369,14 +369,14 @@ export const AlertCenterPage: React.FC = () => {
                         {ev.state === 'ACKNOWLEDGED' && (
                           <button
                             onClick={() => handleResolve(ev.event_id)}
-                            className="px-2.5 py-1 text-[11px] font-heading font-bold bg-[#F7F3EA] hover:bg-[#0B1726] hover:text-white text-[#0B1726] rounded-lg border border-[#0B1726]/20 transition"
+                            className="px-2.5 py-1 text-[11px] font-heading font-bold bg-[#F3F6F7] hover:bg-[#102A43] hover:text-white text-[#102A43] rounded-lg border border-[#102A43]/20 transition"
                           >
                             Resolve
                           </button>
                         )}
                         <button
                           onClick={() => handleViewHistory(ev.event_id)}
-                          className="px-2.5 py-1 text-[11px] font-heading font-bold bg-white text-[#435466] hover:text-[#0B1726] rounded-lg border border-[#0B1726]/15 transition"
+                          className="px-2.5 py-1 text-[11px] font-heading font-bold bg-white text-[#486581] hover:text-[#102A43] rounded-lg border border-[#102A43]/15 transition"
                         >
                           History
                         </button>
@@ -392,30 +392,30 @@ export const AlertCenterPage: React.FC = () => {
 
       {/* 5. Event History Inspection Drawer */}
       {selectedEventHistory && (
-        <div className="bg-white border-2 border-[#0B1726] rounded-2xl p-5 shadow-[4px_4px_0px_#0B1726] space-y-3">
-          <div className="flex items-center justify-between pb-2 border-b border-[#0B1726]/10">
-            <h3 className="font-heading font-extrabold text-sm text-[#0B1726]">
+        <div className="bg-white border-2 border-[#102A43] rounded-2xl p-5 shadow-[4px_4px_0px_#102A43] space-y-3">
+          <div className="flex items-center justify-between pb-2 border-b border-[#102A43]/10">
+            <h3 className="font-heading font-extrabold text-sm text-[#102A43]">
               State Transition Audit: {selectedEventHistory.eventId}
             </h3>
             <button
               onClick={() => setSelectedEventHistory(null)}
-              className="text-xs font-bold text-[#62768A] hover:text-[#0B1726]"
+              className="text-xs font-bold text-[#829AB1] hover:text-[#102A43]"
             >
               Close
             </button>
           </div>
 
           {selectedEventHistory.history.length === 0 ? (
-            <p className="text-xs text-[#62768A]">No previous transitions recorded.</p>
+            <p className="text-xs text-[#829AB1]">No previous transitions recorded.</p>
           ) : (
             <div className="space-y-2 text-xs">
               {selectedEventHistory.history.map((t, idx) => (
-                <div key={idx} className="p-3 bg-[#F7F3EA] rounded-xl border border-[#0B1726]/15 flex items-center justify-between">
+                <div key={idx} className="p-3 bg-[#F3F6F7] rounded-xl border border-[#102A43]/15 flex items-center justify-between">
                   <div>
-                    <span className="font-bold text-[#0B1726]">{t.previous_state} → {t.new_state}</span>
-                    <p className="text-[11px] text-[#435466]">{t.reason}</p>
+                    <span className="font-bold text-[#102A43]">{t.previous_state} → {t.new_state}</span>
+                    <p className="text-[11px] text-[#486581]">{t.reason}</p>
                   </div>
-                  <span className="font-mono text-[10px] text-[#62768A]">{t.timestamp}</span>
+                  <span className="font-mono text-[10px] text-[#829AB1]">{t.timestamp}</span>
                 </div>
               ))}
             </div>

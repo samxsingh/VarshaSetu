@@ -22,29 +22,29 @@ export const FarmerPageHeader: React.FC<FarmerPageHeaderProps> = ({
 }) => {
   return (
     <div
-      className={`bg-white rounded-2xl border-2 border-[#0B1726] p-6 lg:p-7 shadow-[4px_4px_0px_#0B1726] mb-6 flex flex-col md:flex-row md:items-end justify-between gap-6 relative overflow-hidden ${className}`}
+      className={`bg-white rounded-2xl border-2 border-[#102A43] p-6 lg:p-7 shadow-[4px_4px_0px_#102A43] mb-6 flex flex-col md:flex-row md:items-end justify-between gap-6 relative overflow-hidden ${className}`}
     >
       <div className="space-y-3 max-w-2xl relative z-10">
         <div className="flex items-center gap-2.5 flex-wrap">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-[#DCEFF0] border border-[#008F83]/40 text-[#006B65] text-xs font-heading font-extrabold uppercase tracking-wider shadow-[1.5px_1.5px_0px_#0B1726]">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-[#E8F4F6] border border-[#0E7490]/40 text-[#155E75] text-xs font-heading font-extrabold uppercase tracking-wider shadow-[1.5px_1.5px_0px_#102A43]">
             <span>{eyebrow}</span>
           </div>
 
           <ScientificStatusBadge status={status} size="sm" />
 
           {badgeLabel && (
-            <span className="px-2 py-0.5 rounded bg-[#F7F3EA] border border-[#0B1726]/20 text-[#0B1726] text-[10px] font-mono font-bold uppercase tracking-wider">
+            <span className="px-2 py-0.5 rounded bg-[#F3F6F7] border border-[#102A43]/20 text-[#102A43] text-[10px] font-mono font-bold uppercase tracking-wider">
               {badgeLabel}
             </span>
           )}
         </div>
 
-        <h1 className="font-heading font-black text-2xl sm:text-3xl lg:text-4xl text-[#0B1726] tracking-tight leading-tight">
+        <h1 className="font-heading font-black text-2xl sm:text-3xl lg:text-4xl text-[#102A43] tracking-tight leading-tight">
           {title}
         </h1>
 
         {subtitle && (
-          <p className="text-sm sm:text-base text-[#435466] leading-relaxed font-sans">
+          <p className="text-sm sm:text-base text-[#486581] leading-relaxed font-sans">
             {subtitle}
           </p>
         )}
