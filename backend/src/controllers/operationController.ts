@@ -1,17 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import { sendSuccess } from '../utils/responseEnvelope';
-
-const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'http://localhost:8000';
+import { mlGatewayClient } from '../services/ml';
 
 export const operationController = {
   async getStatus(req: Request, res: Response, next: NextFunction) {
     try {
       try {
-        const mlRes = await fetch(`${ML_SERVICE_URL}/operations/status`);
-        if (mlRes.ok) {
-          const data = await mlRes.json();
-          return sendSuccess(res, data);
-        }
+        const data = await mlGatewayClient.get<any>('/operations/status');
+        return sendSuccess(res, data);
       } catch (e) {
         // Fallback
       }

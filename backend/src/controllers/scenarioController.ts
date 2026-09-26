@@ -2,18 +2,14 @@ import { Request, Response, NextFunction } from 'express';
 import { sendSuccess, sendError } from '../utils/responseEnvelope';
 import { AuthenticatedRequest } from '../types';
 import { scenarioRepository } from '../repositories/scenarioRepository';
-
-const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'http://localhost:8000';
+import { mlGatewayClient, GatewayResponseError } from '../services/ml';
 
 export const scenarioController = {
   async getRegistry(req: Request, res: Response, next: NextFunction) {
     try {
       try {
-        const mlRes = await fetch(`${ML_SERVICE_URL}/agronomy/scenario-registry`);
-        if (mlRes.ok) {
-          const data: any = await mlRes.json();
-          return sendSuccess(res, data);
-        }
+        const data = await mlGatewayClient.get<any>('/agronomy/scenario-registry');
+        return sendSuccess(res, data);
       } catch (e) {
         // Fallback
       }
@@ -90,11 +86,8 @@ export const scenarioController = {
     try {
       const limit = Number(req.query.limit) || 20;
       try {
-        const mlRes = await fetch(`${ML_SERVICE_URL}/agronomy/scenarios?limit=${limit}`);
-        if (mlRes.ok) {
-          const data: any = await mlRes.json();
-          return sendSuccess(res, data);
-        }
+        const data = await mlGatewayClient.get<any>('/agronomy/scenarios', { query: { limit } });
+        return sendSuccess(res, data);
       } catch (e) {
         // Fallback
       }
@@ -113,11 +106,8 @@ export const scenarioController = {
     try {
       const { id } = req.params;
       try {
-        const mlRes = await fetch(`${ML_SERVICE_URL}/agronomy/scenarios/${encodeURIComponent(id)}`);
-        if (mlRes.ok) {
-          const data: any = await mlRes.json();
-          return sendSuccess(res, data);
-        }
+        const data = await mlGatewayClient.get<any>(`/agronomy/scenarios/${encodeURIComponent(id)}`);
+        return sendSuccess(res, data);
       } catch (e) {
         // Fallback
       }
@@ -135,23 +125,16 @@ export const scenarioController = {
   async runScenario(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
       const body = req.body;
-      const mlRes = await fetch(`${ML_SERVICE_URL}/agronomy/scenarios/run`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-
-      if (!mlRes.ok) {
-        const errData: any = await mlRes.json().catch(() => ({}));
-        return sendError(
-          res,
-          'SCENARIO_BLOCKED',
-          errData.detail || 'Scenario simulation blocked by safety gate.',
-          mlRes.status
-        );
+      let result: any;
+      try {
+        result = await mlGatewayClient.post<any>('/agronomy/scenarios/run', body);
+      } catch (err: any) {
+        if (err instanceof GatewayResponseError) {
+          const detail = err.responseBody?.detail || err.responseBody?.message || 'Scenario simulation blocked by safety gate.';
+          return sendError(res, 'SCENARIO_BLOCKED', detail, err.statusCode);
+        }
+        return sendError(res, 'SCENARIO_BLOCKED', err.message || 'Scenario simulation failed', 502);
       }
-
-      const result: any = await mlRes.json();
 
       // Persist in repository
       await scenarioRepository.insertScenario({
@@ -182,23 +165,16 @@ export const scenarioController = {
   async compareScenario(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
       const body = req.body;
-      const mlRes = await fetch(`${ML_SERVICE_URL}/agronomy/scenarios/compare`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-
-      if (!mlRes.ok) {
-        const errData: any = await mlRes.json().catch(() => ({}));
-        return sendError(
-          res,
-          'COMPARISON_FAILED',
-          errData.detail || 'Scenario comparison failed.',
-          mlRes.status
-        );
+      let comparison: any;
+      try {
+        comparison = await mlGatewayClient.post<any>('/agronomy/scenarios/compare', body);
+      } catch (err: any) {
+        if (err instanceof GatewayResponseError) {
+          const detail = err.responseBody?.detail || err.responseBody?.message || 'Scenario comparison failed.';
+          return sendError(res, 'COMPARISON_FAILED', detail, err.statusCode);
+        }
+        return sendError(res, 'COMPARISON_FAILED', err.message || 'Scenario comparison failed.', 502);
       }
-
-      const comparison: any = await mlRes.json();
 
       // Persist comparison
       await scenarioRepository.insertComparison({
@@ -224,23 +200,16 @@ export const scenarioController = {
   async runSensitivity(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
       const body = req.body;
-      const mlRes = await fetch(`${ML_SERVICE_URL}/agronomy/scenarios/sensitivity`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-
-      if (!mlRes.ok) {
-        const errData: any = await mlRes.json().catch(() => ({}));
-        return sendError(
-          res,
-          'SENSITIVITY_FAILED',
-          errData.detail || 'Sensitivity analysis failed.',
-          mlRes.status
-        );
+      let sens: any;
+      try {
+        sens = await mlGatewayClient.post<any>('/agronomy/scenarios/sensitivity', body);
+      } catch (err: any) {
+        if (err instanceof GatewayResponseError) {
+          const detail = err.responseBody?.detail || err.responseBody?.message || 'Sensitivity analysis failed.';
+          return sendError(res, 'SENSITIVITY_FAILED', detail, err.statusCode);
+        }
+        return sendError(res, 'SENSITIVITY_FAILED', err.message || 'Sensitivity analysis failed.', 502);
       }
-
-      const sens: any = await mlRes.json();
 
       // Persist sensitivity
       await scenarioRepository.insertSensitivity({
@@ -262,13 +231,15 @@ export const scenarioController = {
   async getScenarioSensitivity(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const mlRes = await fetch(`${ML_SERVICE_URL}/agronomy/scenarios/${encodeURIComponent(id)}/sensitivity`);
-      if (!mlRes.ok) {
-        const errData: any = await mlRes.json().catch(() => ({}));
-        return sendError(res, 'NOT_FOUND', errData.detail || 'Sensitivity data not found.', mlRes.status);
+      try {
+        const data = await mlGatewayClient.get<any>(`/agronomy/scenarios/${encodeURIComponent(id)}/sensitivity`);
+        return sendSuccess(res, data);
+      } catch (err: any) {
+        if (err instanceof GatewayResponseError) {
+          return sendError(res, 'NOT_FOUND', err.responseBody?.detail || 'Sensitivity data not found.', err.statusCode);
+        }
+        return sendError(res, 'NOT_FOUND', 'Sensitivity data not found.', 404);
       }
-      const data: any = await mlRes.json();
-      return sendSuccess(res, data);
     } catch (error) {
       next(error);
     }
@@ -277,13 +248,15 @@ export const scenarioController = {
   async getScenarioExplanation(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const mlRes = await fetch(`${ML_SERVICE_URL}/agronomy/scenarios/${encodeURIComponent(id)}/explanation`);
-      if (!mlRes.ok) {
-        const errData: any = await mlRes.json().catch(() => ({}));
-        return sendError(res, 'NOT_FOUND', errData.detail || 'Explanation not found.', mlRes.status);
+      try {
+        const data = await mlGatewayClient.get<any>(`/agronomy/scenarios/${encodeURIComponent(id)}/explanation`);
+        return sendSuccess(res, data);
+      } catch (err: any) {
+        if (err instanceof GatewayResponseError) {
+          return sendError(res, 'NOT_FOUND', err.responseBody?.detail || 'Explanation not found.', err.statusCode);
+        }
+        return sendError(res, 'NOT_FOUND', 'Explanation not found.', 404);
       }
-      const data: any = await mlRes.json();
-      return sendSuccess(res, data);
     } catch (error) {
       next(error);
     }
@@ -292,13 +265,15 @@ export const scenarioController = {
   async getScenarioProvenance(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const mlRes = await fetch(`${ML_SERVICE_URL}/agronomy/scenarios/${encodeURIComponent(id)}/provenance`);
-      if (!mlRes.ok) {
-        const errData: any = await mlRes.json().catch(() => ({}));
-        return sendError(res, 'NOT_FOUND', errData.detail || 'Provenance not found.', mlRes.status);
+      try {
+        const data = await mlGatewayClient.get<any>(`/agronomy/scenarios/${encodeURIComponent(id)}/provenance`);
+        return sendSuccess(res, data);
+      } catch (err: any) {
+        if (err instanceof GatewayResponseError) {
+          return sendError(res, 'NOT_FOUND', err.responseBody?.detail || 'Provenance not found.', err.statusCode);
+        }
+        return sendError(res, 'NOT_FOUND', 'Provenance not found.', 404);
       }
-      const data: any = await mlRes.json();
-      return sendSuccess(res, data);
     } catch (error) {
       next(error);
     }

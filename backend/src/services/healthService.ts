@@ -1,6 +1,7 @@
 import { checkDbHealth, DatabaseHealthStatus, pool } from '../db/pool';
 import { env } from '../config/env';
 import { isDatabaseConnected } from '../config/database';
+import { mlGatewayClient } from './ml';
 
 export interface SubsystemStatus {
   status: 'HEALTHY' | 'DEGRADED' | 'UNAVAILABLE' | 'NOT_CONFIGURED' | 'DIAGNOSTIC_ONLY' | 'DEMO_ONLY';
@@ -49,7 +50,7 @@ export const healthService = {
         },
         ml_service: {
           status: 'HEALTHY',
-          details: { service: 'varshasetu-ml-service', endpoint: 'http://localhost:8000' },
+          details: { service: 'varshasetu-ml-service', endpoint: mlGatewayClient.getBaseUrl() },
         },
         forecast_engine: {
           status: 'DIAGNOSTIC_ONLY',

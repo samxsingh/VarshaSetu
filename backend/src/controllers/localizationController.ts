@@ -2,18 +2,14 @@ import { Request, Response, NextFunction } from 'express';
 import { sendSuccess, sendError } from '../utils/responseEnvelope';
 import { AuthenticatedRequest } from '../types';
 import { localizationRepository } from '../repositories/localizationRepository';
-
-const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'http://localhost:8000';
+import { mlGatewayClient, GatewayResponseError } from '../services/ml';
 
 export const localizationController = {
   async getLanguages(req: Request, res: Response, next: NextFunction) {
     try {
       try {
-        const mlRes = await fetch(`${ML_SERVICE_URL}/agronomy/languages`);
-        if (mlRes.ok) {
-          const data = await mlRes.json();
-          return sendSuccess(res, data);
-        }
+        const data = await mlGatewayClient.get<any>('/agronomy/languages');
+        return sendSuccess(res, data);
       } catch (e) {
         // Fallback below
       }
@@ -37,11 +33,8 @@ export const localizationController = {
   async getTerminology(req: Request, res: Response, next: NextFunction) {
     try {
       try {
-        const mlRes = await fetch(`${ML_SERVICE_URL}/agronomy/terminology`);
-        if (mlRes.ok) {
-          const data = await mlRes.json();
-          return sendSuccess(res, data);
-        }
+        const data = await mlGatewayClient.get<any>('/agronomy/terminology');
+        return sendSuccess(res, data);
       } catch (e) {
         // Fallback below
       }
@@ -62,46 +55,45 @@ export const localizationController = {
       const { advisory_id, target_language, advisory } = req.body;
       const targetLang = (target_language || 'HI').toUpperCase();
 
-      const mlRes = await fetch(`${ML_SERVICE_URL}/agronomy/localize`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+      let locResult: any;
+      try {
+        locResult = await mlGatewayClient.post<any>('/agronomy/localize', {
           advisory_id,
           target_language: targetLang,
           advisory,
-        }),
-      });
-
-      if (!mlRes.ok) {
-        const errData: any = await mlRes.json().catch(() => ({ detail: 'Localization failed' }));
-        return sendError(res, errData.detail || 'Localization failed', 'LOCALIZATION_ERROR', mlRes.status);
+        });
+      } catch (err: any) {
+        if (err instanceof GatewayResponseError) {
+          const detail = err.responseBody?.detail || err.responseBody?.message || 'Failed to localize advisory.';
+          return sendError(res, detail, 'LOCALIZATION_FAILED', err.statusCode);
+        }
+        return sendError(res, err.message || 'Failed to localize advisory.', 'LOCALIZATION_FAILED', 502);
       }
 
-      const data: any = await mlRes.json();
-      const locAdv = data.localized_advisory;
+      const locAdv = locResult.localized_advisory || locResult;
 
-      // Persist to database cache
+      // Persist localized advisory
       if (locAdv) {
         await localizationRepository.saveLocalizedAdvisory({
           advisory_id: locAdv.source_advisory_id || advisory_id || 'UNKNOWN',
-          language: locAdv.language,
-          title: locAdv.title,
-          summary: locAdv.summary,
-          risk_indicator: locAdv.risk_indicator,
-          what_it_means: locAdv.what_it_means,
-          evidence: locAdv.evidence,
-          confidence_statement: locAdv.confidence_statement,
-          disclosure: locAdv.disclosure,
-          historical_limitation_disclosure: locAdv.historical_limitation_disclosure,
+          language: locAdv.language || targetLang,
+          title: locAdv.title || '',
+          summary: locAdv.summary || '',
+          risk_indicator: locAdv.risk_indicator || '',
+          what_it_means: locAdv.what_it_means || '',
+          evidence: locAdv.evidence || null,
+          confidence_statement: locAdv.confidence_statement || '',
+          disclosure: locAdv.disclosure || '',
+          historical_limitation_disclosure: locAdv.historical_limitation_disclosure || '',
           classification: locAdv.classification || 'DIAGNOSTIC_ONLY',
           translation_method: locAdv.translation_method || 'CONTROLLED_TEMPLATE',
           template_version: locAdv.template_version || '1.0.0',
           terminology_version: locAdv.terminology_version || '1.0.0',
           localization_fingerprint: locAdv.localization_fingerprint || '0000000000000000',
-        });
+        }).catch(() => null);
       }
 
-      return sendSuccess(res, data);
+      return sendSuccess(res, locResult);
     } catch (error) {
       next(error);
     }
@@ -110,22 +102,25 @@ export const localizationController = {
   async getLocalizedAdvisory(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const lang = (String(req.query.lang || 'HI')).toUpperCase();
+      const lang = ((req.query.lang as string) || 'HI').toUpperCase();
 
-      // Check DB first
+      // Check cache first
       const cached = await localizationRepository.getLocalizedAdvisory(id, lang);
       if (cached) {
         return sendSuccess(res, cached);
       }
 
       // Fetch from ML service
-      const mlRes = await fetch(`${ML_SERVICE_URL}/agronomy/advisories/${id}/localized?lang=${lang}`);
-      if (!mlRes.ok) {
-        const err: any = await mlRes.json().catch(() => ({ detail: 'Advisory not found' }));
-        return sendError(res, err.detail || 'Advisory not found', 'NOT_FOUND', mlRes.status);
+      let locAdv: any;
+      try {
+        locAdv = await mlGatewayClient.get<any>(`/agronomy/advisories/${id}/localized`, { query: { lang } });
+      } catch (err: any) {
+        if (err instanceof GatewayResponseError) {
+          const detail = err.responseBody?.detail || 'Advisory not found';
+          return sendError(res, detail, 'NOT_FOUND', err.statusCode);
+        }
+        return sendError(res, 'Advisory not found', 'NOT_FOUND', 404);
       }
-
-      const locAdv: any = await mlRes.json();
 
       // Save to cache
       await localizationRepository.saveLocalizedAdvisory({
@@ -171,11 +166,8 @@ export const localizationController = {
   async getVoiceStatus(req: Request, res: Response, next: NextFunction) {
     try {
       try {
-        const mlRes = await fetch(`${ML_SERVICE_URL}/agronomy/voice/status`);
-        if (mlRes.ok) {
-          const data = await mlRes.json();
-          return sendSuccess(res, data);
-        }
+        const data = await mlGatewayClient.get<any>('/agronomy/voice/status');
+        return sendSuccess(res, data);
       } catch (e) {
         // Fallback
       }
@@ -201,23 +193,21 @@ export const localizationController = {
       const { id } = req.params;
       const { language = 'HI', speech_rate = 1.0, text } = req.body;
 
-      const mlRes = await fetch(`${ML_SERVICE_URL}/agronomy/advisories/${id}/voice`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+      let data: any;
+      try {
+        data = await mlGatewayClient.post<any>(`/agronomy/advisories/${id}/voice`, {
           advisory_id: id,
           language,
           speech_rate,
           text,
-        }),
-      });
-
-      if (!mlRes.ok) {
-        const err: any = await mlRes.json().catch(() => ({ detail: 'Voice synthesis failed' }));
-        return sendError(res, err.detail || 'Voice synthesis failed', 'VOICE_ERROR', mlRes.status);
+        });
+      } catch (err: any) {
+        if (err instanceof GatewayResponseError) {
+          const detail = err.responseBody?.detail || 'Voice synthesis failed';
+          return sendError(res, detail, 'VOICE_ERROR', err.statusCode);
+        }
+        return sendError(res, 'Voice synthesis failed', 'VOICE_ERROR', 502);
       }
-
-      const data: any = await mlRes.json();
 
       // Log voice synthesis
       await localizationRepository.recordVoiceSynthesisLog(

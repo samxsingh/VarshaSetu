@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { dataSourceRepository } from '../repositories/dataSourceRepository';
 import { dataIngestionRepository } from '../repositories/dataIngestionRepository';
 import { sendSuccess, sendError } from '../utils/responseEnvelope';
+import { mlGatewayClient } from '../services/ml';
 
 export const dataHealthController = {
   async getOverview(req: Request, res: Response, next: NextFunction) {
@@ -58,29 +59,14 @@ export const dataHealthController = {
 
   async triggerIngestion(req: Request, res: Response, next: NextFunction) {
     try {
-      const mlServiceUrl = process.env.ML_SERVICE_URL || 'http://localhost:8000';
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 60000);
-
       try {
-        const response = await fetch(`${mlServiceUrl}/ingestion/run`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(req.body || {}),
-          signal: controller.signal,
-        });
-        clearTimeout(timeout);
-
-        if (!response.ok) {
-          const errText = await response.text();
-          return sendError(res, 'ML_SERVICE_ERROR', `ML Service returned ${response.status}: ${errText}`, 502);
-        }
-
-        const data = await response.json();
+        const data = await mlGatewayClient.post('/ingestion/run', req.body || {}, { timeoutMs: 60000 });
         return sendSuccess(res, data, undefined, 202);
       } catch (fetchErr: any) {
-        clearTimeout(timeout);
-        return sendError(res, 'ML_SERVICE_UNAVAILABLE', `Could not reach ML ingestion service at ${mlServiceUrl}: ${fetchErr.message}`, 503);
+        if (fetchErr.name === 'GatewayResponseError') {
+          return sendError(res, 'ML_SERVICE_ERROR', `ML Service returned ${fetchErr.statusCode}: ${JSON.stringify(fetchErr.responseBody)}`, 502);
+        }
+        return sendError(res, 'ML_SERVICE_UNAVAILABLE', `Could not reach ML ingestion service at ${mlGatewayClient.getBaseUrl()}: ${fetchErr.message}`, 503);
       }
     } catch (error) {
       next(error);

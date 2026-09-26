@@ -31,7 +31,7 @@ export interface IForecast extends Document {
   targetType: ForecastTarget;
   targetUnit: string;
   threshold: number;
-  horizonDays: 7 | 14 | 21 | 30;
+  horizonDays: 3 | 7 | 14 | 21 | 30;
   validFrom: Date;
   validUntil: Date;
   probability: number; // Calibrated probability [0.0, 1.0]
@@ -107,7 +107,7 @@ const ForecastSchema = new Schema<IForecast>(
     horizonDays: {
       type: Number,
       required: true,
-      enum: [7, 14, 21, 30],
+      enum: [3, 7, 14, 21, 30],
       default: 7,
       index: true,
     },

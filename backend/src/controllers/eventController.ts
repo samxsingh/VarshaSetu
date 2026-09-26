@@ -2,8 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { sendSuccess, sendError } from '../utils/responseEnvelope';
 import { AuthenticatedRequest } from '../types';
 import { eventRepository } from '../repositories/eventRepository';
-
-const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'http://localhost:8000';
+import { mlGatewayClient } from '../services/ml';
 
 export const eventController = {
   async listEvents(req: AuthenticatedRequest, res: Response, next: NextFunction) {
@@ -22,18 +21,14 @@ export const eventController = {
 
       // 1. Try ML Service
       try {
-        const queryParams = new URLSearchParams();
-        if (blockId) queryParams.append('block_id', blockId);
-        if (eventType) queryParams.append('event_type', eventType);
-        if (severity) queryParams.append('severity', severity);
-        if (state) queryParams.append('state', state);
-        queryParams.append('limit', String(limit));
+        const query: Record<string, any> = { limit };
+        if (blockId) query.block_id = blockId;
+        if (eventType) query.event_type = eventType;
+        if (severity) query.severity = severity;
+        if (state) query.state = state;
 
-        const mlRes = await fetch(`${ML_SERVICE_URL}/events?${queryParams.toString()}`);
-        if (mlRes.ok) {
-          const data: any = await mlRes.json();
-          return sendSuccess(res, data);
-        }
+        const data = await mlGatewayClient.get<any>('/events', { query });
+        return sendSuccess(res, data);
       } catch (e) {
         // Fallback to database repository
       }
@@ -62,17 +57,14 @@ export const eventController = {
 
       // 1. Try ML Service
       try {
-        const mlRes = await fetch(`${ML_SERVICE_URL}/events/${eventId}`);
-        if (mlRes.ok) {
-          const data: any = await mlRes.json();
+        const data = await mlGatewayClient.get<any>(`/events/${encodeURIComponent(eventId)}`);
 
-          // RBAC verification for farmers
-          if (req.user?.role === 'FARMER' && req.user.assignedLocationId && data.block_id !== req.user.assignedLocationId) {
-            return sendError(res, 'FORBIDDEN', 'Access to events outside assigned agricultural block is prohibited.', 403);
-          }
-
-          return sendSuccess(res, data);
+        // RBAC verification for farmers
+        if (req.user?.role === 'FARMER' && req.user.assignedLocationId && data.block_id !== req.user.assignedLocationId) {
+          return sendError(res, 'FORBIDDEN', 'Access to events outside assigned agricultural block is prohibited.', 403);
         }
+
+        return sendSuccess(res, data);
       } catch (e) {
         // Fallback
       }
@@ -99,11 +91,8 @@ export const eventController = {
 
       // 1. Try ML Service
       try {
-        const mlRes = await fetch(`${ML_SERVICE_URL}/events/${eventId}/history`);
-        if (mlRes.ok) {
-          const data = await mlRes.json();
-          return sendSuccess(res, data);
-        }
+        const data = await mlGatewayClient.get<any>(`/events/${encodeURIComponent(eventId)}/history`);
+        return sendSuccess(res, data);
       } catch (e) {
         // Fallback
       }
@@ -124,31 +113,24 @@ export const eventController = {
       const { block_id, target_types, cooldown_hours } = req.body || {};
 
       try {
-        const mlRes = await fetch(`${ML_SERVICE_URL}/events/detect`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            block_id: block_id || 'UP_LKO_BKT',
-            target_types: target_types || null,
-            cooldown_hours: cooldown_hours || 24,
-          }),
+        const data = await mlGatewayClient.post<any>('/events/detect', {
+          block_id: block_id || 'UP_LKO_BKT',
+          target_types: target_types || null,
+          cooldown_hours: cooldown_hours || 24,
         });
 
-        if (mlRes.ok) {
-          const data: any = await mlRes.json();
-          // Sync detected events into database if available
-          if (Array.isArray(data.detected_events)) {
-            for (const ev of data.detected_events) {
-              await eventRepository.upsertEvent(ev).catch(() => null);
-            }
+        // Sync detected events into database if available
+        if (Array.isArray(data.detected_events)) {
+          for (const ev of data.detected_events) {
+            await eventRepository.upsertEvent(ev).catch(() => null);
           }
-          if (Array.isArray(data.updated_events)) {
-            for (const ev of data.updated_events) {
-              await eventRepository.upsertEvent(ev).catch(() => null);
-            }
-          }
-          return sendSuccess(res, data);
         }
+        if (Array.isArray(data.updated_events)) {
+          for (const ev of data.updated_events) {
+            await eventRepository.upsertEvent(ev).catch(() => null);
+          }
+        }
+        return sendSuccess(res, data);
       } catch (e) {
         // Fallback
       }
@@ -175,21 +157,13 @@ export const eventController = {
 
       // 1. Try ML Service
       try {
-        const mlRes = await fetch(`${ML_SERVICE_URL}/events/${eventId}/acknowledge`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            actor,
-            reason: reason || 'Duty officer acknowledged event notice.',
-            metadata: metadata || {},
-          }),
+        const data = await mlGatewayClient.post<any>(`/events/${encodeURIComponent(eventId)}/acknowledge`, {
+          actor,
+          reason: reason || 'Duty officer acknowledged event notice.',
+          metadata: metadata || {},
         });
-
-        if (mlRes.ok) {
-          const data = await mlRes.json();
-          await eventRepository.updateEventState(eventId, 'ACKNOWLEDGED', actor, 'acknowledge').catch(() => null);
-          return sendSuccess(res, data);
-        }
+        await eventRepository.updateEventState(eventId, 'ACKNOWLEDGED', actor, 'acknowledge').catch(() => null);
+        return sendSuccess(res, data);
       } catch (e) {
         // Fallback
       }
@@ -224,21 +198,13 @@ export const eventController = {
 
       // 1. Try ML Service
       try {
-        const mlRes = await fetch(`${ML_SERVICE_URL}/events/${eventId}/resolve`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            actor,
-            reason: reason || 'Event resolution completed.',
-            metadata: metadata || {},
-          }),
+        const data = await mlGatewayClient.post<any>(`/events/${encodeURIComponent(eventId)}/resolve`, {
+          actor,
+          reason: reason || 'Event resolution completed.',
+          metadata: metadata || {},
         });
-
-        if (mlRes.ok) {
-          const data = await mlRes.json();
-          await eventRepository.updateEventState(eventId, 'RESOLVED', actor, 'resolve').catch(() => null);
-          return sendSuccess(res, data);
-        }
+        await eventRepository.updateEventState(eventId, 'RESOLVED', actor, 'resolve').catch(() => null);
+        return sendSuccess(res, data);
       } catch (e) {
         // Fallback
       }

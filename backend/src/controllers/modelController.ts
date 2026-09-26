@@ -1,17 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import { sendSuccess, sendError } from '../utils/responseEnvelope';
-
-const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'http://localhost:8000';
+import { mlGatewayClient, GatewayResponseError } from '../services/ml';
 
 export const modelController = {
   async getStatus(req: Request, res: Response, next: NextFunction) {
     try {
       try {
-        const response = await fetch(`${ML_SERVICE_URL}/models/status`);
-        if (response.ok) {
-          const data = await response.json();
-          return sendSuccess(res, data);
-        }
+        const data = await mlGatewayClient.get<any>('/models/status');
+        return sendSuccess(res, data);
       } catch (e) {
         // Fallback to static readiness disclosure if microservice is offline
       }
@@ -38,7 +34,7 @@ export const modelController = {
           'lightgbm_rainfall_amount_7d',
         ],
         total_experiments_recorded: 4,
-        ml_service_url: ML_SERVICE_URL,
+        ml_service_url: mlGatewayClient.getBaseUrl(),
       });
     } catch (error) {
       next(error);
@@ -48,11 +44,8 @@ export const modelController = {
   async getRegistry(req: Request, res: Response, next: NextFunction) {
     try {
       try {
-        const response = await fetch(`${ML_SERVICE_URL}/models/registry`);
-        if (response.ok) {
-          const data = await response.json();
-          return sendSuccess(res, data);
-        }
+        const data = await mlGatewayClient.get<any>('/models/registry');
+        return sendSuccess(res, data);
       } catch (e) {
         // fallback
       }
@@ -114,13 +107,10 @@ export const modelController = {
       const horizon = (req.query.horizon_days as string) || '7';
 
       try {
-        const response = await fetch(
-          `${ML_SERVICE_URL}/models/comparison?target=${target}&horizon_days=${horizon}`
-        );
-        if (response.ok) {
-          const data = await response.json();
-          return sendSuccess(res, data);
-        }
+        const data = await mlGatewayClient.get<any>('/models/comparison', {
+          query: { target, horizon_days: horizon },
+        });
+        return sendSuccess(res, data);
       } catch (e) {
         // fallback
       }
@@ -209,11 +199,8 @@ export const modelController = {
   async getDatasetsCatalog(req: Request, res: Response, next: NextFunction) {
     try {
       try {
-        const response = await fetch(`${ML_SERVICE_URL}/datasets/catalog`);
-        if (response.ok) {
-          const data = await response.json();
-          return sendSuccess(res, data);
-        }
+        const data = await mlGatewayClient.get<any>('/datasets/catalog');
+        return sendSuccess(res, data);
       } catch (e) {
         // fallback
       }
@@ -264,12 +251,15 @@ export const modelController = {
   async getModelById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const response = await fetch(`${ML_SERVICE_URL}/models/${id}`);
-      if (!response.ok) {
+      try {
+        const data = await mlGatewayClient.get<any>(`/models/${encodeURIComponent(id)}`);
+        return sendSuccess(res, data);
+      } catch (err: any) {
+        if (err instanceof GatewayResponseError && err.statusCode === 404) {
+          return sendError(res, 'MODEL_NOT_FOUND', `Model ${id} not found`, 404);
+        }
         return sendError(res, 'MODEL_NOT_FOUND', `Model ${id} not found`, 404);
       }
-      const data = await response.json();
-      return sendSuccess(res, data);
     } catch (error) {
       next(error);
     }
@@ -279,11 +269,8 @@ export const modelController = {
     try {
       const { id } = req.params;
       try {
-        const response = await fetch(`${ML_SERVICE_URL}/models/${id}/explanations`);
-        if (response.ok) {
-          const data = await response.json();
-          return sendSuccess(res, data);
-        }
+        const data = await mlGatewayClient.get<any>(`/models/${encodeURIComponent(id)}/explanations`);
+        return sendSuccess(res, data);
       } catch (e) {
         // fallback
       }
@@ -323,16 +310,12 @@ export const modelController = {
 
   async trainModel(req: Request, res: Response, next: NextFunction) {
     try {
-      const response = await fetch(`${ML_SERVICE_URL}/models/train`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(req.body || {}),
-      });
-      if (!response.ok) {
+      try {
+        const data = await mlGatewayClient.post<any>('/models/train', req.body || {});
+        return sendSuccess(res, data, undefined, 201);
+      } catch (err: any) {
         return sendError(res, 'TRAINING_FAILED', 'Failed to execute tree training pipeline', 502);
       }
-      const data = await response.json();
-      return sendSuccess(res, data, undefined, 201);
     } catch (error) {
       next(error);
     }
@@ -341,16 +324,12 @@ export const modelController = {
   async explainModel(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const response = await fetch(`${ML_SERVICE_URL}/models/${id}/explain`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(req.body || {}),
-      });
-      if (!response.ok) {
+      try {
+        const data = await mlGatewayClient.post<any>(`/models/${encodeURIComponent(id)}/explain`, req.body || {});
+        return sendSuccess(res, data);
+      } catch (err: any) {
         return sendError(res, 'EXPLANATION_FAILED', 'Failed to generate explanation', 502);
       }
-      const data = await response.json();
-      return sendSuccess(res, data);
     } catch (error) {
       next(error);
     }
@@ -359,11 +338,8 @@ export const modelController = {
   async listExperiments(req: Request, res: Response, next: NextFunction) {
     try {
       try {
-        const response = await fetch(`${ML_SERVICE_URL}/models/experiments`);
-        if (response.ok) {
-          const data = await response.json();
-          return sendSuccess(res, data);
-        }
+        const data = await mlGatewayClient.get<any>('/models/experiments');
+        return sendSuccess(res, data);
       } catch (e) {
         // fallback
       }
@@ -381,12 +357,12 @@ export const modelController = {
   async getExperimentById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const response = await fetch(`${ML_SERVICE_URL}/models/experiments/${id}`);
-      if (!response.ok) {
+      try {
+        const data = await mlGatewayClient.get<any>(`/models/experiments/${encodeURIComponent(id)}`);
+        return sendSuccess(res, data);
+      } catch (err: any) {
         return sendError(res, 'EXPERIMENT_NOT_FOUND', `Experiment ${id} not found`, 404);
       }
-      const data = await response.json();
-      return sendSuccess(res, data);
     } catch (error) {
       next(error);
     }
@@ -395,14 +371,12 @@ export const modelController = {
   async triggerBaselineTraining(req: Request, res: Response, next: NextFunction) {
     try {
       const target = (req.query.target as string) || 'ALL';
-      const response = await fetch(`${ML_SERVICE_URL}/models/baselines/train?target=${target}`, {
-        method: 'POST',
-      });
-      if (!response.ok) {
+      try {
+        const data = await mlGatewayClient.post<any>(`/models/baselines/train?target=${encodeURIComponent(target)}`);
+        return sendSuccess(res, data, undefined, 202);
+      } catch (err: any) {
         return sendError(res, 'ML_SERVICE_ERROR', 'Failed to trigger baseline training', 502);
       }
-      const data = await response.json();
-      return sendSuccess(res, data, undefined, 202);
     } catch (error) {
       next(error);
     }
@@ -415,11 +389,8 @@ export const modelController = {
   async getCalibrationStatus(req: Request, res: Response, next: NextFunction) {
     try {
       try {
-        const response = await fetch(`${ML_SERVICE_URL}/calibration/status`);
-        if (response.ok) {
-          const data = await response.json();
-          return sendSuccess(res, data);
-        }
+        const data = await mlGatewayClient.get<any>('/calibration/status');
+        return sendSuccess(res, data);
       } catch (e) {
         // fallback
       }
@@ -453,13 +424,10 @@ export const modelController = {
       const method = (req.query.method as string) || 'PLATT';
 
       try {
-        const response = await fetch(
-          `${ML_SERVICE_URL}/calibration/comparison?target=${target}&horizon_days=${horizon}&method=${method}`
-        );
-        if (response.ok) {
-          const data = await response.json();
-          return sendSuccess(res, data);
-        }
+        const data = await mlGatewayClient.get<any>('/calibration/comparison', {
+          query: { target, horizon_days: horizon, method },
+        });
+        return sendSuccess(res, data);
       } catch (e) {
         // fallback
       }
@@ -501,12 +469,12 @@ export const modelController = {
   async getCalibrationModelById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const response = await fetch(`${ML_SERVICE_URL}/calibration/models/${id}`);
-      if (!response.ok) {
+      try {
+        const data = await mlGatewayClient.get<any>(`/calibration/models/${encodeURIComponent(id)}`);
+        return sendSuccess(res, data);
+      } catch (err: any) {
         return sendError(res, 'MODEL_NOT_FOUND', `Calibration details for '${id}' not found`, 404);
       }
-      const data = await response.json();
-      return sendSuccess(res, data);
     } catch (error) {
       next(error);
     }
@@ -516,11 +484,8 @@ export const modelController = {
     try {
       const { id } = req.params;
       try {
-        const response = await fetch(`${ML_SERVICE_URL}/calibration/models/${id}/reliability`);
-        if (response.ok) {
-          const data = await response.json();
-          return sendSuccess(res, data);
-        }
+        const data = await mlGatewayClient.get<any>(`/calibration/models/${encodeURIComponent(id)}/reliability`);
+        return sendSuccess(res, data);
       } catch (e) {
         // fallback
       }
@@ -547,16 +512,12 @@ export const modelController = {
 
   async runCalibration(req: Request, res: Response, next: NextFunction) {
     try {
-      const response = await fetch(`${ML_SERVICE_URL}/calibration/run`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(req.body || {}),
-      });
-      if (!response.ok) {
+      try {
+        const data = await mlGatewayClient.post<any>('/calibration/run', req.body || {});
+        return sendSuccess(res, data, undefined, 201);
+      } catch (err: any) {
         return sendError(res, 'CALIBRATION_FAILED', 'Failed to execute calibration pipeline', 502);
       }
-      const data = await response.json();
-      return sendSuccess(res, data, undefined, 201);
     } catch (error) {
       next(error);
     }
@@ -569,11 +530,8 @@ export const modelController = {
   async getHindcastStatus(req: Request, res: Response, next: NextFunction) {
     try {
       try {
-        const response = await fetch(`${ML_SERVICE_URL}/hindcasting/status`);
-        if (response.ok) {
-          const data = await response.json();
-          return sendSuccess(res, data);
-        }
+        const data = await mlGatewayClient.get<any>('/hindcasting/status');
+        return sendSuccess(res, data);
       } catch (e) {
         // Fallback
       }
@@ -598,11 +556,8 @@ export const modelController = {
   async getHindcastGate(req: Request, res: Response, next: NextFunction) {
     try {
       try {
-        const response = await fetch(`${ML_SERVICE_URL}/hindcasting/gate`);
-        if (response.ok) {
-          const data = await response.json();
-          return sendSuccess(res, data);
-        }
+        const data = await mlGatewayClient.get<any>('/hindcasting/gate');
+        return sendSuccess(res, data);
       } catch (e) {
         // Fallback
       }
@@ -633,11 +588,8 @@ export const modelController = {
   async getHindcastFolds(req: Request, res: Response, next: NextFunction) {
     try {
       try {
-        const response = await fetch(`${ML_SERVICE_URL}/hindcasting/folds`);
-        if (response.ok) {
-          const data = await response.json();
-          return sendSuccess(res, data);
-        }
+        const data = await mlGatewayClient.get<any>('/hindcasting/folds');
+        return sendSuccess(res, data);
       } catch (e) {
         // Fallback
       }
@@ -675,11 +627,10 @@ export const modelController = {
       const horizon = (req.query.horizon_days as string) || '7';
 
       try {
-        const response = await fetch(`${ML_SERVICE_URL}/hindcasting/results?target=${target}&horizon_days=${horizon}`);
-        if (response.ok) {
-          const data = await response.json();
-          return sendSuccess(res, data);
-        }
+        const data = await mlGatewayClient.get<any>('/hindcasting/results', {
+          query: { target, horizon_days: horizon },
+        });
+        return sendSuccess(res, data);
       } catch (e) {
         // Fallback
       }
@@ -714,12 +665,12 @@ export const modelController = {
   async getHindcastResultById(req: Request, res: Response, next: NextFunction) {
     try {
       const { experimentId } = req.params;
-      const response = await fetch(`${ML_SERVICE_URL}/hindcasting/results/${experimentId}`);
-      if (!response.ok) {
+      try {
+        const data = await mlGatewayClient.get<any>(`/hindcasting/results/${encodeURIComponent(experimentId)}`);
+        return sendSuccess(res, data);
+      } catch (err: any) {
         return sendError(res, 'HINDCAST_NOT_FOUND', `Hindcast experiment '${experimentId}' not found`, 404);
       }
-      const data = await response.json();
-      return sendSuccess(res, data);
     } catch (error) {
       next(error);
     }
@@ -731,11 +682,10 @@ export const modelController = {
       const horizon = (req.query.horizon_days as string) || '7';
 
       try {
-        const response = await fetch(`${ML_SERVICE_URL}/hindcasting/stability?target=${target}&horizon_days=${horizon}`);
-        if (response.ok) {
-          const data = await response.json();
-          return sendSuccess(res, data);
-        }
+        const data = await mlGatewayClient.get<any>('/hindcasting/stability', {
+          query: { target, horizon_days: horizon },
+        });
+        return sendSuccess(res, data);
       } catch (e) {
         // Fallback
       }
@@ -762,11 +712,8 @@ export const modelController = {
   async getHindcastDrift(req: Request, res: Response, next: NextFunction) {
     try {
       try {
-        const response = await fetch(`${ML_SERVICE_URL}/hindcasting/drift`);
-        if (response.ok) {
-          const data = await response.json();
-          return sendSuccess(res, data);
-        }
+        const data = await mlGatewayClient.get<any>('/hindcasting/drift');
+        return sendSuccess(res, data);
       } catch (e) {
         // Fallback
       }
@@ -790,11 +737,8 @@ export const modelController = {
   async getHindcastCoverage(req: Request, res: Response, next: NextFunction) {
     try {
       try {
-        const response = await fetch(`${ML_SERVICE_URL}/hindcasting/coverage`);
-        if (response.ok) {
-          const data = await response.json();
-          return sendSuccess(res, data);
-        }
+        const data = await mlGatewayClient.get<any>('/hindcasting/coverage');
+        return sendSuccess(res, data);
       } catch (e) {
         // Fallback
       }
@@ -816,19 +760,14 @@ export const modelController = {
 
   async runHindcast(req: Request, res: Response, next: NextFunction) {
     try {
-      const response = await fetch(`${ML_SERVICE_URL}/hindcasting/run`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(req.body || {}),
-      });
-      if (!response.ok) {
+      try {
+        const data = await mlGatewayClient.post<any>('/hindcasting/run', req.body || {});
+        return sendSuccess(res, data, undefined, 201);
+      } catch (err: any) {
         return sendError(res, 'HINDCAST_FAILED', 'Failed to execute hindcast experiment', 502);
       }
-      const data = await response.json();
-      return sendSuccess(res, data, undefined, 201);
     } catch (error) {
       next(error);
     }
   },
 };
-
