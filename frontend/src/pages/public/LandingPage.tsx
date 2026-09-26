@@ -31,15 +31,12 @@ export const LandingPage: React.FC = () => {
   return (
     <div className="flex-1 bg-canvas text-[#102A43]">
       {/* 1. HERO SECTION — CLIMATE INTELLIGENCE & MONSOON OBSERVATORY */}
-      <section className="relative overflow-hidden pt-6 pb-16 lg:pt-10 lg:pb-20 border-b border-[#102A43]/15 bg-editorial-grain">
-        {/* Subtle contour texture overlay */}
-        <div className="absolute inset-0 opacity-25 pointer-events-none bg-subtle-contour" />
-
+      <section className="relative pt-6 pb-16 lg:pt-10 lg:pb-20 border-b border-[#B8C5CC]/60 bg-[#F3F6F7]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
             
-            {/* LEFT COLUMN: Editorial Typography & Strategic CTAs (55% width on xl) */}
-            <div className="lg:col-span-6 xl:col-span-7 space-y-6">
+            {/* LEFT COLUMN: Editorial Typography & Strategic CTAs (50% on lg+) */}
+            <div className="lg:col-span-6 xl:col-span-6 space-y-6 max-w-xl">
               {/* Eyebrow Micro-Label */}
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#E8F4F6] border border-[#0E7490]/40 text-[#0E7490] text-xs font-heading font-bold uppercase tracking-wider shadow-[1.5px_1.5px_0px_#102A43] animate-fade-up">
                 <span className="w-2 h-2 rounded-full bg-[#0E7490] animate-pulse" />
@@ -55,7 +52,7 @@ export const LandingPage: React.FC = () => {
               </h1>
 
               {/* Concise Scientific Description */}
-              <p className="text-base sm:text-lg text-[#486581] leading-relaxed font-sans max-w-xl animate-fade-up">
+              <p className="text-base sm:text-lg text-[#486581] leading-relaxed font-sans animate-fade-up">
                 VarshaSetu translates planetary climate data, weather patterns and regional atmospheric insights into probabilistic forecasts and agricultural intelligence.
               </p>
 
@@ -100,153 +97,163 @@ export const LandingPage: React.FC = () => {
               </div>
             </div>
 
-            {/* RIGHT COLUMN: Atmospheric & Field Imagery with Floating Intelligence Cards */}
-            <div className="lg:col-span-6 xl:col-span-5 relative mt-4 lg:mt-0">
-              {/* Primary Image Frame with Crisp Neo-Brutalist Border & Attached Status Rail */}
-              <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-[#102A43] bg-white shadow-[6px_6px_0px_#102A43] group">
-                <img
-                  src="/images/hero-farmer.jpg"
-                  alt="Indian farmer inspecting VarshaSetu agro-climate intelligence on a tablet in agricultural field"
-                  className="w-full h-[320px] sm:h-[400px] lg:h-[460px] object-cover object-center filter saturate-[1.04] transition-transform duration-500 group-hover:scale-[1.01]"
-                  loading="eager"
-                />
-
-                {/* Attached Caption Rail immediately below the photo */}
-                <div className="border-t-2 border-[#102A43] bg-[#0B1F33] px-3.5 sm:px-4 py-2.5 text-white flex items-center justify-between text-xs font-sans">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-[#0891B2] animate-pulse shrink-0" />
-                    <span className="font-heading font-semibold text-[11px] sm:text-xs tracking-wide">
-                      Hyperlocal Field Intelligence
-                    </span>
-                    <span className="text-[#829AB1] hidden sm:inline">•</span>
-                    <span className="text-[#EAF0F2] text-[11px] hidden sm:inline">
-                      1 Action Recommended
-                    </span>
-                  </div>
-                  <span className="text-[#0891B2] font-heading font-bold text-[11px] tracking-wide shrink-0">
-                    UP_LKO_BKT Pilot
-                  </span>
-                </div>
-              </div>
-
-              {/* DESKTOP FLOATING CARD 1: Rain Event Intelligence (Perimeter Top Left) */}
-              <div className="hidden md:block absolute -top-4 -left-6 lg:-top-5 lg:-left-8 z-20 bg-white/95 backdrop-blur-md border border-[#102A43] rounded-xl p-3 shadow-[3px_3px_0px_#102A43] animate-float-slow max-w-[210px] sm:max-w-[220px]">
-                <div className="flex items-center justify-between gap-2 text-[10px] uppercase tracking-wider text-[#486581] font-heading font-bold">
-                  <span className="flex items-center gap-1 text-[#2563EB]">
-                    <CloudRain className="w-3.5 h-3.5" />
-                    RAIN EVENT
-                  </span>
-                  <span className="px-1.5 py-0.5 rounded bg-[#DBEAFE] text-[#2563EB] text-[9px] font-bold">
-                    7–10 DAYS
-                  </span>
-                </div>
-                <div className="mt-1 font-heading font-bold text-sm text-[#102A43]">
-                  Moderate Risk
-                </div>
-                <div className="text-[10px] text-[#486581] mt-0.5">
-                  Probabilistic Downscaled Model
-                </div>
-              </div>
-
-              {/* DESKTOP FLOATING CARD 2: Forecast Reliability Score (Perimeter Lower Left) */}
-              <div className="hidden md:block absolute bottom-12 -left-6 lg:bottom-14 lg:-left-8 z-20 bg-white/95 backdrop-blur-md border border-[#102A43] rounded-xl p-3 shadow-[3px_3px_0px_#102A43] animate-float-alt max-w-[210px] sm:max-w-[220px]">
-                <div className="flex items-center justify-between gap-2 text-[10px] uppercase tracking-wider text-[#486581] font-heading font-bold">
-                  <span className="flex items-center gap-1 text-[#0E7490]">
-                    <TrendingUp className="w-3.5 h-3.5" />
-                    CONFIDENCE
-                  </span>
-                  <span className="px-1.5 py-0.5 rounded bg-[#E8F4F6] text-[#0E7490] text-[9px] font-bold">
-                    CALIBRATED
-                  </span>
-                </div>
-                <div className="mt-1 font-heading font-extrabold text-lg text-[#102A43] flex items-baseline gap-1.5">
-                  <span>68%</span>
-                  <span className="text-xs font-medium text-[#486581] font-sans">Medium Skill</span>
-                </div>
-                <div className="text-[10px] text-[#829AB1] mt-0.5">
-                  Isotonic & Platt Reliability Curve
-                </div>
-              </div>
-
-              {/* DESKTOP FLOATING CARD 3: Climate Teleconnections (Perimeter Top Right) */}
-              <div className="hidden md:block absolute top-3 -right-4 lg:top-4 lg:-right-6 z-20 bg-white/95 backdrop-blur-md border border-[#B8C5CC] rounded-xl p-2.5 shadow-[3px_3px_0px_#102A43] max-w-[190px]">
-                <div className="text-[9px] uppercase tracking-wider text-[#486581] font-heading font-bold flex items-center gap-1 text-[#102A43]">
-                  <Waves className="w-3 h-3 text-[#0E7490]" />
-                  CLIMATE SIGNALS
-                </div>
-                <div className="mt-1.5 flex items-center gap-1 text-[10px]">
-                  <span className="px-1.5 py-0.5 rounded bg-[#EAF0F2] border border-[#102A43]/20 font-heading font-bold text-[#102A43]">
-                    ENSO
-                  </span>
-                  <span className="px-1.5 py-0.5 rounded bg-[#EAF0F2] border border-[#102A43]/20 font-heading font-bold text-[#102A43]">
-                    IOD
-                  </span>
-                  <span className="px-1.5 py-0.5 rounded bg-[#EAF0F2] border border-[#102A43]/20 font-heading font-bold text-[#102A43]">
-                    MJO
-                  </span>
-                </div>
-              </div>
-
-              {/* MOBILE ONLY: 3 stacked intelligence cards beneath the image frame (normal document flow) */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mt-3 md:hidden">
-                {/* Mobile Card 1: Rain Event */}
-                <div className="bg-white rounded-xl border border-[#102A43] p-3 shadow-[2px_2px_0px_#102A43]">
+            {/* RIGHT COLUMN: Field Observation Frame & Scientific Annotation Rail System */}
+            <div className="lg:col-span-6 xl:col-span-6 relative mt-4 lg:mt-0">
+              
+              {/* DESKTOP/TABLET: Compact Scientific Annotation Strip directly ABOVE image frame */}
+              <div className="hidden md:grid md:grid-cols-12 gap-3 mb-3">
+                {/* Module A: RAIN SIGNAL */}
+                <div className="md:col-span-7 bg-white border border-[#B8C5CC] rounded-xl px-3.5 py-2.5 shadow-[2px_2px_0px_#102A43]">
                   <div className="flex items-center justify-between gap-2 text-[10px] uppercase tracking-wider text-[#486581] font-heading font-bold">
-                    <span className="flex items-center gap-1 text-[#2563EB]">
-                      <CloudRain className="w-3.5 h-3.5" />
-                      RAIN EVENT
+                    <span className="flex items-center gap-1.5 text-[#102A43]">
+                      <CloudRain className="w-3.5 h-3.5 text-[#0E7490]" />
+                      RAIN SIGNAL
                     </span>
                     <span className="px-1.5 py-0.5 rounded bg-[#DBEAFE] text-[#2563EB] text-[9px] font-bold">
                       7–10 DAYS
                     </span>
                   </div>
-                  <div className="mt-1 font-heading font-bold text-sm text-[#102A43]">
-                    Moderate Risk
-                  </div>
-                  <div className="text-[10px] text-[#486581] mt-0.5">
-                    Probabilistic Downscaled Model
-                  </div>
-                </div>
-
-                {/* Mobile Card 2: Confidence */}
-                <div className="bg-white rounded-xl border border-[#102A43] p-3 shadow-[2px_2px_0px_#102A43]">
-                  <div className="flex items-center justify-between gap-2 text-[10px] uppercase tracking-wider text-[#486581] font-heading font-bold">
-                    <span className="flex items-center gap-1 text-[#0E7490]">
-                      <TrendingUp className="w-3.5 h-3.5" />
-                      CONFIDENCE
-                    </span>
-                    <span className="px-1.5 py-0.5 rounded bg-[#E8F4F6] text-[#0E7490] text-[9px] font-bold">
-                      CALIBRATED
-                    </span>
-                  </div>
-                  <div className="mt-1 font-heading font-extrabold text-base text-[#102A43] flex items-baseline gap-1.5">
-                    <span>68%</span>
-                    <span className="text-xs font-medium text-[#486581] font-sans">Medium Skill</span>
-                  </div>
-                  <div className="text-[10px] text-[#829AB1] mt-0.5">
-                    Isotonic & Platt Reliability Curve
+                  <div className="mt-1 flex items-baseline justify-between gap-2">
+                    <div className="font-heading font-bold text-xs sm:text-sm text-[#102A43]">
+                      Moderate Risk
+                    </div>
+                    <div className="text-[10px] text-[#486581] font-sans truncate">
+                      Probabilistic downscaled diagnostic
+                    </div>
                   </div>
                 </div>
 
-                {/* Mobile Card 3: Climate Signals */}
-                <div className="bg-white rounded-xl border border-[#B8C5CC] p-3 shadow-[2px_2px_0px_#102A43]">
+                {/* Module B: CLIMATE SIGNALS */}
+                <div className="md:col-span-5 bg-white border border-[#B8C5CC] rounded-xl px-3 py-2.5 shadow-[2px_2px_0px_#102A43] flex flex-col justify-between">
                   <div className="text-[10px] uppercase tracking-wider text-[#486581] font-heading font-bold flex items-center gap-1 text-[#102A43]">
                     <Waves className="w-3.5 h-3.5 text-[#0E7490]" />
                     CLIMATE SIGNALS
                   </div>
-                  <div className="mt-1.5 flex items-center gap-1.5 text-[10px]">
-                    <span className="px-1.5 py-0.5 rounded bg-[#EAF0F2] border border-[#102A43]/20 font-heading font-bold text-[#102A43]">
+                  <div className="flex items-center gap-1.5 mt-1">
+                    <span className="px-2 py-0.5 rounded bg-[#EAF0F2] border border-[#B8C5CC] font-heading font-bold text-[10px] text-[#102A43]">
                       ENSO
                     </span>
-                    <span className="px-1.5 py-0.5 rounded bg-[#EAF0F2] border border-[#102A43]/20 font-heading font-bold text-[#102A43]">
+                    <span className="px-2 py-0.5 rounded bg-[#EAF0F2] border border-[#B8C5CC] font-heading font-bold text-[10px] text-[#102A43]">
                       IOD
                     </span>
-                    <span className="px-1.5 py-0.5 rounded bg-[#EAF0F2] border border-[#102A43]/20 font-heading font-bold text-[#102A43]">
+                    <span className="px-2 py-0.5 rounded bg-[#EAF0F2] border border-[#B8C5CC] font-heading font-bold text-[10px] text-[#102A43]">
                       MJO
                     </span>
                   </div>
                 </div>
               </div>
+
+              {/* PRIMARY FIELD OBSERVATION FRAME */}
+              <div className="rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-[#102A43] bg-white shadow-[4px_4px_0px_#102A43]">
+                <img
+                  src="/images/hero-farmer.jpg"
+                  alt="Indian farmer inspecting VarshaSetu agro-climate intelligence on a tablet in agricultural field"
+                  className="w-full h-[320px] sm:h-[380px] lg:h-[430px] object-cover object-center filter saturate-[1.03]"
+                  loading="eager"
+                />
+
+                {/* Attached Field Observation Rail immediately beneath the photo */}
+                <div className="border-t-2 border-[#102A43] bg-[#0B1F33] px-3.5 sm:px-4 py-2.5 text-white font-sans">
+                  <div className="flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-[#0891B2] animate-pulse shrink-0" />
+                      <span className="font-heading font-bold text-[11px] sm:text-xs tracking-wider uppercase text-white">
+                        FIELD OBSERVATION
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 text-[11px] font-mono text-[#0891B2]">
+                      <span className="font-bold">UP_LKO_BKT</span>
+                      <span className="text-white/30">•</span>
+                      <span className="text-[#EAF0F2]">122 OBS</span>
+                    </div>
+                  </div>
+                  <div className="mt-1 text-[11px] text-[#829AB1] font-sans flex items-center justify-between">
+                    <span>Bakshi Ka Talab · Kharif 2024 Observational Archive</span>
+                    <span className="text-[10px] text-[#829AB1] hidden sm:inline">Ground Anchor</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* DESKTOP/TABLET: Module C — MODEL CALIBRATION Module below the observation frame */}
+              <div className="hidden md:flex items-center justify-between bg-white border border-[#B8C5CC] rounded-xl px-3.5 py-2 mt-3 shadow-[2px_2px_0px_#102A43] text-xs font-sans">
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="w-3.5 h-3.5 text-[#0E7490] shrink-0" />
+                  <span className="font-heading font-bold text-[10px] sm:text-[11px] uppercase tracking-wider text-[#486581]">
+                    MODEL CALIBRATION
+                  </span>
+                  <span className="text-[#B8C5CC]">•</span>
+                  <span className="font-heading font-extrabold text-[#102A43]">
+                    68%
+                  </span>
+                  <span className="text-[#486581] text-[11px]">
+                    Medium Skill
+                  </span>
+                </div>
+                <div className="text-[10px] text-[#829AB1] font-mono">
+                  Isotonic + Platt Curves
+                </div>
+              </div>
+
+              {/* MOBILE ONLY: Annotation Modules in strict normal document flow */}
+              <div className="space-y-2.5 mt-3 md:hidden">
+                {/* Mobile Rain Signal */}
+                <div className="bg-white border border-[#B8C5CC] rounded-xl p-3 shadow-[2px_2px_0px_#102A43]">
+                  <div className="flex items-center justify-between gap-2 text-[10px] uppercase tracking-wider text-[#486581] font-heading font-bold">
+                    <span className="flex items-center gap-1.5 text-[#102A43]">
+                      <CloudRain className="w-3.5 h-3.5 text-[#0E7490]" />
+                      RAIN SIGNAL
+                    </span>
+                    <span className="px-1.5 py-0.5 rounded bg-[#DBEAFE] text-[#2563EB] text-[9px] font-bold">
+                      7–10 DAYS
+                    </span>
+                  </div>
+                  <div className="mt-1 flex items-baseline justify-between gap-2">
+                    <div className="font-heading font-bold text-sm text-[#102A43]">
+                      Moderate Risk
+                    </div>
+                    <div className="text-[10px] text-[#486581] font-sans">
+                      Probabilistic downscaled diagnostic
+                    </div>
+                  </div>
+                </div>
+
+                {/* Mobile Climate Signals */}
+                <div className="bg-white border border-[#B8C5CC] rounded-xl p-3 shadow-[2px_2px_0px_#102A43]">
+                  <div className="text-[10px] uppercase tracking-wider text-[#486581] font-heading font-bold flex items-center gap-1.5 text-[#102A43] mb-1.5">
+                    <Waves className="w-3.5 h-3.5 text-[#0E7490]" />
+                    CLIMATE SIGNALS
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="flex-1 text-center py-1 rounded bg-[#EAF0F2] border border-[#B8C5CC] font-heading font-bold text-[10px] text-[#102A43]">
+                      ENSO
+                    </span>
+                    <span className="flex-1 text-center py-1 rounded bg-[#EAF0F2] border border-[#B8C5CC] font-heading font-bold text-[10px] text-[#102A43]">
+                      IOD
+                    </span>
+                    <span className="flex-1 text-center py-1 rounded bg-[#EAF0F2] border border-[#B8C5CC] font-heading font-bold text-[10px] text-[#102A43]">
+                      MJO
+                    </span>
+                  </div>
+                </div>
+
+                {/* Mobile Model Calibration */}
+                <div className="bg-white border border-[#B8C5CC] rounded-xl p-3 shadow-[2px_2px_0px_#102A43]">
+                  <div className="flex items-center justify-between gap-2 text-[10px] uppercase tracking-wider text-[#486581] font-heading font-bold">
+                    <span className="flex items-center gap-1.5 text-[#0E7490]">
+                      <TrendingUp className="w-3.5 h-3.5" />
+                      MODEL CALIBRATION
+                    </span>
+                    <span className="text-[10px] text-[#829AB1] font-mono">
+                      Isotonic + Platt
+                    </span>
+                  </div>
+                  <div className="mt-1 font-heading font-extrabold text-base text-[#102A43] flex items-baseline gap-2">
+                    <span>68%</span>
+                    <span className="text-xs font-medium text-[#486581] font-sans">Medium Skill</span>
+                  </div>
+                </div>
+              </div>
+
             </div>
 
           </div>
