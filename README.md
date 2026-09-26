@@ -1,393 +1,495 @@
 # VarshaSetu (वर्षासेतु)
-> *From climate signals to confident farm decisions.*
+> *Evidence-aware agro-meteorological intelligence and probabilistic decision-support platform.*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Tests: 473 Passing](https://img.shields.io/badge/Tests-473%20Passing-brightgreen.svg)](#testing)
+[![Tests: 486 Passing](https://img.shields.io/badge/Tests-486%20Passing-brightgreen.svg)](#testing)
 [![Stack: MERN + Python FastAPI](https://img.shields.io/badge/Stack-React%20%7C%20Node%20%7C%20MongoDB%20%7C%20FastAPI-0E7490.svg)](#technology-stack)
-[![Architecture: One Scientific Layer](https://img.shields.io/badge/Architecture-One%20Scientific%20Layer-102A43.svg)](#core-architecture)
+[![Mode: Diagnostic Only](https://img.shields.io/badge/Mode-DIAGNOSTIC__ONLY-D97706.svg)](#current-scientific-scope)
 
 ---
 
-## Overview
+## Product Overview
 
-**VarshaSetu (वर्षासेतु)** is an agro-meteorological intelligence and scientific decision-support platform designed to bridge the operational gap between planetary atmospheric science and village-level farm management. 
+**VarshaSetu (वर्षासेतु)** is an evidence-aware agro-meteorological intelligence and scientific decision-support platform engineered to transform raw meteorological observations, ensemble climate downscaling, calibrated probabilistic forecasts, and crop-phenology risk models into explainable decision support for farmers, agricultural extension officers, government disaster authorities, and climate research analysts.
 
-Operating at block and gram panchayat resolutions across India, VarshaSetu translates medium-range (7–30 day) probabilistic precipitation and monsoon signals into actionable, crop-phenology-specific advisories, ground-truth field inspection workflows, regional policy matrices, and multi-year hindcast validation laboratories.
-
----
-
-## Problem
-
-Smallholder rainfed farmers face extreme climate volatility during the critical Indian Kharif and Rabi seasons. Conventional weather forecasts suffer from several operational shortcomings:
-1. **Binary Determinism:** Treating rainfall as a certain binary event rather than a calibrated probabilistic distribution leads to false security or premature panic during sowing and transplanting.
-2. **Spatial Misalignment:** Synoptic district-level bulletins overlook micro-climatic block and panchayat topographical variances.
-3. **Decoupled Agronomy:** Meteorological numbers (e.g. "65mm rain") are presented without phenological context (e.g. what 65mm means for 14-day transplanted paddy seedlings versus flowering mustard).
-4. **Lack of Explainability & Lineage:** Black-box predictions offer farmers and agricultural extension officers no inspectable provenance, calibration reliability, or uncertainty bounds.
+Operating at administrative block and Gram Panchayat resolutions across India, VarshaSetu bridges the divide between continental-scale atmospheric circulation and localized, on-the-ground agricultural risk management.
 
 ---
 
-## Solution
+## Core Principle
 
-VarshaSetu solves this by establishing a unified scientific data pipeline that couples multi-model atmospheric downscaling with agronomic safety gates:
-- **Calibrated Probabilistic Forecasting:** Converts raw ensembles into reliable probabilities ($P(\text{event})$) with explicit uncertainty spreads ($P_{10}–P_{90}$) and climatological reference baselines.
-- **Crop-Stage Risk Sensitivity:** Automatically maps predicted moisture anomalies against critical phenological growth stages (nursery, tillering, flowering, maturity).
-- **Interactive "What-If" Decision Simulation:** Equips farmers to test operational decisions—such as delaying sowing by 7–14 days or adjusting irrigation—before committing capital in the field.
-- **End-to-End Scientific Trust Layer:** Discloses observational provenance (IMD AWS, INSAT-3DR, ERA5 Reanalysis), model architecture, Expected Calibration Error (ECE), and verification hashes on every advisory card.
+### One Scientific Layer → Four Operational Perspectives
+
+VarshaSetu operates on a strict separation between core scientific computation and role-specific operational projection:
+
+$$\text{ONE SCIENTIFIC LAYER} \longrightarrow \text{FOUR OPERATIONAL PERSPECTIVES} \; (+\; \text{ADMIN})$$
+
+The scientific intelligence layer computes probabilistic models, calibration reliability curves, SHAP feature attributions, and phenological risk gates once. Four distinct operational perspectives then project this single source of truth according to domain needs:
+
+1. **Farmer Perspective:** Hyper-localized, 7–30 day probabilistic rainfall and dry-spell risk horizons, crop-stage agronomic advisories, and what-if sowing scenario simulations in Hindi and English.
+2. **Field Officer Perspective:** Spatial cluster heatmaps, automated weather station (AWS) ground-truth verification, KVK agromet bulletin authoring, and extension event tracking.
+3. **Government Perspective:** Regional vulnerability matrices, rainfall departure tracking, early disaster watch/warning signals, and contingency planning oversight.
+4. **Climate Analyst Perspective:** Interactive probabilistic inference workbench, multi-model benchmark comparisons (XGBoost, LightGBM, Random Forest, Logistic Baseline), Platt/Isotonic calibration curves, and multi-year hindcast validation.
+5. **System Administrator:** Security governance, immutable audit logging, user role provisioning, and system telemetry monitoring.
 
 ---
 
-## Core Architecture
+## Why VarshaSetu
 
-VarshaSetu follows the architectural principle:
+Smallholder rainfed agriculture in India faces escalating climate volatility. Standard weather forecasts often fail to provide actionable agricultural guidance due to four fundamental shortcomings:
 
-$$\text{ONE SCIENTIFIC LAYER} \longrightarrow \text{FOUR OPERATIONAL PERSPECTIVES}$$
+1. **Deterministic False Certainty:** Presenting rainfall as a binary outcome ("rain expected tomorrow") conceals inherent atmospheric uncertainty, causing farmers to misjudge critical sowing and transplanting windows.
+2. **Spatial Misalignment:** Synoptic district-level bulletins overlook local topographical micro-climates across administrative blocks and Gram Panchayats.
+3. **Decoupled Agronomy:** Meteorological figures (e.g., $65\text{ mm}$ precipitation) are delivered without phenological growth context (e.g., $65\text{ mm}$ during paddy nursery vs. paddy harvesting).
+4. **Opaque Provenance:** Black-box predictions provide extension officers and administrators with no auditable lineage, station backing, or calibration reliability records.
 
-The unified scientific intelligence layer computes probabilistic forecasts, atmospheric feature attributions, and agronomic risk gates once. Four tailored operational perspectives then project this single source of truth according to user needs:
+VarshaSetu bridges these gaps by anchoring forecasts in calibrated probability distributions, mapping moisture anomalies directly to crop phenology, and enforcing an end-to-end scientific provenance ledger.
 
-```
-                      ┌───────────────────────────────────────┐
-                      │        ONE SCIENTIFIC LAYER           │
-                      │  • Calibrated Multi-Model Ensembles   │
-                      │  • Platt & Isotonic ECE Reliability   │
-                      │  • SHAP Local Feature Attribution     │
-                      │  • Multi-Year Cross-Validation Folds  │
-                      └───────────────────┬───────────────────┘
-                                          │
-            ┌───────────────────┬─────────┴─────────┬───────────────────┐
-            ▼                   ▼                   ▼                   ▼
-    ┌───────────────┐   ┌───────────────┐   ┌───────────────┐   ┌───────────────┐
-    │ 1. FARMER     │   │ 2. OFFICER    │   │ 3. GOVERNMENT │   │ 4. ANALYST    │
-    │ Panchayat-lvl │   │ Block cluster │   │ Statewide GIS │   │ Probabilistic │
-    │ advisories in │   │ heatmaps, KVK │   │ risk matrices,│   │ forecast lab, │
-    │ Hindi/English,│   │ agromet draft │   │ departures &  │   │ reliability   │
-    │ What-If sowing│   │ bulletins,    │   │ contingency   │   │ diagrams,     │
-    │ simulators.   │   │ inspections.  │   │ planning.     │   │ model drift.  │
-    └───────────────┘   └───────────────┘   └───────────────┘   └───────────────┘
-```
+---
+
+## Scientific Evidence & Trust
+
+Transparency and scientific accountability are core design requirements. VarshaSetu answers four foundational questions across every interface:
+
+| Scientific Question | Operational Meaning | Implementation Component |
+| :--- | :--- | :--- |
+| **WHAT** is the system showing? | Calibrated event probability ($P(\text{event})$), uncertainty interval ($P_{10}–P_{90}$), climatological baseline departure, and risk category. | `ConfidenceIndicator`, `RiskDistribution` |
+| **WHY** is the system showing this? | Non-causal atmospheric drivers (moisture convergence, synoptic wind vorticity, instability) with SHAP attribution weights. | `SignalExplanation` |
+| **WHERE** did the data come from? | Observational lineage: IMD AWS stations, INSAT-3DR satellite, ERA5 reanalysis, spatial resolution ($5.5\text{ km}$), ingestion timestamp, and cryptographic dataset hash. | `ProvenanceDrawer` |
+| **HOW CONFIDENT** should you be? | Empirical validation metrics: calibration curve (Platt/Isotonic), Expected Calibration Error ($ECE$), Brier Skill Score ($BSS$), and sample verification count ($N$). | `ScientificEvidencePanel` |
+
+### Probability is NOT Confidence
+- **Probability ($P \in [0, 1]$):** Represents the modeled meteorological likelihood of an event occurring (e.g., $72\%$ chance of exceeding $64.5\text{ mm}$ rainfall).
+- **Confidence (`PASS` / `MARGINAL` / `FAIL`):** Represents the empirical verification and calibration reliability of the underlying model against historical observational holdouts.
+
+The application never combines these distinct dimensions into a single misleading score.
+
+---
+
+## Current Scientific Scope
+
+The current platform demonstration operates under explicit scientific guardrails:
+
+- **Observational Demonstration Anchor:** Centered on **Bakshi Ka Talab (`UP_LKO_BKT`)**, Lucknow District, Uttar Pradesh ($26.9749^\circ\text{N}, 80.9276^\circ\text{E}$).
+- **Empirical Baseline:** Calibrated against the single-season **Kharif 2024** observational record (122 daily station and reanalysis records).
+- **Operational Mode:** **`DIAGNOSTIC_ONLY`**. The system is explicitly configured to prevent unsupported multi-year operational claims until multi-season empirical telemetry is ingested.
+- **Multi-Year Hindcast Gate:** Set to **`INSUFFICIENT_DATA`**. Evaluated models pass statistical calibration within the single-season baseline but are barred from multi-season operational deployment.
 
 ---
 
 ## Key Capabilities
 
-### 1. Farmer Perspective
-- **Calibrated 7–30 Day Forecasts:** Block-level precipitation risk, dry-spell onset hazard, and temperature anomaly curves.
-- **Crop-Specific Advisories:** Dynamic recommendations for Paddy, Maize, Mustard, Wheat, and Potato across nursery, transplanting, tillering, and harvesting stages.
-- **Interactive What-If Simulator:** Scenario simulator evaluating the agronomic impact of shifting sowing dates by $+7$ to $+21$ days.
-- **Bilingual & Voice Accessibility:** Full Hindi and English translation with speech synthesis fallback.
-
-### 2. Field Officer Perspective
-- **Spatial Block Monitoring:** Geospatial GIS choropleth layers across administrative block boundaries.
-- **Agromet Advisory Bulletins:** Authoring, validating, and broadcasting localized agromet bulletins for block distribution.
-- **Ground Truth Inspections:** Geo-tagged field observation logs linking farmer reports to automated weather station readings.
-
-### 3. Government Perspective
-- **Regional Risk Matrix:** Unified multi-block status grid tracking rainfall departures and spatial moisture anomalies.
-- **Disaster Mitigation Oversight:** Early watch/warning indicators for prolonged monsoon breaks and waterlogging hazards.
-- **Operational Health Telemetry:** Real-time visibility into AWS sensor uptime, data freshness, and regional ingestion status.
-
-### 4. Climate Analyst Perspective
-- **Probabilistic Forecast Lab:** Interactive model inference generator for custom coordinates, horizons, and risk thresholds.
-- **Calibration & Reliability Benchmarks:** Comparative curves for Platt Scaling, Isotonic Regression, Expected Calibration Error ($ECE$), and Brier Skill Scores ($BSS$).
-- **Model Explainability (SHAP):** Non-causal feature attributions identifying moisture convergence, synoptic wind vorticity, and thermodynamic instability contributions.
-- **Multi-Year Hindcast Validation:** Temporal cross-validation splits ($2014–2024$) verifying stability and detecting covariate drift.
+- **Probabilistic Precipitation & Dry-Spell Forecasting:** Multi-horizon forecast generation (7, 14, 21, and 30 days) with uncertainty quantiles ($P_{10}, P_{50}, P_{90}$).
+- **Crop-Phenology Risk Engine:** Agronomic rules mapping precipitation anomalies to Paddy, Maize, Mustard, Wheat, and Potato across nursery, tillering, flowering, and maturity stages.
+- **What-If Scenario Simulator:** Interactive sensitivity workbench modeling the agro-meteorological effects of sowing shifts (delay by $+7$ to $+21$ days) without claiming biological yield or commercial prediction.
+- **SHAP Feature Importance Attribution:** Local TreeSHAP attribution grouping features into physical domains (Moisture, Synoptic Wind, Thermodynamic Instability, Antecedent Rain).
+- **Multi-Model Calibration Framework:** Comparative Platt Scaling and Isotonic Regression evaluating Brier Skill Scores and Expected Calibration Errors across XGBoost, LightGBM, Random Forest, and Logistic models.
+- **Real-Time Event Synchronization:** WebSocket-based operational event broadcasting, auto-reconnection, and deduplicated event buffers.
+- **Granular RBAC & Persona Routing:** Role-specific layouts and navigational boundaries for Farmer, Field Officer, Government, Analyst, and Admin roles.
+- **Bilingual Accessibility:** English and Hindi localization with accessible screen-reader semantics and audio synthesis fallback.
+- **Immutable Audit Logging:** Cryptographically traced operational and administrative event records.
 
 ---
 
-## Scientific Evidence & Explainability
+## Architecture
 
-VarshaSetu is built on transparency and scientific accountability, answering four core questions across every interface:
+The system follows a three-tier decoupled MERN + FastAPI architecture. The browser client **never** communicates directly with the Python ML service:
 
-| Question | Scientific Evidence Metric | Implementation Component |
-|---|---|---|
-| **WHAT** is the system showing? | Event probability ($P(\text{event})$), confidence tier (`HIGH/MED/LOW`), uncertainty spread ($P_{10}–P_{90}$), climatology normal deviation. | `ConfidenceIndicator` |
-| **WHY** is it showing this signal? | Domain-grouped atmospheric drivers (Moisture, Synoptic Wind, Instability, Antecedent Rain) with SHAP attribution weights. Non-causal diagnostic disclosure. | `SignalExplanation` |
-| **WHERE** did the data come from? | Observational lineage: IMD AWS stations, INSAT-3DR satellite, ERA5 reanalysis, spatial resolution ($5.5\text{ km}$), pipeline latency, SHA-256 verification hash. | `ProvenanceDrawer` |
-| **HOW CONFIDENT** should you be? | Model architecture, calibration method (Isotonic / Platt), Expected Calibration Error ($ECE$), Brier Skill Score ($BSS$), holdout sample size ($N$). | `ScientificEvidencePanel` |
+```mermaid
+flowchart TD
+    subgraph Client["Presentation Tier (Browser Client)"]
+        UI["React 18 + Vite Web App<br/>(Tailwind CSS, Zustand, i18next)"]
+        Badge["RealtimeStatusBadge<br/>(LIVE / RETRYING / OFFLINE)"]
+        Drawer["NotificationDrawer<br/>(Telemetry Stream & Alerts)"]
+    end
 
----
+    subgraph Gateway["Application Gateway Tier (Node.js & Express)"]
+        REST["Express REST API Gateway<br/>(/api/v1/*)"]
+        WS["Socket.IO Server Engine<br/>(/socket.io)"]
+        Auth["JWT & Authoritative RBAC Middleware<br/>(5 Roles: Farmer, Officer, Gov, Analyst, Admin)"]
+        Room["Authoritative Room Router<br/>(user:id, role:name, block:id, system:*)"]
+        MLClient["ML Gateway Client<br/>(HTTP Keep-Alive, Circuit Breaker)"]
+    end
 
-## Architecture Diagram
+    subgraph Data["Persistence Tier"]
+        Mongo[("MongoDB 7.0+ Database<br/>(Mongoose 8.x ODM, GeoJSON 2dsphere)")]
+    end
 
+    subgraph ML["Scientific ML Tier (Python 3.11 & FastAPI)"]
+        FastAPI["FastAPI Scientific Microservice<br/>(Port 8000 - Internal Network Only)"]
+        Tree["Gradient Boosted Trees<br/>(XGBoost, LightGBM)"]
+        Calib["Calibration Engine<br/>(Platt Scaling, Isotonic Regression)"]
+        SHAPCore["SHAP Explainability Core<br/>(TreeSHAP Local Attributions)"]
+        AgroRules["Deterministic Agronomy Engine<br/>(9 Rules / 6 Crops)"]
+    end
+
+    UI -->|REST API Requests| REST
+    UI <-->|Bidirectional WebSockets| WS
+    REST --> Auth
+    Auth --> Room
+    REST -->|Persistence & Query| Mongo
+    REST --> MLClient
+    MLClient -->|Internal HTTP Only| FastAPI
+    FastAPI --> Tree
+    FastAPI --> Calib
+    FastAPI --> SHAPCore
+    FastAPI --> AgroRules
+    WS <--> Room
 ```
-┌────────────────────────────────────────────────────────────────────────┐
-│                   CLIENT PRESENTATION TIER (React 18)                  │
-│   • Vite, TypeScript, Tailwind CSS, React Router v6, Zustand, i18next  │
-│   • Neo-Brutalist Climate Intelligence Editorial Theme                 │
-│   • Leaflet GIS Maps, Phase 7 Triad & Phase 9 Trust Components         │
-│   • Real-Time Socket.IO Client with Auto-Reconnection & Status Badges  │
-└───────────────────────────────────┬────────────────────────────────────┘
-                                    │ HTTP REST (/api/v1) & WSS (/socket.io)
-                                    ▼
-┌────────────────────────────────────────────────────────────────────────┐
-│               APPLICATION GATEWAY TIER (Node.js + Express)             │
-│   • Express REST API Gateway & Socket.IO Real-Time Server Engine       │
-│   • Authoritative Role-Based Access Control (RBAC) & Handshake Auth    │
-│   • Authoritative Room Segmentation (user, role, block, system)        │
-│   • Mongoose 8.x ODM with GeoJSON 2dsphere Spatial Indexing            │
-│   • Security Hardening (Helmet, Rate Limiting, Zod Request Validation) │
-└───────────────────┬────────────────────────────────┬───────────────────┘
-                    │ Mongoose ODM                   │ Internal HTTP (Keep-Alive)
-                    ▼                                ▼
-┌──────────────────────────────────────┐  ┌──────────────────────────────┐
-│         PERSISTENCE (MongoDB)        │  │     SCIENTIFIC ML TIER       │
-│ • MongoDB 7.0+ Persistence           │  │ • Python 3.11 + FastAPI      │
-│ • 16 Optimized Collections           │  │ • LightGBM, XGBoost, Scikit  │
-│ • GeoJSON 2dsphere Spatial Queries   │  │ • Platt & Isotonic Calibrator│
-│ • Embedded Subdocuments for Audits   │  │ • SHAP TreeExplainer Core    │
-│ • Zero Data Fabrication Defaults     │  │ • Multi-Year Hindcast Folds  │
-└──────────────────────────────────────┘  └──────────────────────────────┘
-```
+
+### Architectural Guardrails
+1. **Zero Browser-to-FastAPI Bypass:** The React client possesses no network path to FastAPI (`localhost:8000`). All scientific inference passes through the Express API Gateway.
+2. **No Numerical ML in Node.js:** Algorithmic forecasting, SHAP values, Platt scaling, and tree models reside exclusively in the Python scientific runtime. Express orchestrates, validates, and persists.
+3. **Database Authorization:** MongoDB operations run through authoritative Mongoose models. RBAC is verified on the server side prior to query execution.
 
 ---
 
 ## Technology Stack
 
-- **Frontend:** React 18, Vite, TypeScript, Tailwind CSS, React Router v6, Zustand, Axios, Socket.IO Client, Leaflet, Lucide React, i18next, Vitest.
-- **Backend:** Node.js (>=20.0.0), Express, Socket.IO Server, TypeScript, Mongoose (MongoDB ODM), Zod, JSON Web Tokens (JWT), bcryptjs, Helmet, Morgan, Vitest.
-- **Database:** MongoDB 7.0+ (GeoJSON `2dsphere` spatial indexing, document embedding, schema validation).
-- **Scientific ML Microservice:** Python 3.11, FastAPI, Uvicorn, LightGBM, XGBoost, Scikit-learn, SHAP, NumPy, Pandas, NetCDF4, Pytest.
-- **Maps & Visualization:** Leaflet GIS with GeoJSON choropleth layers, custom SVG uncertainty bands, and probability density curves.
-- **Security & Authorization:** Cryptographic JWT tokens, bcrypt password hashing, granular RBAC middlewares, Socket handshake auth, and Helmet HTTP protections.
+### Frontend Client
+- **Framework:** React 18.3, Vite 5.x, TypeScript 5.x
+- **Styling:** Tailwind CSS (Neo-brutalist Climate Intelligence Editorial Theme)
+- **State Management:** Zustand (Stores: `useAppStore`, `useAuthStore`, `useFarmerStore`, `useOfficerStore`, `useRealtimeStore`)
+- **Networking:** Axios HTTP client, Socket.IO Client 4.8
+- **Mapping & GIS:** Leaflet 1.9, React-Leaflet
+- **Localization:** i18next, react-i18next (English & Hindi)
+- **Testing:** Vitest, React Testing Library, jsdom
+
+### Application Gateway
+- **Runtime:** Node.js (>= 20.0.0 LTS), Express 4.x, TypeScript 5.x
+- **Real-Time Engine:** Socket.IO Server 4.8
+- **Database ODM:** Mongoose 8.x
+- **Security:** JSON Web Tokens (`jsonwebtoken`), bcryptjs, Helmet, express-rate-limit, Zod
+- **Testing:** Vitest, Supertest
+
+### Scientific ML Microservice
+- **Runtime:** Python 3.11, FastAPI, Uvicorn
+- **Machine Learning:** LightGBM, XGBoost, Scikit-learn
+- **Explainability:** SHAP (TreeExplainer)
+- **Scientific Computing:** NumPy, Pandas, SciPy, NetCDF4
+- **Testing:** Pytest, HTTPX
+
+### Database & Storage
+- **Primary Database:** MongoDB 7.0+ (GeoJSON `2dsphere` spatial indexing, 16 collections, schema validations)
+- **Legacy Fallback:** PostgreSQL 16 + PostGIS (Retained for migration compatibility and rollback resilience)
 
 ---
 
-## Application Structure
+## Data Architecture
+
+The persistence tier consists of 16 structured collections in MongoDB:
 
 ```
-VarshaSetu/
-├── backend/                     # Node.js Express Application Server
-│   ├── src/
-│   │   ├── config/              # Database connection & environment configuration
-│   │   ├── controllers/         # Express controllers (auth, forecast, advisory, etc.)
-│   │   ├── db/
-│   │   │   ├── migrations/      # Historical PostgreSQL migration reference files
-│   │   │   └── seeds/           # MongoDB development seed script (mongoSeed.ts)
-│   │   ├── middleware/          # requireAuth, requireRole, rateLimit, error handling
-│   │   ├── models/              # 16 Mongoose Schemas (User, Geography, Forecast, etc.)
-│   │   ├── realtime/            # Socket.IO server, handshake auth, room segmentation, events
-│   │   ├── repositories/        # Persistence repositories
-│   │   ├── routes/              # Express API route modules (/api/v1/*)
-│   │   └── server.ts            # Application bootstrap with Socket.IO attachment
-│   └── tests/                   # Backend Vitest integration & unit test suites (154 tests)
-│
-├── frontend/                    # React 18 + Vite Web Application
-│   ├── src/
-│   │   ├── components/          # Modular components (ui, viz, maps, landing, personas, realtime)
-│   │   ├── layouts/             # RootLayout, FarmerLayout, OfficerLayout, AnalystLayout
-│   │   ├── pages/               # Persona pages (public, farmer, officer, gov, analyst)
-│   │   ├── services/            # Frontend API client, socketClient singleton & domain services
-│   │   ├── stores/              # Zustand stores (useAppStore, useFarmerStore, useRealtimeStore)
-│   │   └── tests/               # Frontend Vitest suites (117 tests)
-│   └── vite.config.ts
-│
-├── ml-service/                  # Scientific Python FastAPI Microservice (202 tests)
-│   ├── app/
-│   │   ├── agronomy/            # Phenological rules & advisory generator
-│   │   ├── calibration/         # Platt Scaling & Isotonic Regression engines
-│   │   ├── forecast/            # Multi-target probability ensemble generator
-│   │   ├── hindcasting/         # Multi-year temporal cross-validation folds
-│   │   └── main.py              # FastAPI microservice endpoints
-│   └── tests/                   # Pytest scientific test suites
-│
-├── docs/                        # Complete technical architecture specifications
-├── .env.example                 # Environment configuration template
-└── README.md                    # Project documentation
+mongodb://localhost:27017/varshasetu
+├── users                    # User identity, credentials, roles, permissions, block assignments
+├── geography                # State, district, block, gram panchayat hierarchies
+├── stations                 # IMD AWS ground telemetry stations with GeoJSON coordinates
+├── telemetry                # Daily observed weather parameters (rainfall, temp, humidity, wind)
+├── forecasts                # Probabilistic forecast snapshots (P10, P50, P90, probability, horizon)
+├── forecast_runs            # Model execution metadata, pipeline latency, feature coverage
+├── events                   # Detected agro-meteorological risk events (heavy rain, dry spell)
+├── advisories               # Phenological crop advisories with severity and dismissal status
+├── crops                    # Agronomic crop catalogs and growth stage threshold definitions
+├── scenarios                # What-if sensitivity simulation contracts and calculated outcomes
+├── models                   # Model family registry (XGBoost, LightGBM, RF, Logistic)
+├── provenance               # Cryptographic data lineage, source hashes, station provenance
+├── data_health              # Pipeline ingestion status, dataset freshness, record counts
+├── notifications            # Unicast in-app delivery records and read receipts
+├── localizations            # Multilingual advisory templates and voice manifests
+└── audit_logs               # Immutable administrative and operational security logs
 ```
 
----
-
-## Installation
-
-### Prerequisites
-- **Node.js:** v20.0.0 or higher
-- **Python:** v3.11.0 or higher
-- **MongoDB:** v7.0 or higher (local daemon or MongoDB Atlas)
-
-### Setup Commands
-
-```bash
-# Clone the repository
-git clone https://github.com/samxsingh/VarshaSetu.git
-cd VarshaSetu
-
-# 1. Install Backend Dependencies
-cd backend
-npm install
-
-# 2. Install Frontend Dependencies
-cd ../frontend
-npm install
-
-# 3. Setup Python ML Environment
-cd ../ml-service
-python3.11 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-cd ..
+### GeoJSON Spatial Indexing
+Administrative blocks and weather stations use GeoJSON `Point` and `Polygon` schemas indexed with `2dsphere`:
+```typescript
+coordinates: {
+  type: { type: String, enum: ['Point'], required: true },
+  coordinates: { type: [Number], required: true }, // [longitude, latitude]
+}
 ```
 
 ---
 
-## Environment Variables
+## Security Architecture
 
-Copy `.env.example` to `.env` in both `backend/` and `ml-service/`:
-
-```bash
-# Backend Environment Configuration (backend/.env)
-NODE_ENV=development
-PORT=5001
-MONGODB_URI=mongodb://127.0.0.1:27017/varshasetu
-MONGODB_DB_NAME=varshasetu
-JWT_SECRET=your_secure_development_jwt_secret_key_32chars!
-FRONTEND_URL=http://localhost:5173
-ML_SERVICE_URL=http://localhost:8000
-
-# Frontend Configuration (frontend/.env)
-VITE_API_BASE_URL=http://localhost:5001/api/v1
-
-# ML Service Configuration (ml-service/.env)
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/varshasetu
-FASTAPI_PORT=8000
-ENVIRONMENT=development
-```
+- **Authentication:** Stateless JWT access tokens ($7\text{-day}$ default) coupled with rotating refresh tokens ($30\text{-day}$ validity) stored securely.
+- **Handshake Verification:** Socket.IO connections require valid JWT credentials at connection handshake (`socketAuthMiddleware`).
+- **Granular RBAC:** Five-tier authoritative role enforcement (`requireAuth`, `requireRole`, `requirePermission`) evaluated on the backend.
+- **Authoritative Room Isolation:** Socket.IO join requests are validated on the server. Clients cannot join rooms for unauthorized roles or non-assigned geographic blocks.
+- **Request Defense:** Strict Zod schema validation on API payloads, Helmet security headers (`X-Content-Type-Options`, `X-Frame-Options`), and IP-based rate limiting on sensitive routes.
+- **Audit Immutability:** Audit records are append-only. No deletion endpoint exists for historical audit logs.
+- **Sanitized Payloads:** Socket.IO DTOs and API responses strip internal MongoDB connection strings, internal service hostnames, and credentials.
 
 ---
 
-## Running Locally
+## Real-Time Architecture
 
-To run all tiers concurrently for local development:
+The real-time subsystem synchronizes platform state across clients using targeted room multicasting:
 
-```bash
-# Terminal 1: MongoDB Service (if running locally)
-mongod --dbpath /path/to/data/db
+| Socket Event | DTO Type | Description | Target Channel |
+| :--- | :--- | :--- | :--- |
+| `event:created` | `ScientificEventDTO` | Newly detected meteorological risk event | `block:<id>`, `role:OFFICER`, `role:GOVERNMENT` |
+| `event:updated` | `ScientificEventDTO` | State or parameter update on existing event | `block:<id>`, `role:OFFICER`, `role:GOVERNMENT` |
+| `event:acknowledged`| `ScientificEventDTO` | Extension officer review and acknowledgment | `block:<id>`, `role:OFFICER`, `role:GOVERNMENT` |
+| `event:resolved` | `ScientificEventDTO` | Resolution and closure of operational risk | `block:<id>`, `role:OFFICER`, `role:GOVERNMENT` |
+| `forecast:updated` | `ForecastUpdatedDTO` | New multi-horizon model forecast run | `block:<id>`, `role:ANALYST`, `role:GOVERNMENT` |
+| `advisory:updated` | `AdvisoryUpdatedDTO` | Modification or dismissal of crop advisory | `block:<id>`, `role:FARMER`, `role:OFFICER` |
+| `data_health:updated`| `DataHealthUpdatedDTO`| Telemetry pipeline ingestion synchronization | `role:ANALYST`, `system:health` |
+| `notification:new` | `InAppNotificationDTO` | Private in-app alert delivery | `user:<userId>` (Unicast) |
+| `system:announcement`| `SystemAnnouncementDTO`| Global platform maintenance or warning | `system:announcements` (Broadcast) |
 
-# Terminal 2: Node.js Express Gateway Server
-cd backend
-npm run seed:mongo   # Ingests Lucknow BKT demonstration hierarchy, stations & models
-npm run dev          # Starts on http://localhost:5001
+### Resilient Client Strategy
+The frontend `socketClient` implements exponential backoff reconnection (10 attempts, 1s base delay, 10s maximum cap) and maintains a 50-item deduplicating ring buffer in `useRealtimeStore`.
 
-# Terminal 3: Python FastAPI Scientific Service
-cd ml-service
-source venv/bin/activate
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+---
 
-# Terminal 4: React Vite Frontend Portal
-cd frontend
-npm run dev          # Starts on http://localhost:5173
-```
+## Operational Personas
+
+| Persona | Primary Operational Purpose | Core System Capabilities |
+| :--- | :--- | :--- |
+| **Farmer** | Farm-level operational decisions and sowing window selection | 7–30 day calibrated forecasts, crop-specific phenology advisories, interactive What-If sowing simulator, Hindi/English translation, provenance drawers. |
+| **Field Officer** | Extension advisory management and ground-truth verification | Block geospatial cluster monitoring, KVK advisory bulletin drafting and broadcasting, AWS ground-truth inspections, event acknowledgement. |
+| **Government** | Regional disaster oversight and contingency planning | Statewide/district risk matrices, rainfall departure tracking, early warning triggers, telemetry uptime monitoring, policy intervention logs. |
+| **Climate Analyst** | Meteorological model verification and calibration research | Probabilistic forecast lab, multi-model benchmark comparisons, Platt/Isotonic calibration curves, SHAP feature attributions, hindcast folds. |
+| **Administrator** | System security, user access, and pipeline governance | User role provisioning, system status telemetry, immutable audit log inspection, cross-perspective diagnostics. |
 
 ---
 
 ## API Architecture
 
-The Node.js Express server acts as the authoritative application gateway mounted under `/api/v1`. The frontend communicates exclusively with Express, which proxies compute workloads to FastAPI:
+All Express REST endpoints (`/api/v1/*`) return a standardized response envelope:
 
-- `/api/v1/auth` — Registration, JWT login, profile fetching, logout.
-- `/api/v1/geography` — Administrative hierarchy and GeoJSON `$geoIntersects` point-in-polygon resolution.
-- `/api/v1/forecasts` — Calibrated probabilistic forecast queries and generation.
-- `/api/v1/events` — Detection, lifecycle state transitions, and alert center feeds.
-- `/api/v1/advisories` — Crop phenology advisory evaluations, dismissals, and multilingual deliveries.
-- `/api/v1/agronomy/scenarios` — What-If sensitivity runs, parameter response curves, and comparative deltas.
-- `/api/v1/models` — ML registry, Platt/Isotonic calibration curves, and hindcast stability metrics.
-- `/api/v1/data-health` — Observational sensor health, provider statuses, and ingestion quality logs.
+### Success Envelope
+```json
+{
+  "success": true,
+  "data": { ... },
+  "meta": {
+    "requestId": "c768940a-1727-4b3f-8c1e",
+    "timestamp": "2026-09-26T16:05:10.851Z"
+  }
+}
+```
 
----
-
-## Database Architecture
-
-The persistence tier utilizes **16 Mongoose collections** with strict schema validation:
-
-1. `users` — Authentication credentials, role enums, permission scopes.
-2. `geography` — Administrative hierarchy and GeoJSON MultiPolygon boundaries with `2dsphere` indexes.
-3. `stations` — Automatic Weather Stations (AWS) with GeoJSON Point coordinates.
-4. `telemetry` — Ingested surface meteorological time-series observations.
-5. `forecasts` — Calibrated forecasts with triad indicators and uncertainty intervals.
-6. `forecast_runs` — Forecast generation jobs and lifecycle transitions.
-7. `events` — Scientific risk alert events with transition audit history.
-8. `advisories` — Agronomic advisories with embedded bilingual translations.
-9. `crops` — Crop phenology definitions and growth stage sensitivities.
-10. `scenarios` — What-If decision simulation runs, response curves, and deltas.
-11. `models` — Machine learning model registry, ECE scores, and calibration curves.
-12. `provenance` — Immutable evidence ledger detailing data lineage and hashes.
-13. `data_health` — External meteorological providers and data quality reports.
-14. `notifications` — Multi-channel notification preferences and simulated delivery logs.
-15. `localizations` — Agromet dictionary and bilingual template catalog.
-16. `audit_logs` — Immutable regulatory security and operational action logs.
+### Error Envelope
+```json
+{
+  "success": false,
+  "error": {
+    "code": "FORBIDDEN",
+    "message": "User does not have required permissions"
+  },
+  "meta": {
+    "requestId": "d821ae40-2819-4a1b-9e2c",
+    "timestamp": "2026-09-26T16:05:11.120Z"
+  }
+}
+```
 
 ---
 
-## Scientific Methodology
+## Scientific Safety & Non-Fabrication
 
-1. **Probabilistic Calibration:** Raw multi-model ensemble probabilities are calibrated against a 10-year IMD ground-truth holdout using Platt Scaling and Isotonic Regression, minimizing Expected Calibration Error ($ECE \le 0.038$).
-2. **Uncertainty Quantification:** Rather than a point estimate, forecasts compute explicit non-parametric quantile spreads ($P_{10}$, $P_{50}$, $P_{90}$) and climatological baseline departures.
-3. **Multi-Year Hindcasting:** Models are evaluated across temporal leave-one-year-out cross-validation folds ($2014–2024$), calculating Brier Skill Scores ($BSS$) relative to climatological reference baselines.
-4. **SHAP Feature Attribution:** TreeExplainer SHAP values disclose local atmospheric contributions accompanied by non-causal diagnostic disclaimers.
-
----
-
-## Data Integrity
-
-VarshaSetu adheres to a strict **Zero-Fabrication Policy**:
-- Missing or unobserved sensor telemetry strictly defaults to `null` or explicit status indicators: `"NOT CONFIGURED"` or `"NOT AVAILABLE IN CURRENT PIPELINE"`.
-- The system **never** replaces unmeasured parameters with zero, false, or simulated approximations without transparent labeling.
-- All pilot demonstration records are explicitly tagged: `isDemo: true`, `operationalStatus: "DIAGNOSTIC_ONLY"`.
+1. **Zero Fabrication Policy:** When telemetry parameters, observational metrics, or model outputs are absent from an ingestion run, the UI explicitly renders:
+   ```
+   "NOT CONFIGURED"  or  "NOT AVAILABLE IN CURRENT PIPELINE"
+   ```
+   Values are never synthetic placeholders disguised as verified observations.
+2. **Non-Causal Diagnostic Disclaimer:** Feature attributions (SHAP) represent statistical correlation within the trained gradient-boosted tree models and do not assert physical atmospheric causality.
+3. **No Commercial or Yield Predictions:** What-if simulations evaluate meteorological sensitivity only. The system does not claim to project crop yield, biomass, market prices, or revenue.
+4. **No Procurement Terminology:** The platform contains zero commercial marketplace, procurement, mandi, crop-selling, weighing, queue, or payment mechanisms.
 
 ---
 
-## Security
+## Repository Structure
 
-- **Authentication:** Stateless JSON Web Tokens (JWT) with configurable expiration and secure signature algorithms.
-- **Password Security:** Passwords hashed with `bcryptjs` (salt rounds $\ge 10$).
-- **Role-Based Access Control (RBAC):** Authoritative backend verification (`requireAuth`, `requireRole`, `requirePermission`) across all five personas.
-- **Defense in Depth:** Helmet security headers (`X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`), request rate limiting on authentication and simulation routes, and strict Zod request validation.
+```
+VarshaSetu/
+├── backend/                         # Node.js + Express API Gateway
+│   ├── src/
+│   │   ├── config/                  # Database, environment, and security configs
+│   │   ├── controllers/             # REST API business controllers
+│   │   ├── db/                      # Database pool, migrations, and seed scripts
+│   │   ├── middleware/              # requireAuth, requireRole, rateLimit, error handlers
+│   │   ├── models/                  # 16 Mongoose document schemas & GeoJSON indexes
+│   │   ├── realtime/                # Socket.IO server, handshake auth, rooms, events
+│   │   ├── repositories/            # Data access repositories (MongoDB + fallback)
+│   │   ├── routes/                  # Express route definitions (/api/v1/*)
+│   │   ├── services/                # Business services, ML client proxy, audit logger
+│   │   └── server.ts                # HTTP and Socket.IO server bootstrap
+│   └── tests/                       # Vitest integration and unit test suites
+│
+├── frontend/                        # React 18 + Vite Web Application
+│   ├── src/
+│   │   ├── components/              # Modular UI, visualization, map, and layout components
+│   │   │   ├── common/              # Navbar, RealtimeStatusBadge, NotificationDrawer
+│   │   │   ├── farmer/              # Farmer forecast cards, advisory strips, what-if teaser
+│   │   │   ├── maps/                # Leaflet choropleth maps, layer controls, legends
+│   │   │   └── visualization/       # Triad metrics, ProvenanceDrawer, ConfidenceIndicator
+│   │   ├── pages/                   # Persona views (Farmer, Officer, Government, Analyst, Admin)
+│   │   ├── services/                # Axios API client, socketClient, domain services
+│   │   ├── stores/                  # Zustand state stores
+│   │   └── tests/                   # Vitest unit and integration test suites
+│   └── vite.config.ts               # Vite bundler configuration with /api and /socket.io proxy
+│
+├── ml-service/                      # Python 3.11 Scientific ML Microservice
+│   ├── app/
+│   │   ├── agronomy/                # Phenology rules, crop stages, what-if simulator
+│   │   ├── calibration/             # Platt Scaling and Isotonic Regression engines
+│   │   ├── explainability/          # TreeSHAP feature importance computation
+│   │   ├── models/                  # XGBoost, LightGBM, and Random Forest pipelines
+│   │   ├── validation/              # Multi-year hindcasting validation gates
+│   │   └── main.py                  # FastAPI application entrypoint
+│   └── tests/                       # Pytest scientific test suite
+│
+└── docs/                            # Architectural specifications and audit ledgers
+```
 
 ---
 
-## Testing
+## Local Development Setup
 
-VarshaSetu maintains a comprehensive test suite across all three tiers:
+### Prerequisites
+- Node.js >= 20.0.0 LTS
+- Python >= 3.11
+- MongoDB >= 7.0 (running locally on port 27017)
+- PostgreSQL 16 (optional, legacy fallback)
+
+### 1. Clone & Configure Environment
+```bash
+git clone https://github.com/org/varshasetu.git
+cd VarshaSetu
+
+# Configure environment files from templates
+cp .env.example .env
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
+cp ml-service/.env.example ml-service/.env
+```
+
+### 2. Install Dependencies
+```bash
+# Backend dependencies
+cd backend && npm install
+
+# Frontend dependencies
+cd ../frontend && npm install
+
+# ML Service virtual environment and packages
+cd ../ml-service
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+### 3. Seed Development Database
+```bash
+cd ../backend
+npm run seed:mongo
+```
+
+### 4. Start Services
+```bash
+# Terminal 1: Scientific ML Service (Port 8000)
+cd ml-service
+source venv/bin/activate
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+# Terminal 2: Node.js Express Gateway (Port 5001)
+cd backend
+npm run dev
+
+# Terminal 3: React Frontend Client (Port 5173)
+cd frontend
+npm run dev
+```
+Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+---
+
+## Development Demonstration Accounts
+
+> **NOTICE:** The following credentials are provided strictly for **LOCAL DEVELOPMENT AND VERIFICATION ONLY**. They must never be deployed to staging or production environments.
+
+| Operational Perspective | Email | Password | Assigned Location |
+| :--- | :--- | :--- | :--- |
+| **Farmer** | `ramesh.farmer@example.com` | `FarmerPassword123!` | Bakshi Ka Talab (`UP_LKO_BKT`) |
+| **Field Officer** | `officer.lucknow@varshasetu.gov.in` | `OfficerPassword123!` | Lucknow District (`UP_LKO`) |
+| **Government** | `planner.up@varshasetu.gov.in` | `GovPassword123!` | Uttar Pradesh State |
+| **Climate Analyst** | `analyst.climate@varshasetu.gov.in` | `AnalystPassword123!` | Regional Climatology Center |
+| **Administrator** | `admin@varshasetu.gov.in` | `AdminPassword123!` | System Universal Access |
+
+---
+
+## Testing & Quality Assurance
+
+The codebase is continuously validated across all three architectural tiers:
 
 ```bash
-# Run Backend Tests (154 Tests Passing across 15 suites)
+# 1. Run Backend Integration & Unit Tests (167 Tests Passing across 16 Suites)
 cd backend
 npm test -- --run
 
-# Run Frontend Tests (117 Tests Passing across 21 suites)
+# 2. Run Frontend Integration & Component Tests (117 Tests Passing across 21 Suites)
 cd frontend
 npm test -- --run
 
-# Run ML Service Tests (202 Tests Passing)
+# 3. Run Scientific ML Microservice Tests (202 Tests Passing across 49 Suites)
 cd ml-service
 source venv/bin/activate
 pytest
+
+# 4. Production Build Verification
+cd backend && npm run build
+cd ../frontend && npm run build
 ```
 
-**Total Automated Coverage:** **473 Automated Tests (100% Passing)** across the repository.
+**Total Automated Coverage:** **486 Automated Tests (100% Passing)** across the repository.
 
 ---
 
-## Project Status
+## Production Readiness Status
 
-- [x] **Global Visual Theme & Editorial System** — Neo-brutalist climate intelligence design system with accessible contrast and touch targets.
-- [x] **Scientific Visualization Framework** — Phase 7 triad metrics, uncertainty spreads, and timeline instrumentation.
-- [x] **Evidence & Explainability Trust Layer** — Phase 9 WHAT, WHY, WHERE, and HOW CONFIDENT ledger and slide-out provenance drawers.
-- [x] **Repository Audit & Migration Blueprint (Phase 0)** — Complete architectural audit (`docs/MERN-MIGRATION-AUDIT.md`).
-- [x] **MongoDB Persistence Layer (Phase 1)** — 16 Mongoose models, GeoJSON 2dsphere indexing, controlled seed pipeline, and unit tests (`docs/MONGO-DATA-MODEL.md`).
-- [x] **Node.js/Express API Gateway & RBAC (Phase 2)** — Authoritative REST API gateway with 5-role RBAC (`docs/PHASE-2-API-MIGRATION.md`).
-- [x] **Scientific ML Service Gateway (Phase 3)** — Express gateway proxy to Python FastAPI ML computation engine (`docs/PHASE-3-ML-GATEWAY.md`).
-- [x] **Frontend MERN Integration (Phase 4)** — React/Vite migration with Axios API client, Zustand stores, and full persona alignment (`docs/PHASE-4-FRONTEND-MIGRATION.md`).
-- [x] **Real-Time Operational Infrastructure (Phase 5)** — Socket.IO bidirectional event sync, room segmentation, and reactive telemetry (`docs/PHASE-5-REALTIME.md`).
+| Subsystem | Readiness Category | Verification Status | Notes |
+| :--- | :--- | :--- | :--- |
+| **MERN Architecture** | Implemented & Verified | Fully operational | Express gateway, MongoDB persistence, React Vite frontend. |
+| **5-Role RBAC** | Implemented & Verified | Fully operational | Server-side role enforcement with URL-hopping protection. |
+| **ML Service Gateway** | Implemented & Verified | Fully operational | Proxied through Express; zero direct browser exposure. |
+| **Real-Time WebSockets**| Implemented & Verified | Fully operational | Handshake JWT auth, room segmentation, auto-reconnection. |
+| **Scientific Trust Layer**| Implemented & Verified | Fully operational | Phase 9 WHAT, WHY, WHERE, HOW CONFIDENT audit components. |
+| **Demonstration Scope** | Diagnostic Only | Strictly gated | Single-season Kharif 2024 anchor (`UP_LKO_BKT`). |
+| **Multi-Year Hindcasting**| Requires Multi-Season Data | Gated (`INSUFFICIENT_DATA`)| Awaiting 10-year historical telemetry ingestion. |
+| **Live AWS Feed** | Requires Infrastructure | Simulation / Reanalysis | Real-time IMD API ingestion requires live telemetry credentials. |
+| **Telecom Dispatch** | Requires Carrier Setup | Mock / Gated | SMS and WhatsApp delivery disabled by default until configured. |
 
 ---
 
-## Roadmap
+## Scientific Limitations
 
-- **Expanded Agro-Climatic Zones:** Scaling boundary definitions and station mesonets beyond Uttar Pradesh to Maharashtra, Karnataka, and Punjab.
-- **Direct IMD AWS Integration:** Transitioning from historical Kharif reanalysis to automated real-time IMD API ingestion pipelines.
-- **Edge Deployment & PWA Offline Sync:** Offline-first caching of block advisory cards for remote village connectivity.
+1. **Single-Season Baseline:** The current demonstration utilizes observations from Kharif 2024. Statistical models should not be considered operational for multi-season or winter (Rabi) forecasting without retraining.
+2. **Spatial Extrapolation:** Empirical calibration is anchored to the Lucknow District (`UP_LKO_BKT`) centroid. Model performance may degrade if extrapolated outside the Indo-Gangetic alluvial plain without recalibration.
+3. **Statistical vs. Dynamical:** Forecasts combine gradient-boosted tree downscaling with reanalysis fields; they are statistical downscalings, not coupled numerical weather prediction (NWP) integrations.
+
+---
+
+## Future Scope
+
+- **Multi-Season Ingestion:** Ingesting 10+ years of gridded daily precipitation data to satisfy the multi-year hindcast validation gate.
+- **Geographic Expansion:** Expanding calibration baselines to Maharashtra (Vidarbha), Karnataka (Dry Zone), and Punjab.
+- **Live IMD AWS Integration:** Automated streaming ingestion from India Meteorological Department Automated Weather Station networks.
+- **Offline PWA Capabilities:** Offline-first caching of block advisory cards with background synchronization for rural mobile networks.
+- **Expanded Indian Languages:** Adding Marathi, Telugu, Punjabi, and Bengali localized advisory templates.
 
 ---
 
 ## License
 
 This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+
+---
+
+## Acknowledgements
+
+- **India Meteorological Department (IMD):** Meteorological threshold standards and observational guidelines.
+- **European Centre for Medium-Range Weather Forecasts (ECMWF):** ERA5 atmospheric reanalysis dataset references.
+- **National Remote Sensing Centre (NRSC) / ISRO:** INSAT-3DR satellite meteorological data references.

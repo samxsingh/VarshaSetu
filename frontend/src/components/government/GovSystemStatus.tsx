@@ -8,9 +8,9 @@ interface GovSystemStatusProps {
 
 export const GovSystemStatus: React.FC<GovSystemStatusProps> = ({ opStatus }) => {
   const subsystems = [
-    { name: 'ML Intelligence Microservice', status: 'HEALTHY', host: 'Port 8000', color: 'text-[#3F7D58]' },
-    { name: 'Backend Core & API Gateway', status: 'HEALTHY', host: 'Port 5001', color: 'text-[#3F7D58]' },
-    { name: 'PostGIS Geospatial Engine', status: 'HEALTHY', host: 'EPSG:4326', color: 'text-[#3F7D58]' },
+    { name: 'ML Intelligence Microservice', status: 'HEALTHY', host: 'Internal Gateway', color: 'text-[#3F7D58]' },
+    { name: 'Backend Core & API Gateway', status: 'HEALTHY', host: 'Express Gateway', color: 'text-[#3F7D58]' },
+    { name: 'MongoDB Spatial Engine', status: 'HEALTHY', host: 'GeoJSON 2dsphere', color: 'text-[#3F7D58]' },
     { name: 'Probabilistic Calibration Gate', status: 'ENFORCED', host: 'Isotonic/Platt', color: 'text-[#3F7D58]' },
     { name: 'Agronomic Rules Engine', status: 'ACTIVE', host: '9 Rules / 6 Crops', color: 'text-[#3F7D58]' },
     { name: 'What-If Scenario Engine', status: 'SCENARIO_ONLY', host: 'Non-Causal', color: 'text-[#D97706]' },
