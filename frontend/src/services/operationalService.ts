@@ -323,7 +323,120 @@ export const operationalService = {
       cancellationReason,
     });
   },
+
+  /**
+   * Retrieves operational command center posture, attention queue, and resolution metrics (Phase 7D)
+   */
+  async getCommandCenter(
+    params?: OperationalCommandCenterParams
+  ): Promise<ApiResponse<OperationalCommandCenterDTO>> {
+    return apiClient.get<OperationalCommandCenterDTO>('/operations/command-center', {
+      params,
+    });
+  },
 };
+
+// ============================================================================
+// Phase 7D — Operational Command & Resolution Intelligence DTOs
+// ============================================================================
+
+export interface AttentionQueueItemDTO {
+  id: string;
+  sourceType: 'SIGNAL' | 'ACTION';
+  sourceId: string;
+  title: string;
+  severity: SignalSeverity;
+  priority: 'P1' | 'P2' | 'P3' | 'P4';
+  reason:
+    | 'UNACTIONED_CRITICAL_SIGNAL'
+    | 'OVERDUE_P1_ACTION'
+    | 'STALLED_IN_PROGRESS'
+    | 'UNASSIGNED_HIGH_PRIORITY'
+    | 'ROUTINE_MONITORING';
+  blockId: string;
+  status: string;
+  assignedTo?: string;
+  ageHours: number;
+  detectedAt: string;
+}
+
+export interface AgingDistributionDTO {
+  lessThan1h: number;
+  between1hAnd6h: number;
+  between6hAnd24h: number;
+  between24hAnd72h: number;
+  greaterThan72h: number;
+}
+
+export interface SignalActionCoverageDTO {
+  totalActiveSignals: number;
+  actionedSignalsCount: number;
+  unactionedSignalsCount: number;
+  coveragePercentage: number;
+  criticalSignalsUnactioned: number;
+}
+
+export interface ResolutionMetricsDTO {
+  totalActions: number;
+  openCount: number;
+  assignedCount: number;
+  inProgressCount: number;
+  completedCount: number;
+  cancelledCount: number;
+  averageTimeToResolutionHours: number | null;
+}
+
+export interface OperationalCommandCenterDTO {
+  timestamp: string;
+
+  scope: {
+    blockId: string | 'ALL';
+    userRole: string;
+  };
+
+  systemStatus: {
+    forecastServiceStatus: string;
+    modelRegistryStatus: string;
+    dataFreshnessStatus: string;
+    validationStatus: string;
+    activeDataset: string;
+    scientificDisclosures: string[];
+  };
+
+  signalSummary: {
+    total: number;
+    bySeverity: {
+      CRITICAL: number;
+      WARNING: number;
+      WATCH: number;
+      INFO: number;
+    };
+    byType: Record<string, number>;
+  };
+
+  actionSummary: ResolutionMetricsDTO;
+
+  coverage: SignalActionCoverageDTO;
+
+  aging: AgingDistributionDTO;
+
+  attentionQueue: AttentionQueueItemDTO[];
+
+  recentActivity: Array<{
+    id: string;
+    actionId: string;
+    transition: string;
+    performedBy: string;
+    role: string;
+    timestamp: string;
+    notes?: string;
+  }>;
+}
+
+export interface OperationalCommandCenterParams {
+  blockId?: string;
+  timeHorizon?: '24h' | '7d' | '30d';
+}
 
 
 

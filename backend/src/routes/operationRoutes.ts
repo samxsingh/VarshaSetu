@@ -8,6 +8,9 @@ operationRoutes.get('/status', requireAuth, operationController.getStatus);
 operationRoutes.get('/signals', requireAuth, operationController.getSignals);
 operationRoutes.get('/signals/:signalId/context', requireAuth, operationController.getSignalContext);
 
+// Phase 7D: Operational Command Center
+operationRoutes.get('/command-center', requireAuth, operationController.getCommandCenter);
+
 // Phase 7C: Operational Inspection & Action Tracking
 operationRoutes.post('/actions', requireAuth, operationController.createAction);
 operationRoutes.get('/actions', requireAuth, operationController.listActions);

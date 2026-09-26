@@ -108,6 +108,8 @@ interface RealtimeState {
   operationalSignals: OperationalSignalDTO[];
   inspectionActions: InspectionActionDTO[];
   connectionError: string | null;
+  commandCenterStale: boolean;
+  commandCenterLastInvalidatedAt: string | null;
 
   setConnectionStatus: (status: RealtimeConnectionStatus, error?: string | null) => void;
   addEvent: (event: ScientificEventDTO) => void;
@@ -121,6 +123,8 @@ interface RealtimeState {
   clearInspectionActions: () => void;
   markNotificationsRead: () => void;
   clearEvents: () => void;
+  invalidateCommandCenter: () => void;
+  markCommandCenterFresh: () => void;
 }
 
 const MAX_RECENT_EVENTS = 50;
@@ -142,6 +146,8 @@ export const useRealtimeStore = create<RealtimeState>((set) => ({
   operationalSignals: [],
   inspectionActions: [],
   connectionError: null,
+  commandCenterStale: false,
+  commandCenterLastInvalidatedAt: null,
 
   setConnectionStatus: (status, error = null) => {
     set((state) => ({
@@ -256,6 +262,8 @@ export const useRealtimeStore = create<RealtimeState>((set) => ({
       return {
         operationalSignals: updatedList,
         lastEventAt: new Date().toISOString(),
+        commandCenterStale: true,
+        commandCenterLastInvalidatedAt: new Date().toISOString(),
       };
     });
   },
@@ -283,6 +291,8 @@ export const useRealtimeStore = create<RealtimeState>((set) => ({
       return {
         inspectionActions: updatedList,
         lastEventAt: new Date().toISOString(),
+        commandCenterStale: true,
+        commandCenterLastInvalidatedAt: new Date().toISOString(),
       };
     });
   },
@@ -305,6 +315,19 @@ export const useRealtimeStore = create<RealtimeState>((set) => ({
       recentEvents: [],
       recentNotifications: [],
       unreadEventCount: 0,
+    });
+  },
+
+  invalidateCommandCenter: () => {
+    set({
+      commandCenterStale: true,
+      commandCenterLastInvalidatedAt: new Date().toISOString(),
+    });
+  },
+
+  markCommandCenterFresh: () => {
+    set({
+      commandCenterStale: false,
     });
   },
 }));

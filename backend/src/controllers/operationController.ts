@@ -3,9 +3,30 @@ import { sendSuccess } from '../utils/responseEnvelope';
 import { mlGatewayClient } from '../services/ml';
 import { operationalSignalService } from '../services/operational/operationalSignalService';
 import { inspectionActionService } from '../services/operational/inspectionActionService';
+import { commandCenterService } from '../services/operational/commandCenterService';
 import { AuthenticatedRequest } from '../types';
 
 export const operationController = {
+  async getCommandCenter(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    try {
+      const data = await commandCenterService.getCommandCenter(
+        {
+          userId: req.user?.id || 'system',
+          role: req.user?.role || 'CLIMATE_ANALYST',
+          assignedLocationId: req.user?.assignedLocationId,
+        },
+        {
+          blockId: req.query.blockId as string | undefined,
+          timeHorizon: req.query.timeHorizon as string | undefined,
+        }
+      );
+
+      return sendSuccess(res, data);
+    } catch (error) {
+      next(error);
+    }
+  },
+
   async getSignals(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
       const signals = await operationalSignalService.getSignals(req.query, {
