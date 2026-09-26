@@ -10,15 +10,20 @@ import {
   Settings,
   Menu,
   X,
+  LogIn,
+  LogOut,
+  User,
 } from 'lucide-react';
 import { LanguageToggle } from './LanguageToggle';
 import { useAppStore } from '../../stores/useAppStore';
+import { useAuthStore } from '../../stores/useAuthStore';
 import { cn } from '../../utils/cn';
 
 export const Navbar: React.FC = () => {
   const { t } = useTranslation();
   const location = useLocation();
   const { setRole } = useAppStore();
+  const { user, logout } = useAuthStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -109,12 +114,42 @@ export const Navbar: React.FC = () => {
           })}
         </nav>
 
-        {/* RIGHT: Language Switcher & Controls */}
+        {/* RIGHT: Language Switcher, Auth Persona & Controls */}
         <div className="hidden sm:flex items-center gap-2.5">
           <LanguageToggle />
+
+          {user ? (
+            <div className="flex items-center gap-2 pl-1 border-l border-[#B8C5CC]">
+              <div className="flex flex-col text-right">
+                <span className="text-xs font-heading font-bold text-[#102A43] truncate max-w-[120px]">
+                  {user.fullName}
+                </span>
+                <span className="text-[10px] font-mono text-[#0E7490] uppercase leading-none">
+                  {user.role}
+                </span>
+              </div>
+              <button
+                onClick={() => logout()}
+                className="p-1.5 rounded-lg text-[#486581] hover:text-red-700 hover:bg-red-50 border border-transparent hover:border-red-200 transition-colors"
+                title="Sign out of VarshaSetu"
+                aria-label="Sign out"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+            </div>
+          ) : (
+            <Link
+              to="/login"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0E7490] hover:bg-[#155E75] text-white text-xs font-heading font-bold shadow-[1.5px_1.5px_0px_#102A43] border border-[#102A43] transition-all"
+            >
+              <LogIn className="w-3.5 h-3.5" />
+              <span>Sign In</span>
+            </Link>
+          )}
+
           <Link
             to="/admin"
-            className="p-2 text-[#486581] hover:text-[#102A43] rounded-lg hover:bg-[#EAF0F2] border border-transparent hover:border-[#B8C5CC] transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0E7490]"
+            className="p-2 text-[#486581] hover:text-[#102A43] rounded-lg hover:bg-[#EAF0F2] border border-transparent hover:border-[#B8C5CC] transition-colors min-h-[40px] min-w-[40px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0E7490]"
             title={t('nav.admin', { defaultValue: 'Admin Portal' })}
             aria-label={t('nav.admin', { defaultValue: 'Admin Portal' })}
           >
@@ -138,6 +173,34 @@ export const Navbar: React.FC = () => {
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div className="sm:hidden mt-2 max-w-7xl mx-auto rounded-xl border border-[#B8C5CC] bg-white p-3 space-y-1.5 shadow-[0_8px_24px_rgba(16,42,67,0.12)] animate-fade-in">
+          {/* User state in mobile */}
+          {user ? (
+            <div className="p-2.5 rounded-lg bg-[#EAF0F2] border border-[#B8C5CC] flex items-center justify-between mb-2">
+              <div>
+                <p className="text-xs font-heading font-bold text-[#102A43]">{user.fullName}</p>
+                <p className="text-[10px] font-mono text-[#0E7490]">{user.role} PERSPECTIVE</p>
+              </div>
+              <button
+                onClick={() => {
+                  logout();
+                  setMobileMenuOpen(false);
+                }}
+                className="px-2 py-1 rounded bg-white text-xs font-heading font-bold text-red-700 border border-red-200"
+              >
+                Sign Out
+              </button>
+            </div>
+          ) : (
+            <Link
+              to="/login"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center justify-center gap-2 p-2.5 mb-2 rounded-lg bg-[#0E7490] text-white font-heading font-bold text-xs shadow-[2px_2px_0px_#102A43] border border-[#102A43]"
+            >
+              <LogIn className="w-4 h-4" />
+              <span>Sign In to VarshaSetu</span>
+            </Link>
+          )}
+
           {navLinks.map((link) => {
             const isActive =
               link.to === '/'
