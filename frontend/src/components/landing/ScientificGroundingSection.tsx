@@ -16,6 +16,9 @@ import {
   Volume2,
   AlertCircle,
   Radio,
+  Waves,
+  Sprout,
+  CheckCircle2,
 } from 'lucide-react';
 
 export const ScientificGroundingSection: React.FC = () => {
@@ -65,10 +68,7 @@ export const ScientificGroundingSection: React.FC = () => {
   ];
 
   return (
-    <section id="scientific-grounding" className="py-16 lg:py-24 border-b border-[#102A43]/15 bg-[#F3F6F7] relative">
-      {/* Subtle contour texture */}
-      <div className="absolute inset-0 opacity-25 pointer-events-none bg-subtle-contour" />
-
+    <section id="scientific-grounding" className="py-16 lg:py-24 border-b border-[#B8C5CC]/60 bg-[#EAF0F2] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-12">
         
         {/* A. EDITORIAL SECTION INTRODUCTION */}
@@ -95,6 +95,101 @@ export const ScientificGroundingSection: React.FC = () => {
               <div className="text-xs font-mono font-bold text-[#0E7490] tracking-wider mt-0.5">
                 TRACEABLE • DISCLOSED • DIAGNOSTIC
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* SCIENTIFIC PIPELINE FLOW: Atmospheric to Agronomic Resolution */}
+        <div className="bg-white rounded-2xl border-2 border-[#102A43] p-6 shadow-[4px_4px_0px_#102A43]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 mb-5 border-b border-[#102A43]/10">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#0E7490] animate-pulse" />
+              <span className="font-heading font-extrabold text-xs tracking-wider text-[#102A43] uppercase">
+                SCIENTIFIC INTELLIGENCE PIPELINE
+              </span>
+            </div>
+            <span className="text-[11px] font-mono text-[#829AB1]">
+              PHYSICAL GROUNDING • UP_LKO_BKT ANCHOR
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 text-center">
+            {/* 1. Global Climate */}
+            <div className="p-3.5 bg-[#EAF0F2] rounded-xl border border-[#B8C5CC] flex flex-col justify-between space-y-2">
+              <div className="flex items-center justify-between text-[10px] font-mono text-[#829AB1]">
+                <span>STAGE 01</span>
+                <Radio className="w-3.5 h-3.5 text-[#0E7490]" />
+              </div>
+              <div>
+                <strong className="block font-heading text-xs text-[#102A43]">GLOBAL CLIMATE</strong>
+                <span className="text-[11px] text-[#486581] font-mono">ENSO • IOD • MJO</span>
+              </div>
+              <div className="text-[10px] text-[#829AB1]">Planetary Teleconnections</div>
+            </div>
+
+            {/* 2. Atmosphere */}
+            <div className="p-3.5 bg-[#EAF0F2] rounded-xl border border-[#B8C5CC] flex flex-col justify-between space-y-2">
+              <div className="flex items-center justify-between text-[10px] font-mono text-[#829AB1]">
+                <span>STAGE 02</span>
+                <Waves className="w-3.5 h-3.5 text-[#0891B2]" />
+              </div>
+              <div>
+                <strong className="block font-heading text-xs text-[#102A43]">ATMOSPHERE</strong>
+                <span className="text-[11px] text-[#486581] font-mono">Moisture & Vorticity</span>
+              </div>
+              <div className="text-[10px] text-[#829AB1]">Synoptic Dynamics</div>
+            </div>
+
+            {/* 3. Downscaling */}
+            <div className="p-3.5 bg-[#EAF0F2] rounded-xl border border-[#B8C5CC] flex flex-col justify-between space-y-2">
+              <div className="flex items-center justify-between text-[10px] font-mono text-[#829AB1]">
+                <span>STAGE 03</span>
+                <Layers className="w-3.5 h-3.5 text-[#0E7490]" />
+              </div>
+              <div>
+                <strong className="block font-heading text-xs text-[#102A43]">DOWNSCALING</strong>
+                <span className="text-[11px] text-[#486581] font-mono">PostGIS Grids</span>
+              </div>
+              <div className="text-[10px] text-[#829AB1]">Statistical & Physical</div>
+            </div>
+
+            {/* 4. Block Signal */}
+            <div className="p-3.5 bg-[#EAF0F2] rounded-xl border border-[#B8C5CC] flex flex-col justify-between space-y-2">
+              <div className="flex items-center justify-between text-[10px] font-mono text-[#829AB1]">
+                <span>STAGE 04</span>
+                <MapPin className="w-3.5 h-3.5 text-[#0891B2]" />
+              </div>
+              <div>
+                <strong className="block font-heading text-xs text-[#102A43]">BLOCK SIGNAL</strong>
+                <span className="text-[11px] text-[#486581] font-mono">UP_LKO_BKT (122d)</span>
+              </div>
+              <div className="text-[10px] text-[#829AB1]">Panchayat-level Horizon</div>
+            </div>
+
+            {/* 5. Agronomic Context (Agricultural Green ONLY here) */}
+            <div className="p-3.5 bg-[#E4F0E8] rounded-xl border border-[#3F7D58]/40 flex flex-col justify-between space-y-2">
+              <div className="flex items-center justify-between text-[10px] font-mono text-[#3F7D58]">
+                <span>STAGE 05</span>
+                <Sprout className="w-3.5 h-3.5 text-[#3F7D58]" />
+              </div>
+              <div>
+                <strong className="block font-heading text-xs text-[#102A43]">AGRONOMIC CONTEXT</strong>
+                <span className="text-[11px] text-[#3F7D58] font-mono">Phenology & Soil</span>
+              </div>
+              <div className="text-[10px] text-[#486581]">Deterministic Rules</div>
+            </div>
+
+            {/* 6. Decision Support */}
+            <div className="p-3.5 bg-[#0E7490] text-white rounded-xl border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] flex flex-col justify-between space-y-2">
+              <div className="flex items-center justify-between text-[10px] font-mono text-white/80">
+                <span>STAGE 06</span>
+                <CheckCircle2 className="w-3.5 h-3.5 text-white" />
+              </div>
+              <div>
+                <strong className="block font-heading text-xs text-white">DECISION SUPPORT</strong>
+                <span className="text-[11px] text-white/90 font-mono">Calibrated Action</span>
+              </div>
+              <div className="text-[10px] text-white/80">Cross-Role Advisory</div>
             </div>
           </div>
         </div>
@@ -344,7 +439,7 @@ export const ScientificGroundingSection: React.FC = () => {
         </div>
 
         {/* E. HORIZONTAL PROVENANCE STRIP (Section E) */}
-        <div id="provenance-strip" className="bg-[#0B1F33] text-white rounded-2xl border-2 border-[#102A43] p-6 lg:p-7 shadow-[4px_4px_0px_#0E7490]">
+        <div id="provenance-strip" className="bg-[#0B1F33] text-white rounded-2xl border-2 border-[#102A43] p-6 lg:p-7 shadow-[4px_4px_0px_#102A43]">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             
             {/* Left Motto */}

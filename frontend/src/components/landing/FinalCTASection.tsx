@@ -13,10 +13,7 @@ export const FinalCTASection: React.FC = () => {
   ];
 
   return (
-    <section className="py-20 lg:py-28 bg-[#F3F6F7] border-b border-[#102A43]/15 relative overflow-hidden">
-      {/* Subtle contour overlay */}
-      <div className="absolute inset-0 opacity-20 pointer-events-none bg-subtle-contour" />
-
+    <section className="py-20 lg:py-28 bg-[#F3F6F7] border-b border-[#B8C5CC]/60 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           
@@ -39,7 +36,7 @@ export const FinalCTASection: React.FC = () => {
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-4">
               <Link
                 to="/farmer/dashboard"
-                className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 min-h-[48px] rounded-xl bg-[#0E7490] text-white border-2 border-[#102A43] font-heading font-bold text-sm shadow-[3px_3px_0px_#102A43] hover:-translate-y-0.5 hover:bg-[#155E75] hover:shadow-[5px_5px_0px_#102A43] transition-all duration-200 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0E7490]"
+                className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 min-h-[48px] rounded-xl bg-[#0E7490] text-white border-2 border-[#102A43] font-heading font-bold text-sm shadow-[4px_4px_0px_#102A43] hover:-translate-y-0.5 hover:bg-[#155E75] hover:shadow-[6px_6px_0px_#102A43] transition-all duration-200 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0E7490]"
               >
                 <span>Explore Monsoon Intelligence</span>
                 <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -47,7 +44,7 @@ export const FinalCTASection: React.FC = () => {
 
               <a
                 href="#scientific-grounding"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 min-h-[48px] rounded-xl bg-white text-[#102A43] border-2 border-[#102A43] font-heading font-bold text-sm shadow-[3px_3px_0px_#102A43] hover:-translate-y-0.5 hover:bg-[#EAF0F2] hover:shadow-[5px_5px_0px_#102A43] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0E7490]"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 min-h-[48px] rounded-xl bg-white text-[#102A43] border-2 border-[#102A43] font-heading font-bold text-sm shadow-[4px_4px_0px_#102A43] hover:-translate-y-0.5 hover:bg-[#EAF0F2] hover:shadow-[6px_6px_0px_#102A43] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0E7490]"
               >
                 <Compass className="w-4 h-4 text-[#0E7490]" />
                 <span>View Scientific Grounding</span>
@@ -63,7 +60,7 @@ export const FinalCTASection: React.FC = () => {
 
           {/* Right Column: Abstract Signal-to-Decision Radar Pipeline Visual */}
           <div className="lg:col-span-6">
-            <div className="bg-white rounded-2xl border-2 border-[#102A43] shadow-[6px_6px_0px_#102A43] p-6 sm:p-8 relative overflow-hidden">
+            <div className="bg-white rounded-2xl border-2 border-[#102A43] shadow-[4px_4px_0px_#102A43] p-6 sm:p-8 relative overflow-hidden">
               
               {/* Abstract Background Radar Concentric Rings */}
               <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/4 w-[340px] h-[340px] pointer-events-none opacity-20">

@@ -151,7 +151,7 @@ export const RoleGatewaySection: React.FC = () => {
   ];
 
   return (
-    <section className="py-16 lg:py-20 border-b border-[#102A43]/15 bg-[#F3F6F7] relative">
+    <section className="py-16 lg:py-20 border-b border-[#B8C5CC]/60 bg-[#F3F6F7] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* SECTION INTRODUCTION (Horizontal Editorial Header) */}
@@ -161,8 +161,8 @@ export const RoleGatewaySection: React.FC = () => {
               <span>CHOOSE YOUR ROLE</span>
             </div>
             <h2 className="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl text-[#102A43] tracking-tight leading-tight">
-              One platform.{' '}
-              <span className="text-[#0E7490] block sm:inline">Different perspectives.</span>
+              One scientific layer.{' '}
+              <span className="text-[#0E7490] block sm:inline">Four operational perspectives.</span>
             </h2>
             <p className="text-base text-[#486581] leading-relaxed font-sans">
               VarshaSetu connects farmers, field officers, government teams, and analysts through the same scientific intelligence layer.
@@ -193,7 +193,7 @@ export const RoleGatewaySection: React.FC = () => {
               key={card.id}
               to={card.to}
               onClick={() => setRole(card.role as any)}
-              className="group flex flex-col bg-white rounded-2xl border-2 border-[#102A43] shadow-[3.5px_3.5px_0px_#102A43] hover:shadow-[5.5px_5.5px_0px_#102A43] hover:-translate-y-1 transition-all duration-200 overflow-hidden focus:outline-none focus:ring-2 focus:ring-[#0E7490] focus:ring-offset-2"
+              className="group flex flex-col bg-white rounded-2xl border-2 border-[#102A43] shadow-[4px_4px_0px_#102A43] hover:shadow-[6px_6px_0px_#102A43] hover:-translate-y-1 transition-all duration-200 overflow-hidden focus:outline-none focus:ring-2 focus:ring-[#0E7490] focus:ring-offset-2"
             >
               {/* Card Image Container with Editorial Photo Frame */}
               <div className="relative overflow-hidden bg-[#EAF0F2] border-b border-[#102A43]/15">

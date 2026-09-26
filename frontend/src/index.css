@@ -112,13 +112,6 @@
 }
 
 /* Atmospheric subtle observation texture */
-.bg-editorial-grain {
-  background-color: #F3F6F7;
-  background-image: 
-    radial-gradient(at 0% 0%, rgba(14, 116, 144, 0.05) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(37, 99, 235, 0.04) 0px, transparent 50%),
-    radial-gradient(at 50% 50%, rgba(234, 240, 242, 0.5) 0px, transparent 60%);
-}
 
 .bg-subtle-contour {
   background-image: radial-gradient(#0E7490 0.5px, transparent 0.5px);

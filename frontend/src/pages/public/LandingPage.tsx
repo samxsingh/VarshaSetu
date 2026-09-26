@@ -5,19 +5,11 @@ import {
   CloudRain,
   Sprout,
   ShieldCheck,
-  Compass,
   ArrowRight,
-  Sparkles,
   Waves,
-  Globe2,
-  Volume2,
-  Languages,
-  CheckCircle2,
   TrendingUp,
   MapPin,
 } from 'lucide-react';
-import { Button } from '../../components/ui/Button';
-import { Badge } from '../../components/ui/Badge';
 import { RoleGatewaySection } from '../../components/landing/RoleGatewaySection';
 import { ScientificGroundingSection } from '../../components/landing/ScientificGroundingSection';
 import { DecisionPathwaysSection } from '../../components/landing/DecisionPathwaysSection';
@@ -256,51 +248,6 @@ export const LandingPage: React.FC = () => {
 
             </div>
 
-          </div>
-
-          {/* End-to-End Decision Architecture Flow (Integrated Scientific Cards) */}
-          <div className="mt-16 bg-white rounded-2xl border-2 border-[#102A43] p-5 sm:p-6 shadow-[4px_4px_0px_#102A43]">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-3 border-b border-[#102A43]/10">
-              <span className="text-xs font-heading font-bold uppercase tracking-wider text-[#486581]">
-                Seven-Stage Scientific Decision Architecture
-              </span>
-              <span className="text-[11px] font-sans text-[#829AB1]">
-                End-to-End Grounded Pipeline · Lucknow Pilot
-              </span>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5 text-center text-xs">
-              <div className="p-3 bg-[#EAF0F2] rounded-xl border border-[#102A43]/15 hover:border-[#0E7490] transition-colors">
-                <Globe2 className="w-5 h-5 text-[#0E7490] mx-auto mb-1.5" />
-                <strong className="block font-heading text-[#102A43]">Global Climate</strong>
-                <span className="text-[10px] text-[#486581]">ENSO, IOD, MJO</span>
-              </div>
-              <div className="p-3 bg-[#EAF0F2] rounded-xl border border-[#102A43]/15 hover:border-[#0E7490] transition-colors">
-                <Waves className="w-5 h-5 text-[#2563EB] mx-auto mb-1.5" />
-                <strong className="block font-heading text-[#102A43]">Atmosphere</strong>
-                <span className="text-[10px] text-[#486581]">Moisture & Wind</span>
-              </div>
-              <div className="p-3 bg-[#EAF0F2] rounded-xl border border-[#102A43]/15 hover:border-[#0E7490] transition-colors">
-                <MapPin className="w-5 h-5 text-[#D97706] mx-auto mb-1.5" />
-                <strong className="block font-heading text-[#102A43]">Block Scale</strong>
-                <span className="text-[10px] text-[#486581]">PostGIS Downscaling</span>
-              </div>
-              <div className="p-3 bg-[#EAF0F2] rounded-xl border border-[#102A43]/15 hover:border-[#0E7490] transition-colors">
-                <CloudRain className="w-5 h-5 text-[#0E7490] mx-auto mb-1.5" />
-                <strong className="block font-heading text-[#102A43]">Panchayat Risk</strong>
-                <span className="text-[10px] text-[#486581]">7–30d Probabilities</span>
-              </div>
-              <div className="p-3 bg-[#EAF0F2] rounded-xl border border-[#102A43]/15 hover:border-[#0E7490] transition-colors">
-                <Sprout className="w-5 h-5 text-[#3F7D58] mx-auto mb-1.5" />
-                <strong className="block font-heading text-[#102A43]">Crop Impact</strong>
-                <span className="text-[10px] text-[#486581]">Agronomic Rules</span>
-              </div>
-              <div className="p-3 bg-[#0E7490] text-white rounded-xl border border-[#102A43] shadow-[2px_2px_0px_#102A43]">
-                <CheckCircle2 className="w-5 h-5 mx-auto mb-1.5 text-[#E8F4F6]" />
-                <strong className="block font-heading">Action</strong>
-                <span className="text-[10px] text-[#E8F4F6]">Confident Decision</span>
-              </div>
-            </div>
           </div>
         </div>
       </section>

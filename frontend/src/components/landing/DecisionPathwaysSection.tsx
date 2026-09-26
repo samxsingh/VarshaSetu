@@ -88,10 +88,7 @@ export const DecisionPathwaysSection: React.FC = () => {
   ];
 
   return (
-    <section id="decision-pathways" className="py-20 lg:py-28 border-b border-[#102A43]/15 bg-[#F3F6F7] relative">
-      {/* Background contour texture */}
-      <div className="absolute inset-0 opacity-20 pointer-events-none bg-subtle-contour" />
-
+    <section id="decision-pathways" className="py-20 lg:py-28 border-b border-[#B8C5CC]/60 bg-[#F3F6F7] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-12">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-[#102A43]/10">
@@ -113,6 +110,44 @@ export const DecisionPathwaysSection: React.FC = () => {
             <span>TARGETS: BLOCK-SCALE</span>
             <span>•</span>
             <span>DISCLOSED</span>
+          </div>
+        </div>
+
+        {/* SCIENTIFIC WORKFLOW RAIL: OBSERVE → INTERPRET → LOCALIZE → EXPLAIN → INFORM */}
+        <div className="bg-white rounded-2xl border-2 border-[#102A43] p-5 sm:p-6 shadow-[4px_4px_0px_#102A43]">
+          <div className="text-[10px] font-heading font-extrabold uppercase tracking-wider text-[#486581] mb-3 flex items-center justify-between border-b border-[#102A43]/10 pb-2.5">
+            <span className="flex items-center gap-2 text-[#102A43]">
+              <span className="w-2 h-2 rounded-full bg-[#0E7490]" />
+              OPERATIONAL REASONING PIPELINE
+            </span>
+            <span className="font-mono text-[#829AB1] text-[10px]">CROSS-ROLE TRANSLATION</span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+            <div className="p-3 rounded-xl bg-[#EAF0F2] border border-[#B8C5CC] flex flex-col justify-between space-y-1">
+              <div className="font-mono font-bold text-[10px] text-[#0E7490]">01 • OBSERVE</div>
+              <div className="font-heading font-bold text-xs text-[#102A43]">Atmospheric Telemetry</div>
+              <div className="text-[10px] text-[#486581]">Ground & satellite telemetry</div>
+            </div>
+            <div className="p-3 rounded-xl bg-[#EAF0F2] border border-[#B8C5CC] flex flex-col justify-between space-y-1">
+              <div className="font-mono font-bold text-[10px] text-[#0891B2]">02 • INTERPRET</div>
+              <div className="font-heading font-bold text-xs text-[#102A43]">Physical Ensembles</div>
+              <div className="text-[10px] text-[#486581]">Moisture & boundary dynamics</div>
+            </div>
+            <div className="p-3 rounded-xl bg-[#EAF0F2] border border-[#B8C5CC] flex flex-col justify-between space-y-1">
+              <div className="font-mono font-bold text-[10px] text-[#0E7490]">03 • LOCALIZE</div>
+              <div className="font-heading font-bold text-xs text-[#102A43]">Block-Scale Grid</div>
+              <div className="text-[10px] text-[#486581]">PostGIS UP_LKO_BKT mapping</div>
+            </div>
+            <div className="p-3 rounded-xl bg-[#EAF0F2] border border-[#B8C5CC] flex flex-col justify-between space-y-1">
+              <div className="font-mono font-bold text-[10px] text-[#0891B2]">04 • EXPLAIN</div>
+              <div className="font-heading font-bold text-xs text-[#102A43]">Model Calibration</div>
+              <div className="text-[10px] text-[#486581]">Platt & Isotonic reliability</div>
+            </div>
+            <div className="p-3 rounded-xl bg-[#0E7490] text-white border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] flex flex-col justify-between space-y-1">
+              <div className="font-mono font-bold text-[10px] text-white/80">05 • INFORM</div>
+              <div className="font-heading font-bold text-xs text-white">Role Action Pathway</div>
+              <div className="text-[10px] text-white/80">Tailored decision delivery</div>
+            </div>
           </div>
         </div>
 
