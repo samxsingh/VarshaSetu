@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { PhoneCall, ShieldAlert, FileText, ExternalLink } from 'lucide-react';
 
@@ -12,15 +12,15 @@ export const Footer: React.FC = () => {
   }
 
   return (
-    <footer className="bg-white border-t border-surface-border text-slate-700 text-xs mt-auto">
+    <footer className="bg-white border-t-2 border-[#0B1726]/15 text-[#435466] text-xs mt-auto font-sans">
       {/* Helpline Strip */}
-      <div className="bg-brand-teal-tint/50 border-b border-brand-teal-border/40 py-3 px-4">
+      <div className="bg-[#DCEFF0]/50 border-b border-[#008F83]/20 py-3 px-4">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-          <div className="flex items-center gap-2 text-brand-teal-dark font-medium">
-            <PhoneCall className="w-4 h-4 text-brand-teal shrink-0" />
+          <div className="flex items-center gap-2 text-[#006B65] font-semibold">
+            <PhoneCall className="w-4 h-4 text-[#008F83] shrink-0" />
             <span>{t('farmer.kisanCallCenter')}</span>
           </div>
-          <div className="flex items-center gap-4 text-slate-600">
+          <div className="flex items-center gap-4 text-slate-600 font-mono text-[11px]">
             <span>KVK Lucknow: 0522-2970420</span>
             <span className="hidden md:inline">•</span>
             <span className="hidden md:inline">ICAR-CISH Rehmankhera, Kakori</span>
@@ -33,33 +33,34 @@ export const Footer: React.FC = () => {
           {/* Brand Info */}
           <div className="md:col-span-2 space-y-3">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-brand-teal text-white flex items-center justify-center font-bold text-xs">
+              <div className="w-7 h-7 rounded-lg bg-[#008F83] text-white flex items-center justify-center font-bold text-xs border border-[#006B65] shadow-[1.5px_1.5px_0px_#0B1726]">
                 VS
               </div>
-              <span className="font-heading font-bold text-slate-900 text-base">
+              <span className="font-heading font-black text-[#0B1726] text-base">
                 VarshaSetu (वर्षासेतु)
               </span>
             </div>
             <p className="text-slate-600 max-w-md leading-relaxed text-sm">
               Hyperlocal monsoon intelligence and agricultural decision support bridging planetary climate signals (ENSO, IOD, MJO) with village-level agronomic actions.
             </p>
-            <div className="flex items-center gap-2 text-[11px] text-amber-800 bg-amber-50 p-2.5 rounded-lg border border-amber-200">
-              <ShieldAlert className="w-4 h-4 shrink-0 text-amber-700" />
-              <span>
-                Demonstration platform currently initialized for Lucknow District, UP (`DEFAULT_DEMO_LOCATION`). Not operational meteorology.
-              </span>
+            <div className="flex items-start gap-2.5 text-[11px] text-[#9A6218] bg-[#FEF6E9] p-3 rounded-xl border border-[#E5A33D]/50">
+              <ShieldAlert className="w-4 h-4 shrink-0 text-[#E5A33D] mt-0.5" />
+              <div className="space-y-0.5">
+                <span className="font-heading font-bold text-[#0B1726] block">Scientific Disclosure:</span>
+                <span>Demonstration platform anchored to Bakshi Ka Talab (UP_LKO_BKT, Kharif 2024 archive · 122 observations). Operational mode: DIAGNOSTIC_ONLY.</span>
+              </div>
             </div>
           </div>
 
           {/* Nav Links */}
           <div className="space-y-2">
-            <h4 className="font-heading font-semibold text-slate-900 text-sm">Navigation</h4>
-            <ul className="space-y-1.5 text-slate-600">
-              <li><a href="/" className="hover:text-brand-teal transition-colors">Home</a></li>
-              <li><a href="/farmer/dashboard" className="hover:text-brand-teal transition-colors">Farmer Dashboard</a></li>
-              <li><a href="/officer" className="hover:text-brand-teal transition-colors">Officer Command Center</a></li>
-              <li><a href="/analyst" className="hover:text-brand-teal transition-colors">Analyst Model Registry</a></li>
-              <li><a href="/government/command-center" className="hover:text-brand-teal transition-colors">Government Portal</a></li>
+            <h4 className="font-heading font-bold text-[#0B1726] text-sm">Navigation</h4>
+            <ul className="space-y-1.5 text-slate-600 font-medium">
+              <li><Link to="/" className="hover:text-[#008F83] transition-colors">Home</Link></li>
+              <li><Link to="/farmer/dashboard" className="hover:text-[#008F83] transition-colors">Farmer Dashboard</Link></li>
+              <li><Link to="/officer" className="hover:text-[#008F83] transition-colors">Officer Command Center</Link></li>
+              <li><Link to="/government/command-center" className="hover:text-[#008F83] transition-colors">Government Portal</Link></li>
+              <li><Link to="/analyst" className="hover:text-[#008F83] transition-colors">Analyst Research Lab</Link></li>
             </ul>
           </div>
 

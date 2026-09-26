@@ -13,11 +13,11 @@ export const GovIntelligenceStrip: React.FC<GovIntelligenceStripProps> = ({
 }) => {
   const metrics = [
     {
-      label: 'Statewide Coverage',
+      label: 'Spatial Assimilation',
       value: '1 / 826 Blocks',
-      detail: 'Assimilated: UP_LKO_BKT',
+      detail: 'Assimilated Anchor: UP_LKO_BKT',
       icon: <Layers className="w-4 h-4 text-[#008F83]" />,
-      tag: '825 Pending',
+      tag: 'Single-Block Anchor',
       tagColor: 'bg-[#FEF6E9] text-[#9A6218] border-[#E5A33D]/40',
     },
     {

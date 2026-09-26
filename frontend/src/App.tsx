@@ -86,6 +86,9 @@ export function App() {
               <Route path="alerts" element={<AlertCenterPage />} />
             </Route>
 
+            {/* Direct Forecast Lab Alias */}
+            <Route path="forecast-lab" element={<Navigate to="/analyst/forecast-lab" replace />} />
+
             {/* Admin Routes */}
             <Route path="admin" element={<AdminDashboardPage />} />
 

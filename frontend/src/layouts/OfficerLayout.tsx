@@ -54,6 +54,8 @@ export const OfficerLayout: React.FC = () => {
               <span className="text-[#0B1726]/40">•</span>
               <span>UP_LKO_BKT</span>
               <span className="text-[#0B1726]/40">•</span>
+              <span>KHARIF 2024</span>
+              <span className="text-[#0B1726]/40">•</span>
               <span>122 OBS</span>
             </div>
 

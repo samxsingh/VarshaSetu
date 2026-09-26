@@ -309,8 +309,14 @@ export const FarmerForecastPage: React.FC = () => {
           })}
         </div>
       ) : (
-        <div className="bg-white rounded-2xl border-2 border-[#0B1726] p-8 text-center text-[#62768A]">
-          <p className="text-xs font-mono">No forecast records available for horizon {horizon} days.</p>
+        <div className="bg-white rounded-2xl border-2 border-[#0B1726] shadow-[3px_3px_0px_#0B1726] p-8 text-center space-y-2.5">
+          <div className="w-12 h-12 rounded-xl bg-[#F7F3EA] border-2 border-[#0B1726] text-[#008F83] mx-auto flex items-center justify-center shadow-[1.5px_1.5px_0px_#0B1726]">
+            <CloudRain className="w-6 h-6" />
+          </div>
+          <h4 className="font-heading font-black text-sm text-[#0B1726]">NO OBSERVATIONS FOR SELECTED WINDOW</h4>
+          <p className="text-xs text-[#435466] max-w-md mx-auto leading-relaxed">
+            The historical Kharif 2024 archive currently does not have active risk forecasts generated for the {horizon}-day horizon window. Select a 3-day or 7-day window to view calibrated model outputs.
+          </p>
         </div>
       )}
     </div>
