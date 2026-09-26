@@ -5,7 +5,6 @@ import { FarmerHeader } from '../../components/farmer/FarmerHeader';
 import { MonsoonGlanceCard } from '../../components/farmer/MonsoonGlanceCard';
 import { CropAdvisoryCard } from '../../components/farmer/CropAdvisoryCard';
 import { WhatIfPreviewCard } from '../../components/farmer/WhatIfPreviewCard';
-import { ProcurementTimeline } from '../../components/farmer/ProcurementTimeline';
 
 export const FarmerDashboardPage: React.FC = () => {
   return (
@@ -34,10 +33,7 @@ export const FarmerDashboardPage: React.FC = () => {
       {/* 5. Primary Crop Advisory: "What this means for your crop" */}
       <CropAdvisoryCard />
 
-      {/* 6. Mandi Procurement Booking, Queue & Digital Receipt Tracker */}
-      <ProcurementTimeline />
-
-      {/* 7. What-If Simulator Teaser */}
+      {/* 6. What-If Simulator Teaser */}
       <WhatIfPreviewCard />
     </div>
   );

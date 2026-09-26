@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { useFarmerStore } from '../../stores/useFarmerStore';
 import { LanguageToggle } from '../../components/common/LanguageToggle';
 import { ScientificStatusBadge } from '../../components/farmer/ScientificStatusBadge';
-import { ProcurementTimeline } from '../../components/farmer/ProcurementTimeline';
 
 export const FarmerProfilePage: React.FC = () => {
   const { t } = useTranslation();
@@ -105,9 +104,6 @@ export const FarmerProfilePage: React.FC = () => {
           </button>
         </div>
       </div>
-
-      {/* Procurement & Token History Panel */}
-      <ProcurementTimeline />
     </div>
   );
 };
