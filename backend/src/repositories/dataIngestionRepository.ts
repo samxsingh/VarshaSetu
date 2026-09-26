@@ -1,4 +1,6 @@
 import { query } from '../db/pool';
+import { DataHealth, IDataHealth } from '../models/DataHealth';
+import { isDatabaseConnected } from '../config/database';
 
 export interface DataIngestionRunRow {
   id: string;
@@ -39,6 +41,51 @@ export interface DataQualityReportRow {
 
 export const dataIngestionRepository = {
   async listRuns(limit = 20, offset = 0, status?: string): Promise<{ runs: DataIngestionRunRow[]; total: number }> {
+    if (isDatabaseConnected()) {
+      try {
+        const sources = await DataHealth.find();
+        let allRuns: DataIngestionRunRow[] = [];
+        for (const s of sources) {
+          if (s.runs && s.runs.length > 0) {
+            for (const r of s.runs) {
+              if (!status || r.status === status.toUpperCase()) {
+                allRuns.push({
+                  id: r.runId,
+                  source_id: s.sourceId,
+                  source_name: s.name,
+                  provider: s.provider,
+                  dataset_name: s.name,
+                  variable: r.variable,
+                  started_at: r.startedAt,
+                  completed_at: r.completedAt || null,
+                  status: r.status,
+                  records_processed: r.recordsProcessed || 0,
+                  records_failed: r.recordsFailed || 0,
+                  quality_summary: r.qualityReport || {},
+                  processing_version: r.processingVersion,
+                  error_message: r.errorMessage || null,
+                  file_path: null,
+                  coverage_start: r.coverageStart ? r.coverageStart.toISOString() : null,
+                  coverage_end: r.coverageEnd ? r.coverageEnd.toISOString() : null,
+                  spatial_resolution: r.spatialResolution || null,
+                  temporal_resolution: null,
+                  created_at: r.startedAt,
+                });
+              }
+            }
+          }
+        }
+        if (allRuns.length > 0) {
+          allRuns.sort((a, b) => b.started_at.getTime() - a.started_at.getTime());
+          const total = allRuns.length;
+          const paged = allRuns.slice(offset, offset + limit);
+          return { runs: paged, total };
+        }
+      } catch (err) {
+        // Fallback
+      }
+    }
+
     const params: any[] = [];
     let whereClause = '';
 
@@ -100,6 +147,50 @@ export const dataIngestionRepository = {
     lastSyncTime: Date | null;
     overallHealth: 'HEALTHY' | 'DEGRADED' | 'UNHEALTHY' | 'NO_DATA';
   }> {
+    if (isDatabaseConnected()) {
+      try {
+        const sources = await DataHealth.find();
+        if (sources.length > 0) {
+          const totalSources = sources.length;
+          const activeSources = sources.filter((s) => s.status === 'ACTIVE').length;
+          const freshSources = sources.filter((s) => s.status === 'ACTIVE' && s.lastSuccessfulSync).length;
+          let totalRuns = 0;
+          let successfulRuns = 0;
+          let failedRuns = 0;
+          let lastSyncTime: Date | null = null;
+
+          for (const s of sources) {
+            if (s.lastSuccessfulSync && (!lastSyncTime || s.lastSuccessfulSync > lastSyncTime)) {
+              lastSyncTime = s.lastSuccessfulSync;
+            }
+            if (s.runs) {
+              totalRuns += s.runs.length;
+              successfulRuns += s.runs.filter((r) => r.status === 'SUCCESS').length;
+              failedRuns += s.runs.filter((r) => r.status === 'FAILED').length;
+            }
+          }
+
+          let overallHealth: 'HEALTHY' | 'DEGRADED' | 'UNHEALTHY' | 'NO_DATA' = 'HEALTHY';
+          if (failedRuns > 0 && successfulRuns > 0) overallHealth = 'DEGRADED';
+          else if (failedRuns > 0 && successfulRuns === 0) overallHealth = 'UNHEALTHY';
+
+          return {
+            totalSources,
+            activeSources,
+            freshSources,
+            staleSources: activeSources - freshSources,
+            totalRuns,
+            successfulRuns,
+            failedRuns,
+            lastSyncTime,
+            overallHealth,
+          };
+        }
+      } catch (err) {
+        // Fallback
+      }
+    }
+
     const sourcesRes = await query<{
       total: string;
       fresh: string;
@@ -163,5 +254,5 @@ export const dataIngestionRepository = {
       lastSyncTime,
       overallHealth,
     };
-  }
+  },
 };

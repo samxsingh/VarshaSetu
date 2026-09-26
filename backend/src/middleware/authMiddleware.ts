@@ -33,6 +33,7 @@ export async function requireAuth(
       phoneNumber: userRow.phone_number,
       email: userRow.email,
       assignedLocationId: userRow.assigned_location_id,
+      preferredLanguage: userRow.preferred_language,
     };
 
     next();

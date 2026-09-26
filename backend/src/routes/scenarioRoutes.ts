@@ -8,7 +8,9 @@ export const scenarioRoutes = Router();
 // Controlled Scenario Registry (Accessible to all authenticated users & health checks)
 scenarioRoutes.get('/registry', scenarioController.getRegistry);
 scenarioRoutes.get('/', requireAuth, scenarioController.listScenarios);
+scenarioRoutes.get('/history', requireAuth, scenarioController.listScenarios);
 scenarioRoutes.post('/run', requireAuth, simulationRateLimiter, scenarioController.runScenario);
+scenarioRoutes.post('/simulate', requireAuth, simulationRateLimiter, scenarioController.runScenario);
 scenarioRoutes.post('/compare', requireAuth, simulationRateLimiter, scenarioController.compareScenario);
 scenarioRoutes.post('/sensitivity', requireAuth, simulationRateLimiter, scenarioController.runSensitivity);
 

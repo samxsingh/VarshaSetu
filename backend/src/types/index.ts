@@ -9,6 +9,7 @@ export interface AuthenticatedUser {
   phoneNumber?: string;
   email?: string;
   assignedLocationId?: string;
+  preferredLanguage?: string;
 }
 
 export interface AuthenticatedRequest extends Request {

@@ -42,3 +42,16 @@ export class ConflictError extends AppError {
     super(message, 409, 'CONFLICT', details);
   }
 }
+
+export class BadRequestError extends AppError {
+  constructor(message = 'Bad request', details?: Record<string, unknown>) {
+    super(message, 400, 'BAD_REQUEST', details);
+  }
+}
+
+export class ServiceUnavailableError extends AppError {
+  constructor(message = 'Service temporarily unavailable', details?: Record<string, unknown>) {
+    super(message, 503, 'SERVICE_UNAVAILABLE', details);
+  }
+}
+

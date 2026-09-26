@@ -7,3 +7,4 @@ export const notificationRoutes = Router();
 notificationRoutes.get('/status', requireAuth, notificationController.getStatus);
 notificationRoutes.get('/preferences', requireAuth, notificationController.getPreferences);
 notificationRoutes.put('/preferences', requireAuth, notificationController.updatePreferences);
+notificationRoutes.post('/simulate-alert', requireAuth, notificationController.simulateAlert);

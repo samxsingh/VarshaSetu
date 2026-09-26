@@ -34,3 +34,7 @@ geographyRoutes.get('/villages/:id', asyncHandler(geographyController.getVillage
 
 // Spatial point-in-polygon resolution
 geographyRoutes.get('/resolve-point', validateRequest({ query: resolvePointQuerySchema }), asyncHandler(geographyController.resolvePoint as any));
+geographyRoutes.get('/resolve', validateRequest({ query: resolvePointQuerySchema }), asyncHandler(geographyController.resolvePoint as any));
+
+// Geographic hierarchy chain resolution
+geographyRoutes.get('/hierarchy/:id', asyncHandler(geographyController.getHierarchy as any));

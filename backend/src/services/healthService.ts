@@ -1,5 +1,6 @@
 import { checkDbHealth, DatabaseHealthStatus, pool } from '../db/pool';
 import { env } from '../config/env';
+import { isDatabaseConnected } from '../config/database';
 
 export interface SubsystemStatus {
   status: 'HEALTHY' | 'DEGRADED' | 'UNAVAILABLE' | 'NOT_CONFIGURED' | 'DIAGNOSTIC_ONLY' | 'DEMO_ONLY';
@@ -39,7 +40,12 @@ export const healthService = {
       subsystems: {
         database: {
           status: 'HEALTHY',
-          details: { postgres: true, postgis: true, connectionPoolSize: 20 },
+          details: {
+            mongodb: isDatabaseConnected(),
+            postgres: true,
+            postgis: true,
+            connectionPoolSize: 20,
+          },
         },
         ml_service: {
           status: 'HEALTHY',
@@ -105,11 +111,12 @@ export const healthService = {
 
   async getReadiness(): Promise<{ ready: boolean; timestamp: string; dependencies: Record<string, string> }> {
     const dbHealth = await checkDbHealth();
-    const ready = dbHealth.postgres;
+    const ready = isDatabaseConnected() || dbHealth.postgres;
     return {
       ready,
       timestamp: new Date().toISOString(),
       dependencies: {
+        mongodb: isDatabaseConnected() ? 'UP' : 'DOWN',
         database: dbHealth.postgres ? 'UP' : 'DOWN',
         postgis: dbHealth.postgis ? 'UP' : 'COMPATIBILITY',
       },

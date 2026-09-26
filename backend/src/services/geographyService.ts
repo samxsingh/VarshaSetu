@@ -215,4 +215,27 @@ export const geographyService = {
       defaultDemoLocation,
     };
   },
+
+  async getHierarchy(id: string) {
+    let villageRow = await geographyRepository.getVillageById(id);
+    let panchayatRow = villageRow ? (villageRow.panchayat_id ? await geographyRepository.getPanchayatById(villageRow.panchayat_id) : null) : await geographyRepository.getPanchayatById(id);
+    let blockRow = panchayatRow ? (panchayatRow.block_id ? await geographyRepository.getBlockById(panchayatRow.block_id) : null) : await geographyRepository.getBlockById(id);
+    let districtRow = blockRow ? (blockRow.district_id ? await geographyRepository.getDistrictById(blockRow.district_id) : null) : await geographyRepository.getDistrictById(id);
+    let stateRow = districtRow ? (districtRow.state_id ? await geographyRepository.getStateById(districtRow.state_id) : null) : await geographyRepository.getStateById(id);
+
+    if (!villageRow && !panchayatRow && !blockRow && !districtRow && !stateRow) {
+      throw new NotFoundError(`Geographic entity with ID ${id} not found in hierarchy`);
+    }
+
+    return {
+      entityId: id,
+      hierarchy: {
+        state: stateRow ? toStateEntity(stateRow) : null,
+        district: districtRow ? toDistrictEntity(districtRow) : null,
+        block: blockRow ? toBlockEntity(blockRow) : null,
+        panchayat: panchayatRow ? toPanchayatEntity(panchayatRow) : null,
+        village: villageRow ? toVillageEntity(villageRow) : null,
+      },
+    };
+  },
 };

@@ -1,15 +1,24 @@
 import { app } from './app';
 import { env } from './config/env';
 import { closeDbPool, checkDbHealth } from './db/pool';
+import { connectDatabase, closeDatabase, isDatabaseConnected } from './config/database';
 import http from 'http';
 
 const server = http.createServer(app);
 
 async function startServer(): Promise<void> {
   try {
-    console.log('🌧️  Initializing VarshaSetu Backend Core...');
+    console.log('🌧️  Initializing VarshaSetu Backend Core (MERN Architecture)...');
     console.log(`🌍 Environment: ${env.NODE_ENV}`);
     console.log(`📡 Port: ${env.PORT}`);
+
+    // Connect to MongoDB primary persistence layer
+    try {
+      await connectDatabase();
+      console.log(`🍃 Connected to MongoDB persistence layer (Database: ${env.NODE_ENV !== 'production' ? 'varshasetu' : 'production'})`);
+    } catch (mongoErr: any) {
+      console.warn(`⚠️  MongoDB connection deferred or offline (${mongoErr.message}). Gateway will use resilient fallback.`);
+    }
 
     // Check database connectivity
     const dbHealth = await checkDbHealth();
@@ -44,6 +53,8 @@ async function handleGracefulShutdown(signal: string): Promise<void> {
     console.log('🛑 HTTP server closed.');
 
     try {
+      // Close MongoDB connection
+      await closeDatabase();
       // Drain and close database pool
       await closeDbPool();
       console.log('✅ All connections drained. Exiting cleanly.');

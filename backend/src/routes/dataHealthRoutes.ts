@@ -5,6 +5,7 @@ export const dataHealthRoutes = Router();
 
 // Overview stats across all providers & ingestion status
 dataHealthRoutes.get('/', dataHealthController.getOverview);
+dataHealthRoutes.get('/overview', dataHealthController.getOverview);
 
 // List of all configured data sources and freshness
 dataHealthRoutes.get('/sources', dataHealthController.listSources);

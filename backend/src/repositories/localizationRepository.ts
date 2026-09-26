@@ -1,4 +1,6 @@
 import { query } from '../db/pool';
+import { Advisory } from '../models/Advisory';
+import { isDatabaseConnected } from '../config/database';
 
 export interface LocalizedAdvisoryRow {
   id: string;
@@ -41,6 +43,40 @@ export interface VoiceSynthesisLogRow {
 
 export const localizationRepository = {
   async saveLocalizedAdvisory(data: Omit<LocalizedAdvisoryRow, 'id' | 'created_at'>): Promise<LocalizedAdvisoryRow> {
+    if (isDatabaseConnected()) {
+      try {
+        const localizedItem = {
+          language: data.language as 'EN' | 'HI',
+          title: data.title,
+          summary: data.summary,
+          riskIndicator: data.risk_indicator,
+          whatItMeans: data.what_it_means,
+          confidenceStatement: data.confidence_statement,
+          disclosure: data.disclosure,
+          historicalLimitationDisclosure: data.historical_limitation_disclosure,
+          translationMethod: data.translation_method || 'CONTROLLED_TEMPLATE',
+          templateVersion: data.template_version || '1.0.0',
+          terminologyVersion: data.terminology_version || '1.0.0',
+          localizationFingerprint: data.localization_fingerprint,
+        };
+
+        await Advisory.findOneAndUpdate(
+          { advisoryId: data.advisory_id },
+          {
+            $pull: { localizations: { language: data.language } },
+          }
+        );
+        await Advisory.findOneAndUpdate(
+          { advisoryId: data.advisory_id },
+          {
+            $push: { localizations: localizedItem },
+          }
+        );
+      } catch (err) {
+        // Fallback
+      }
+    }
+
     const sql = `
       INSERT INTO localized_advisories (
         advisory_id, language, title, summary, risk_indicator, what_it_means,
@@ -83,6 +119,38 @@ export const localizationRepository = {
   },
 
   async getLocalizedAdvisory(advisoryId: string, language: string): Promise<LocalizedAdvisoryRow | null> {
+    if (isDatabaseConnected()) {
+      try {
+        const adv = await Advisory.findOne({ advisoryId });
+        if (adv && adv.localizations) {
+          const loc = adv.localizations.find((l) => l.language === language.toUpperCase());
+          if (loc) {
+            return {
+              id: `${advisoryId}_${loc.language}`,
+              advisory_id: advisoryId,
+              language: loc.language,
+              title: loc.title,
+              summary: loc.summary,
+              risk_indicator: loc.riskIndicator,
+              what_it_means: loc.whatItMeans,
+              evidence: adv.evidence || {},
+              confidence_statement: loc.confidenceStatement,
+              disclosure: loc.disclosure,
+              historical_limitation_disclosure: loc.historicalLimitationDisclosure || '',
+              classification: 'DIAGNOSTIC_ONLY',
+              translation_method: loc.translationMethod,
+              template_version: loc.templateVersion,
+              terminology_version: loc.terminologyVersion,
+              localization_fingerprint: loc.localizationFingerprint,
+              created_at: adv.createdAt,
+            };
+          }
+        }
+      } catch (err) {
+        // Fallback
+      }
+    }
+
     const sql = `
       SELECT * FROM localized_advisories
       WHERE advisory_id = $1 AND language = $2
@@ -109,6 +177,25 @@ export const localizationRepository = {
     language: string = 'EN',
     deviceChannel: string = 'WEB_PORTAL'
   ): Promise<AdvisoryReadRow> {
+    if (isDatabaseConnected()) {
+      try {
+        await Advisory.findOneAndUpdate(
+          { advisoryId },
+          {
+            $push: {
+              readReceipts: {
+                language,
+                deviceChannel,
+                readAt: new Date(),
+              },
+            },
+          }
+        );
+      } catch (err) {
+        // Fallback
+      }
+    }
+
     const sql = `
       INSERT INTO advisory_reads (advisory_id, user_id, language, device_channel)
       VALUES ($1, $2, $3, $4)
@@ -119,6 +206,24 @@ export const localizationRepository = {
   },
 
   async getReadReceipts(advisoryId: string): Promise<AdvisoryReadRow[]> {
+    if (isDatabaseConnected()) {
+      try {
+        const adv = await Advisory.findOne({ advisoryId });
+        if (adv && adv.readReceipts) {
+          return adv.readReceipts.map((r, idx) => ({
+            id: `${advisoryId}_read_${idx}`,
+            advisory_id: advisoryId,
+            user_id: r.userId ? r.userId.toString() : null,
+            language: r.language,
+            device_channel: r.deviceChannel,
+            read_at: r.readAt,
+          }));
+        }
+      } catch (err) {
+        // Fallback
+      }
+    }
+
     const sql = `
       SELECT * FROM advisory_reads
       WHERE advisory_id = $1

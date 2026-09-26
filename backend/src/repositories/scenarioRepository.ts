@@ -1,4 +1,6 @@
 import { query } from '../db/pool';
+import { Scenario, IScenario } from '../models/Scenario';
+import { isDatabaseConnected } from '../config/database';
 
 export interface ScenarioRunRecord {
   id: string;
@@ -49,6 +51,31 @@ export interface ScenarioSensitivityRecord {
   created_at: Date;
 }
 
+function docToScenarioRunRecord(doc: IScenario): ScenarioRunRecord {
+  return {
+    id: (doc._id as any).toString(),
+    scenario_id: doc.scenarioId,
+    user_id: doc.userId ? doc.userId.toString() : null,
+    block_id: doc.blockId,
+    crop_type: doc.cropType,
+    growth_stage: doc.growthStage,
+    scenario_type: doc.scenarioType,
+    classification: doc.classification || 'SCENARIO_INDICATOR_ONLY',
+    baseline_forecast_id: doc.baselineForecastId,
+    scenario_parameters: doc.scenarioParameters || {},
+    scenario_results: doc.scenarioResults || {},
+    deltas: doc.deltas || [],
+    envelope: doc.envelope || null,
+    explanation: doc.explanation || {},
+    provenance: doc.provenance || {},
+    scientific_disclaimer:
+      doc.scientificDisclaimer ||
+      'This scenario evaluates meteorological and agro-meteorological sensitivity indicators only. It does NOT predict crop yields, biomass production, revenue, or guaranteed agronomic outcomes.',
+    indicator_only_ack: true,
+    created_at: doc.createdAt || new Date(),
+  };
+}
+
 export const scenarioRepository = {
   async insertScenario(data: {
     scenario_id: string;
@@ -69,6 +96,40 @@ export const scenarioRepository = {
     provenance?: any;
     scientific_disclaimer?: string;
   }): Promise<ScenarioRunRecord | null> {
+    if (isDatabaseConnected() && data.scenario_id) {
+      try {
+        const doc = await Scenario.findOneAndUpdate(
+          { scenarioId: data.scenario_id },
+          {
+            scenarioId: data.scenario_id,
+            blockId: data.block_id,
+            cropType: data.crop,
+            growthStage: data.crop_stage,
+            scenarioType: (data.scenario_type as any) || 'SOWING_DELAY',
+            classification: data.classification || 'SCENARIO_INDICATOR_ONLY',
+            baselineForecastId: data.baseline_forecast_id || 'fc_kharif2024_anchor',
+            scenarioParameters: data.inputs || {},
+            scenarioResults: {
+              baseline_summary: data.baseline_summary,
+              simulated_summary: data.simulated_summary,
+              hypothetical_risk_indicators: data.hypothetical_risk_indicators,
+            },
+            deltas: data.deltas || [],
+            envelope: data.envelope || null,
+            explanation: data.explanation || {},
+            provenance: data.provenance || {},
+            scientificDisclaimer:
+              data.scientific_disclaimer ||
+              'This scenario evaluates meteorological and agro-meteorological sensitivity indicators only. It does NOT predict crop yields, biomass production, revenue, or guaranteed agronomic outcomes.',
+          },
+          { upsert: true, new: true }
+        );
+        if (doc) return docToScenarioRunRecord(doc);
+      } catch (err) {
+        // Fallback to PostgreSQL
+      }
+    }
+
     try {
       const sql = `
         INSERT INTO scenario_runs (
@@ -104,7 +165,8 @@ export const scenarioRepository = {
         data.envelope ? JSON.stringify(data.envelope) : null,
         data.explanation ? JSON.stringify(data.explanation) : null,
         data.provenance ? JSON.stringify(data.provenance) : null,
-        data.scientific_disclaimer || 'This scenario evaluates meteorological and agro-meteorological sensitivity indicators only. It does NOT predict crop yields, biomass production, revenue, or guaranteed agronomic outcomes.',
+        data.scientific_disclaimer ||
+          'This scenario evaluates meteorological and agro-meteorological sensitivity indicators only. It does NOT predict crop yields, biomass production, revenue, or guaranteed agronomic outcomes.',
         true,
       ];
       const res = await query(sql, values);
@@ -116,6 +178,15 @@ export const scenarioRepository = {
   },
 
   async getScenarioById(scenarioId: string): Promise<ScenarioRunRecord | null> {
+    if (isDatabaseConnected()) {
+      try {
+        const doc = await Scenario.findOne({ scenarioId });
+        if (doc) return docToScenarioRunRecord(doc);
+      } catch (err) {
+        // Fallback to PostgreSQL
+      }
+    }
+
     try {
       const res = await query('SELECT * FROM scenario_runs WHERE scenario_id = $1', [scenarioId]);
       return res.rows[0] || null;
@@ -126,6 +197,15 @@ export const scenarioRepository = {
   },
 
   async listScenarios(limit = 20): Promise<ScenarioRunRecord[]> {
+    if (isDatabaseConnected()) {
+      try {
+        const docs = await Scenario.find().sort({ createdAt: -1 }).limit(limit);
+        return docs.map(docToScenarioRunRecord);
+      } catch (err) {
+        // Fallback to PostgreSQL
+      }
+    }
+
     try {
       const res = await query(
         'SELECT * FROM scenario_runs ORDER BY created_at DESC LIMIT $1',
@@ -170,7 +250,8 @@ export const scenarioRepository = {
         data.envelope ? JSON.stringify(data.envelope) : null,
         JSON.stringify(data.explanation || {}),
         JSON.stringify(data.provenance || {}),
-        data.scientific_disclaimer || 'This scenario evaluates meteorological and agro-meteorological sensitivity indicators only. It does NOT predict crop yields, biomass production, revenue, or guaranteed agronomic outcomes.',
+        data.scientific_disclaimer ||
+          'This scenario evaluates meteorological and agro-meteorological sensitivity indicators only. It does NOT predict crop yields, biomass production, revenue, or guaranteed agronomic outcomes.',
       ];
       const res = await query(sql, values);
       return res.rows[0];

@@ -1,6 +1,7 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { authService } from '../services/authService';
 import { sendSuccess } from '../utils/responseEnvelope';
+import { BadRequestError } from '../utils/errors';
 import { AuthenticatedRequest } from '../types';
 
 export const authController = {
@@ -17,6 +18,15 @@ export const authController = {
       ...req.body,
       ipAddress: req.ip,
     });
+    return sendSuccess(res, result);
+  },
+
+  async refresh(req: Request, res: Response): Promise<Response> {
+    const refreshToken = req.body?.refreshToken || req.headers['x-refresh-token'];
+    if (!refreshToken || typeof refreshToken !== 'string') {
+      throw new BadRequestError('Refresh token is required in request body or X-Refresh-Token header');
+    }
+    const result = await authService.refresh(refreshToken);
     return sendSuccess(res, result);
   },
 

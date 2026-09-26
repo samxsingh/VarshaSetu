@@ -91,4 +91,34 @@ export const notificationController = {
       next(error);
     }
   },
+
+  async simulateAlert(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    try {
+      if (!req.user) {
+        return sendError(res, 'UNAUTHORIZED', 'Authentication required.', 401);
+      }
+      const { event_type, severity, title, body, channel } = req.body || {};
+      const deliveryId = `del_${Date.now()}`;
+      const record = await notificationRepository.recordDelivery({
+        delivery_id: deliveryId,
+        message_id: `msg_${Date.now()}`,
+        recipient_id: req.user.id,
+        channel: channel || 'IN_APP',
+        status: 'SIMULATED',
+        provider_name: 'INTERNAL_MOCK',
+        title: title || 'Agro-Meteorological Advisory Alert',
+        body: body || 'Simulated advisory alert dispatch',
+        details: { event_type, severity, simulated: true },
+      });
+      return sendSuccess(res, {
+        simulated: true,
+        deliveryId,
+        recipient: req.user.id,
+        channel: channel || 'IN_APP',
+        record,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 };

@@ -1,4 +1,6 @@
 import { query } from '../db/pool';
+import { Event, IEvent, IEventStateTransition } from '../models/Event';
+import { isDatabaseConnected } from '../config/database';
 
 export interface ForecastEventRow {
   id: string;
@@ -42,6 +44,38 @@ export interface ForecastEventTransitionRow {
   created_at: Date;
 }
 
+function docToEventRow(doc: IEvent): ForecastEventRow {
+  return {
+    id: (doc._id as any).toString(),
+    event_id: doc.eventId,
+    event_type: doc.eventType,
+    forecast_id: doc.forecastId,
+    block_id: doc.blockId,
+    detected_at: doc.detectedAt || new Date(),
+    valid_from: doc.validFrom ? doc.validFrom.toISOString() : new Date().toISOString(),
+    valid_until: doc.validUntil ? doc.validUntil.toISOString() : new Date().toISOString(),
+    probability: doc.probability,
+    threshold: doc.threshold,
+    unit: doc.unit || 'mm',
+    severity: doc.severity,
+    confidence_status: doc.confidenceStatus || 'CALIBRATED',
+    operational_status: doc.operationalStatus || 'DIAGNOSTIC_ONLY',
+    data_freshness: doc.dataFreshness || 'HISTORICAL_ONLY',
+    validation_status: doc.validationStatus || 'INSUFFICIENT_DATA',
+    explanation_reference: doc.explanationReference || null,
+    state: doc.state || 'DETECTED',
+    description: doc.description || '',
+    deduplication_hash: doc.deduplicationHash || '',
+    acknowledged_by: doc.acknowledgedBy || null,
+    acknowledged_at: doc.acknowledgedAt || null,
+    resolved_by: doc.resolvedBy || null,
+    resolved_at: doc.resolvedAt || null,
+    metadata: doc.metadata || {},
+    created_at: doc.createdAt || new Date(),
+    updated_at: doc.updatedAt || new Date(),
+  };
+}
+
 export const eventRepository = {
   async listEvents(filters: {
     block_id?: string;
@@ -50,6 +84,22 @@ export const eventRepository = {
     state?: string;
     limit?: number;
   } = {}): Promise<ForecastEventRow[]> {
+    if (isDatabaseConnected()) {
+      try {
+        const mongoFilter: any = {};
+        if (filters.block_id) mongoFilter.blockId = filters.block_id;
+        if (filters.event_type) mongoFilter.eventType = filters.event_type;
+        if (filters.severity) mongoFilter.severity = filters.severity;
+        if (filters.state) mongoFilter.state = filters.state;
+
+        const limit = filters.limit || 50;
+        const docs = await Event.find(mongoFilter).sort({ detectedAt: -1 }).limit(limit);
+        return docs.map(docToEventRow);
+      } catch (err) {
+        // Fallback to PostgreSQL
+      }
+    }
+
     try {
       const conditions: string[] = [];
       const params: any[] = [];
@@ -91,6 +141,15 @@ export const eventRepository = {
   },
 
   async getEventById(eventId: string): Promise<ForecastEventRow | null> {
+    if (isDatabaseConnected()) {
+      try {
+        const doc = await Event.findOne({ eventId });
+        if (doc) return docToEventRow(doc);
+      } catch (err) {
+        // Fallback to PostgreSQL
+      }
+    }
+
     try {
       const res = await query<ForecastEventRow>(
         'SELECT * FROM forecast_events WHERE event_id = $1 LIMIT 1',
@@ -103,6 +162,40 @@ export const eventRepository = {
   },
 
   async upsertEvent(event: Partial<ForecastEventRow>): Promise<ForecastEventRow | null> {
+    if (isDatabaseConnected() && event.event_id) {
+      try {
+        const doc = await Event.findOneAndUpdate(
+          { eventId: event.event_id },
+          {
+            eventId: event.event_id,
+            eventType: event.event_type,
+            forecastId: event.forecast_id,
+            blockId: event.block_id,
+            detectedAt: event.detected_at || new Date(),
+            validFrom: event.valid_from ? new Date(event.valid_from) : new Date(),
+            validUntil: event.valid_until ? new Date(event.valid_until) : new Date(),
+            probability: event.probability,
+            threshold: event.threshold,
+            unit: event.unit || 'mm',
+            severity: event.severity,
+            confidenceStatus: event.confidence_status || 'CALIBRATED',
+            operationalStatus: event.operational_status || 'DIAGNOSTIC_ONLY',
+            dataFreshness: event.data_freshness || 'HISTORICAL_ONLY',
+            validationStatus: event.validation_status || 'INSUFFICIENT_DATA',
+            explanationReference: event.explanation_reference,
+            state: event.state || 'DETECTED',
+            description: event.description,
+            deduplicationHash: event.deduplication_hash,
+            metadata: event.metadata || {},
+          },
+          { upsert: true, new: true }
+        );
+        if (doc) return docToEventRow(doc);
+      } catch (err) {
+        // Fallback to PostgreSQL
+      }
+    }
+
     try {
       const sql = `
         INSERT INTO forecast_events (
@@ -158,6 +251,23 @@ export const eventRepository = {
     actor: string,
     action: 'acknowledge' | 'resolve'
   ): Promise<ForecastEventRow | null> {
+    if (isDatabaseConnected()) {
+      try {
+        const updateData: any = { state, updatedAt: new Date() };
+        if (action === 'acknowledge') {
+          updateData.acknowledgedBy = actor;
+          updateData.acknowledgedAt = new Date();
+        } else if (action === 'resolve') {
+          updateData.resolvedBy = actor;
+          updateData.resolvedAt = new Date();
+        }
+        const doc = await Event.findOneAndUpdate({ eventId }, updateData, { new: true });
+        if (doc) return docToEventRow(doc);
+      } catch (err) {
+        // Fallback to PostgreSQL
+      }
+    }
+
     try {
       let extraField = '';
       if (action === 'acknowledge') {
@@ -189,6 +299,37 @@ export const eventRepository = {
     reason: string;
     metadata?: any;
   }): Promise<ForecastEventTransitionRow | null> {
+    if (isDatabaseConnected()) {
+      try {
+        const newTrans: IEventStateTransition = {
+          transitionId: transition.transition_id,
+          previousState: transition.previous_state as any,
+          newState: transition.new_state as any,
+          actor: transition.actor,
+          reason: transition.reason,
+          timestamp: new Date(),
+          metadata: transition.metadata || {},
+        };
+        await Event.findOneAndUpdate(
+          { eventId: transition.event_id },
+          { $push: { transitions: newTrans } }
+        );
+        return {
+          id: transition.transition_id,
+          transition_id: transition.transition_id,
+          event_id: transition.event_id,
+          previous_state: transition.previous_state,
+          new_state: transition.new_state,
+          actor: transition.actor,
+          reason: transition.reason,
+          metadata: transition.metadata || {},
+          created_at: newTrans.timestamp,
+        };
+      } catch (err) {
+        // Fallback to PostgreSQL
+      }
+    }
+
     try {
       const sql = `
         INSERT INTO forecast_event_transitions (
@@ -212,6 +353,27 @@ export const eventRepository = {
   },
 
   async getTransitionsByEventId(eventId: string): Promise<ForecastEventTransitionRow[]> {
+    if (isDatabaseConnected()) {
+      try {
+        const doc = await Event.findOne({ eventId });
+        if (doc && doc.transitions) {
+          return doc.transitions.map((t) => ({
+            id: t.transitionId,
+            transition_id: t.transitionId,
+            event_id: eventId,
+            previous_state: t.previousState,
+            new_state: t.newState,
+            actor: t.actor,
+            reason: t.reason,
+            metadata: t.metadata || {},
+            created_at: t.timestamp || new Date(),
+          }));
+        }
+      } catch (err) {
+        // Fallback to PostgreSQL
+      }
+    }
+
     try {
       const res = await query<ForecastEventTransitionRow>(
         'SELECT * FROM forecast_event_transitions WHERE event_id = $1 ORDER BY created_at ASC',

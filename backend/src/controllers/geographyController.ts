@@ -71,4 +71,9 @@ export const geographyController = {
     const result = await geographyService.resolvePoint(lat, lon);
     return sendSuccess(res, result);
   },
+
+  async getHierarchy(req: Request, res: Response): Promise<Response> {
+    const result = await geographyService.getHierarchy(req.params.id);
+    return sendSuccess(res, result);
+  },
 };

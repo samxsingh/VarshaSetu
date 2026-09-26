@@ -1,7 +1,7 @@
 import { userRepository, UserRow } from '../repositories/userRepository';
 import { auditRepository } from '../repositories/auditRepository';
 import { hashPassword, comparePassword } from '../utils/password';
-import { signAuthToken } from '../utils/jwt';
+import { signAuthToken, signRefreshToken, verifyRefreshToken } from '../utils/jwt';
 import { UnauthorizedError, ConflictError, NotFoundError, ForbiddenError } from '../utils/errors';
 import { UserEntity, UserRole, PermissionScope } from '@shared/types';
 import { env } from '../config/env';
@@ -63,7 +63,7 @@ export const authService = {
     password?: string;
     otp?: string;
     ipAddress?: string;
-  }): Promise<{ token: string; user: UserEntity }> {
+  }): Promise<{ token: string; refreshToken: string; user: UserEntity }> {
     let userRow: UserRow | null = null;
 
     if (payload.email) {
@@ -117,8 +117,12 @@ export const authService = {
       permissions: user.permissions,
       assignedLocationId: user.assignedLocationId,
     });
+    const refreshToken = signRefreshToken({
+      userId: user.id,
+      role: user.role,
+    });
 
-    return { token, user };
+    return { token, refreshToken, user };
   },
 
   async register(payload: {
@@ -130,7 +134,7 @@ export const authService = {
     preferredLanguage?: string;
     assignedLocationId?: string;
     ipAddress?: string;
-  }): Promise<{ token: string; user: UserEntity }> {
+  }): Promise<{ token: string; refreshToken: string; user: UserEntity }> {
     // Prevent unauthenticated self-registration privilege escalation
     if (payload.role && payload.role !== 'FARMER') {
       throw new ForbiddenError(
@@ -181,8 +185,37 @@ export const authService = {
       permissions: user.permissions,
       assignedLocationId: user.assignedLocationId,
     });
+    const refreshToken = signRefreshToken({
+      userId: user.id,
+      role: user.role,
+    });
 
-    return { token, user };
+    return { token, refreshToken, user };
+  },
+
+  async refresh(refreshTokenStr: string): Promise<{ token: string; refreshToken: string; user: UserEntity }> {
+    try {
+      const payload = verifyRefreshToken(refreshTokenStr);
+      const userRow = await userRepository.findById(payload.userId);
+      if (!userRow || !userRow.is_active) {
+        throw new UnauthorizedError('User does not exist or has been disabled');
+      }
+      const user = toUserEntity(userRow);
+      const token = signAuthToken({
+        userId: user.id,
+        role: user.role,
+        permissions: user.permissions,
+        assignedLocationId: user.assignedLocationId,
+      });
+      const newRefreshToken = signRefreshToken({
+        userId: user.id,
+        role: user.role,
+      });
+      return { token, refreshToken: newRefreshToken, user };
+    } catch (err: any) {
+      if (err instanceof UnauthorizedError) throw err;
+      throw new UnauthorizedError('Invalid or expired refresh token', { original: err.message });
+    }
   },
 
   async getCurrentUser(userId: string): Promise<UserEntity> {

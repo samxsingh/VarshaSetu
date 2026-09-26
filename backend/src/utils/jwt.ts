@@ -11,9 +11,28 @@ export function signAuthToken(payload: {
   const options: SignOptions = {
     expiresIn: env.JWT_EXPIRES_IN as any,
   };
-  return jwt.sign(payload, env.JWT_SECRET, options);
+  return jwt.sign({ ...payload, sub: payload.userId }, env.JWT_SECRET, options);
 }
 
 export function verifyAuthToken(token: string): AuthSessionTokenPayload {
-  return jwt.verify(token, env.JWT_SECRET) as AuthSessionTokenPayload;
+  const decoded = jwt.verify(token, env.JWT_SECRET) as any;
+  return {
+    ...decoded,
+    userId: decoded.userId || decoded.sub,
+  } as AuthSessionTokenPayload;
+}
+
+export function signRefreshToken(payload: { userId: string; role?: UserRole }): string {
+  const options: SignOptions = {
+    expiresIn: '30d',
+  };
+  return jwt.sign({ sub: payload.userId, userId: payload.userId, role: payload.role, type: 'refresh' }, env.JWT_SECRET, options);
+}
+
+export function verifyRefreshToken(token: string): { userId: string; sub: string } {
+  const decoded = jwt.verify(token, env.JWT_SECRET) as any;
+  if (decoded.type !== 'refresh') {
+    throw new Error('Invalid token type');
+  }
+  return { userId: decoded.userId || decoded.sub, sub: decoded.sub || decoded.userId };
 }
