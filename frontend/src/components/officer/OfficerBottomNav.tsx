@@ -1,0 +1,45 @@
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { LayoutDashboard, Map, CloudRain, Bell, Sprout } from 'lucide-react';
+import { cn } from '../../utils/cn';
+
+export const OfficerBottomNav: React.FC = () => {
+  const { t } = useTranslation();
+
+  const links = [
+    { to: '/officer', end: true, label: 'Overview', icon: <LayoutDashboard className="w-4 h-4" /> },
+    { to: '/officer/map', label: 'GIS Map', icon: <Map className="w-4 h-4" /> },
+    { to: '/officer/forecast', label: 'Forecasts', icon: <CloudRain className="w-4 h-4" /> },
+    { to: '/officer/advisories', label: 'Advisories', icon: <Bell className="w-4 h-4" /> },
+    { to: '/officer/crops', label: 'Crops', icon: <Sprout className="w-4 h-4" /> },
+  ];
+
+  return (
+    <nav
+      aria-label="Officer mobile navigation"
+      className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#F7F3EA]/95 backdrop-blur-md border-t-2 border-[#0B1726] shadow-[0_-4px_12px_rgba(11,23,38,0.08)] px-2 py-1.5"
+    >
+      <div className="flex items-center justify-around gap-1 max-w-md mx-auto">
+        {links.map((link) => (
+          <NavLink
+            key={link.to}
+            to={link.to}
+            end={link.end}
+            className={({ isActive }) =>
+              cn(
+                'flex flex-col items-center justify-center flex-1 py-1.5 px-1 rounded-lg text-[10px] font-heading font-bold transition-all min-h-[48px] min-w-[48px]',
+                isActive
+                  ? 'bg-[#008F83] text-white border-2 border-[#0B1726] shadow-[2px_2px_0px_#0B1726]'
+                  : 'text-[#435466] hover:text-[#0B1726] active:bg-[#0B1726]/5'
+              )
+            }
+          >
+            {link.icon}
+            <span className="mt-0.5 leading-none">{link.label}</span>
+          </NavLink>
+        ))}
+      </div>
+    </nav>
+  );
+};

@@ -3,36 +3,67 @@ import { MapContainer } from '../../components/maps/MapContainer';
 import { MapLayerControl } from '../../components/maps/MapLayerControl';
 import { MapLegend } from '../../components/maps/MapLegend';
 import { SelectedAreaPanel } from '../../components/maps/SelectedAreaPanel';
-import { Card } from '../../components/ui/Card';
-import { Badge } from '../../components/ui/Badge';
+import { ScientificIntegrityStrip } from '../../components/officer/ScientificIntegrityStrip';
+import { Map, Layers, Compass, Info, ShieldCheck } from 'lucide-react';
 
 export const OfficerMapPage: React.FC = () => {
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-xl border border-surface-border">
-        <div>
-          <h2 className="font-heading font-bold text-lg text-slate-900">
-            Geographic Information System (GIS) Risk Map
-          </h2>
-          <p className="text-xs text-slate-600">
-            Interactive block choropleths and risk gradients for Lucknow District, UP
-          </p>
+    <div className="space-y-6" data-testid="officer-map-page">
+      {/* 1. Header Strip */}
+      <div className="bg-white border-2 border-[#0B1726] rounded-2xl p-5 shadow-[4px_4px_0px_#0B1726]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="px-2.5 py-0.5 rounded-md bg-[#008F83] text-white text-[10px] font-mono font-bold uppercase tracking-wider">
+                GIS SPATIAL WORKSPACE
+              </span>
+              <span className="px-2 py-0.5 rounded-md bg-[#FEF6E9] border border-[#E5A33D] text-[#9A6218] text-[10px] font-mono font-bold">
+                DIAGNOSTIC VIEW
+              </span>
+            </div>
+            <h2 className="font-heading font-extrabold text-xl sm:text-2xl text-[#0B1726] tracking-tight">
+              Geographic Information System (GIS) Risk Map
+            </h2>
+            <p className="text-xs text-[#435466]">
+              Interactive block choropleths, downscaled rainfall departures, and localized risk gradients for Lucknow District, UP
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <MapLayerControl />
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <Badge variant="demo" size="sm">PostGIS Demo Fixture</Badge>
-          <MapLayerControl />
+
+        {/* Spatial Source Notice */}
+        <div className="mt-4 pt-3 border-t border-[#0B1726]/10 flex flex-wrap items-center justify-between gap-2 text-xs">
+          <div className="flex items-center gap-2 text-[#435466]">
+            <Compass className="w-3.5 h-3.5 text-[#008F83]" />
+            <span className="font-mono text-[11px]">
+              PostGIS Vector Layer: 6 Administrative Blocks • Centroid Spatial Projection EPSG:4326
+            </span>
+          </div>
+          <span className="px-2 py-0.5 rounded bg-[#F7F3EA] border border-[#0B1726]/15 text-[10px] font-mono text-[#62768A]">
+            Anchor: Bakshi Ka Talab
+          </span>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+      {/* 2. Main Map & Selected Block Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <div className="lg:col-span-3 space-y-3">
-          <MapContainer />
+          <div className="bg-white border-2 border-[#0B1726] rounded-2xl p-2 sm:p-3 shadow-[4px_4px_0px_#0B1726]">
+            <MapContainer />
+          </div>
           <MapLegend />
         </div>
+
         <div className="lg:col-span-1">
           <SelectedAreaPanel />
         </div>
       </div>
+
+      {/* 3. Scientific Integrity Strip */}
+      <ScientificIntegrityStrip />
     </div>
   );
 };

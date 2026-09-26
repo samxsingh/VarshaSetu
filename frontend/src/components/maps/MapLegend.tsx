@@ -48,13 +48,15 @@ export const MapLegend: React.FC<{ className?: string }> = ({ className }) => {
   const current = legendConfigs[activeRiskLayer];
 
   return (
-    <div className={cn('bg-white/95 backdrop-blur-md p-3.5 rounded-2xl border border-surface-border shadow-elevated text-xs', className)}>
-      <h5 className="font-heading font-semibold text-slate-900 mb-2">{current.title}</h5>
+    <div className={cn('bg-white border-2 border-[#0B1726] p-3 rounded-xl shadow-[2px_2px_0px_#0B1726] text-xs', className)}>
+      <h5 className="font-heading font-bold text-[#0B1726] text-xs mb-2 uppercase tracking-wide">
+        {current.title}
+      </h5>
       <div className="flex flex-wrap items-center gap-3">
         {current.items.map((item, idx) => (
           <div key={idx} className="flex items-center gap-1.5">
-            <span className={cn('w-3 h-3 rounded-full shrink-0', item.color)} />
-            <span className="text-slate-600 text-[11px]">{item.label}</span>
+            <span className={cn('w-2.5 h-2.5 rounded-full border border-[#0B1726]/20 shrink-0', item.color)} />
+            <span className="text-[#435466] text-[11px] font-medium">{item.label}</span>
           </div>
         ))}
       </div>

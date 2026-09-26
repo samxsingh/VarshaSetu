@@ -1,8 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
-import { Badge } from '../../components/ui/Badge';
-import { Button } from '../../components/ui/Button';
-import { Alert } from '../../components/ui/Alert';
 import {
   Bell,
   Send,
@@ -16,6 +12,10 @@ import {
   Info,
   Languages,
   Volume2,
+  CloudRain,
+  ArrowRight,
+  Activity,
+  AlertCircle,
 } from 'lucide-react';
 import { useOfficerStore } from '../../stores/useOfficerStore';
 import {
@@ -23,6 +23,7 @@ import {
   AgronomyStatusResponse,
 } from '../../services/advisoryService';
 import { ScientificAdvisory, LocalizedAdvisory } from '@shared/types';
+import { ScientificIntegrityStrip } from '../../components/officer/ScientificIntegrityStrip';
 
 export const OfficerAdvisoriesPage: React.FC = () => {
   const { setBulletinModalOpen } = useOfficerStore();
@@ -32,6 +33,7 @@ export const OfficerAdvisoriesPage: React.FC = () => {
   const [engineStatus, setEngineStatus] = useState<AgronomyStatusResponse | null>(null);
   const [advisories, setAdvisories] = useState<ScientificAdvisory[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [acknowledgedAdvisories, setAcknowledgedAdvisories] = useState<Record<string, boolean>>({});
 
   // Phase 5C: Multilingual Review State
   const [previewLanguage, setPreviewLanguage] = useState<'EN' | 'HI'>('EN');
@@ -202,76 +204,92 @@ export const OfficerAdvisoriesPage: React.FC = () => {
     }
   }, [previewLanguage, advisories]);
 
+  const toggleAcknowledge = (id: string) => {
+    setAcknowledgedAdvisories((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
+
   return (
     <div className="space-y-6" data-testid="officer-advisories-page">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-xl border border-surface-border">
-        <div>
-          <div className="flex items-center gap-2 flex-wrap">
-            <h2 className="font-heading font-bold text-xl text-slate-900">
+      {/* 1. Header Strip */}
+      <div className="bg-white border-2 border-[#0B1726] rounded-2xl p-5 sm:p-6 shadow-[4px_4px_0px_#0B1726]">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="px-2.5 py-0.5 rounded-md bg-[#008F83] text-white text-[10px] font-mono font-bold uppercase tracking-wider">
+                ADVISORY INTELLIGENCE
+              </span>
+              <span className="px-2 py-0.5 rounded-md bg-[#FEF6E9] border border-[#E5A33D] text-[#9A6218] text-[10px] font-mono font-bold">
+                DIAGNOSTIC ONLY
+              </span>
+              <span className="px-2 py-0.5 rounded-md bg-[#EBF5EE] text-[#2F7D4A] border border-[#2F7D4A]/30 text-[10px] font-mono font-bold">
+                Safety Gate: ACTIVE
+              </span>
+            </div>
+            <h2 className="font-heading font-extrabold text-xl sm:text-2xl text-[#0B1726] tracking-tight">
               Block Agronomic Intelligence Monitor
             </h2>
-            <Badge variant="teal" size="sm">Phase 5C Multilingual</Badge>
-            <Badge variant="amber" size="sm">DIAGNOSTIC_ONLY</Badge>
-            <Badge variant="teal" size="sm">Safety Gate: ACTIVE</Badge>
+            <p className="text-xs text-[#435466] max-w-2xl leading-relaxed">
+              Synthesizing downscaled weather signals, crop phenological stages, and empirical thresholds into non-causal agronomic advisories across Lucknow District.
+            </p>
           </div>
-          <p className="text-xs text-slate-600 mt-0.5">
-            Monitor rule evaluations, hazard thresholds, and multilingual advisory delivery across agricultural blocks.
-          </p>
+
+          <div className="flex flex-wrap items-center gap-2.5">
+            {/* Bilingual Preview Toggle */}
+            <div className="flex items-center bg-[#F7F3EA] p-1 rounded-xl border-2 border-[#0B1726]">
+              <button
+                onClick={() => setPreviewLanguage('EN')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-heading font-bold transition-all ${
+                  previewLanguage === 'EN'
+                    ? 'bg-[#008F83] text-white shadow-xs'
+                    : 'text-[#435466] hover:text-[#0B1726]'
+                }`}
+              >
+                EN Preview
+              </button>
+              <button
+                onClick={() => setPreviewLanguage('HI')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-heading font-bold transition-all ${
+                  previewLanguage === 'HI'
+                    ? 'bg-[#008F83] text-white shadow-xs'
+                    : 'text-[#435466] hover:text-[#0B1726]'
+                }`}
+              >
+                हिन्दी Preview
+              </button>
+            </div>
+
+            <button
+              onClick={() => setBulletinModalOpen(true)}
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#008F83] text-white border-2 border-[#0B1726] shadow-[2px_2px_0px_#0B1726] hover:-translate-y-0.5 active:translate-y-0 transition-all text-xs font-heading font-bold min-h-[40px]"
+            >
+              <Send className="w-3.5 h-3.5" />
+              <span>Draft Bulletin</span>
+            </button>
+          </div>
         </div>
 
-        <div className="flex items-center gap-2.5">
-          {/* Bilingual Preview Toggle */}
-          <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200">
-            <button
-              onClick={() => setPreviewLanguage('EN')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-heading font-semibold transition-all ${
-                previewLanguage === 'EN'
-                  ? 'bg-white text-slate-900 shadow-sm border border-slate-200/60'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              EN Preview
-            </button>
-            <button
-              onClick={() => setPreviewLanguage('HI')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-heading font-semibold transition-all ${
-                previewLanguage === 'HI'
-                  ? 'bg-brand-teal text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              हिन्दी Preview
-            </button>
+        {/* Scope disclosure bar */}
+        <div className="mt-4 pt-3 border-t border-[#0B1726]/10 flex flex-wrap items-center justify-between gap-2 text-xs text-[#435466]">
+          <div className="flex items-center gap-2">
+            <Info className="w-3.5 h-3.5 text-[#008F83]" />
+            <span>Station Anchor: <strong>UP_LKO_BKT</strong> (122 Kharif 2024 Records). Deterministic templates guarantee 0% numerical drift in Hindi.</span>
           </div>
-
-          <Button
-            variant="primary"
-            size="md"
-            leftIcon={<Send className="w-4 h-4" />}
-            onClick={() => setBulletinModalOpen(true)}
-          >
-            Draft Advisory Bulletin
-          </Button>
+          <span className="text-[10px] font-mono text-[#62768A]">Rules Loaded: 9 Verified</span>
         </div>
       </div>
 
-      {/* Mandatory Scope Disclosure */}
-      <Alert variant="info" title="Scientific Scope & Ground Anchor">
-        Agronomic rules operate in <strong className="font-mono text-slate-900">DIAGNOSTIC_ONLY</strong> mode.
-        Station anchor is Bakshi Ka Talab (<strong className="font-mono text-slate-900">UP_LKO_BKT</strong>) with 122 daily records from Kharif 2024.
-        Multilingual translations are governed by deterministic templates with zero numerical drift.
-      </Alert>
-
-      {/* Filter Toolbar */}
-      <div className="bg-white p-4 rounded-xl border border-surface-border flex flex-wrap items-center justify-between gap-4">
+      {/* 2. Filter Toolbar */}
+      <div className="bg-white border-2 border-[#0B1726] rounded-xl p-4 shadow-[3px_3px_0px_#0B1726] flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-4 flex-wrap">
           <div className="flex items-center gap-2">
-            <label className="text-xs font-heading font-semibold text-slate-700">Filter Crop:</label>
+            <label className="text-xs font-heading font-bold text-[#0B1726]">Filter Crop:</label>
             <select
               value={selectedCrop}
               onChange={(e) => setSelectedCrop(e.target.value)}
-              className="px-3 py-1.5 bg-surface-muted rounded-lg text-xs font-semibold text-slate-800 border border-surface-border"
+              className="px-3 py-1.5 bg-[#F7F3EA] rounded-lg text-xs font-bold text-[#0B1726] border-2 border-[#0B1726]/20 focus:border-[#008F83] focus:outline-none"
             >
               <option value="ALL">All Registered Crops</option>
               <option value="PADDY">Paddy (धान)</option>
@@ -284,11 +302,11 @@ export const OfficerAdvisoriesPage: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            <label className="text-xs font-heading font-semibold text-slate-700">Severity:</label>
+            <label className="text-xs font-heading font-bold text-[#0B1726]">Severity:</label>
             <select
               value={selectedSeverity}
               onChange={(e) => setSelectedSeverity(e.target.value)}
-              className="px-3 py-1.5 bg-surface-muted rounded-lg text-xs font-semibold text-slate-800 border border-surface-border"
+              className="px-3 py-1.5 bg-[#F7F3EA] rounded-lg text-xs font-bold text-[#0B1726] border-2 border-[#0B1726]/20 focus:border-[#008F83] focus:outline-none"
             >
               <option value="ALL">All Severities</option>
               <option value="HIGH">High Risk</option>
@@ -299,115 +317,199 @@ export const OfficerAdvisoriesPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="text-xs text-slate-500 flex items-center gap-3">
-          <span>Active records: <strong className="text-slate-800">{advisories.length}</strong></span>
-          <Badge variant="teal" size="sm">Languages: EN / HI Active</Badge>
+        <div className="text-xs text-[#62768A] flex items-center gap-3 font-mono">
+          <span>Active records: <strong className="text-[#0B1726]">{advisories.length}</strong></span>
+          <span className="px-2 py-0.5 rounded bg-[#DCEFF0] text-[#006B65] border border-[#008F83]/30 text-[10px]">
+            Languages: EN / HI Active
+          </span>
         </div>
       </div>
 
-      {/* Advisory Feed */}
+      {/* 3. Advisory Feed (Weather Signal → Agronomic Indicator → Scientific Explanation) */}
       <div className="space-y-4">
         {advisories.map((b) => {
           const loc = previewLanguage === 'HI' ? localizedMap[`${b.advisory_id}_HI`] : null;
           const displayTitle = loc ? loc.title : b.headline;
           const displaySummary = loc ? loc.summary : b.advisory_text;
+          const isAcked = !!acknowledgedAdvisories[b.advisory_id];
 
           return (
-            <Card key={b.advisory_id} className="p-5 flex flex-col justify-between gap-4 border-l-4 border-l-brand-teal">
-              <div className="space-y-2">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <Badge variant="teal" size="sm">{b.rule_id}</Badge>
-                    <span className="text-xs font-mono font-semibold text-slate-700 uppercase">
-                      {b.category}
+            <div
+              key={b.advisory_id}
+              className="bg-white border-2 border-[#0B1726] rounded-2xl p-5 shadow-[4px_4px_0px_#0B1726] space-y-4 hover:-translate-y-0.5 transition-transform"
+            >
+              {/* Header meta */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b-2 border-[#0B1726]/10">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="px-2 py-0.5 rounded-md bg-[#F7F3EA] border border-[#0B1726]/20 text-[#0B1726] text-[10px] font-mono font-bold">
+                    {b.rule_id}
+                  </span>
+                  <span className="text-[10px] font-mono font-bold text-[#62768A] uppercase">
+                    {b.category}
+                  </span>
+                  <span
+                    className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold border ${
+                      b.severity === 'ELEVATED'
+                        ? 'bg-[#FEF2F2] text-[#DC2626] border-[#DC2626]/30'
+                        : b.severity === 'WATCH'
+                        ? 'bg-[#FEF6E9] text-[#9A6218] border-[#E5A33D]/40'
+                        : 'bg-[#EFF6FF] text-[#1D4ED8] border-[#3B82F6]/30'
+                    }`}
+                  >
+                    {b.severity}
+                  </span>
+                  {previewLanguage === 'HI' && (
+                    <span className="px-2 py-0.5 rounded bg-[#EBF5EE] text-[#2F7D4A] border border-[#2F7D4A]/30 text-[10px] font-mono font-bold">
+                      हिन्दी अनुवाद (सत्यापित)
                     </span>
-                    <Badge variant={b.severity === 'HIGH' ? 'crimson' : 'amber'} size="sm">
-                      {b.severity}
-                    </Badge>
-                    {previewLanguage === 'HI' && (
-                      <Badge variant="teal" size="sm">हिन्दी अनुवाद (सत्यापित)</Badge>
-                    )}
-                  </div>
-
-                  <div className="flex items-center gap-3 text-[11px] text-slate-500">
-                    <span className="flex items-center gap-1 font-mono">
-                      <Clock className="w-3.5 h-3.5" /> Valid: {b.valid_from} to {b.valid_until}
-                    </span>
-                    <Badge variant="demo" size="sm">{b.operational_status}</Badge>
-                  </div>
+                  )}
                 </div>
 
-                <h3 className="font-heading font-bold text-base text-slate-900">{displayTitle}</h3>
+                <div className="flex items-center gap-3 text-[11px] text-[#62768A] font-mono">
+                  <span className="flex items-center gap-1">
+                    <Clock className="w-3.5 h-3.5 text-[#008F83]" />
+                    Valid: {b.valid_from} to {b.valid_until}
+                  </span>
+                  <span className="px-2 py-0.5 rounded bg-[#FEF6E9] border border-[#E5A33D] text-[#9A6218] text-[9px] font-bold">
+                    {b.operational_status}
+                  </span>
+                </div>
+              </div>
 
-                <p className="text-xs sm:text-sm text-slate-700 leading-relaxed bg-surface-muted/50 p-3 rounded-lg border border-surface-border/60">
+              {/* Title & Core Advisory */}
+              <div>
+                <h3 className="font-heading font-extrabold text-base sm:text-lg text-[#0B1726]">
+                  {displayTitle}
+                </h3>
+                <p className="text-xs sm:text-sm text-[#435466] leading-relaxed bg-[#F7F3EA] p-3.5 rounded-xl border border-[#0B1726]/10 mt-2">
                   {displaySummary}
                 </p>
+              </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-[11px]">
-                  <div className="p-2 bg-white rounded border border-slate-200">
-                    <span className="text-slate-400 block text-[10px]">CROP & STAGE</span>
-                    <strong className="text-slate-800">{b.crop_type} ({b.growth_stage})</strong>
+              {/* 3-Step Scientific Hierarchy: Signal → Indicator → Explanation */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                {/* Step 1: Weather Signal */}
+                <div className="bg-[#FDFBF7] p-3 rounded-xl border border-[#0B1726]/15 space-y-1">
+                  <div className="flex items-center gap-1.5 text-[#008F83]">
+                    <CloudRain className="w-3.5 h-3.5" />
+                    <span className="font-heading font-bold text-[10px] uppercase tracking-wider text-[#0B1726]">
+                      1. Weather Signal
+                    </span>
                   </div>
-                  <div className="p-2 bg-white rounded border border-slate-200">
-                    <span className="text-slate-400 block text-[10px]">CALIBRATED PROB</span>
-                    <strong className="text-brand-teal font-mono">{(b.evidence.calibrated_probability * 100).toFixed(1)}%</strong>
+                  <div className="text-[11px] text-[#435466] pt-1">
+                    Probability: <strong className="text-[#008F83] font-mono font-bold">{(b.evidence.calibrated_probability * 100).toFixed(1)}%</strong>
                   </div>
-                  <div className="p-2 bg-white rounded border border-slate-200">
-                    <span className="text-slate-400 block text-[10px]">THRESHOLD</span>
-                    <strong className="text-slate-800">{b.evidence.threshold_value} {b.evidence.threshold_unit}</strong>
+                  <div className="text-[11px] text-[#435466]">
+                    Threshold: <strong className="text-[#0B1726] font-mono">{b.evidence.threshold_value} {b.evidence.threshold_unit}</strong>
                   </div>
-                  <div className="p-2 bg-white rounded border border-slate-200">
-                    <span className="text-slate-400 block text-[10px]">ANCHOR BLOCK</span>
-                    <strong className="text-slate-800 font-mono">{b.block_id}</strong>
+                  <div className="text-[10px] text-[#62768A] pt-0.5">
+                    Model: {b.evidence.model_name}
+                  </div>
+                </div>
+
+                {/* Step 2: Agronomic Indicator */}
+                <div className="bg-[#FDFBF7] p-3 rounded-xl border border-[#0B1726]/15 space-y-1">
+                  <div className="flex items-center gap-1.5 text-[#2F7D4A]">
+                    <Sprout className="w-3.5 h-3.5" />
+                    <span className="font-heading font-bold text-[10px] uppercase tracking-wider text-[#0B1726]">
+                      2. Agronomic Indicator
+                    </span>
+                  </div>
+                  <div className="text-[11px] text-[#435466] pt-1">
+                    Target Crop: <strong className="text-[#0B1726] font-bold">{b.crop_type}</strong>
+                  </div>
+                  <div className="text-[11px] text-[#435466]">
+                    Phenology: <strong className="text-[#0B1726] font-mono">{b.growth_stage}</strong>
+                  </div>
+                  <div className="text-[10px] text-[#62768A] pt-0.5">
+                    Anchor: {b.block_id}
+                  </div>
+                </div>
+
+                {/* Step 3: Scientific Explanation */}
+                <div className="bg-[#FDFBF7] p-3 rounded-xl border border-[#0B1726]/15 space-y-1">
+                  <div className="flex items-center gap-1.5 text-[#E5A33D]">
+                    <ShieldAlert className="w-3.5 h-3.5" />
+                    <span className="font-heading font-bold text-[10px] uppercase tracking-wider text-[#0B1726]">
+                      3. Scientific Explanation
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-[#435466] pt-1 leading-snug">
+                    {b.explanation?.evidence_summary || b.scientific_basis}
+                  </p>
+                  <div className="text-[10px] text-[#9A6218] font-medium pt-0.5">
+                    {b.uncertainty_caveat}
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-2 border-t border-surface-border text-xs text-slate-500">
-                <span>Scientific Basis: {b.scientific_basis}</span>
-                <span className="text-amber-700 font-medium">Informational risk indicator</span>
+              {/* Action / Review Strip */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-3 border-t border-[#0B1726]/10 text-xs">
+                <span className="text-[#62768A] text-[11px]">
+                  Scientific Basis: {b.scientific_basis}
+                </span>
+
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    onClick={() => toggleAcknowledge(b.advisory_id)}
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-heading font-bold transition-all border ${
+                      isAcked
+                        ? 'bg-[#EBF5EE] text-[#2F7D4A] border-[#2F7D4A]/40'
+                        : 'bg-white text-[#435466] border-[#0B1726]/20 hover:border-[#0B1726] hover:text-[#0B1726]'
+                    }`}
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>{isAcked ? 'Reviewed by Officer' : 'Mark as Reviewed'}</span>
+                  </button>
+                </div>
               </div>
-            </Card>
+            </div>
           );
         })}
       </div>
 
-      {/* Phase 5B: What-If Scenario Sensitivity Evaluation Inspection */}
-      <div className="bg-white p-5 rounded-2xl border border-surface-border shadow-card space-y-4">
-        <div className="flex items-center justify-between">
+      {/* 4. What-If Agro-Meteorological Sensitivity Monitor (Phase 5B) */}
+      <div className="bg-white border-2 border-[#0B1726] rounded-2xl p-5 sm:p-6 shadow-[4px_4px_0px_#0B1726] space-y-4">
+        <div className="flex items-center justify-between pb-3 border-b-2 border-[#0B1726]/10">
           <div className="flex items-center gap-2">
-            <Layers className="w-5 h-5 text-brand-teal" />
-            <h3 className="font-heading font-bold text-base text-slate-900">
+            <Layers className="w-5 h-5 text-[#008F83]" />
+            <h3 className="font-heading font-extrabold text-base text-[#0B1726]">
               What-If Agro-Meteorological Sensitivity Monitor (Phase 5B)
             </h3>
           </div>
-          <Badge variant="amber" size="sm">SCENARIO_INDICATOR_ONLY</Badge>
+          <span className="px-2.5 py-0.5 rounded-md bg-[#FEF6E9] border border-[#E5A33D] text-[#9A6218] text-[10px] font-mono font-bold">
+            SCENARIO_INDICATOR_ONLY
+          </span>
         </div>
-        <p className="text-xs text-slate-600 leading-relaxed">
+
+        <p className="text-xs text-[#435466] leading-relaxed">
           Extension officers can review scenario-derived sensitivity response envelopes for <strong>Bakshi Ka Talab (UP_LKO_BKT)</strong>.
           Evaluations operate strictly on meteorological indicators (moisture stress, waterlogging risk) and explicitly exclude yield predictions.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-          <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
-            <span className="font-semibold text-slate-700 block">Sowing Delay Analysis</span>
-            <span className="text-slate-500 block text-[11px] mt-0.5">Evaluated range: [1, 21 days]</span>
-            <span className="text-brand-teal font-mono font-semibold block mt-1">Monotonic moisture stress increase</span>
+          <div className="p-3 bg-[#F7F3EA] rounded-xl border border-[#0B1726]/15">
+            <span className="font-heading font-bold text-[#0B1726] block">Sowing Delay Analysis</span>
+            <span className="text-[#62768A] block text-[11px] mt-0.5 font-mono">Evaluated range: [1, 21 days]</span>
+            <span className="text-[#008F83] font-mono font-bold block mt-1.5">Monotonic moisture stress increase</span>
           </div>
 
-          <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
-            <span className="font-semibold text-slate-700 block">Supplemental Irrigation</span>
-            <span className="text-slate-500 block text-[11px] mt-0.5">Evaluated intervals: [1, 7 days]</span>
-            <span className="text-brand-emerald font-mono font-semibold block mt-1">Stress attenuation up to -35%</span>
+          <div className="p-3 bg-[#F7F3EA] rounded-xl border border-[#0B1726]/15">
+            <span className="font-heading font-bold text-[#0B1726] block">Supplemental Irrigation</span>
+            <span className="text-[#62768A] block text-[11px] mt-0.5 font-mono">Evaluated intervals: [1, 7 days]</span>
+            <span className="text-[#2F7D4A] font-mono font-bold block mt-1.5">Stress attenuation up to -35%</span>
           </div>
 
-          <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
-            <span className="font-semibold text-slate-700 block">Precipitation Concentration</span>
-            <span className="text-slate-500 block text-[11px] mt-0.5">Evaluated multiplier: [1.0x, 2.5x]</span>
-            <span className="text-brand-crimson font-mono font-semibold block mt-1">Waterlogging risk escalation</span>
+          <div className="p-3 bg-[#F7F3EA] rounded-xl border border-[#0B1726]/15">
+            <span className="font-heading font-bold text-[#0B1726] block">Precipitation Concentration</span>
+            <span className="text-[#62768A] block text-[11px] mt-0.5 font-mono">Evaluated multiplier: [1.0x, 2.5x]</span>
+            <span className="text-[#DC2626] font-mono font-bold block mt-1.5">Waterlogging risk escalation</span>
           </div>
         </div>
       </div>
+
+      {/* 5. Scientific Integrity Strip */}
+      <ScientificIntegrityStrip />
     </div>
   );
 };
