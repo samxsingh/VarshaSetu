@@ -8,17 +8,11 @@ import {
   Check,
   ArrowRight,
   ArrowLeft,
-  Sparkles,
-  Droplets,
-  Layers,
-  Ruler,
 } from 'lucide-react';
-import { useFarmerStore, DEFAULT_DEMO_SELECTION } from '../../stores/useFarmerStore';
+import { useFarmerStore } from '../../stores/useFarmerStore';
 import { geographyService } from '../../services/geographyService';
-import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
-import { Button } from '../../components/ui/Button';
-import { Badge } from '../../components/ui/Badge';
 import { CropType, CropGrowthStage, IrrigationFacility, SoilType, StateEntity, DistrictEntity, BlockEntity, PanchayatEntity } from '@shared/types';
+import { ScientificStatusBadge } from '../../components/farmer/ScientificStatusBadge';
 
 export const FarmerOnboardingPage: React.FC = () => {
   const { t } = useTranslation();
@@ -98,44 +92,44 @@ export const FarmerOnboardingPage: React.FC = () => {
   };
 
   const cropsList: { type: CropType; label: string; icon: string; desc: string }[] = [
-    { type: 'PADDY', label: t('crops.PADDY'), icon: '🌾', desc: 'Basmati, Swarna, Swarna Sub-1, Sambha' },
-    { type: 'MAIZE', label: t('crops.MAIZE'), icon: '🌽', desc: 'Hybrid Kharif Maize, Baby Corn' },
-    { type: 'SOYBEAN', label: t('crops.SOYBEAN'), icon: '🌱', desc: 'JS-9560, JS-2034 varieties' },
-    { type: 'PULSES', label: t('crops.PULSES'), icon: '🫘', desc: 'Pigeonpea (Arhar), Greengram (Moong)' },
-    { type: 'COTTON', label: t('crops.COTTON'), icon: '☁️', desc: 'Bt Cotton, Desi varieties' },
-    { type: 'GROUNDNUT', label: t('crops.GROUNDNUT'), icon: '🥜', desc: 'Kharif bunch/spreading types' },
-    { type: 'MILLETS', label: t('crops.MILLETS'), icon: '🌾', desc: 'Pearl Millet (Bajra), Sorghum (Jowar)' },
+    { type: 'PADDY', label: t('crops.PADDY') || 'Paddy', icon: '🌾', desc: 'Basmati, Swarna, Swarna Sub-1, Sambha' },
+    { type: 'MAIZE', label: t('crops.MAIZE') || 'Maize', icon: '🌽', desc: 'Hybrid Kharif Maize, Baby Corn' },
+    { type: 'SOYBEAN', label: t('crops.SOYBEAN') || 'Soybean', icon: '🌱', desc: 'JS-9560, JS-2034 varieties' },
+    { type: 'PULSES', label: t('crops.PULSES') || 'Pulses', icon: '🫘', desc: 'Pigeonpea (Arhar), Greengram (Moong)' },
+    { type: 'COTTON', label: t('crops.COTTON') || 'Cotton', icon: '☁️', desc: 'Bt Cotton, Desi varieties' },
+    { type: 'GROUNDNUT', label: t('crops.GROUNDNUT') || 'Groundnut', icon: '🥜', desc: 'Kharif bunch/spreading types' },
+    { type: 'MILLETS', label: t('crops.MILLETS') || 'Millets', icon: '🌾', desc: 'Pearl Millet (Bajra), Sorghum (Jowar)' },
   ];
 
   const stagesList: { type: CropGrowthStage; label: string; desc: string }[] = [
     {
       type: 'LAND_PREPARATION',
-      label: t('stages.LAND_PREPARATION'),
+      label: t('stages.LAND_PREPARATION') || 'Land Preparation',
       desc: 'Ploughing, field leveling, bund repair before monsoon showers arrive.',
     },
     {
       type: 'NURSERY_SOWING',
-      label: t('stages.NURSERY_SOWING'),
+      label: t('stages.NURSERY_SOWING') || 'Nursery & Sowing',
       desc: 'Seed treatment, nursery wet-bed raising, or direct field drilling.',
     },
     {
       type: 'VEGETATIVE',
-      label: t('stages.VEGETATIVE'),
+      label: t('stages.VEGETATIVE') || 'Vegetative Tillering',
       desc: 'Active tillering, branching, root establishment, weed management.',
     },
     {
       type: 'FLOWERING_REPRODUCTIVE',
-      label: t('stages.FLOWERING_REPRODUCTIVE'),
+      label: t('stages.FLOWERING_REPRODUCTIVE') || 'Flowering & Reproductive',
       desc: 'Panicle initiation, tasseling, flowering (peak water-sensitive stage).',
     },
     {
       type: 'GRAIN_POD_FILLING',
-      label: t('stages.GRAIN_POD_FILLING'),
+      label: t('stages.GRAIN_POD_FILLING') || 'Grain Filling',
       desc: 'Milky stage, grain dough development, pod enlargement.',
     },
     {
       type: 'MATURITY_HARVESTING',
-      label: t('stages.MATURITY_HARVESTING'),
+      label: t('stages.MATURITY_HARVESTING') || 'Maturity & Harvesting',
       desc: 'Yellowing of leaves, physiological maturity, cutting and threshing.',
     },
   ];
@@ -149,20 +143,20 @@ export const FarmerOnboardingPage: React.FC = () => {
     <div className="flex-1 max-w-3xl mx-auto px-4 py-8">
       {/* Step Indicator Header */}
       <div className="mb-8 text-center space-y-2">
-        <Badge variant="teal" size="sm">
-          {t('onboarding.step')} {currentStep} of 4
-        </Badge>
-        <h1 className="font-heading font-bold text-2xl sm:text-3xl text-slate-900">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-[#DCEFF0] border border-[#008F83]/40 text-[#006B65] text-xs font-heading font-extrabold uppercase tracking-wider shadow-[1.5px_1.5px_0px_#0B1726]">
+          {t('onboarding.step') || 'Step'} {currentStep} of 4
+        </div>
+        <h1 className="font-heading font-black text-2xl sm:text-3xl lg:text-4xl text-[#0B1726]">
           Tell us about your farm
         </h1>
-        <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto">
+        <p className="text-xs sm:text-sm text-[#435466] max-w-md mx-auto font-sans">
           We use this to downscale atmospheric signals into exact advice for your crops.
         </p>
 
-        {/* Progress Bar */}
-        <div className="w-full max-w-xs mx-auto h-2 bg-slate-200 rounded-full overflow-hidden mt-4">
+        {/* Neo-brutalist Progress Bar */}
+        <div className="w-full max-w-xs mx-auto h-3 bg-[#F7F3EA] rounded-full border-2 border-[#0B1726] overflow-hidden mt-4 shadow-[1.5px_1.5px_0px_#0B1726]">
           <div
-            className="h-full bg-brand-teal transition-all duration-300 rounded-full"
+            className="h-full bg-[#008F83] transition-all duration-300"
             style={{ width: `${(currentStep / 4) * 100}%` }}
           />
         </div>
@@ -170,32 +164,32 @@ export const FarmerOnboardingPage: React.FC = () => {
 
       {/* STEP 1: WHERE IS YOUR FARM? */}
       {currentStep === 1 && (
-        <Card className="p-6 space-y-6 animate-fadeIn">
+        <div className="bg-white rounded-2xl border-2 border-[#0B1726] p-6 sm:p-7 shadow-[4px_4px_0px_#0B1726] space-y-6">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <MapPin className="w-5 h-5 text-brand-teal" />
-              <h2 className="font-heading font-bold text-xl text-slate-900">
-                {t('onboarding.step1Title')}
+              <MapPin className="w-5 h-5 text-[#008F83]" />
+              <h2 className="font-heading font-black text-xl text-[#0B1726]">
+                {t('onboarding.step1Title') || 'Where is your farm located?'}
               </h2>
             </div>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              {t('onboarding.step1Subtitle')}
+            <p className="text-xs text-[#435466] leading-relaxed font-sans">
+              {t('onboarding.step1Subtitle') || 'Select your district and block to connect with the local meteorological ground anchor.'}
             </p>
           </div>
 
           {/* Configurable Demo Notice */}
-          <div className="bg-brand-teal-tint/50 border border-brand-teal-border p-4 rounded-xl space-y-2">
+          <div className="bg-[#DCEFF0]/60 border-2 border-[#0B1726] p-4 rounded-xl space-y-1.5 shadow-[2px_2px_0px_#0B1726]">
             <div className="flex items-center justify-between">
-              <span className="font-heading font-semibold text-xs text-brand-teal-dark uppercase tracking-wider">
+              <span className="font-heading font-extrabold text-xs text-[#006B65] uppercase tracking-wider">
                 Geographic Hierarchy
               </span>
               {isLiveGeography ? (
-                <Badge variant="emerald" size="sm">POSTGIS / API CONNECTED</Badge>
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#EBF5EE] text-[#2F7D4A]">POSTGIS / API CONNECTED</span>
               ) : (
-                <Badge variant="teal" size="sm">DEFAULT DEMO: LUCKNOW, UP</Badge>
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-white text-[#006B65]">DEFAULT DEMO: LUCKNOW, UP</span>
               )}
             </div>
-            <p className="text-xs text-slate-700 leading-relaxed">
+            <p className="text-xs text-[#0B1726] leading-relaxed font-sans">
               {isLiveGeography
                 ? 'Administrative nodes loaded live from PostgreSQL / PostGIS backend hierarchy.'
                 : 'In development mode, initialized to Lucknow District. Select demonstration blocks and panchayats:'}
@@ -204,35 +198,35 @@ export const FarmerOnboardingPage: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-1.5">
+              <label className="text-xs font-heading font-bold uppercase tracking-wider text-[#0B1726] block mb-1.5">
                 State
               </label>
               <input
                 type="text"
                 disabled
                 value={states.length > 0 ? states[0].name : location.state}
-                className="w-full bg-slate-100 border border-surface-border rounded-lg p-2.5 text-xs text-slate-700 font-medium"
+                className="w-full bg-[#F7F3EA] border-2 border-[#0B1726]/30 rounded-xl p-2.5 text-xs text-[#435466] font-semibold"
               />
             </div>
             <div>
-              <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-1.5">
+              <label className="text-xs font-heading font-bold uppercase tracking-wider text-[#0B1726] block mb-1.5">
                 District
               </label>
               <input
                 type="text"
                 disabled
                 value={districts.length > 0 ? districts[0].name : location.district}
-                className="w-full bg-slate-100 border border-surface-border rounded-lg p-2.5 text-xs text-slate-700 font-medium"
+                className="w-full bg-[#F7F3EA] border-2 border-[#0B1726]/30 rounded-xl p-2.5 text-xs text-[#435466] font-semibold"
               />
             </div>
             <div>
-              <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-1.5">
+              <label className="text-xs font-heading font-bold uppercase tracking-wider text-[#0B1726] block mb-1.5">
                 Block
               </label>
               <select
                 value={location.block}
                 onChange={(e) => handleBlockChange(e.target.value)}
-                className="w-full bg-white border border-surface-border rounded-lg p-2.5 text-xs text-slate-900 font-medium focus:ring-1 focus:ring-brand-teal"
+                className="w-full bg-white border-2 border-[#0B1726] rounded-xl p-2.5 text-xs text-[#0B1726] font-bold focus:ring-2 focus:ring-[#008F83]"
               >
                 {blocks.length > 0 ? (
                   blocks.map((b) => (
@@ -252,13 +246,13 @@ export const FarmerOnboardingPage: React.FC = () => {
               </select>
             </div>
             <div>
-              <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-1.5">
+              <label className="text-xs font-heading font-bold uppercase tracking-wider text-[#0B1726] block mb-1.5">
                 Gram Panchayat & Village
               </label>
               <select
                 value={location.village}
                 onChange={(e) => setLocation({ village: e.target.value, panchayat: e.target.value })}
-                className="w-full bg-white border border-surface-border rounded-lg p-2.5 text-xs text-slate-900 font-medium focus:ring-1 focus:ring-brand-teal"
+                className="w-full bg-white border-2 border-[#0B1726] rounded-xl p-2.5 text-xs text-[#0B1726] font-bold focus:ring-2 focus:ring-[#008F83]"
               >
                 {panchayats.length > 0 ? (
                   panchayats.map((p) => (
@@ -278,173 +272,173 @@ export const FarmerOnboardingPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex justify-end pt-4 border-t border-surface-border">
-            <Button
-              variant="primary"
-              size="md"
-              rightIcon={<ArrowRight className="w-4 h-4" />}
+          <div className="flex justify-end pt-4 border-t-2 border-[#0B1726]/10">
+            <button
               onClick={() => setCurrentStep(2)}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#008F83] text-white border-2 border-[#0B1726] font-heading font-bold text-xs shadow-[2px_2px_0px_#0B1726] hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_#0B1726] transition-all"
             >
-              {t('common.next')}
-            </Button>
+              <span>{t('common.next') || 'Next Step'}</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
           </div>
-        </Card>
+        </div>
       )}
 
       {/* STEP 2: WHAT ARE YOU GROWING? */}
       {currentStep === 2 && (
-        <Card className="p-6 space-y-6 animate-fadeIn">
+        <div className="bg-white rounded-2xl border-2 border-[#0B1726] p-6 sm:p-7 shadow-[4px_4px_0px_#0B1726] space-y-6">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <Sprout className="w-5 h-5 text-brand-teal" />
-              <h2 className="font-heading font-bold text-xl text-slate-900">
-                {t('onboarding.step2Title')}
+              <Sprout className="w-5 h-5 text-[#2F7D4A]" />
+              <h2 className="font-heading font-black text-xl text-[#0B1726]">
+                {t('onboarding.step2Title') || 'What are you growing?'}
               </h2>
             </div>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              {t('onboarding.step2Subtitle')}
+            <p className="text-xs text-[#435466] leading-relaxed font-sans">
+              {t('onboarding.step2Subtitle') || 'Select your target crop so the agronomic engine applies crop-specific thresholds.'}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             {cropsList.map((item) => {
               const isSelected = crop === item.type;
               return (
                 <button
                   key={item.type}
                   onClick={() => setCrop(item.type)}
-                  className={`p-4 rounded-xl border text-left transition-all flex items-start gap-3 min-h-[72px] ${
+                  className={`p-4 rounded-xl border-2 text-left transition-all flex items-start gap-3 min-h-[72px] ${
                     isSelected
-                      ? 'bg-brand-teal-tint/60 border-brand-teal ring-2 ring-brand-teal/40'
-                      : 'bg-white border-surface-border hover:bg-slate-50'
+                      ? 'bg-[#EBF5EE] border-[#2F7D4A] shadow-[2px_2px_0px_#0B1726]'
+                      : 'bg-[#F7F3EA] border-[#0B1726]/20 hover:border-[#0B1726] hover:bg-white'
                   }`}
                 >
                   <span className="text-2xl shrink-0">{item.icon}</span>
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
-                      <span className="font-heading font-bold text-sm text-slate-900">
+                      <span className="font-heading font-black text-sm text-[#0B1726]">
                         {item.label}
                       </span>
-                      {isSelected && <Check className="w-4 h-4 text-brand-teal" />}
+                      {isSelected && <Check className="w-4 h-4 text-[#2F7D4A]" />}
                     </div>
-                    <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">{item.desc}</p>
+                    <p className="text-xs text-[#435466] mt-0.5 line-clamp-1 font-sans">{item.desc}</p>
                   </div>
                 </button>
               );
             })}
           </div>
 
-          <div className="flex items-center justify-between pt-4 border-t border-surface-border">
-            <Button
-              variant="ghost"
-              size="sm"
-              leftIcon={<ArrowLeft className="w-4 h-4" />}
+          <div className="flex items-center justify-between pt-4 border-t-2 border-[#0B1726]/10">
+            <button
               onClick={() => setCurrentStep(1)}
+              className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-heading font-bold text-[#62768A] hover:text-[#0B1726] transition-colors"
             >
-              {t('common.back')}
-            </Button>
-            <Button
-              variant="primary"
-              size="md"
-              rightIcon={<ArrowRight className="w-4 h-4" />}
+              <ArrowLeft className="w-4 h-4" />
+              <span>{t('common.back') || 'Back'}</span>
+            </button>
+            <button
               onClick={() => setCurrentStep(3)}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#008F83] text-white border-2 border-[#0B1726] font-heading font-bold text-xs shadow-[2px_2px_0px_#0B1726] hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_#0B1726] transition-all"
             >
-              {t('common.next')}
-            </Button>
+              <span>{t('common.next') || 'Next Step'}</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
           </div>
-        </Card>
+        </div>
       )}
 
       {/* STEP 3: WHICH STAGE IS YOUR CROP IN? */}
       {currentStep === 3 && (
-        <Card className="p-6 space-y-6 animate-fadeIn">
+        <div className="bg-white rounded-2xl border-2 border-[#0B1726] p-6 sm:p-7 shadow-[4px_4px_0px_#0B1726] space-y-6">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <Calendar className="w-5 h-5 text-brand-teal" />
-              <h2 className="font-heading font-bold text-xl text-slate-900">
-                {t('onboarding.step3Title')}
+              <Calendar className="w-5 h-5 text-[#008F83]" />
+              <h2 className="font-heading font-black text-xl text-[#0B1726]">
+                {t('onboarding.step3Title') || 'Which growth stage is your crop currently in?'}
               </h2>
             </div>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              {t('onboarding.step3Subtitle')}
+            <p className="text-xs text-[#435466] leading-relaxed font-sans">
+              {t('onboarding.step3Subtitle') || 'Crop vulnerability to moisture stress and heavy downpours varies across growth stages.'}
             </p>
           </div>
 
-          <div className="space-y-2.5">
+          <div className="space-y-3">
             {stagesList.map((item) => {
               const isSelected = stage === item.type;
               return (
                 <button
                   key={item.type}
                   onClick={() => setStage(item.type)}
-                  className={`w-full p-3.5 rounded-xl border text-left transition-all flex items-center justify-between min-h-[56px] ${
+                  className={`w-full p-4 rounded-xl border-2 text-left transition-all flex items-center justify-between min-h-[56px] ${
                     isSelected
-                      ? 'bg-brand-teal-tint/60 border-brand-teal ring-2 ring-brand-teal/40'
-                      : 'bg-white border-surface-border hover:bg-slate-50'
+                      ? 'bg-[#EBF5EE] border-[#2F7D4A] shadow-[2px_2px_0px_#0B1726]'
+                      : 'bg-[#F7F3EA] border-[#0B1726]/20 hover:border-[#0B1726] hover:bg-white'
                   }`}
                 >
                   <div>
-                    <span className="font-heading font-bold text-sm text-slate-900 block">
+                    <span className="font-heading font-black text-sm text-[#0B1726] block">
                       {item.label}
                     </span>
-                    <span className="text-xs text-slate-500 block mt-0.5">{item.desc}</span>
+                    <span className="text-xs text-[#435466] block mt-0.5 font-sans">{item.desc}</span>
                   </div>
-                  {isSelected && <Check className="w-5 h-5 text-brand-teal shrink-0 ml-2" />}
+                  {isSelected && <Check className="w-5 h-5 text-[#2F7D4A] shrink-0 ml-2" />}
                 </button>
               );
             })}
           </div>
 
-          <div className="flex items-center justify-between pt-4 border-t border-surface-border">
-            <Button
-              variant="ghost"
-              size="sm"
-              leftIcon={<ArrowLeft className="w-4 h-4" />}
+          <div className="flex items-center justify-between pt-4 border-t-2 border-[#0B1726]/10">
+            <button
               onClick={() => setCurrentStep(2)}
+              className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-heading font-bold text-[#62768A] hover:text-[#0B1726] transition-colors"
             >
-              {t('common.back')}
-            </Button>
+              <ArrowLeft className="w-4 h-4" />
+              <span>{t('common.back') || 'Back'}</span>
+            </button>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={handleFinish}>
-                {t('common.skip')} & Finish
-              </Button>
-              <Button
-                variant="primary"
-                size="md"
-                rightIcon={<ArrowRight className="w-4 h-4" />}
-                onClick={() => setCurrentStep(4)}
+              <button
+                onClick={handleFinish}
+                className="px-4 py-2.5 rounded-xl border border-[#0B1726]/30 text-xs font-heading font-bold text-[#435466] hover:bg-[#F7F3EA] transition-all"
               >
-                {t('common.next')}
-              </Button>
+                {t('common.skip') || 'Skip'} & Finish
+              </button>
+              <button
+                onClick={() => setCurrentStep(4)}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#008F83] text-white border-2 border-[#0B1726] font-heading font-bold text-xs shadow-[2px_2px_0px_#0B1726] hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_#0B1726] transition-all"
+              >
+                <span>{t('common.next') || 'Next Step'}</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
             </div>
           </div>
-        </Card>
+        </div>
       )}
 
-      {/* STEP 4: OPTIONAL ENRICHMENT (SKIPPABLE) */}
+      {/* STEP 4: OPTIONAL ENRICHMENT */}
       {currentStep === 4 && (
-        <Card className="p-6 space-y-6 animate-fadeIn">
+        <div className="bg-white rounded-2xl border-2 border-[#0B1726] p-6 sm:p-7 shadow-[4px_4px_0px_#0B1726] space-y-6">
           <div>
             <div className="flex items-center justify-between">
-              <h2 className="font-heading font-bold text-xl text-slate-900">
-                {t('onboarding.optionalTitle')}
+              <h2 className="font-heading font-black text-xl text-[#0B1726]">
+                {t('onboarding.optionalTitle') || 'Field Attributes & Soil Properties'}
               </h2>
-              <Badge variant="neutral" size="sm">Skippable</Badge>
+              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#F7F3EA] border border-[#0B1726]/20 text-[#62768A]">
+                Skippable
+              </span>
             </div>
-            <p className="text-xs text-slate-600 mt-1">
+            <p className="text-xs text-[#435466] mt-1 font-sans">
               Adding irrigation and soil details refines the precision of what-if simulations.
             </p>
           </div>
 
           <div className="space-y-4">
             <div>
-              <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-1.5">
-                {t('onboarding.irrigationType')}
+              <label className="text-xs font-heading font-bold uppercase tracking-wider text-[#0B1726] block mb-1.5">
+                {t('onboarding.irrigationType') || 'Irrigation Type'}
               </label>
               <select
                 value={irrigation}
                 onChange={(e) => setIrrigation(e.target.value as IrrigationFacility)}
-                className="w-full bg-white border border-surface-border rounded-lg p-2.5 text-xs text-slate-900 font-medium"
+                className="w-full bg-[#F7F3EA] border-2 border-[#0B1726]/30 rounded-xl p-2.5 text-xs text-[#0B1726] font-bold focus:ring-2 focus:ring-[#008F83]"
               >
                 <option value="RAINFED">Rainfed (वर्षा आधारित)</option>
                 <option value="CANAL">Canal Irrigation (नहरी पानी)</option>
@@ -454,13 +448,13 @@ export const FarmerOnboardingPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-1.5">
-                {t('onboarding.soilType')}
+              <label className="text-xs font-heading font-bold uppercase tracking-wider text-[#0B1726] block mb-1.5">
+                {t('onboarding.soilType') || 'Soil Type'}
               </label>
               <select
                 value={soil}
                 onChange={(e) => setSoil(e.target.value as SoilType)}
-                className="w-full bg-white border border-surface-border rounded-lg p-2.5 text-xs text-slate-900 font-medium"
+                className="w-full bg-[#F7F3EA] border-2 border-[#0B1726]/30 rounded-xl p-2.5 text-xs text-[#0B1726] font-bold focus:ring-2 focus:ring-[#008F83]"
               >
                 <option value="ALLUVIAL">Alluvial / Loam (दोमट मिट्टी - Gangetic Plains)</option>
                 <option value="CLAY">Clay / Heavy (मटियार / चिकनी मिट्टी)</option>
@@ -470,8 +464,8 @@ export const FarmerOnboardingPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-1.5">
-                {t('onboarding.farmSize')}
+              <label className="text-xs font-heading font-bold uppercase tracking-wider text-[#0B1726] block mb-1.5">
+                {t('onboarding.farmSize') || 'Farm Size (Acres)'}
               </label>
               <input
                 type="number"
@@ -479,30 +473,28 @@ export const FarmerOnboardingPage: React.FC = () => {
                 step="0.5"
                 value={farmSizeAcres}
                 onChange={(e) => setFarmSizeAcres(Number(e.target.value))}
-                className="w-full bg-white border border-surface-border rounded-lg p-2.5 text-xs text-slate-900 font-medium"
+                className="w-full bg-white border-2 border-[#0B1726]/30 rounded-xl p-2.5 text-xs text-[#0B1726] font-bold"
               />
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-4 border-t border-surface-border">
-            <Button
-              variant="ghost"
-              size="sm"
-              leftIcon={<ArrowLeft className="w-4 h-4" />}
+          <div className="flex items-center justify-between pt-4 border-t-2 border-[#0B1726]/10">
+            <button
               onClick={() => setCurrentStep(3)}
+              className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-heading font-bold text-[#62768A] hover:text-[#0B1726] transition-colors"
             >
-              {t('common.back')}
-            </Button>
-            <Button
-              variant="primary"
-              size="lg"
-              rightIcon={<Check className="w-4 h-4" />}
+              <ArrowLeft className="w-4 h-4" />
+              <span>{t('common.back') || 'Back'}</span>
+            </button>
+            <button
               onClick={handleFinish}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#008F83] text-white border-2 border-[#0B1726] font-heading font-bold text-xs shadow-[2px_2px_0px_#0B1726] hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_#0B1726] transition-all"
             >
-              {t('onboarding.finish')}
-            </Button>
+              <Check className="w-4 h-4" />
+              <span>{t('onboarding.finish') || 'Save & Launch Dashboard'}</span>
+            </button>
           </div>
-        </Card>
+        </div>
       )}
     </div>
   );

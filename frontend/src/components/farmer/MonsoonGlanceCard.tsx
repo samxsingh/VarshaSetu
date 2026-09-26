@@ -5,16 +5,14 @@ import {
   SunMedium,
   CloudLightning,
   TrendingUp,
-  Info,
   ChevronRight,
+  Compass,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useFarmerStore } from '../../stores/useFarmerStore';
-import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card';
-import { Badge } from '../ui/Badge';
-import { Progress } from '../ui/Progress';
 import { HorizonSelector } from '../forecast/HorizonSelector';
 import { ForecastHorizonDays } from '@shared/types';
+import { ScientificStatusBadge } from './ScientificStatusBadge';
 
 export const MonsoonGlanceCard: React.FC = () => {
   const { t } = useTranslation();
@@ -42,7 +40,7 @@ export const MonsoonGlanceCard: React.FC = () => {
       heavyRainProb: 65,
       expectedRainfallMm: '110 - 145 mm',
       departureText: '+18% above 30-year Lucknow normal',
-      confidence: t('common.highConfidence'),
+      confidence: t('common.highConfidence') || 'High Confidence',
     },
     14: {
       dates: '14-Day Outlook (June 25 - July 8)',
@@ -52,7 +50,7 @@ export const MonsoonGlanceCard: React.FC = () => {
       heavyRainProb: 40,
       expectedRainfallMm: '160 - 210 mm',
       departureText: '+5% normal range',
-      confidence: t('common.moderateConfidence'),
+      confidence: t('common.moderateConfidence') || 'Moderate Confidence',
     },
     21: {
       dates: '21-Day Outlook (June 25 - July 15)',
@@ -62,7 +60,7 @@ export const MonsoonGlanceCard: React.FC = () => {
       heavyRainProb: 30,
       expectedRainfallMm: '220 - 275 mm',
       departureText: '-12% below normal',
-      confidence: t('common.moderateConfidence'),
+      confidence: t('common.moderateConfidence') || 'Moderate Confidence',
     },
     30: {
       dates: '30-Day Outlook (June 25 - July 24)',
@@ -72,141 +70,162 @@ export const MonsoonGlanceCard: React.FC = () => {
       heavyRainProb: 50,
       expectedRainfallMm: '310 - 380 mm',
       departureText: 'Near normal (-4%)',
-      confidence: t('common.lowConfidence'),
+      confidence: t('common.lowConfidence') || 'Low Confidence',
     },
   };
 
   const current = demoOutlookData[horizon];
 
   return (
-    <Card className="mb-6 overflow-hidden">
-      <CardHeader className="pb-3 border-b border-surface-border">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <div className="flex items-center gap-2">
-              <CardTitle>{t('farmer.monsoonOutlook')}</CardTitle>
-              <Badge variant="demo" size="sm">
-                {t('demo.badge')}
-              </Badge>
-            </div>
-            <p className="text-xs text-slate-600 mt-0.5">
-              {current.dates} • <span className="font-semibold text-brand-teal-dark">{current.phaseLabel}</span>
-            </p>
+    <div className="bg-white rounded-2xl border-2 border-[#0B1726] shadow-[4px_4px_0px_#0B1726] mb-6 overflow-hidden">
+      {/* Header */}
+      <div className="p-5 sm:p-6 border-b-2 border-[#0B1726]/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <h3 className="font-heading font-black text-xl text-[#0B1726]">
+              {t('farmer.monsoonOutlook') || 'Monsoon Outlook'}
+            </h3>
+            <ScientificStatusBadge status="DIAGNOSTIC ARCHIVE" size="sm" />
           </div>
-
-          {/* Horizon Switcher */}
-          <HorizonSelector value={horizon} onChange={setHorizon} />
+          <p className="text-xs text-[#435466] mt-1 font-sans">
+            {current.dates} • <span className="font-heading font-bold text-[#008F83]">{current.phaseLabel}</span>
+          </p>
         </div>
-      </CardHeader>
 
-      <CardContent className="pt-4">
+        {/* Horizon Switcher */}
+        <HorizonSelector value={horizon} onChange={setHorizon} />
+      </div>
+
+      <div className="p-5 sm:p-6 space-y-5">
         {/* 3 Core Metric Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          
           {/* 1. Monsoon Onset */}
-          <div className="bg-brand-teal-tint/40 border border-brand-teal-border/70 rounded-xl p-4 flex flex-col justify-between">
+          <div className="bg-[#DCEFF0]/50 border-2 border-[#0B1726] rounded-xl p-5 shadow-[3px_3px_0px_#0B1726] flex flex-col justify-between">
             <div className="flex items-start justify-between">
-              <div className="flex items-center gap-2 text-brand-teal-dark">
-                <CloudRain className="w-5 h-5" />
-                <span className="text-xs font-heading font-semibold uppercase tracking-wider">
-                  {t('targets.onset')}
+              <div className="flex items-center gap-2 text-[#006B65]">
+                <CloudRain className="w-5 h-5 text-[#008F83]" />
+                <span className="text-xs font-heading font-extrabold uppercase tracking-wider">
+                  {t('targets.onset') || 'Monsoon Onset'}
                 </span>
               </div>
-              <Badge variant="teal" size="sm">
+              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-[#DCEFF0] border border-[#008F83]/40 text-[#006B65]">
                 Favorable
-              </Badge>
+              </span>
             </div>
 
-            <div className="my-3">
-              <div className="flex items-baseline gap-1">
-                <span className="font-heading font-bold text-3xl text-slate-900">
+            <div className="my-4">
+              <div className="flex items-baseline gap-1.5">
+                <span className="font-heading font-black text-4xl text-[#0B1726]">
                   {current.onsetProb}%
                 </span>
-                <span className="text-xs text-slate-500 font-medium">likelihood</span>
+                <span className="text-xs text-[#62768A] font-medium font-sans">likelihood</span>
               </div>
-              <p className="text-xs text-slate-700 mt-1 font-medium">
-                Window: June 26–28 • {current.confidence}
+              <p className="text-xs text-[#435466] mt-1 font-sans">
+                Window: June 26–28 • <span className="font-medium text-[#006B65]">{current.confidence}</span>
               </p>
             </div>
 
-            <Progress value={current.onsetProb} color="teal" height="sm" />
+            {/* Neo-brutalist Progress Bar */}
+            <div className="w-full bg-white h-2.5 rounded-full border border-[#0B1726]/30 overflow-hidden">
+              <div
+                className="bg-[#008F83] h-full transition-all duration-300"
+                style={{ width: `${current.onsetProb}%` }}
+              />
+            </div>
           </div>
 
           {/* 2. Dry Spell Break Risk */}
-          <div className="bg-brand-amber-tint/40 border border-brand-amber-border/70 rounded-xl p-4 flex flex-col justify-between">
+          <div className="bg-[#FEF6E9]/60 border-2 border-[#0B1726] rounded-xl p-5 shadow-[3px_3px_0px_#0B1726] flex flex-col justify-between">
             <div className="flex items-start justify-between">
-              <div className="flex items-center gap-2 text-brand-amber-dark">
-                <SunMedium className="w-5 h-5" />
-                <span className="text-xs font-heading font-semibold uppercase tracking-wider">
-                  {t('targets.drySpell')}
+              <div className="flex items-center gap-2 text-[#9A6218]">
+                <SunMedium className="w-5 h-5 text-[#E5A33D]" />
+                <span className="text-xs font-heading font-extrabold uppercase tracking-wider">
+                  {t('targets.drySpell') || 'Dry Spell Break'}
                 </span>
               </div>
-              <Badge variant={current.drySpellRisk > 50 ? 'amber' : 'emerald'} size="sm">
-                {current.drySpellRisk > 50 ? t('common.riskHigh') : t('common.riskLow')}
-              </Badge>
+              <span
+                className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase border ${
+                  current.drySpellRisk > 50
+                    ? 'bg-[#FEF6E9] border-[#E5A33D] text-[#9A6218]'
+                    : 'bg-[#EBF5EE] border-[#2F7D4A] text-[#2F7D4A]'
+                }`}
+              >
+                {current.drySpellRisk > 50 ? t('common.riskHigh') || 'High Risk' : t('common.riskLow') || 'Low Risk'}
+              </span>
             </div>
 
-            <div className="my-3">
-              <div className="flex items-baseline gap-1">
-                <span className="font-heading font-bold text-3xl text-slate-900">
+            <div className="my-4">
+              <div className="flex items-baseline gap-1.5">
+                <span className="font-heading font-black text-4xl text-[#0B1726]">
                   {current.drySpellRisk}%
                 </span>
-                <span className="text-xs text-slate-500 font-medium">break risk</span>
+                <span className="text-xs text-[#62768A] font-medium font-sans">break risk</span>
               </div>
-              <p className="text-xs text-slate-700 mt-1 font-medium">
+              <p className="text-xs text-[#435466] mt-1 font-sans">
                 {current.drySpellRisk > 50 ? 'hiatus expected after day 6' : 'consistent moisture continuity'}
               </p>
             </div>
 
-            <Progress
-              value={current.drySpellRisk}
-              color={current.drySpellRisk > 50 ? 'amber' : 'emerald'}
-              height="sm"
-            />
+            {/* Progress Bar */}
+            <div className="w-full bg-white h-2.5 rounded-full border border-[#0B1726]/30 overflow-hidden">
+              <div
+                className={`h-full transition-all duration-300 ${
+                  current.drySpellRisk > 50 ? 'bg-[#E5A33D]' : 'bg-[#2F7D4A]'
+                }`}
+                style={{ width: `${current.drySpellRisk}%` }}
+              />
+            </div>
           </div>
 
           {/* 3. Heavy Rain Alert */}
-          <div className="bg-brand-azure-tint/40 border border-brand-azure-border/70 rounded-xl p-4 flex flex-col justify-between">
+          <div className="bg-[#EFF6FF]/60 border-2 border-[#0B1726] rounded-xl p-5 shadow-[3px_3px_0px_#0B1726] flex flex-col justify-between">
             <div className="flex items-start justify-between">
-              <div className="flex items-center gap-2 text-brand-azure-dark">
-                <CloudLightning className="w-5 h-5" />
-                <span className="text-xs font-heading font-semibold uppercase tracking-wider">
-                  {t('targets.heavyRain')}
+              <div className="flex items-center gap-2 text-[#1E3A8A]">
+                <CloudLightning className="w-5 h-5 text-[#3B82F6]" />
+                <span className="text-xs font-heading font-extrabold uppercase tracking-wider">
+                  {t('targets.heavyRain') || 'Heavy Rain'}
                 </span>
               </div>
-              <Badge variant={current.heavyRainProb > 60 ? 'amber' : 'azure'} size="sm">
+              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-[#EFF6FF] border border-[#3B82F6]/40 text-[#1E3A8A]">
                 &gt; 65 mm / 24h
-              </Badge>
+              </span>
             </div>
 
-            <div className="my-3">
-              <div className="flex items-baseline gap-1">
-                <span className="font-heading font-bold text-3xl text-slate-900">
+            <div className="my-4">
+              <div className="flex items-baseline gap-1.5">
+                <span className="font-heading font-black text-4xl text-[#0B1726]">
                   {current.heavyRainProb}%
                 </span>
-                <span className="text-xs text-slate-500 font-medium">probability</span>
+                <span className="text-xs text-[#62768A] font-medium font-sans">probability</span>
               </div>
-              <p className="text-xs text-slate-700 mt-1 font-medium">
+              <p className="text-xs text-[#435466] mt-1 font-sans">
                 Peak convective event: June 27 evening
               </p>
             </div>
 
-            <Progress
-              value={current.heavyRainProb}
-              color={current.heavyRainProb > 60 ? 'amber' : 'azure'}
-              height="sm"
-            />
+            {/* Progress Bar */}
+            <div className="w-full bg-white h-2.5 rounded-full border border-[#0B1726]/30 overflow-hidden">
+              <div
+                className="bg-[#3B82F6] h-full transition-all duration-300"
+                style={{ width: `${current.heavyRainProb}%` }}
+              />
+            </div>
           </div>
+
         </div>
 
         {/* Cumulative Rainfall Strip */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 bg-surface-muted rounded-xl border border-surface-border text-xs">
-          <div className="flex items-center gap-2.5">
-            <TrendingUp className="w-4 h-4 text-brand-teal shrink-0" />
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-[#F7F3EA] rounded-xl border border-[#0B1726]/20 text-xs">
+          <div className="flex items-center gap-3">
+            <div className="p-1.5 rounded-lg bg-white border border-[#0B1726]/10 text-[#008F83]">
+              <TrendingUp className="w-4 h-4" />
+            </div>
             <div>
-              <span className="font-semibold text-slate-900">
+              <span className="font-heading font-bold text-[#0B1726]">
                 Projected Rainfall: {current.expectedRainfallMm}
               </span>
-              <span className="text-slate-600 block sm:inline sm:ml-2">
+              <span className="text-[#62768A] block sm:inline sm:ml-2">
                 ({current.departureText})
               </span>
             </div>
@@ -214,13 +233,13 @@ export const MonsoonGlanceCard: React.FC = () => {
 
           <Link
             to="/farmer/forecast"
-            className="inline-flex items-center gap-1 font-heading font-semibold text-brand-teal hover:text-brand-teal-dark hover:underline"
+            className="inline-flex items-center gap-1.5 font-heading font-bold text-[#008F83] hover:text-[#006B65] transition-colors"
           >
             <span>Detailed Forecast View</span>
             <ChevronRight className="w-3.5 h-3.5" />
           </Link>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };

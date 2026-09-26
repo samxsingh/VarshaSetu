@@ -2,33 +2,21 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Sprout,
-  Calendar,
   AlertTriangle,
-  FileText,
   Clock,
   ShieldAlert,
   ShieldCheck,
   ChevronDown,
   ChevronUp,
   Info,
-  Layers,
-  Database,
-  ExternalLink,
-  Activity,
   CheckCircle2,
   Volume2,
   VolumeX,
-  Play,
-  Pause,
   Languages,
   BookOpen,
   Radio,
 } from 'lucide-react';
 import { useFarmerStore } from '../../stores/useFarmerStore';
-import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
-import { Badge } from '../../components/ui/Badge';
-import { Button } from '../../components/ui/Button';
-import { Alert } from '../../components/ui/Alert';
 import {
   advisoryService,
   AgronomyStatusResponse,
@@ -38,8 +26,8 @@ import {
   LanguageCode,
   LocalizedAdvisory,
   TerminologyCatalogItem,
-  VoiceStatus,
 } from '@shared/types';
+import { ScientificStatusBadge } from '../../components/farmer/ScientificStatusBadge';
 
 // Phase 5A / 5C Default Scientific Advisories (conforming to Diagnostic-Only protocol)
 const defaultAdvisories: ScientificAdvisory[] = [
@@ -274,7 +262,6 @@ export const FarmerAdvisoryPage: React.FC = () => {
   };
 
   const handleToggleVoice = async (adv: ScientificAdvisory) => {
-    // If already playing this advisory, stop it
     if (playingAdvisoryId === adv.advisory_id) {
       if (audioPlayerRef.current) {
         audioPlayerRef.current.pause();
@@ -298,35 +285,34 @@ export const FarmerAdvisoryPage: React.FC = () => {
           : `${adv.headline}. ${adv.advisory_text}`,
       });
 
-      if (res.success && res.data) {
-        const voiceData = res.data;
+      if (res?.success && res.data?.audio_url) {
+        const audio = new Audio(res.data.audio_url);
+        audio.playbackRate = speechRate;
+        audio.onended = () => setPlayingAdvisoryId(null);
+        audio.onerror = () => {
+          fallbackSpeechSynthesis(adv);
+        };
+        audioPlayerRef.current = audio;
+        await audio.play();
         setPlayingAdvisoryId(adv.advisory_id);
-
-        if (voiceData.audio_content_base64) {
-          const audio = new Audio(voiceData.audio_content_base64);
-          audioPlayerRef.current = audio;
-          audio.playbackRate = speechRate;
-          audio.onended = () => setPlayingAdvisoryId(null);
-          audio.onerror = () => setPlayingAdvisoryId(null);
-          audio.play().catch(() => {
-            fallbackBrowserSpeech(voiceData.transcript);
-          });
-        } else {
-          fallbackBrowserSpeech(voiceData.transcript);
-        }
       } else {
-        fallbackBrowserSpeech(adv.advisory_text);
+        fallbackSpeechSynthesis(adv);
       }
-    } catch (e) {
-      fallbackBrowserSpeech(adv.advisory_text);
+    } catch (err) {
+      fallbackSpeechSynthesis(adv);
     } finally {
       setAudioLoadingId(null);
     }
   };
 
-  const fallbackBrowserSpeech = (text: string) => {
+  const fallbackSpeechSynthesis = (adv: ScientificAdvisory) => {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
+      setPlayingAdvisoryId(adv.advisory_id);
+      const text = selectedLanguage === 'HI' && localizedMap[`${adv.advisory_id}_HI`]
+        ? `${localizedMap[`${adv.advisory_id}_HI`].title}. ${localizedMap[`${adv.advisory_id}_HI`].summary}`
+        : `${adv.headline}. ${adv.advisory_text}`;
+
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = selectedLanguage === 'HI' ? 'hi-IN' : 'en-IN';
       utterance.rate = speechRate;
@@ -344,14 +330,13 @@ export const FarmerAdvisoryPage: React.FC = () => {
       : sev;
     switch (sev) {
       case 'HIGH':
-        return <Badge variant="crimson" size="sm">{label}</Badge>;
+        return <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-[#FEF2F2] border border-[#E53E3E] text-[#E53E3E]">{label}</span>;
       case 'ELEVATED':
-        return <Badge variant="amber" size="sm">{label}</Badge>;
       case 'WATCH':
-        return <Badge variant="amber" size="sm">{label}</Badge>;
+        return <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-[#FEF6E9] border border-[#E5A33D] text-[#9A6218]">{label}</span>;
       case 'INFO':
       default:
-        return <Badge variant="teal" size="sm">{label}</Badge>;
+        return <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-[#DCEFF0] border border-[#008F83] text-[#006B65]">{label}</span>;
     }
   };
 
@@ -360,7 +345,7 @@ export const FarmerAdvisoryPage: React.FC = () => {
       ? cat === 'WEATHER_RISK' ? 'मौसम जोखिम' : cat === 'WATER_STRESS' ? 'जल तनाव' : cat
       : cat.replace('_', ' ');
     return (
-      <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200">
+      <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-md bg-[#F7F3EA] text-[#435466] border border-[#0B1726]/15">
         {label}
       </span>
     );
@@ -369,21 +354,23 @@ export const FarmerAdvisoryPage: React.FC = () => {
   return (
     <div className="space-y-6" data-testid="farmer-advisory-page">
       {/* 1. Page Header & Language Switcher */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-surface-border shadow-card">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border-2 border-[#0B1726] shadow-[4px_4px_0px_#0B1726]">
         <div>
-          <div className="flex items-center gap-2 flex-wrap">
-            <h1 className="font-heading font-bold text-xl text-slate-900 flex items-center gap-2">
-              <Sprout className="w-5 h-5 text-brand-teal" />
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <h1 className="font-heading font-black text-2xl text-[#0B1726] flex items-center gap-2">
+              <Sprout className="w-5 h-5 text-[#2F7D4A]" />
               <span>
                 {selectedLanguage === 'HI' ? 'कृषि-मौसम सलाह एवं निगरानी' : 'Scientific Agronomic Advisories'}
               </span>
             </h1>
-            <Badge variant="amber" size="sm">DIAGNOSTIC_ONLY</Badge>
-            <Badge variant="teal" size="sm">
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-[#FEF6E9] border border-[#E5A33D] text-[#9A6218]">
+              DIAGNOSTIC_ONLY
+            </span>
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-[#DCEFF0] border border-[#008F83]/40 text-[#006B65]">
               {selectedLanguage === 'HI' ? 'खरीफ 2024 अभिलेख' : 'Kharif 2024 Archive'}
-            </Badge>
+            </span>
           </div>
-          <p className="text-xs text-slate-600 mt-1">
+          <p className="text-xs text-[#435466] mt-1.5 font-sans">
             {selectedLanguage === 'HI'
               ? `बख्शी का तालाब (UP_LKO_BKT) के लिए वैज्ञानिक कृषि-मौसम स्थिति जागरूकता`
               : `Probabilistic agro-meteorological situational awareness for ${location.block || 'Bakshi Ka Talab'} (UP_LKO_BKT)`}
@@ -393,113 +380,119 @@ export const FarmerAdvisoryPage: React.FC = () => {
         {/* Language Selection & Utility Controls */}
         <div className="flex items-center gap-2.5 flex-wrap">
           {/* Controlled Bilingual Switcher */}
-          <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200">
+          <div className="flex items-center bg-[#F7F3EA] p-1 rounded-xl border border-[#0B1726]/20">
             <button
               onClick={() => setSelectedLanguage('EN')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-heading font-semibold transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-heading font-bold transition-all ${
                 selectedLanguage === 'EN'
-                  ? 'bg-white text-slate-900 shadow-sm border border-slate-200/60'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-[#008F83] text-white shadow-[1.5px_1.5px_0px_#0B1726]'
+                  : 'text-[#435466] hover:text-[#0B1726]'
               }`}
             >
               English
             </button>
             <button
               onClick={() => setSelectedLanguage('HI')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-heading font-semibold transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-heading font-bold transition-all ${
                 selectedLanguage === 'HI'
-                  ? 'bg-brand-teal text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-[#008F83] text-white shadow-[1.5px_1.5px_0px_#0B1726]'
+                  : 'text-[#435466] hover:text-[#0B1726]'
               }`}
             >
               हिन्दी (Hindi)
             </button>
           </div>
 
-          <Button
-            variant="secondary"
-            size="sm"
+          <button
             onClick={() => setShowTerminologyModal(!showTerminologyModal)}
-            leftIcon={<BookOpen className="w-4 h-4 text-brand-teal" />}
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-[#0B1726] text-xs font-heading font-bold text-[#0B1726] shadow-[2px_2px_0px_#0B1726] hover:bg-[#F7F3EA] transition-all"
           >
-            {selectedLanguage === 'HI' ? 'शब्दावली' : 'Terminology'}
-          </Button>
+            <BookOpen className="w-3.5 h-3.5 text-[#008F83]" />
+            <span>{selectedLanguage === 'HI' ? 'शब्दावली' : 'Terminology'}</span>
+          </button>
 
-          <Button
-            variant="secondary"
-            size="sm"
+          <button
             onClick={() => setShowBlockedDirectives(!showBlockedDirectives)}
-            leftIcon={<ShieldCheck className="w-4 h-4 text-brand-teal" />}
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-[#0B1726] text-xs font-heading font-bold text-[#0B1726] shadow-[2px_2px_0px_#0B1726] hover:bg-[#F7F3EA] transition-all"
           >
-            {showBlockedDirectives ? 'Hide Safety Gate' : 'Safety Gate Checks'}
-          </Button>
+            <ShieldCheck className="w-3.5 h-3.5 text-[#2F7D4A]" />
+            <span>{showBlockedDirectives ? 'Hide Safety Gate' : 'Safety Gate Checks'}</span>
+          </button>
         </div>
       </div>
 
       {/* 2. Mandatory Scientific Notices (Bilingual) */}
-      <Alert variant="warning" title={selectedLanguage === 'HI' ? 'सूचनात्मक नैदानिक सूचना' : 'Informational Diagnostic Notice'}>
+      <div className="p-4 sm:p-5 bg-[#FEF6E9] border-2 border-[#0B1726] rounded-xl shadow-[3px_3px_0px_#0B1726] text-xs text-[#7A4B00] space-y-1.5 font-sans leading-relaxed">
+        <div className="font-heading font-black text-xs text-[#0B1726] uppercase tracking-wider flex items-center gap-1.5">
+          <ShieldAlert className="w-4 h-4 text-[#E5A33D]" />
+          <span>{selectedLanguage === 'HI' ? 'सूचनात्मक नैदानिक सूचना' : 'Informational Diagnostic Notice'}</span>
+        </div>
         {selectedLanguage === 'HI' ? (
-          <>
-            सलाहें पूर्णतः <strong className="font-mono text-slate-900">DIAGNOSTIC_ONLY (केवल नैदानिक)</strong> मोड के अंतर्गत तैयार की गई हैं।
+          <p>
+            सलाहें पूर्णतः <strong className="font-mono text-[#0B1726]">DIAGNOSTIC_ONLY (केवल नैदानिक)</strong> मोड के अंतर्गत तैयार की गई हैं।
             ये ऐतिहासिक जलवायु संकेतों और आईएमडी के स्थापित मानकों पर आधारित हैं।
-            यह केवल एक सूचनात्मक जोखिम सूचक है, <strong className="text-slate-900">कोई अनिवार्य कृषि आदेश या छिड़काव निर्देश नहीं</strong>।
+            यह केवल एक सूचनात्मक जोखिम सूचक है, <strong className="text-[#0B1726]">कोई अनिवार्य कृषि आदेश या छिड़काव निर्देश नहीं</strong>।
             कृषि कार्यों के लिए सदैव स्थानीय कृषि विज्ञान केंद्र (KVK) अथवा राजकीय प्रसार अधिकारियों के दिशानिर्देशों का पालन करें।
-          </>
+          </p>
         ) : (
-          <>
-            Advisories are generated under strict <strong className="font-mono text-slate-900">DIAGNOSTIC_ONLY</strong> mode.
+          <p>
+            Advisories are generated under strict <strong className="font-mono text-[#0B1726]">DIAGNOSTIC_ONLY</strong> mode.
             Statements reflect statistical associations with historical climate signals and empirical IMD thresholds.
-            These are informational risk notifications and situational awareness indicators, <strong className="text-slate-900">not imperative agronomic commands</strong>.
+            These are informational risk notifications and situational awareness indicators, <strong className="text-[#0B1726]">not imperative agronomic commands</strong>.
             Field actions must follow local Krishi Vigyan Kendra (KVK) and state agricultural extension guidelines.
-          </>
+          </p>
         )}
-      </Alert>
+      </div>
 
       {/* 3. Terminology Explorer Modal / Drawer */}
       {showTerminologyModal && (
-        <Card className="p-5 bg-teal-50/50 border-brand-teal/30 space-y-3">
+        <div className="p-5 bg-white rounded-2xl border-2 border-[#0B1726] shadow-[4px_4px_0px_#0B1726] space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Languages className="w-5 h-5 text-brand-teal" />
-              <h3 className="font-heading font-bold text-sm text-slate-900">
+              <Languages className="w-5 h-5 text-[#008F83]" />
+              <h3 className="font-heading font-bold text-sm text-[#0B1726]">
                 Controlled Agro-Meteorological Terminology (Version 1.0.0)
               </h3>
             </div>
-            <Badge variant="teal" size="sm">Immutable Glossary</Badge>
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#DCEFF0] text-[#006B65]">
+              Immutable Glossary
+            </span>
           </div>
-          <p className="text-xs text-slate-600 leading-relaxed">
+          <p className="text-xs text-[#435466] leading-relaxed">
             To prevent mistranslation and semantic drift, all meteorological hazards and advisory terms are mapped through an immutable, versioned bilingual vocabulary. Dynamic machine translation is strictly blocked.
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 pt-2 max-h-60 overflow-y-auto">
-            {terminologyList.map((t, idx) => (
-              <div key={idx} className="p-2.5 bg-white rounded-lg border border-slate-200 text-xs space-y-1">
-                <span className="font-mono text-[10px] text-slate-400 block">{t.term_key}</span>
-                <span className="font-semibold text-slate-800 block">{t.en}</span>
-                <span className="text-brand-teal font-medium block">{t.hi}</span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 pt-2 max-h-60 overflow-y-auto">
+            {terminologyList.map((tItem, idx) => (
+              <div key={idx} className="p-3 bg-[#F7F3EA] rounded-xl border border-[#0B1726]/15 text-xs space-y-1">
+                <span className="font-mono text-[10px] text-[#62768A] block">{tItem.term_key}</span>
+                <span className="font-heading font-bold text-[#0B1726] block">{tItem.en}</span>
+                <span className="text-[#008F83] font-medium block">{tItem.hi}</span>
               </div>
             ))}
           </div>
-        </Card>
+        </div>
       )}
 
       {/* 4. Safety Gate Drawer */}
       {showBlockedDirectives && (
-        <Card className="p-5 bg-slate-50 border-brand-teal/30 space-y-3">
+        <div className="p-5 bg-white rounded-2xl border-2 border-[#0B1726] shadow-[4px_4px_0px_#0B1726] space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <ShieldAlert className="w-5 h-5 text-brand-teal" />
-              <h3 className="font-heading font-bold text-sm text-slate-900">
+              <ShieldAlert className="w-5 h-5 text-[#008F83]" />
+              <h3 className="font-heading font-bold text-sm text-[#0B1726]">
                 Deterministic Agronomic Safety Gate (13 Checks Active)
               </h3>
             </div>
-            <Badge variant="teal" size="sm">Enforcing</Badge>
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#EBF5EE] text-[#2F7D4A]">
+              Enforcing
+            </span>
           </div>
-          <p className="text-xs text-slate-600 leading-relaxed">
+          <p className="text-xs text-[#435466] leading-relaxed">
             The safety gate evaluates every generated advisory before release. Any rule output containing imperative commands
             (e.g., "Do not sow", "Apply pesticide immediately"), uncalibrated probabilities, missing confidence intervals,
             or fabricated crop yield projections is strictly blocked and audited.
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 pt-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 pt-2">
             {[
               { check: 'Imperative Command Filter', desc: 'Blocks directive verbs ("do not", "must spray")' },
               { check: 'Yield Model Claims', desc: 'Blocks yield loss percentages and revenue forecasts' },
@@ -508,26 +501,26 @@ export const FarmerAdvisoryPage: React.FC = () => {
               { check: 'Scientific Attribution', desc: 'Ensures non-causal language ("model-associated")' },
               { check: 'Multi-Year Disclosure', desc: 'Enforces single-season Kharif 2024 caveat' },
             ].map((c, i) => (
-              <div key={i} className="p-2.5 bg-white rounded-lg border border-slate-200 text-xs">
-                <span className="font-semibold text-slate-800 block">{c.check}</span>
-                <span className="text-[11px] text-slate-500">{c.desc}</span>
+              <div key={i} className="p-3 bg-[#F7F3EA] rounded-xl border border-[#0B1726]/15 text-xs">
+                <span className="font-heading font-bold text-[#0B1726] block">{c.check}</span>
+                <span className="text-[11px] text-[#62768A]">{c.desc}</span>
               </div>
             ))}
           </div>
-        </Card>
+        </div>
       )}
 
       {/* 5. Crop & Growth Stage Filter Selectors */}
-      <div className="bg-white p-4 rounded-xl border border-surface-border flex flex-wrap items-center justify-between gap-4">
+      <div className="bg-white p-5 rounded-2xl border-2 border-[#0B1726] shadow-[3px_3px_0px_#0B1726] flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-4 flex-wrap">
           <div className="flex items-center gap-2">
-            <label className="text-xs font-heading font-semibold text-slate-700">
+            <label className="text-xs font-heading font-bold text-[#0B1726]">
               {selectedLanguage === 'HI' ? 'फसल चयन:' : 'Crop Focus:'}
             </label>
             <select
               value={selectedCrop}
               onChange={(e) => setSelectedCrop(e.target.value)}
-              className="px-3 py-1.5 bg-surface-muted rounded-lg text-xs font-semibold text-slate-800 border border-surface-border focus:outline-none focus:ring-2 focus:ring-brand-teal"
+              className="px-3 py-1.5 bg-[#F7F3EA] rounded-xl text-xs font-semibold text-[#0B1726] border border-[#0B1726]/30 focus:outline-none focus:ring-2 focus:ring-[#008F83]"
             >
               <option value="PADDY">Paddy (धान - Oryza sativa)</option>
               <option value="MAIZE">Maize (मक्का - Zea mays)</option>
@@ -539,13 +532,13 @@ export const FarmerAdvisoryPage: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            <label className="text-xs font-heading font-semibold text-slate-700">
+            <label className="text-xs font-heading font-bold text-[#0B1726]">
               {selectedLanguage === 'HI' ? 'वृद्धि अवस्था:' : 'Growth Stage:'}
             </label>
             <select
               value={selectedStage}
               onChange={(e) => setSelectedStage(e.target.value)}
-              className="px-3 py-1.5 bg-surface-muted rounded-lg text-xs font-semibold text-slate-800 border border-surface-border focus:outline-none focus:ring-2 focus:ring-brand-teal"
+              className="px-3 py-1.5 bg-[#F7F3EA] rounded-xl text-xs font-semibold text-[#0B1726] border border-[#0B1726]/30 focus:outline-none focus:ring-2 focus:ring-[#008F83]"
             >
               <option value="ALL">{selectedLanguage === 'HI' ? 'सभी अवस्थाएं' : 'All Growth Stages'}</option>
               <option value="NURSERY_SOWING">{selectedLanguage === 'HI' ? 'नर्सरी व बोआई' : 'Nursery & Sowing'}</option>
@@ -559,14 +552,14 @@ export const FarmerAdvisoryPage: React.FC = () => {
 
         {/* Speech Speed Setting */}
         <div className="flex items-center gap-2 text-xs">
-          <span className="text-slate-500">{selectedLanguage === 'HI' ? 'ध्वनि गति:' : 'Voice Speed:'}</span>
-          <div className="flex bg-slate-100 p-0.5 rounded-lg border border-slate-200">
+          <span className="text-[#62768A] font-medium">{selectedLanguage === 'HI' ? 'ध्वनि गति:' : 'Voice Speed:'}</span>
+          <div className="flex bg-[#F7F3EA] p-0.5 rounded-lg border border-[#0B1726]/20">
             {[0.8, 1.0, 1.2].map((rate) => (
               <button
                 key={rate}
                 onClick={() => setSpeechRate(rate)}
                 className={`px-2 py-0.5 rounded text-[11px] font-mono ${
-                  speechRate === rate ? 'bg-white font-bold text-slate-900 shadow-xs' : 'text-slate-500'
+                  speechRate === rate ? 'bg-white font-bold text-[#0B1726] shadow-[1px_1px_0px_#0B1726]' : 'text-[#62768A]'
                 }`}
               >
                 {rate}x
@@ -577,17 +570,17 @@ export const FarmerAdvisoryPage: React.FC = () => {
       </div>
 
       {/* 6. Advisories Feed */}
-      <div className="space-y-4">
+      <div className="space-y-5">
         {advisories.length === 0 ? (
-          <Card className="p-8 text-center space-y-2">
-            <Info className="w-8 h-8 text-slate-400 mx-auto" />
-            <h3 className="font-heading font-semibold text-sm text-slate-800">
+          <div className="p-8 text-center space-y-2 bg-white rounded-2xl border-2 border-[#0B1726]">
+            <Info className="w-8 h-8 text-[#62768A] mx-auto" />
+            <h3 className="font-heading font-bold text-sm text-[#0B1726]">
               {selectedLanguage === 'HI' ? 'चयनित फिल्टर के लिए कोई सक्रिय सलाह नहीं है' : 'No Active Advisories for Selected Filters'}
             </h3>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-[#62768A]">
               No meteorological hazard thresholds currently triggered for {selectedCrop} in {selectedStage}.
             </p>
-          </Card>
+          </div>
         ) : (
           advisories.map((adv) => {
             const isExpanded = expandedAdvisoryId === adv.advisory_id;
@@ -601,158 +594,162 @@ export const FarmerAdvisoryPage: React.FC = () => {
 
             const displayTitle = localized ? localized.title : adv.headline;
             const displaySummary = localized ? localized.summary : adv.advisory_text;
-            const displayRisk = localized ? localized.risk_indicator : (adv.explanation?.headline || adv.rule_name);
             const displayWhatItMeans = localized ? localized.what_it_means : null;
 
             return (
-              <Card key={adv.advisory_id} className="p-5 space-y-4 border-l-4 border-l-brand-teal transition-all">
+              <div
+                key={adv.advisory_id}
+                className="bg-white rounded-2xl border-2 border-[#0B1726] p-6 shadow-[4px_4px_0px_#0B1726] space-y-4"
+              >
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
-                  <div className="space-y-1">
+                  <div className="space-y-1.5">
                     <div className="flex items-center gap-2 flex-wrap">
                       {getSeverityBadge(adv.severity)}
                       {getCategoryBadge(adv.category)}
-                      <span className="text-[11px] font-mono text-slate-500">
+                      <span className="text-[11px] font-mono text-[#62768A]">
                         {adv.rule_id}
                       </span>
                       {isRead && (
-                        <Badge variant="teal" size="sm" className="flex items-center gap-1">
+                        <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#EBF5EE] border border-[#2F7D4A] text-[#2F7D4A] flex items-center gap-1">
                           <CheckCircle2 className="w-3 h-3" />
                           <span>{selectedLanguage === 'HI' ? 'स्वीकृत' : 'Acknowledged'}</span>
-                        </Badge>
+                        </span>
                       )}
                     </div>
-                    <h3 className="font-heading font-bold text-base text-slate-900 pt-1">
+                    <h3 className="font-heading font-black text-lg text-[#0B1726] pt-1">
                       {displayTitle}
                     </h3>
                   </div>
 
                   {/* Actions & Timings */}
                   <div className="flex items-center gap-2 shrink-0 flex-wrap">
-                    <span className="text-[11px] text-slate-500 flex items-center gap-1 mr-2">
-                      <Clock className="w-3.5 h-3.5" />
+                    <span className="text-[11px] text-[#62768A] flex items-center gap-1 mr-2 font-mono">
+                      <Clock className="w-3.5 h-3.5 text-[#008F83]" />
                       Valid: {adv.valid_from} to {adv.valid_until}
                     </span>
 
                     {/* Voice Accessibility Button */}
-                    <Button
-                      variant={isPlaying ? 'primary' : 'secondary'}
-                      size="sm"
+                    <button
                       onClick={() => handleToggleVoice(adv)}
-                      leftIcon={isPlaying ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5 text-brand-teal" />}
-                      className="text-xs"
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-heading font-bold transition-all shadow-[1.5px_1.5px_0px_#0B1726] ${
+                        isPlaying
+                          ? 'bg-[#008F83] text-white border-[#0B1726]'
+                          : 'bg-[#F7F3EA] text-[#0B1726] border-[#0B1726]/30 hover:bg-[#DCEFF0]'
+                      }`}
                     >
-                      {isLoadingAudio ? (
-                        'Loading...'
-                      ) : isPlaying ? (
-                        selectedLanguage === 'HI' ? 'रोकें' : 'Stop'
-                      ) : (
-                        selectedLanguage === 'HI' ? 'सुनें' : 'Listen'
-                      )}
-                    </Button>
+                      {isPlaying ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5 text-[#008F83]" />}
+                      <span>
+                        {isLoadingAudio ? (
+                          'Loading...'
+                        ) : isPlaying ? (
+                          selectedLanguage === 'HI' ? 'रोकें' : 'Stop'
+                        ) : (
+                          selectedLanguage === 'HI' ? 'सुनें' : 'Listen'
+                        )}
+                      </span>
+                    </button>
 
                     {/* Acknowledge / Read Receipt Button */}
                     {!isRead && (
-                      <Button
-                        variant="secondary"
-                        size="sm"
+                      <button
                         onClick={() => handleMarkAsRead(adv.advisory_id)}
-                        leftIcon={<CheckCircle2 className="w-3.5 h-3.5 text-slate-500" />}
-                        className="text-xs"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#0B1726]/30 bg-white text-[#0B1726] text-xs font-heading font-bold shadow-[1.5px_1.5px_0px_#0B1726] hover:bg-[#F7F3EA] transition-all"
                       >
-                        {selectedLanguage === 'HI' ? 'पढ़ा हुआ चिह्नित करें' : 'Mark Read'}
-                      </Button>
+                        <CheckCircle2 className="w-3.5 h-3.5 text-[#2F7D4A]" />
+                        <span>{selectedLanguage === 'HI' ? 'पढ़ा हुआ चिह्नित करें' : 'Mark Read'}</span>
+                      </button>
                     )}
                   </div>
                 </div>
 
                 {/* Voice Playing Status Banner */}
                 {isPlaying && (
-                  <div className="p-2.5 bg-brand-teal/10 border border-brand-teal/30 rounded-lg flex items-center justify-between text-xs text-brand-teal-dark animate-pulse">
+                  <div className="p-3 bg-[#DCEFF0] border border-[#008F83] rounded-xl flex items-center justify-between text-xs text-[#006B65] animate-pulse">
                     <div className="flex items-center gap-2">
-                      <Radio className="w-4 h-4 text-brand-teal" />
+                      <Radio className="w-4 h-4 text-[#008F83]" />
                       <span>
                         {selectedLanguage === 'HI'
                           ? 'ध्वनि वाचन सक्रिय है (प्रोटोटाइप डेमो मोड - कोई टेलीकॉम डिस्पैच नहीं)'
                           : 'Voice readout active (Prototype demo mode - no telecom dispatch)'}
                       </span>
                     </div>
-                    <Badge variant="teal" size="sm">DEMO_ONLY</Badge>
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-white text-[#006B65]">DEMO_ONLY</span>
                   </div>
                 )}
 
                 {/* Primary Advisory Narrative */}
-                <div className="bg-slate-50/70 p-3.5 rounded-xl border border-slate-100 space-y-2">
-                  <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-sans">
+                <div className="bg-[#F7F3EA] p-4 rounded-xl border border-[#0B1726]/15 space-y-2">
+                  <p className="text-xs sm:text-sm text-[#435466] leading-relaxed font-sans">
                     {displaySummary}
                   </p>
                   {displayWhatItMeans && (
-                    <div className="pt-2 border-t border-slate-200/60 text-xs text-slate-600">
-                      <strong className="text-slate-800 block mb-0.5">
+                    <div className="pt-2 border-t border-[#0B1726]/10 text-xs text-[#0B1726]">
+                      <strong className="block mb-0.5">
                         {selectedLanguage === 'HI' ? 'इसका क्या प्रभाव है:' : 'What it means:'}
                       </strong>
-                      <p>{displayWhatItMeans}</p>
+                      <p className="text-[#435466]">{displayWhatItMeans}</p>
                     </div>
                   )}
                 </div>
 
                 {/* Quick Evidence Summary Metrics */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs pt-1">
-                  <div className="p-2.5 bg-surface-muted rounded-lg">
-                    <span className="text-[10px] uppercase text-slate-400 block font-semibold">
+                  <div className="p-3 bg-white rounded-xl border border-[#0B1726]/15">
+                    <span className="text-[10px] uppercase text-[#62768A] block font-heading font-bold">
                       {selectedLanguage === 'HI' ? 'अंशांकित संभावना' : 'Calibrated Prob'}
                     </span>
-                    <strong className="text-brand-teal text-sm font-mono">
+                    <strong className="text-[#008F83] text-base font-mono">
                       {(adv.evidence.calibrated_probability * 100).toFixed(1)}%
                     </strong>
                     {adv.evidence.confidence_interval_lower !== undefined && (
-                      <span className="text-[10px] text-slate-500 block">
+                      <span className="text-[10px] text-[#62768A] block font-mono">
                         90% CI: [{(adv.evidence.confidence_interval_lower * 100).toFixed(0)}%-{(adv.evidence.confidence_interval_upper! * 100).toFixed(0)}%]
                       </span>
                     )}
                   </div>
 
-                  <div className="p-2.5 bg-surface-muted rounded-lg">
-                    <span className="text-[10px] uppercase text-slate-400 block font-semibold">
+                  <div className="p-3 bg-white rounded-xl border border-[#0B1726]/15">
+                    <span className="text-[10px] uppercase text-[#62768A] block font-heading font-bold">
                       {selectedLanguage === 'HI' ? 'मौसम मानक सीमा' : 'Target Threshold'}
                     </span>
-                    <strong className="text-slate-800 text-sm font-mono">
+                    <strong className="text-[#0B1726] text-base font-mono">
                       {adv.evidence.threshold_value} {adv.evidence.threshold_unit}
                     </strong>
-                    <span className="text-[10px] text-slate-500 block">
+                    <span className="text-[10px] text-[#62768A] block">
                       IMD Standard Criteria
                     </span>
                   </div>
 
-                  <div className="p-2.5 bg-surface-muted rounded-lg">
-                    <span className="text-[10px] uppercase text-slate-400 block font-semibold">
+                  <div className="p-3 bg-white rounded-xl border border-[#0B1726]/15">
+                    <span className="text-[10px] uppercase text-[#62768A] block font-heading font-bold">
                       {selectedLanguage === 'HI' ? 'मॉडल अंशांकन' : 'Model Calibration'}
                     </span>
-                    <strong className="text-slate-800 text-sm font-mono">
+                    <strong className="text-[#0B1726] text-base font-mono">
                       ECE: {adv.evidence.isotonic_ece !== undefined ? adv.evidence.isotonic_ece.toFixed(3) : '0.042'}
                     </strong>
-                    <span className="text-[10px] text-slate-500 block">
+                    <span className="text-[10px] text-[#62768A] block">
                       Isotonic Non-Parametric
                     </span>
                   </div>
 
-                  <div className="p-2.5 bg-surface-muted rounded-lg">
-                    <span className="text-[10px] uppercase text-slate-400 block font-semibold">
+                  <div className="p-3 bg-white rounded-xl border border-[#0B1726]/15">
+                    <span className="text-[10px] uppercase text-[#62768A] block font-heading font-bold">
                       {selectedLanguage === 'HI' ? 'सत्यापन आधार' : 'Validation Mode'}
                     </span>
-                    <strong className="text-amber-700 text-xs font-heading block mt-0.5">
+                    <strong className="text-[#9A6218] text-xs font-mono block mt-0.5">
                       {adv.evidence.data_freshness}
                     </strong>
-                    <span className="text-[10px] text-slate-500 block">
+                    <span className="text-[10px] text-[#62768A] block">
                       Kharif 2024 Anchor
                     </span>
                   </div>
                 </div>
 
                 {/* Expand / Collapse Evidence Drawer Toggle */}
-                <div className="pt-2 flex justify-between items-center border-t border-surface-border">
+                <div className="pt-2 flex justify-between items-center border-t-2 border-[#0B1726]/10">
                   <button
                     onClick={() => toggleExpand(adv.advisory_id)}
-                    className="flex items-center gap-1.5 text-xs font-heading font-semibold text-brand-teal hover:text-brand-teal-dark transition-colors"
+                    className="flex items-center gap-1.5 text-xs font-heading font-bold text-[#008F83] hover:text-[#006B65] transition-colors"
                   >
                     <span>
                       {isExpanded
@@ -762,26 +759,26 @@ export const FarmerAdvisoryPage: React.FC = () => {
                     {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                   </button>
 
-                  <Badge variant="demo" size="sm">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#FEF6E9] border border-[#E5A33D] text-[#9A6218]">
                     {adv.operational_status}
-                  </Badge>
+                  </span>
                 </div>
 
                 {/* Expanded Scientific Details */}
                 {isExpanded && (
-                  <div className="mt-3 p-4 bg-slate-50 rounded-xl border border-surface-border space-y-3.5 text-xs text-slate-700">
+                  <div className="mt-3 p-4 bg-[#FDFBF7] rounded-xl border-2 border-[#0B1726] space-y-3.5 text-xs text-[#435466]">
                     <div>
-                      <h4 className="font-heading font-bold text-slate-900 text-xs uppercase tracking-wider mb-1">
+                      <h4 className="font-heading font-black text-[#0B1726] text-xs uppercase tracking-wider mb-1">
                         {selectedLanguage === 'HI' ? 'वैज्ञानिक पद्धति व आधार' : 'Scientific Basis & Methodology'}
                       </h4>
-                      <p className="text-slate-600 leading-relaxed">{adv.scientific_basis}</p>
+                      <p className="text-[#435466] leading-relaxed">{adv.scientific_basis}</p>
                     </div>
 
                     <div>
-                      <h4 className="font-heading font-bold text-slate-900 text-xs uppercase tracking-wider mb-1">
+                      <h4 className="font-heading font-black text-[#0B1726] text-xs uppercase tracking-wider mb-1">
                         {selectedLanguage === 'HI' ? 'मौसम मॉडल संकेत' : 'Model Evidence Signals'}
                       </h4>
-                      <ul className="space-y-1 list-disc list-inside text-slate-600">
+                      <ul className="space-y-1 list-disc list-inside text-[#435466]">
                         {adv.explanation.model_signals.map((sig, idx) => (
                           <li key={idx}>{sig}</li>
                         ))}
@@ -789,25 +786,25 @@ export const FarmerAdvisoryPage: React.FC = () => {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                      <div className="p-2.5 bg-white rounded-lg border border-slate-200">
-                        <span className="text-[11px] text-slate-500 block">Forecast Record ID</span>
-                        <span className="font-mono text-slate-800 font-semibold">{adv.forecast_id}</span>
+                      <div className="p-3 bg-white rounded-lg border border-[#0B1726]/15">
+                        <span className="text-[10px] text-[#62768A] block font-mono">Forecast Record ID</span>
+                        <span className="font-mono text-[#0B1726] font-bold">{adv.forecast_id}</span>
                       </div>
-                      <div className="p-2.5 bg-white rounded-lg border border-slate-200">
-                        <span className="text-[11px] text-slate-500 block">Model Engine</span>
-                        <span className="font-mono text-slate-800 font-semibold">{adv.evidence.model_name} (v{adv.evidence.model_version})</span>
+                      <div className="p-3 bg-white rounded-lg border border-[#0B1726]/15">
+                        <span className="text-[10px] text-[#62768A] block font-mono">Model Engine</span>
+                        <span className="font-mono text-[#0B1726] font-bold">{adv.evidence.model_name} (v{adv.evidence.model_version})</span>
                       </div>
                     </div>
 
                     {/* Dual Disclosures */}
-                    <div className="p-3 bg-amber-50 rounded-lg border border-amber-200 text-amber-900 space-y-1">
-                      <div className="flex items-center gap-1.5 font-bold">
-                        <AlertTriangle className="w-3.5 h-3.5 text-amber-700" />
+                    <div className="p-3.5 bg-[#FEF6E9] rounded-xl border border-[#E5A33D] text-[#7A4B00] space-y-1">
+                      <div className="flex items-center gap-1.5 font-heading font-bold text-xs text-[#0B1726]">
+                        <AlertTriangle className="w-3.5 h-3.5 text-[#E5A33D]" />
                         <span>
                           {selectedLanguage === 'HI' ? 'अनिश्चितता व एकल-सत्र ऐतिहासिक सीमा' : 'Uncertainty & Multi-Season Disclaimers'}
                         </span>
                       </div>
-                      <p className="text-[11px] leading-relaxed text-amber-800">
+                      <p className="text-[11px] leading-relaxed text-[#7A4B00]">
                         {selectedLanguage === 'HI'
                           ? 'ऐतिहासिक धरातलीय सीमा: बख्शी का तालाब (UP_LKO_BKT, खरीफ 2024 सत्र, 122 दैनिक रिकॉर्ड) के अवलोकनों के आधार पर मूल्यांकित। बहु-वर्षीय परिचालन सत्यापन अभी लंबित है।'
                           : adv.uncertainty_caveat}
@@ -815,7 +812,7 @@ export const FarmerAdvisoryPage: React.FC = () => {
                     </div>
                   </div>
                 )}
-              </Card>
+              </div>
             );
           })
         )}
