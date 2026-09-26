@@ -24,9 +24,9 @@ export const GovIntelligenceStrip: React.FC<GovIntelligenceStripProps> = ({
       label: 'Data Freshness',
       value: availability?.data_freshness || 'HISTORICAL_ONLY',
       detail: `Archive: ${availability?.latest_observation_date || '2024-09-30'}`,
-      icon: <Database className="w-4 h-4 text-[#3F7D58]" />,
+      icon: <Database className="w-4 h-4 text-[#0891B2]" />,
       tag: 'Station Truth',
-      tagColor: 'bg-[#EBF5EE] text-[#3F7D58] border-[#3F7D58]/30',
+      tagColor: 'bg-[#E8F4F6] text-[#0E7490] border-[#0891B2]/30',
     },
     {
       label: 'Operational Gating',
@@ -51,7 +51,7 @@ export const GovIntelligenceStrip: React.FC<GovIntelligenceStripProps> = ({
       {metrics.map((m, idx) => (
         <div
           key={idx}
-          className="bg-white border-2 border-[#102A43] rounded-xl p-4 shadow-[3px_3px_0px_#102A43] flex flex-col justify-between hover:-translate-y-0.5 transition-transform"
+          className="bg-white border-2 border-[#102A43] rounded-xl p-4 shadow-[2px_2px_0px_#102A43] flex flex-col justify-between hover:-translate-y-0.5 transition-transform"
         >
           <div className="flex items-start justify-between gap-2 pb-2">
             <span className="text-[10px] font-heading font-extrabold uppercase tracking-wider text-[#829AB1]">

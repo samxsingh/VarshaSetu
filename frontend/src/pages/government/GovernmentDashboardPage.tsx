@@ -60,9 +60,6 @@ export const GovernmentDashboardPage: React.FC = () => {
       className="min-h-screen bg-[#F3F6F7] text-[#102A43] font-sans pb-16 relative"
       data-testid="government-dashboard-page"
     >
-      {/* Subtle contour texture */}
-      <div className="absolute inset-0 opacity-20 pointer-events-none bg-subtle-contour" />
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6 relative z-10">
         {/* 1. Government Command Header */}
         <GovCommandHeader

@@ -26,17 +26,17 @@ export const SummaryStatCards: React.FC = () => {
       title: t('officer.heavyRainAlerts', { defaultValue: 'Heavy Rain Exposure' }),
       value: '3 Blocks',
       subtitle: '>65mm Threshold Projected June 27',
-      icon: <CloudSun className="w-4 h-4 text-[#3B82F6]" />,
+      icon: <CloudSun className="w-4 h-4 text-[#2563EB]" />,
       tag: 'Tier 2 Event',
-      tagColor: 'bg-[#EFF6FF] text-[#1D4ED8] border-[#3B82F6]/30',
+      tagColor: 'bg-[#DBEAFE] text-[#1E40AF] border-[#2563EB]/30',
     },
     {
       title: t('officer.dataFreshness', { defaultValue: 'Scientific Provenance' }),
       value: 'UP_LKO_BKT',
       subtitle: '122 Observations • Kharif 2024 Archive',
-      icon: <Database className="w-4 h-4 text-[#3F7D58]" />,
+      icon: <Database className="w-4 h-4 text-[#0891B2]" />,
       tag: 'Diagnostic',
-      tagColor: 'bg-[#EBF5EE] text-[#3F7D58] border-[#3F7D58]/30',
+      tagColor: 'bg-[#E8F4F6] text-[#0E7490] border-[#0891B2]/30',
     },
   ];
 
@@ -45,7 +45,7 @@ export const SummaryStatCards: React.FC = () => {
       {stats.map((s, i) => (
         <div
           key={i}
-          className="bg-white border-2 border-[#102A43] rounded-xl p-4 shadow-[3px_3px_0px_#102A43] flex flex-col justify-between hover:-translate-y-0.5 transition-transform"
+          className="bg-white border-2 border-[#102A43] rounded-xl p-4 shadow-[2px_2px_0px_#102A43] flex flex-col justify-between hover:-translate-y-0.5 transition-transform"
         >
           <div className="flex items-start justify-between gap-2 pb-2">
             <span className="text-[10px] font-heading font-extrabold uppercase tracking-wider text-[#829AB1]">

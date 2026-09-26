@@ -211,7 +211,7 @@ export const AlertCenterPage: React.FC = () => {
       )}
 
       {/* 3. Filters Bar */}
-      <div className="bg-white border-2 border-[#102A43] rounded-xl p-4 shadow-[3px_3px_0px_#102A43]">
+      <div className="bg-white border-2 border-[#102A43] rounded-xl p-4 shadow-[2px_2px_0px_#102A43]">
         <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3 items-center">
           <div>
             <label className="text-[11px] font-heading font-bold text-[#102A43] block mb-1">
@@ -321,7 +321,7 @@ export const AlertCenterPage: React.FC = () => {
                             ? 'bg-[#FEF2F2] text-[#DC2626] border-[#DC2626]/30'
                             : ev.severity === 'WARNING'
                             ? 'bg-[#FEF3C7] text-[#B45309] border-[#D97706]/40'
-                            : 'bg-[#EFF6FF] text-[#1D4ED8] border-[#3B82F6]/30'
+                            : 'bg-[#DBEAFE] text-[#1E40AF] border-[#2563EB]/30'
                         }`}
                       >
                         {ev.severity}
@@ -348,7 +348,7 @@ export const AlertCenterPage: React.FC = () => {
                           ev.state === 'RESOLVED'
                             ? 'bg-[#EBF5EE] text-[#3F7D58]'
                             : ev.state === 'ACKNOWLEDGED'
-                            ? 'bg-[#EFF6FF] text-[#1D4ED8]'
+                            ? 'bg-[#DBEAFE] text-[#1E40AF]'
                             : 'bg-[#F3F6F7] text-[#102A43]'
                         }`}
                       >

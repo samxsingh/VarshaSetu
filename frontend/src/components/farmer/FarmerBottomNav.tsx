@@ -18,37 +18,24 @@ export const FarmerBottomNav: React.FC = () => {
   return (
     <nav
       aria-label="Farmer mobile navigation"
-      className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#F3F6F7] border-t-2 border-[#102A43] px-2 py-1.5 shadow-[0px_-2px_10px_rgba(16, 42, 67,0.1)]"
+      className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#F3F6F7]/95 backdrop-blur-md border-t-2 border-[#102A43] shadow-[0_-4px_12px_rgba(16,42,67,0.08)] px-2 py-1.5"
     >
-      <div className="flex items-center justify-around">
+      <div className="flex items-center justify-around gap-1 max-w-md mx-auto">
         {tabs.map((tab) => (
           <NavLink
             key={tab.to}
             to={tab.to}
             className={({ isActive }) =>
               cn(
-                'flex flex-col items-center justify-center py-1 px-1.5 rounded-xl text-[10px] font-heading font-bold transition-all min-h-[48px] min-w-[56px]',
+                'flex flex-col items-center justify-center flex-1 py-1.5 px-1 rounded-lg text-[10px] font-heading font-bold transition-all min-h-[48px] min-w-[48px]',
                 isActive
-                  ? 'text-[#0E7490]'
-                  : 'text-[#486581] hover:text-[#102A43]'
+                  ? 'bg-[#0E7490] text-white border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43]'
+                  : 'text-[#486581] hover:text-[#102A43] active:bg-[#102A43]/5'
               )
             }
           >
-            {({ isActive }) => (
-              <>
-                <div
-                  className={cn(
-                    'p-1 rounded-lg transition-colors border',
-                    isActive
-                      ? 'bg-[#0E7490] text-white border-[#102A43] shadow-[1.5px_1.5px_0px_#102A43]'
-                      : 'bg-white text-[#486581] border-transparent'
-                  )}
-                >
-                  {tab.icon}
-                </div>
-                <span className="truncate max-w-[62px] mt-0.5">{tab.label}</span>
-              </>
-            )}
+            {tab.icon}
+            <span className="mt-0.5 leading-none">{tab.label}</span>
           </NavLink>
         ))}
       </div>

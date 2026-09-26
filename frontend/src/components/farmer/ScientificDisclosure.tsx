@@ -20,7 +20,7 @@ export const ScientificDisclosure: React.FC<ScientificDisclosureProps> = ({
 
   return (
     <div
-      className={`rounded-xl border-2 border-[#102A43] p-4 text-xs font-sans shadow-[3px_3px_0px_#102A43] ${
+      className={`rounded-xl border-2 border-[#102A43] p-4 text-xs font-sans shadow-[2px_2px_0px_#102A43] ${
         isWarning
           ? 'bg-[#FEF3C7] border-[#102A43] text-[#7A4B00]'
           : 'bg-[#E8F4F6] border-[#102A43] text-[#155E75]'

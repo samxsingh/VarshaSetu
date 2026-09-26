@@ -4,7 +4,7 @@ import { ShieldAlert, Database, MapPin, Calendar, Activity, AlertOctagon } from 
 export const ScientificIntegrityStrip: React.FC<{ className?: string }> = ({ className = '' }) => {
   return (
     <div
-      className={`bg-[#F3F6F7] border-2 border-[#102A43] rounded-xl p-4 sm:p-5 shadow-[3px_3px_0px_#102A43] space-y-3 ${className}`}
+      className={`bg-[#F3F6F7] border-2 border-[#102A43] rounded-xl p-4 sm:p-5 shadow-[2px_2px_0px_#102A43] space-y-3 ${className}`}
       data-testid="scientific-integrity-strip"
     >
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b-2 border-[#102A43]/15">

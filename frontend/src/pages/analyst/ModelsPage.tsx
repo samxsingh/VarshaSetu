@@ -168,14 +168,14 @@ export const ModelsPage: React.FC = () => {
       </div>
 
       {error && (
-        <div className="p-4 bg-red-50 border-2 border-red-500 rounded-xl text-xs text-red-700 flex items-center gap-2">
-          <AlertCircle className="w-4 h-4 shrink-0" />
+        <div className="p-4 bg-[#FEF2F2] border-2 border-[#DC2626] rounded-xl text-xs text-[#DC2626] flex items-center gap-2 shadow-[2px_2px_0px_#102A43]">
+          <AlertCircle className="w-4 h-4 shrink-0 text-[#DC2626]" />
           <span>{error}</span>
         </div>
       )}
 
       {/* 3. Target Selector Bar */}
-      <div className="bg-white border-2 border-[#102A43] rounded-xl p-3 shadow-[3px_3px_0px_#102A43] flex flex-wrap items-center gap-3">
+      <div className="bg-white border-2 border-[#102A43] rounded-xl p-3 shadow-[2px_2px_0px_#102A43] flex flex-wrap items-center gap-3">
         <span className="text-xs font-heading font-extrabold uppercase tracking-wider text-[#102A43]">
           Benchmark Target:
         </span>

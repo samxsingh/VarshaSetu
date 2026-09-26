@@ -72,7 +72,7 @@ export const AnalystOverviewPage: React.FC = () => {
               </div>
               <div>
                 <span className="text-[#829AB1] block text-[9px] uppercase">Records</span>
-                <strong className="text-[#3F7D58]">122 Daily Obs</strong>
+                <strong className="text-[#0891B2]">122 Daily Obs</strong>
               </div>
               <div>
                 <span className="text-[#829AB1] block text-[9px] uppercase">Resolution</span>
@@ -98,7 +98,7 @@ export const AnalystOverviewPage: React.FC = () => {
           </div>
           <div className="p-2.5 bg-[#F3F6F7] rounded-lg border border-[#102A43]/10">
             <span className="text-[9px] font-mono uppercase text-[#829AB1] block">Calibration State</span>
-            <strong className="font-mono font-bold text-[#3F7D58] block">Enforced (Isotonic)</strong>
+            <strong className="font-mono font-bold text-[#0E7490] block">Enforced (Isotonic)</strong>
           </div>
           <div className="p-2.5 bg-[#F3F6F7] rounded-lg border border-[#102A43]/10">
             <span className="text-[9px] font-mono uppercase text-[#829AB1] block">Spatial Grid</span>
@@ -172,7 +172,7 @@ export const AnalystOverviewPage: React.FC = () => {
               <span className="font-heading font-bold text-[10px] uppercase text-[#829AB1]">
                 850 hPa Low-Level Jet
               </span>
-              <span className="px-1.5 py-0.5 rounded bg-[#EBF5EE] text-[#3F7D58] text-[9px] font-mono font-bold">
+              <span className="px-1.5 py-0.5 rounded bg-[#E8F4F6] text-[#0E7490] text-[9px] font-mono font-bold">
                 NORMAL FLUX
               </span>
             </div>

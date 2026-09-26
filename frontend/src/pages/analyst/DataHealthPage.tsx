@@ -128,7 +128,7 @@ export const DataHealthPage: React.FC = () => {
             <button
               onClick={handleTriggerSync}
               disabled={triggering}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider bg-[#0E7490] text-white border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] hover:bg-[#007b70] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all disabled:opacity-50"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider bg-[#0E7490] text-white border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] hover:bg-[#155E75] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all disabled:opacity-50"
             >
               <Activity className="w-3.5 h-3.5" />
               {triggering ? 'Ingesting Feeds...' : 'Trigger Pipeline Ingestion'}
@@ -139,18 +139,18 @@ export const DataHealthPage: React.FC = () => {
 
       {/* Error Banner */}
       {error && (
-        <div className="p-4 bg-rose-50 border-2 border-rose-300 rounded-xl flex items-center gap-3 text-rose-900 text-xs shadow-[2px_2px_0px_rgba(225,29,72,0.2)]">
-          <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
+        <div className="p-4 bg-[#FEF2F2] border-2 border-[#DC2626] rounded-xl flex items-center gap-3 text-[#DC2626] text-xs shadow-[2px_2px_0px_#102A43]">
+          <AlertCircle className="w-4 h-4 shrink-0 text-[#DC2626]" />
           <span className="font-medium">{error}</span>
         </div>
       )}
 
       {/* Overview Metric Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-2xl border-2 border-[#102A43] shadow-[3px_3px_0px_#102A43] p-4 transition-all hover:-translate-y-0.5">
+        <div className="bg-white rounded-2xl border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] p-4 transition-all hover:-translate-y-0.5">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-slate-500">Pipeline Status</span>
-            <Activity className="w-4 h-4 text-[#3F7D58]" />
+            <Activity className="w-4 h-4 text-[#0E7490]" />
           </div>
           <div className="mt-2 text-xl font-heading font-black text-[#102A43]">
             {overview ? getStatusBadge(overview.overallHealth) : 'Not available'}
@@ -160,7 +160,7 @@ export const DataHealthPage: React.FC = () => {
           </span>
         </div>
 
-        <div className="bg-white rounded-2xl border-2 border-[#102A43] shadow-[3px_3px_0px_#102A43] p-4 transition-all hover:-translate-y-0.5">
+        <div className="bg-white rounded-2xl border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] p-4 transition-all hover:-translate-y-0.5">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-slate-500">Ingestion Runs</span>
             <Database className="w-4 h-4 text-[#0E7490]" />
@@ -173,12 +173,12 @@ export const DataHealthPage: React.FC = () => {
           </span>
         </div>
 
-        <div className="bg-white rounded-2xl border-2 border-[#102A43] shadow-[3px_3px_0px_#102A43] p-4 transition-all hover:-translate-y-0.5">
+        <div className="bg-white rounded-2xl border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] p-4 transition-all hover:-translate-y-0.5">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-slate-500">Quality Assured</span>
-            <FileCheck2 className="w-4 h-4 text-[#3F7D58]" />
+            <FileCheck2 className="w-4 h-4 text-[#0891B2]" />
           </div>
-          <div className="mt-2 text-2xl font-mono font-black text-[#3F7D58]">
+          <div className="mt-2 text-2xl font-mono font-black text-[#0891B2]">
             100%
           </div>
           <span className="text-[11px] text-slate-600 mt-2 block font-medium">
@@ -186,7 +186,7 @@ export const DataHealthPage: React.FC = () => {
           </span>
         </div>
 
-        <div className="bg-white rounded-2xl border-2 border-[#102A43] shadow-[3px_3px_0px_#102A43] p-4 transition-all hover:-translate-y-0.5">
+        <div className="bg-white rounded-2xl border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43] p-4 transition-all hover:-translate-y-0.5">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-slate-500">Last Sync Time</span>
             <Clock className="w-4 h-4 text-[#D97706]" />

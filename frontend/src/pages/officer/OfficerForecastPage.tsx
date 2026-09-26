@@ -397,7 +397,7 @@ export const OfficerForecastPage: React.FC = () => {
         <div className="bg-white border-2 border-[#102A43] rounded-2xl p-5 shadow-[4px_4px_0px_#102A43] space-y-4">
           <div className="flex items-center justify-between pb-3 border-b-2 border-[#102A43]/10">
             <div className="flex items-center gap-2">
-              <Bell className="w-4 h-4 text-[#3B82F6]" />
+              <Bell className="w-4 h-4 text-[#2563EB]" />
               <h3 className="font-heading font-extrabold text-sm text-[#102A43]">
                 Block-Level Meteorological Event Timeline
               </h3>
@@ -424,7 +424,7 @@ export const OfficerForecastPage: React.FC = () => {
                           ? 'bg-[#FEF2F2] text-[#DC2626] border-[#DC2626]/30'
                           : evt.severity === 'WARNING'
                           ? 'bg-[#FEF3C7] text-[#B45309] border-[#D97706]/40'
-                          : 'bg-[#EFF6FF] text-[#1D4ED8] border-[#3B82F6]/30'
+                          : 'bg-[#DBEAFE] text-[#1E40AF] border-[#2563EB]/30'
                       }`}
                     >
                       {evt.severity}

@@ -15,8 +15,6 @@ export const AnalystLayout: React.FC = () => {
 
   return (
     <div className="flex-1 pb-24 md:pb-12 bg-[#F3F6F7] min-h-screen relative font-sans">
-      {/* Subtle contour texture overlay */}
-      <div className="absolute inset-0 opacity-20 pointer-events-none bg-subtle-contour" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 relative z-10 space-y-6">
         {/* Research Lab Header Strip */}

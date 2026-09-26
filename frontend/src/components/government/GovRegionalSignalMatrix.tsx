@@ -29,7 +29,7 @@ export const GovRegionalSignalMatrix: React.FC = () => {
     },
     {
       signal: 'WATERLOGGING INDICATOR',
-      signalIcon: <Droplets className="w-3.5 h-3.5 text-[#3B82F6]" />,
+      signalIcon: <Droplets className="w-3.5 h-3.5 text-[#2563EB]" />,
       area: 'Sarojininagar (UP_LKO_SRJ)',
       indicator: 'Heavy Soil Saturation > 80% with Pulse Inflow',
       severity: 'WATCH',
@@ -41,7 +41,7 @@ export const GovRegionalSignalMatrix: React.FC = () => {
     },
     {
       signal: 'MONSOON ONSET SURGE',
-      signalIcon: <CloudRain className="w-3.5 h-3.5 text-[#3F7D58]" />,
+      signalIcon: <CloudRain className="w-3.5 h-3.5 text-[#2563EB]" />,
       area: 'Mohanlalganj (UP_LKO_MHL)',
       indicator: 'Active Trough Axis Convergence (> 25 mm soaking)',
       severity: 'FAVORABLE',
@@ -65,7 +65,7 @@ export const GovRegionalSignalMatrix: React.FC = () => {
     },
     {
       signal: 'CATCHMENT RUNOFF',
-      signalIcon: <Droplets className="w-3.5 h-3.5 text-[#3B82F6]" />,
+      signalIcon: <Droplets className="w-3.5 h-3.5 text-[#2563EB]" />,
       area: 'Gosainganj (UP_LKO_GSN)',
       indicator: 'Gomti Riverine Influx with 40.5 mm Event Potential',
       severity: 'WATCH',

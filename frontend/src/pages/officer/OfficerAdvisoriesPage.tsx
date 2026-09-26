@@ -282,7 +282,7 @@ export const OfficerAdvisoriesPage: React.FC = () => {
       </div>
 
       {/* 2. Filter Toolbar */}
-      <div className="bg-white border-2 border-[#102A43] rounded-xl p-4 shadow-[3px_3px_0px_#102A43] flex flex-wrap items-center justify-between gap-4">
+      <div className="bg-white border-2 border-[#102A43] rounded-xl p-4 shadow-[2px_2px_0px_#102A43] flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-4 flex-wrap">
           <div className="flex items-center gap-2">
             <label className="text-xs font-heading font-bold text-[#102A43]">Filter Crop:</label>
@@ -353,7 +353,7 @@ export const OfficerAdvisoriesPage: React.FC = () => {
                         ? 'bg-[#FEF2F2] text-[#DC2626] border-[#DC2626]/30'
                         : b.severity === 'WATCH'
                         ? 'bg-[#FEF3C7] text-[#B45309] border-[#D97706]/40'
-                        : 'bg-[#EFF6FF] text-[#1D4ED8] border-[#3B82F6]/30'
+                        : 'bg-[#DBEAFE] text-[#1E40AF] border-[#2563EB]/30'
                     }`}
                   >
                     {b.severity}

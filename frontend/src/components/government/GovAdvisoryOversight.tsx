@@ -40,7 +40,7 @@ export const GovAdvisoryOversight: React.FC = () => {
       crop: 'PULSES (अरहर)',
       stage: 'PRE-SOWING',
       severity: 'INFO',
-      severityColor: 'bg-[#EFF6FF] text-[#1D4ED8] border-[#3B82F6]/30',
+      severityColor: 'bg-[#DBEAFE] text-[#1E40AF] border-[#2563EB]/30',
       status: 'ACTIVE',
       languageSupport: 'EN / HI (Deterministic)',
       reviewState: 'Duty Officer Reviewed',

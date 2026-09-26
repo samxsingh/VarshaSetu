@@ -653,8 +653,8 @@ export const ForecastLabPage: React.FC = () => {
       ) : activeTab === 'hindcasting' ? (
         <div className="space-y-6">
           {hindcastError && (
-            <div className="bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 flex items-center gap-3 text-amber-900 text-xs shadow-[2px_2px_0px_rgba(245,158,11,0.2)]">
-              <AlertCircle className="w-4 h-4 shrink-0 text-amber-600" />
+            <div className="bg-[#FEF3C7] border-2 border-[#D97706] rounded-xl p-4 flex items-center gap-3 text-[#B45309] text-xs shadow-[2px_2px_0px_#102A43]">
+              <AlertCircle className="w-4 h-4 shrink-0 text-[#D97706]" />
               <span className="font-medium">{hindcastError}</span>
             </div>
           )}
@@ -786,7 +786,7 @@ export const ForecastLabPage: React.FC = () => {
                 <button
                   onClick={handleGenerateForecast}
                   disabled={isGenerating}
-                  className="w-full text-xs font-mono font-bold uppercase tracking-wider py-2.5 px-4 bg-[#0E7490] hover:bg-[#007b70] text-white border-2 border-[#102A43] rounded-xl flex items-center justify-center gap-2 shadow-[2px_2px_0px_#102A43] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all disabled:opacity-50"
+                  className="w-full text-xs font-mono font-bold uppercase tracking-wider py-2.5 px-4 bg-[#0E7490] hover:bg-[#155E75] text-white border-2 border-[#102A43] rounded-xl flex items-center justify-center gap-2 shadow-[2px_2px_0px_#102A43] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all disabled:opacity-50"
                 >
                   {isGenerating ? (
                     <>
@@ -805,8 +805,8 @@ export const ForecastLabPage: React.FC = () => {
           </div>
 
           {forecastError && (
-            <div className="bg-rose-50 border-2 border-rose-300 rounded-2xl p-4 flex items-center gap-3 text-rose-900 text-xs shadow-[2px_2px_0px_rgba(225,29,72,0.2)]">
-              <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
+            <div className="bg-[#FEF2F2] border-2 border-[#DC2626] rounded-xl p-4 flex items-center gap-3 text-[#DC2626] text-xs shadow-[2px_2px_0px_#102A43]">
+              <AlertCircle className="w-4 h-4 shrink-0 text-[#DC2626]" />
               <span className="font-medium">{forecastError}</span>
             </div>
           )}

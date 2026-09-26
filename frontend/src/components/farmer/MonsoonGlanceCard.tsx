@@ -101,7 +101,7 @@ export const MonsoonGlanceCard: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           
           {/* 1. Monsoon Onset */}
-          <div className="bg-[#E8F4F6]/50 border-2 border-[#102A43] rounded-xl p-5 shadow-[3px_3px_0px_#102A43] flex flex-col justify-between">
+          <div className="bg-[#E8F4F6]/50 border-2 border-[#102A43] rounded-xl p-5 shadow-[2px_2px_0px_#102A43] flex flex-col justify-between">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-2 text-[#155E75]">
                 <CloudRain className="w-5 h-5 text-[#0E7490]" />
@@ -136,7 +136,7 @@ export const MonsoonGlanceCard: React.FC = () => {
           </div>
 
           {/* 2. Dry Spell Break Risk */}
-          <div className="bg-[#FEF3C7]/60 border-2 border-[#102A43] rounded-xl p-5 shadow-[3px_3px_0px_#102A43] flex flex-col justify-between">
+          <div className="bg-[#FEF3C7]/60 border-2 border-[#102A43] rounded-xl p-5 shadow-[2px_2px_0px_#102A43] flex flex-col justify-between">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-2 text-[#B45309]">
                 <SunMedium className="w-5 h-5 text-[#D97706]" />
@@ -179,15 +179,15 @@ export const MonsoonGlanceCard: React.FC = () => {
           </div>
 
           {/* 3. Heavy Rain Alert */}
-          <div className="bg-[#EFF6FF]/60 border-2 border-[#102A43] rounded-xl p-5 shadow-[3px_3px_0px_#102A43] flex flex-col justify-between">
+          <div className="bg-[#DBEAFE]/40 border-2 border-[#102A43] rounded-xl p-5 shadow-[2px_2px_0px_#102A43] flex flex-col justify-between">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-2 text-[#1E3A8A]">
-                <CloudLightning className="w-5 h-5 text-[#3B82F6]" />
+                <CloudLightning className="w-5 h-5 text-[#2563EB]" />
                 <span className="text-xs font-heading font-extrabold uppercase tracking-wider">
                   {t('targets.heavyRain') || 'Heavy Rain'}
                 </span>
               </div>
-              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-[#EFF6FF] border border-[#3B82F6]/40 text-[#1E3A8A]">
+              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-[#DBEAFE] border border-[#2563EB]/40 text-[#1E3A8A]">
                 &gt; 65 mm / 24h
               </span>
             </div>
@@ -207,7 +207,7 @@ export const MonsoonGlanceCard: React.FC = () => {
             {/* Progress Bar */}
             <div className="w-full bg-white h-2.5 rounded-full border border-[#102A43]/30 overflow-hidden">
               <div
-                className="bg-[#3B82F6] h-full transition-all duration-300"
+                className="bg-[#2563EB] h-full transition-all duration-300"
                 style={{ width: `${current.heavyRainProb}%` }}
               />
             </div>
