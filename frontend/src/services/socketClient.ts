@@ -111,6 +111,10 @@ class SocketClientManager {
       useRealtimeStore.getState().addNotification(data);
     });
 
+    socket.on('operation:signal', (data) => {
+      useRealtimeStore.getState().addOperationalSignal(data);
+    });
+
     this.socket = socket;
     return socket;
   }

@@ -7,6 +7,7 @@ import {
   EventTransitionItem,
 } from '../../services/eventService';
 import { useRealtimeStore } from '../../stores/useRealtimeStore';
+import { OperationalSignalCenter } from '../../components/operations/OperationalSignalCenter';
 import {
   AlertCircle,
   Bell,
@@ -220,6 +221,13 @@ export const AlertCenterPage: React.FC = () => {
           </button>
         </div>
       )}
+
+      {/* 2c. Operational Intelligence Signals Center */}
+      <OperationalSignalCenter
+        persona="CLIMATE_ANALYST"
+        title="Operational Intelligence Signals & Verification Gates"
+        description="Multi-source operational intelligence combining meteorological alerts, forecast changes, and verification gate status."
+      />
 
       {/* 3. Filters Bar */}
       <div className="bg-white border-2 border-[#102A43] rounded-xl p-4 shadow-[2px_2px_0px_#102A43]">

@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Settings, Users, Shield, Database, Server } from 'lucide-react';
+import { OperationalSignalCenter } from '../../components/operations/OperationalSignalCenter';
 
 export const AdminDashboardPage: React.FC = () => {
   return (
@@ -53,6 +54,13 @@ export const AdminDashboardPage: React.FC = () => {
           <span className="text-[11px] text-[#829AB1] font-medium">Lucknow District Seeded</span>
         </Card>
       </div>
+
+      {/* Operational Signal Center & Verification Gate Telemetry */}
+      <OperationalSignalCenter
+        persona="ADMIN"
+        title="Operational Intelligence & System Gate Monitor"
+        description="Authoritative gate statuses, model calibration disclosures, and multi-source operational signals."
+      />
 
       <Card className="p-5 border-2 border-[#102A43] rounded-2xl shadow-[4px_4px_0px_#102A43] bg-white">
         <CardHeader className="pb-3 border-b-2 border-[#102A43]/10">

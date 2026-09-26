@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { OperationalSignalDTO } from '../services/operationalService';
 
 export type RealtimeConnectionStatus =
   | 'DISCONNECTED'
@@ -104,6 +105,7 @@ interface RealtimeState {
   recentNotifications: InAppNotificationDTO[];
   recentForecastUpdates: ForecastUpdatedDTO[];
   latestDataHealth: DataHealthUpdatedDTO | null;
+  operationalSignals: OperationalSignalDTO[];
   connectionError: string | null;
 
   setConnectionStatus: (status: RealtimeConnectionStatus, error?: string | null) => void;
@@ -112,6 +114,8 @@ interface RealtimeState {
   addNotification: (notification: InAppNotificationDTO) => void;
   addForecastUpdate: (forecast: ForecastUpdatedDTO) => void;
   setDataHealth: (health: DataHealthUpdatedDTO) => void;
+  addOperationalSignal: (signal: OperationalSignalDTO) => void;
+  clearOperationalSignals: () => void;
   markNotificationsRead: () => void;
   clearEvents: () => void;
 }
@@ -119,6 +123,7 @@ interface RealtimeState {
 const MAX_RECENT_EVENTS = 50;
 const MAX_RECENT_NOTIFICATIONS = 30;
 const MAX_RECENT_FORECASTS = 20;
+const MAX_RECENT_SIGNALS = 50;
 
 export const useRealtimeStore = create<RealtimeState>((set) => ({
   connectionStatus: 'DISCONNECTED',
@@ -129,6 +134,7 @@ export const useRealtimeStore = create<RealtimeState>((set) => ({
   recentNotifications: [],
   recentForecastUpdates: [],
   latestDataHealth: null,
+  operationalSignals: [],
   connectionError: null,
 
   setConnectionStatus: (status, error = null) => {
@@ -224,6 +230,33 @@ export const useRealtimeStore = create<RealtimeState>((set) => ({
     set({
       latestDataHealth: health,
       lastEventAt: new Date().toISOString(),
+    });
+  },
+
+  addOperationalSignal: (signal) => {
+    set((state) => {
+      const existingIndex = state.operationalSignals.findIndex(
+        (s) => s.signalId === signal.signalId
+      );
+
+      let updatedList: OperationalSignalDTO[];
+      if (existingIndex >= 0) {
+        updatedList = [...state.operationalSignals];
+        updatedList[existingIndex] = signal;
+      } else {
+        updatedList = [signal, ...state.operationalSignals].slice(0, MAX_RECENT_SIGNALS);
+      }
+
+      return {
+        operationalSignals: updatedList,
+        lastEventAt: new Date().toISOString(),
+      };
+    });
+  },
+
+  clearOperationalSignals: () => {
+    set({
+      operationalSignals: [],
     });
   },
 

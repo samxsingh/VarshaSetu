@@ -1,8 +1,27 @@
 import { Request, Response, NextFunction } from 'express';
 import { sendSuccess } from '../utils/responseEnvelope';
 import { mlGatewayClient } from '../services/ml';
+import { operationalSignalService } from '../services/operational/operationalSignalService';
+import { AuthenticatedRequest } from '../types';
 
 export const operationController = {
+  async getSignals(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    try {
+      const signals = await operationalSignalService.getSignals(req.query, {
+        userId: req.user?.id,
+        role: req.user?.role,
+        assignedLocationId: req.user?.assignedLocationId,
+      });
+
+      return sendSuccess(res, {
+        items: signals,
+        total: signals.length,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
   async getStatus(req: Request, res: Response, next: NextFunction) {
     try {
       try {

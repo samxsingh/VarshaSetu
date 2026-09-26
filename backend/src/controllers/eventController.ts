@@ -4,6 +4,7 @@ import { AuthenticatedRequest } from '../types';
 import { eventRepository, ForecastEventRow } from '../repositories/eventRepository';
 import { mlGatewayClient } from '../services/ml';
 import { realtimeService, ScientificEventDTO } from '../realtime';
+import { operationalSignalService } from '../services/operational/operationalSignalService';
 
 function toEventDTO(ev: any): ScientificEventDTO {
   return {
@@ -154,12 +155,14 @@ export const eventController = {
           for (const ev of data.detected_events) {
             await eventRepository.upsertEvent(ev).catch(() => null);
             realtimeService.emitEventCreated(toEventDTO(ev));
+            realtimeService.emitOperationalSignal(operationalSignalService.fromEvent(ev));
           }
         }
         if (Array.isArray(data.updated_events)) {
           for (const ev of data.updated_events) {
             await eventRepository.upsertEvent(ev).catch(() => null);
             realtimeService.emitEventUpdated(toEventDTO(ev));
+            realtimeService.emitOperationalSignal(operationalSignalService.fromEvent(ev));
           }
         }
         return sendSuccess(res, data);

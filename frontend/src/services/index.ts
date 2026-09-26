@@ -7,3 +7,5 @@ export * from './climateService';
 export * from './dataHealthService';
 export * from './modelService';
 export * from './authService';
+export * from './eventService';
+export * from './operationalService';

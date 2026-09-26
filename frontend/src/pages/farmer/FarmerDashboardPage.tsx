@@ -5,6 +5,7 @@ import { FarmerHeader } from '../../components/farmer/FarmerHeader';
 import { MonsoonGlanceCard } from '../../components/farmer/MonsoonGlanceCard';
 import { CropAdvisoryCard } from '../../components/farmer/CropAdvisoryCard';
 import { WhatIfPreviewCard } from '../../components/farmer/WhatIfPreviewCard';
+import { OperationalSignalCenter } from '../../components/operations/OperationalSignalCenter';
 
 export const FarmerDashboardPage: React.FC = () => {
   return (
@@ -29,6 +30,15 @@ export const FarmerDashboardPage: React.FC = () => {
 
       {/* 4. Probabilistic Monsoon Outlook (7, 14, 21, 30 Days) */}
       <MonsoonGlanceCard />
+
+      {/* 4b. Operational Weather & Advisory Signals */}
+      <OperationalSignalCenter
+        blockId="UP_LKO_BKT"
+        persona="FARMER"
+        title="Operational Weather & Advisory Signals"
+        description="Active meteorological events, forecast shifts, and advisory notifications for your block."
+        maxItems={10}
+      />
 
       {/* 5. Primary Crop Advisory: "What this means for your crop" */}
       <CropAdvisoryCard />

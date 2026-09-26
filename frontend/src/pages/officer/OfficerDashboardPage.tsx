@@ -9,6 +9,7 @@ import { ScientificIntegrityStrip } from '../../components/officer/ScientificInt
 import { useOfficerStore } from '../../stores/useOfficerStore';
 import { Send, MapPin, Compass, Eye, ShieldAlert, Sparkles } from 'lucide-react';
 import { RiskDistribution, ForecastTimeline } from '../../components/visualization';
+import { OperationalSignalCenter } from '../../components/operations/OperationalSignalCenter';
 
 export const OfficerDashboardPage: React.FC = () => {
   const { t } = useTranslation();
@@ -149,6 +150,14 @@ export const OfficerDashboardPage: React.FC = () => {
           />
         </div>
       </div>
+
+      {/* 2b. Operational Intelligence Signals */}
+      <OperationalSignalCenter
+        blockId="UP_LKO_BKT"
+        persona="OFFICER"
+        title="Block Operational Intelligence Signals"
+        description="Active meteorological risk signals and advisory verification items for extension officers."
+      />
 
       {/* 3. Primary GIS Map & Drill-Down Grid */}
       <div className="space-y-3">

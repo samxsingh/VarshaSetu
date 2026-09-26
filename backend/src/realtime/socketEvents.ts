@@ -7,6 +7,8 @@ import {
   InAppNotificationDTO,
   SystemAnnouncementDTO,
 } from './types';
+import { OperationalSignalDTO } from '../services/operational/operationalSignalTypes';
+
 
 export const realtimeService = {
   /**
@@ -166,4 +168,25 @@ export const realtimeService = {
 
     io.to('system:announcements').emit('system:announcement', announcement);
   },
+
+  /**
+   * Broadcasts an operational intelligence signal to authorized block and role rooms.
+   */
+  emitOperationalSignal(signal: OperationalSignalDTO): void {
+    if (!isSocketInitialized()) return;
+    const io = getIO();
+
+    const targetRooms: string[] = ['role:admin', 'role:analyst'];
+
+    if (signal.blockId) {
+      targetRooms.push(`block:${signal.blockId}`);
+    }
+
+    if (signal.signalType !== 'MODEL_STATUS') {
+      targetRooms.push('role:officer', 'role:government');
+    }
+
+    io.to(targetRooms).emit('operation:signal', signal);
+  },
 };
+

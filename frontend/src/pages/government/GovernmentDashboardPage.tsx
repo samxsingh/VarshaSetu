@@ -14,6 +14,7 @@ import { ProvenanceCard } from '../../components/analyst/ProvenanceCard';
 import { forecastService, ForecastStatusResponse, ForecastAvailabilityResponse } from '../../services/forecastService';
 import { eventService, OperationalStatusResponse, ForecastEvent } from '../../services/eventService';
 import { useRealtimeStore } from '../../stores/useRealtimeStore';
+import { OperationalSignalCenter } from '../../components/operations/OperationalSignalCenter';
 
 export const GovernmentDashboardPage: React.FC = () => {
   const [activeSection, setActiveSection] = useState<string>('overview');
@@ -81,6 +82,15 @@ export const GovernmentDashboardPage: React.FC = () => {
         {/* 3. Regional Intelligence GIS Map */}
         <div id="map" className="scroll-mt-24">
           <GovRegionalMapWorkspace />
+        </div>
+
+        {/* 3b. Executive Operational Signal Center */}
+        <div id="operational-signals" className="scroll-mt-24">
+          <OperationalSignalCenter
+            persona="GOVERNMENT"
+            title="Executive Operational Signal Center"
+            description="Comprehensive operational signals across all administrative blocks and verification gates."
+          />
         </div>
 
         {/* 4. Regional Signal Matrix */}

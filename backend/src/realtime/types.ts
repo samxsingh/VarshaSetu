@@ -1,4 +1,5 @@
 import { UserRole, PermissionScope } from '@shared/types';
+import { OperationalSignalDTO } from '../services/operational/operationalSignalTypes';
 
 export interface AuthenticatedSocketUser {
   userId: string;
@@ -113,6 +114,7 @@ export interface ServerToClientEvents {
   'data_health:updated': (health: DataHealthUpdatedDTO) => void;
   'notification:received': (notification: InAppNotificationDTO) => void;
   'system:announcement': (announcement: SystemAnnouncementDTO) => void;
+  'operation:signal': (signal: OperationalSignalDTO) => void;
   'room:joined': (data: { room: string; timestamp: string }) => void;
   'room:left': (data: { room: string; timestamp: string }) => void;
   'room:error': (data: { room: string; error: string }) => void;
