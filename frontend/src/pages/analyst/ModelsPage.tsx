@@ -21,6 +21,10 @@ import {
   Scale,
   Database,
   Compass,
+  Cpu,
+  ShieldAlert,
+  Sliders,
+  CheckCircle2,
 } from 'lucide-react';
 
 export const ModelsPage: React.FC = () => {
@@ -72,7 +76,7 @@ export const ModelsPage: React.FC = () => {
       if (calCompRes.success) setCalibComp(calCompRes.data);
       if (relRes.success) setReliability(relRes.data);
     } catch (err: any) {
-      setError(err?.message || 'Failed to load model registry telemetry.');
+      setError(err?.message || 'Failed to fetch benchmark registries.');
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -91,90 +95,99 @@ export const ModelsPage: React.FC = () => {
   const handleTrain = async () => {
     try {
       setTraining(true);
+      setError(null);
       await modelService.trainTreeModel(selectedTarget, selectedHorizon, 'UP_LKO_BKT');
       await fetchData();
     } catch (err: any) {
-      setError(err?.message || 'Failed to execute tree ensemble training pipeline.');
+      setError(err?.message || 'Failed to train downscaling ensemble.');
     } finally {
       setTraining(false);
     }
   };
 
   return (
-    <div className="space-y-6">
-      {/* Page Header */}
-      <Card className="p-5">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
+    <div className="space-y-6" data-testid="models-page">
+      {/* 1. Page Header */}
+      <div className="bg-white border-2 border-[#0B1726] rounded-2xl p-5 sm:p-6 shadow-[4px_4px_0px_#0B1726]">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div className="space-y-1">
             <div className="flex items-center gap-2 flex-wrap">
-              <h1 className="font-heading font-bold text-2xl text-slate-900">
-                Operational Downscaling & Model Benchmark Registry
-              </h1>
-              <Badge variant="teal" size="sm">Phase 4B Ensembles</Badge>
-              <Badge variant="amber" size="sm">Phase 4C Calibration</Badge>
-              <Badge variant="neutral" size="sm">Block Centroid (~9km)</Badge>
+              <span className="px-2.5 py-0.5 rounded-md bg-[#008F83] text-white text-[10px] font-mono font-bold uppercase tracking-wider">
+                03 MODEL REGISTRY
+              </span>
+              <span className="px-2.5 py-0.5 rounded-md bg-[#DCEFF0] text-[#006B65] text-[10px] font-mono font-bold border border-[#008F83]/30">
+                Phase 4B Ensembles
+              </span>
+              <span className="px-2.5 py-0.5 rounded-md bg-[#FEF6E9] border border-[#E5A33D] text-[#9A6218] text-[10px] font-mono font-bold">
+                Phase 4C Calibration
+              </span>
+              <span className="px-2.5 py-0.5 rounded-md bg-white border border-[#0B1726]/20 text-[#0B1726] text-[10px] font-mono font-bold">
+                Block Centroid (~9km)
+              </span>
             </div>
-            <p className="text-xs text-slate-600 mt-1">
+            <h1 className="font-heading font-extrabold text-2xl sm:text-3xl text-[#0B1726] tracking-tight">
+              Operational Downscaling & Model Benchmark Registry
+            </h1>
+            <p className="text-xs sm:text-sm text-[#435466] max-w-3xl leading-relaxed">
               Evaluating multi-paradigm downscaling models (Climatology vs Linear Baselines vs XGBoost vs LightGBM) with empirical reliability diagrams and Murphy (1973) Brier score decompositions.
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
+
+          <div className="flex items-center gap-2.5 self-start lg:self-center">
+            <button
               onClick={handleRefresh}
               disabled={refreshing || loading}
-              className="flex items-center gap-1.5 text-xs"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-heading font-bold bg-[#F7F3EA] text-[#0B1726] border-2 border-[#0B1726] shadow-[2px_2px_0px_#0B1726] hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-50 min-h-[40px]"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
-              Refresh
-            </Button>
-            <Button
-              variant="primary"
-              size="sm"
+              <span>Refresh</span>
+            </button>
+            <button
               onClick={handleTrain}
               disabled={training}
-              className="flex items-center gap-1.5 text-xs"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-heading font-bold bg-[#008F83] text-white border-2 border-[#0B1726] shadow-[2px_2px_0px_#0B1726] hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-50 min-h-[40px]"
             >
               <FlaskConical className={`w-3.5 h-3.5 ${training ? 'animate-spin' : ''}`} />
-              {training ? 'Benchmarking...' : 'Train Tree Ensembles'}
-            </Button>
+              <span>{training ? 'Benchmarking...' : 'Train Tree Ensembles'}</span>
+            </button>
           </div>
         </div>
-      </Card>
+      </div>
 
-      {/* Scientific Limitation & Provenance Disclosure */}
-      <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-3">
-        <AlertCircle className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
-        <div className="text-xs text-amber-900 space-y-1">
-          <p className="font-bold">
+      {/* 2. Scientific Limitation & Provenance Disclosure */}
+      <div className="p-4 bg-[#FEF6E9] border-2 border-[#E5A33D] rounded-xl text-xs text-[#9A6218] flex items-start gap-3 shadow-[2px_2px_0px_#0B1726]">
+        <AlertCircle className="w-5 h-5 text-[#E5A33D] shrink-0 mt-0.5" />
+        <div className="space-y-1 leading-relaxed">
+          <p className="font-heading font-extrabold text-[#9A6218]">
             Data Availability & Spatial Resolution Guardrail:
           </p>
           <p>
-            Observations reflect single-season ERA5-Land reanalysis (Kharif 2024, 122 days). This does <span className="font-semibold">not satisfy the 30-year WMO climatology standard</span>. Models are experimental benchmarks. Spatial outputs represent <span className="font-semibold">block-scale centroids (Bakshi Ka Talab, UP_LKO_BKT)</span>; village/panchayat micro-station claims are strictly disclaimed.
+            Observations reflect single-season ERA5-Land reanalysis (Kharif 2024, 122 days). This does <span className="font-bold underline">not satisfy the 30-year WMO climatology standard</span>. Models are experimental benchmarks. Spatial outputs represent <span className="font-bold underline">block-scale centroids (Bakshi Ka Talab, UP_LKO_BKT)</span>; village/panchayat micro-station claims are strictly disclaimed.
           </p>
         </div>
       </div>
 
       {error && (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-xs text-red-700 flex items-center gap-2">
+        <div className="p-4 bg-red-50 border-2 border-red-500 rounded-xl text-xs text-red-700 flex items-center gap-2">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{error}</span>
         </div>
       )}
 
-      {/* Target Selector Bar */}
-      <div className="flex flex-wrap items-center gap-3">
-        <span className="text-xs font-semibold text-slate-700">Benchmark Target:</span>
-        <div className="flex gap-2">
+      {/* 3. Target Selector Bar */}
+      <div className="bg-white border-2 border-[#0B1726] rounded-xl p-3 shadow-[3px_3px_0px_#0B1726] flex flex-wrap items-center gap-3">
+        <span className="text-xs font-heading font-extrabold uppercase tracking-wider text-[#0B1726]">
+          Benchmark Target:
+        </span>
+        <div className="flex flex-wrap gap-2">
           {['HEAVY_RAIN', 'DRY_SPELL', 'RAINFALL_AMOUNT'].map((tgt) => (
             <button
               key={tgt}
               onClick={() => setSelectedTarget(tgt)}
-              className={`px-3 py-1.5 rounded text-xs font-medium border transition-colors ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-heading font-bold border-2 transition-all ${
                 selectedTarget === tgt
-                  ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
-                  : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50'
+                  ? 'bg-[#008F83] text-white border-[#0B1726] shadow-[2px_2px_0px_#0B1726]'
+                  : 'bg-[#F7F3EA] text-[#435466] border-[#0B1726]/15 hover:border-[#0B1726]'
               }`}
             >
               {tgt === 'HEAVY_RAIN' ? 'Heavy Rain (>64.5mm)' : tgt === 'DRY_SPELL' ? 'Dry Spell (>=5d)' : 'Rainfall Sum (mm)'}
@@ -182,101 +195,106 @@ export const ModelsPage: React.FC = () => {
           ))}
         </div>
         <div className="flex items-center gap-1.5 ml-auto">
-          <span className="text-xs text-slate-500">Horizon:</span>
-          <Badge variant="neutral" size="sm">{selectedHorizon} Days</Badge>
+          <span className="text-xs text-[#62768A] font-mono">Horizon:</span>
+          <span className="px-2 py-0.5 rounded bg-[#F7F3EA] border border-[#0B1726]/20 font-mono font-bold text-xs text-[#0B1726]">
+            {selectedHorizon} Days
+          </span>
         </div>
       </div>
 
-      {/* Multi-Model Benchmark Comparison Table */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-base flex items-center gap-2">
-              <Scale className="w-4 h-4 text-blue-600" />
+      {/* 4. Multi-Model Benchmark Comparison Table */}
+      <div className="bg-white border-2 border-[#0B1726] rounded-2xl shadow-[4px_4px_0px_#0B1726] overflow-hidden">
+        <div className="p-4 border-b-2 border-[#0B1726]/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-[#FDFBF7]">
+          <div className="flex items-center gap-2">
+            <Scale className="w-4 h-4 text-[#008F83]" />
+            <h3 className="font-heading font-extrabold text-sm text-[#0B1726]">
               Multi-Paradigm Benchmark: Identical Test Partition
-            </CardTitle>
-            <span className="text-xs text-slate-500">
-              Evaluated on {comparison?.benchmark_report?.test_sample_count || 18} samples ({comparison?.benchmark_report?.evaluation_period || '2024-09-13 to 2024-09-30'})
-            </span>
+            </h3>
           </div>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr className="border-b border-slate-200 bg-slate-50 text-slate-600 font-semibold">
-                  <th className="py-2.5 px-3">Model Paradigm</th>
-                  <th className="py-2.5 px-3">Family</th>
-                  <th className="py-2.5 px-3">Test Brier / MAE</th>
-                  <th className="py-2.5 px-3">Skill vs Climatology</th>
-                  <th className="py-2.5 px-3">ROC-AUC / RMSE</th>
-                  <th className="py-2.5 px-3">Accuracy / F1</th>
-                  <th className="py-2.5 px-3">Calibration</th>
-                  <th className="py-2.5 px-3">Evaluation Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {comparison?.benchmark_report?.models?.map((m) => (
-                  <tr key={m.model_id} className="hover:bg-slate-50">
-                    <td className="py-2.5 px-3 font-medium text-slate-900">
-                      {m.model_name}
-                    </td>
-                    <td className="py-2.5 px-3">
-                      <span className="capitalize px-2 py-0.5 bg-slate-100 rounded text-slate-700 text-[11px]">
-                        {m.model_family.replace('_', ' ')}
-                      </span>
-                    </td>
-                    <td className="py-2.5 px-3 font-mono">
-                      {m.brier_score !== undefined ? m.brier_score.toFixed(4) : m.mae !== undefined ? `${m.mae.toFixed(2)} mm` : '—'}
-                    </td>
-                    <td className="py-2.5 px-3 font-mono">
-                      {m.brier_skill_score !== undefined ? (
-                        <span className={m.brier_skill_score > 0 ? 'text-emerald-700 font-semibold' : 'text-slate-500'}>
-                          {m.brier_skill_score > 0 ? `+${(m.brier_skill_score * 100).toFixed(1)}% BSS` : `${(m.brier_skill_score * 100).toFixed(1)}% BSS`}
-                        </span>
-                      ) : m.mae_skill_score !== undefined ? (
-                        <span className={m.mae_skill_score > 0 ? 'text-emerald-700 font-semibold' : 'text-slate-500'}>
-                          {m.mae_skill_score > 0 ? `+${(m.mae_skill_score * 100).toFixed(1)}% MSS` : `${(m.mae_skill_score * 100).toFixed(1)}% MSS`}
-                        </span>
-                      ) : (
-                        '0.0% (Ref)'
-                      )}
-                    </td>
-                    <td className="py-2.5 px-3 font-mono">
-                      {m.roc_auc !== undefined ? (
-                        <span>AUC: {m.roc_auc.toFixed(3)}</span>
-                      ) : m.rmse !== undefined ? (
-                        <span>RMSE: {m.rmse.toFixed(2)}</span>
-                      ) : (
-                        '—'
-                      )}
-                    </td>
-                    <td className="py-2.5 px-3 font-mono">
-                      {m.accuracy !== undefined ? (
-                        <span>{(m.accuracy * 100).toFixed(1)}% (F1: {m.f1_score?.toFixed(2) || '0.00'})</span>
-                      ) : (
-                        '—'
-                      )}
-                    </td>
-                    <td className="py-2.5 px-3">
-                      <Badge variant={m.is_calibrated ? 'emerald' : 'neutral'} size="sm">
-                        {m.is_calibrated ? 'Calibrated' : 'Uncalibrated'}
-                      </Badge>
-                    </td>
-                    <td className="py-2.5 px-3">
-                      <span className="text-[11px] text-slate-600">
-                        {m.has_skill_over_climatology ? 'Demonstrates Skill' : 'Baseline Reference'}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
+          <span className="text-xs text-[#62768A] font-mono">
+            Evaluated on {comparison?.benchmark_report?.test_sample_count || 18} samples ({comparison?.benchmark_report?.evaluation_period || '2024-09-13 to 2024-09-30'})
+          </span>
+        </div>
 
-      {/* PHASE 4C: Probability Reliability & Calibration Diagnostics Panel */}
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs">
+            <thead className="bg-[#F7F3EA] border-b-2 border-[#0B1726]/15 font-heading text-[#0B1726] uppercase tracking-wider text-[11px]">
+              <tr>
+                <th className="py-3 px-3.5 font-extrabold">Model Paradigm</th>
+                <th className="py-3 px-3 font-extrabold">Family</th>
+                <th className="py-3 px-3 font-extrabold">Test Brier / MAE</th>
+                <th className="py-3 px-3 font-extrabold">Skill vs Climatology</th>
+                <th className="py-3 px-3 font-extrabold">ROC-AUC / RMSE</th>
+                <th className="py-3 px-3 font-extrabold">Accuracy / F1</th>
+                <th className="py-3 px-3 font-extrabold">Calibration</th>
+                <th className="py-3 px-3.5 font-extrabold">Evaluation Status</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[#0B1726]/10 font-sans text-xs">
+              {comparison?.benchmark_report?.models?.map((m) => (
+                <tr key={m.model_id} className="hover:bg-[#FDFBF7] transition-colors">
+                  <td className="py-3 px-3.5 font-heading font-bold text-[#0B1726]">
+                    {m.model_name}
+                  </td>
+                  <td className="py-3 px-3 font-mono text-[#62768A]">
+                    <span className="capitalize px-2 py-0.5 bg-[#F7F3EA] rounded border border-[#0B1726]/10 text-[11px]">
+                      {m.model_family.replace('_', ' ')}
+                    </span>
+                  </td>
+                  <td className="py-3 px-3 font-mono font-bold text-[#0B1726]">
+                    {m.brier_score !== undefined ? m.brier_score.toFixed(4) : m.mae !== undefined ? `${m.mae.toFixed(2)} mm` : '—'}
+                  </td>
+                  <td className="py-3 px-3 font-mono">
+                    {m.brier_skill_score !== undefined ? (
+                      <span className={m.brier_skill_score > 0 ? 'text-[#2F7D4A] font-bold' : 'text-[#62768A]'}>
+                        {m.brier_skill_score > 0 ? `+${(m.brier_skill_score * 100).toFixed(1)}% BSS` : `${(m.brier_skill_score * 100).toFixed(1)}% BSS`}
+                      </span>
+                    ) : m.mae_skill_score !== undefined ? (
+                      <span className={m.mae_skill_score > 0 ? 'text-[#2F7D4A] font-bold' : 'text-[#62768A]'}>
+                        {m.mae_skill_score > 0 ? `+${(m.mae_skill_score * 100).toFixed(1)}% MSS` : `${(m.mae_skill_score * 100).toFixed(1)}% MSS`}
+                      </span>
+                    ) : (
+                      '0.0% (Ref)'
+                    )}
+                  </td>
+                  <td className="py-3 px-3 font-mono text-[#435466]">
+                    {m.roc_auc !== undefined ? (
+                      <span>AUC: {m.roc_auc.toFixed(3)}</span>
+                    ) : m.rmse !== undefined ? (
+                      <span>RMSE: {m.rmse.toFixed(2)}</span>
+                    ) : (
+                      '—'
+                    )}
+                  </td>
+                  <td className="py-3 px-3 font-mono text-[#435466]">
+                    {m.accuracy !== undefined ? (
+                      <span>{(m.accuracy * 100).toFixed(1)}% (F1: {m.f1_score?.toFixed(2) || '0.00'})</span>
+                    ) : (
+                      '—'
+                    )}
+                  </td>
+                  <td className="py-3 px-3">
+                    <span
+                      className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold border ${
+                        m.is_calibrated
+                          ? 'bg-[#EBF5EE] text-[#2F7D4A] border-[#2F7D4A]/30'
+                          : 'bg-[#F7F3EA] text-[#62768A] border-[#0B1726]/15'
+                      }`}
+                    >
+                      {m.is_calibrated ? 'Calibrated' : 'Uncalibrated'}
+                    </span>
+                  </td>
+                  <td className="py-3 px-3.5 text-[#435466] text-[11px]">
+                    {m.has_skill_over_climatology ? 'Demonstrates Skill' : 'Baseline Reference'}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* 5. PHASE 4C: Probability Reliability & Calibration Diagnostics Panel */}
       <CalibrationReliabilityPanel
         status={calibStatus}
         comparison={calibComp}
@@ -284,85 +302,94 @@ export const ModelsPage: React.FC = () => {
         selectedTarget={selectedTarget}
       />
 
-      {/* SHAP Feature Contribution & Explainability */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-base flex items-center gap-2">
-              <Compass className="w-4 h-4 text-purple-600" />
+      {/* 6. SHAP Feature Contribution & Explainability */}
+      <div className="bg-white border-2 border-[#0B1726] rounded-2xl p-5 sm:p-6 shadow-[4px_4px_0px_#0B1726] space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b-2 border-[#0B1726]/10 gap-2">
+          <div className="flex items-center gap-2">
+            <Compass className="w-5 h-5 text-[#008F83]" />
+            <h3 className="font-heading font-extrabold text-base text-[#0B1726]">
               SHAP Explainability: Feature Attributions & Teleconnections
-            </CardTitle>
-            <div className="flex items-center gap-2">
-              <Badge variant="azure" size="sm">
-                Teleconnections: {explanations?.teleconnection_importance_pct || 18.5}% Impact
-              </Badge>
-              <Badge variant="neutral" size="sm">
-                Top Driver: {explanations?.top_driver || 'rainfall_1d'}
-              </Badge>
-            </div>
+            </h3>
           </div>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <p className="text-xs text-slate-600">
-              Tree SHAP attributions quantify the marginal causal contribution of each antecedent meteorological variable and global teleconnection index to the forecast.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {explanations?.global_importances?.slice(0, 6).map((item) => (
-                <div key={item.feature_name} className="p-3 bg-slate-50 border border-slate-200 rounded-md">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="font-mono text-xs font-semibold text-slate-800">
-                      {item.feature_name}
-                    </span>
-                    <span className="text-xs font-bold text-purple-700">
-                      {item.relative_importance_pct.toFixed(1)}%
-                    </span>
-                  </div>
-                  <div className="w-full bg-slate-200 rounded-full h-2 mb-2">
-                    <div
-                      className="bg-purple-600 h-2 rounded-full"
-                      style={{ width: `${Math.min(100, item.relative_importance_pct * 2.5)}%` }}
-                    />
-                  </div>
-                  <div className="flex items-center justify-between text-[11px] text-slate-500">
-                    <span className="capitalize">{item.meteorological_category.replace('_', ' ')}</span>
-                    <span className="font-mono">Mean |SHAP|: {item.mean_abs_shap.toFixed(3)}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
+          <div className="flex items-center gap-2">
+            <span className="px-2.5 py-0.5 rounded-md bg-[#DCEFF0] text-[#006B65] text-[10px] font-mono font-bold border border-[#008F83]/30">
+              Teleconnections: {explanations?.teleconnection_importance_pct || 18.5}% Impact
+            </span>
+            <span className="px-2.5 py-0.5 rounded-md bg-[#F7F3EA] border border-[#0B1726]/20 text-[#0B1726] text-[10px] font-mono font-bold">
+              Top Driver: {explanations?.top_driver || 'rainfall_1d'}
+            </span>
           </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      {/* Scientific Dataset Catalog */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base flex items-center gap-2">
-            <Database className="w-4 h-4 text-emerald-600" />
-            Scientific Dataset Catalog & Integrity Hashing
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {datasets.map((ds) => (
-              <div key={ds.dataset_id} className="p-3.5 bg-slate-50 border border-slate-200 rounded-lg space-y-2">
-                <div className="flex items-start justify-between gap-1">
-                  <h4 className="font-semibold text-xs text-slate-900 leading-snug">{ds.name}</h4>
-                  <Badge variant={ds.qc_passed ? 'emerald' : 'amber'} size="sm">
-                    {ds.qc_passed ? 'QC Passed' : 'Pending'}
-                  </Badge>
-                </div>
-                <p className="text-[11px] text-slate-600 line-clamp-2">{ds.provider}</p>
-                <div className="pt-2 border-t border-slate-200/80 text-[11px] text-slate-500 space-y-1">
-                  <div><span className="text-slate-400">Resolution:</span> {ds.spatial_resolution}</div>
-                  <div><span className="text-slate-400">Cadence:</span> {ds.temporal_resolution}</div>
-                </div>
+        <p className="text-xs text-[#435466] leading-relaxed">
+          Tree SHAP attributions quantify the marginal empirical contribution of each antecedent meteorological variable and global teleconnection index to the downscaled forecast without establishing causal determinism.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {explanations?.global_importances?.slice(0, 6).map((item) => (
+            <div
+              key={item.feature_name}
+              className="p-3.5 bg-[#F7F3EA] border-2 border-[#0B1726]/15 rounded-xl space-y-2"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-xs font-bold text-[#0B1726]">
+                  {item.feature_name}
+                </span>
+                <span className="text-xs font-mono font-black text-[#008F83]">
+                  {item.relative_importance_pct.toFixed(1)}%
+                </span>
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+              <div className="w-full bg-white rounded-full h-2 overflow-hidden border border-[#0B1726]/15">
+                <div
+                  className="bg-[#008F83] h-full rounded-full"
+                  style={{ width: `${Math.min(100, item.relative_importance_pct * 2.5)}%` }}
+                />
+              </div>
+              <div className="flex items-center justify-between text-[10px] font-mono text-[#62768A]">
+                <span className="capitalize">{item.meteorological_category.replace('_', ' ')}</span>
+                <span>Mean |SHAP|: {item.mean_abs_shap.toFixed(3)}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 7. Scientific Dataset Catalog */}
+      <div className="bg-white border-2 border-[#0B1726] rounded-2xl p-5 sm:p-6 shadow-[4px_4px_0px_#0B1726] space-y-4">
+        <div className="flex items-center gap-2 pb-3 border-b-2 border-[#0B1726]/10">
+          <Database className="w-5 h-5 text-[#2F7D4A]" />
+          <h3 className="font-heading font-extrabold text-base text-[#0B1726]">
+            Scientific Dataset Catalog & Integrity Hashing
+          </h3>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {datasets.map((ds) => (
+            <div
+              key={ds.dataset_id}
+              className="p-3.5 bg-[#F7F3EA] border-2 border-[#0B1726]/15 rounded-xl space-y-2"
+            >
+              <div className="flex items-start justify-between gap-1">
+                <h4 className="font-heading font-bold text-xs text-[#0B1726] leading-snug">{ds.name}</h4>
+                <span
+                  className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold border ${
+                    ds.qc_passed
+                      ? 'bg-[#EBF5EE] text-[#2F7D4A] border-[#2F7D4A]/30'
+                      : 'bg-[#FEF6E9] text-[#9A6218] border-[#E5A33D]/40'
+                  }`}
+                >
+                  {ds.qc_passed ? 'QC Passed' : 'Pending'}
+                </span>
+              </div>
+              <p className="text-[11px] text-[#435466] line-clamp-2">{ds.provider}</p>
+              <div className="pt-2 border-t border-[#0B1726]/10 text-[10px] font-mono text-[#62768A] space-y-0.5">
+                <div><span>Resolution:</span> {ds.spatial_resolution}</div>
+                <div><span>Cadence:</span> {ds.temporal_resolution}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

@@ -20,6 +20,7 @@ import {
   Sliders,
   Check,
   X,
+  Radio,
 } from 'lucide-react';
 
 export const AlertCenterPage: React.FC = () => {
@@ -140,40 +141,40 @@ export const AlertCenterPage: React.FC = () => {
   return (
     <div className="space-y-6" data-testid="alert-center-page">
       {/* 1. Header & Actions */}
-      <Card className="p-5">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
+      <div className="bg-white border-2 border-[#0B1726] rounded-2xl p-5 sm:p-6 shadow-[4px_4px_0px_#0B1726]">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div className="space-y-1">
             <div className="flex items-center gap-2 flex-wrap">
-              <h2 className="font-heading font-bold text-lg text-slate-900">
+              <h2 className="font-heading font-extrabold text-xl sm:text-2xl text-[#0B1726] tracking-tight">
                 Alert Intelligence & Scientific Event Center
               </h2>
-              <Badge variant="amber" size="sm">
+              <span className="px-2.5 py-0.5 rounded-md bg-[#FEF6E9] border border-[#E5A33D] text-[#9A6218] text-[10px] font-mono font-bold">
                 DIAGNOSTIC_ONLY
-              </Badge>
-              <Badge variant="neutral" size="sm">
+              </span>
+              <span className="px-2.5 py-0.5 rounded-md bg-[#F7F3EA] border border-[#0B1726]/20 text-[#0B1726] text-[10px] font-mono font-bold">
                 Historical Archive (Kharif 2024)
-              </Badge>
+              </span>
             </div>
-            <p className="text-xs text-slate-600 mt-1">
+            <p className="text-xs text-[#435466]">
               Deterministic threshold detection and alert lifecycle management for Bakshi Ka Talab (UP_LKO_BKT). Non-operational diagnostic advisory mode.
             </p>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2.5 self-start lg:self-center">
             <button
               onClick={handleDetectEvents}
               disabled={isDetecting}
-              className="text-xs font-bold py-2 px-3.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg flex items-center gap-1.5 transition shadow-xs disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-heading font-bold bg-[#008F83] text-white border-2 border-[#0B1726] shadow-[2px_2px_0px_#0B1726] hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-50 min-h-[40px]"
             >
               {isDetecting ? (
                 <>
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  Detecting...
+                  <span>Detecting...</span>
                 </>
               ) : (
                 <>
                   <RefreshCw className="w-3.5 h-3.5" />
-                  Detect Events
+                  <span>Detect Events</span>
                 </>
               )}
             </button>
@@ -181,47 +182,45 @@ export const AlertCenterPage: React.FC = () => {
             <button
               onClick={handleProcessExpiry}
               disabled={isExpiring}
-              className="text-xs font-semibold py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg flex items-center gap-1.5 transition border border-slate-200 disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-heading font-bold bg-[#F7F3EA] text-[#0B1726] border-2 border-[#0B1726] shadow-[2px_2px_0px_#0B1726] hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-50 min-h-[40px]"
             >
               {isExpiring ? (
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
               ) : (
                 <Clock className="w-3.5 h-3.5" />
               )}
-              Run Expiry Sweep
+              <span>Run Expiry Sweep</span>
             </button>
           </div>
         </div>
-      </Card>
+      </div>
 
       {/* 2. Operational Gating Disclosure */}
-      <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-700 flex items-start gap-2.5">
-        <Info className="w-4 h-4 text-slate-500 shrink-0 mt-0.5" />
-        <p>
-          <strong className="text-slate-900">Scientific Integrity Notice:</strong> Events are detected directly from statistical downscaling outputs using Phase 4A meteorological thresholds (e.g. Heavy Rain ≥ 64.5mm/24h, Dry Spell ≥ 5 days). Because data reflects single-season historical archives, all events are designated <code>DIAGNOSTIC_ONLY</code>. Telecommunication broadcasting (SMS/WhatsApp) is disabled; deliveries operate in internal simulation mode.
+      <div className="p-4 bg-[#F7F3EA] border-2 border-[#0B1726] rounded-xl text-xs text-[#435466] shadow-[2px_2px_0px_#0B1726] flex items-start gap-3">
+        <Info className="w-4 h-4 text-[#008F83] shrink-0 mt-0.5" />
+        <p className="leading-relaxed">
+          <strong className="text-[#0B1726]">Scientific Integrity Notice:</strong> Events are detected directly from statistical downscaling outputs using Phase 4A meteorological thresholds (e.g. Heavy Rain ≥ 64.5mm/24h, Dry Spell ≥ 5 days). Because data reflects single-season historical archives, all events are designated <code>DIAGNOSTIC_ONLY</code>. Telecommunication broadcasting (SMS/WhatsApp) is disabled; deliveries operate in internal simulation mode.
         </p>
       </div>
 
       {error && (
-        <Card className="border-red-200 bg-red-50">
-          <CardContent className="p-4 flex items-center gap-3 text-red-800 text-xs">
-            <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
-            <span>{error}</span>
-          </CardContent>
-        </Card>
+        <div className="p-4 bg-red-50 border-2 border-red-500 rounded-xl text-xs text-red-700 flex items-center gap-2">
+          <AlertCircle className="w-4 h-4 shrink-0" />
+          <span>{error}</span>
+        </div>
       )}
 
       {/* 3. Filters Bar */}
-      <Card className="p-4">
+      <div className="bg-white border-2 border-[#0B1726] rounded-xl p-4 shadow-[3px_3px_0px_#0B1726]">
         <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3 items-center">
           <div>
-            <label className="text-[11px] font-semibold text-slate-600 block mb-1">
+            <label className="text-[11px] font-heading font-bold text-[#0B1726] block mb-1">
               Event Type
             </label>
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="w-full text-xs border border-slate-200 rounded-lg p-2 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full text-xs font-medium border-2 border-[#0B1726]/20 rounded-lg p-2 bg-[#F7F3EA] text-[#0B1726] focus:outline-none focus:border-[#008F83]"
             >
               <option value="ALL">All Event Types</option>
               <option value="HEAVY_RAIN_RISK">Heavy Rain Risk (≥64.5mm)</option>
@@ -234,13 +233,13 @@ export const AlertCenterPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="text-[11px] font-semibold text-slate-600 block mb-1">
+            <label className="text-[11px] font-heading font-bold text-[#0B1726] block mb-1">
               Severity Tier
             </label>
             <select
               value={severityFilter}
               onChange={(e) => setSeverityFilter(e.target.value)}
-              className="w-full text-xs border border-slate-200 rounded-lg p-2 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full text-xs font-medium border-2 border-[#0B1726]/20 rounded-lg p-2 bg-[#F7F3EA] text-[#0B1726] focus:outline-none focus:border-[#008F83]"
             >
               <option value="ALL">All Severities</option>
               <option value="CRITICAL">Critical</option>
@@ -251,13 +250,13 @@ export const AlertCenterPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="text-[11px] font-semibold text-slate-600 block mb-1">
+            <label className="text-[11px] font-heading font-bold text-[#0B1726] block mb-1">
               Lifecycle State
             </label>
             <select
               value={stateFilter}
               onChange={(e) => setStateFilter(e.target.value)}
-              className="w-full text-xs border border-slate-200 rounded-lg p-2 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full text-xs font-medium border-2 border-[#0B1726]/20 rounded-lg p-2 bg-[#F7F3EA] text-[#0B1726] focus:outline-none focus:border-[#008F83]"
             >
               <option value="ALL">All States</option>
               <option value="DETECTED">Detected</option>
@@ -269,68 +268,76 @@ export const AlertCenterPage: React.FC = () => {
           </div>
 
           <div className="sm:self-end pt-1">
-            <span className="text-xs text-slate-500 font-mono">
-              Total Events: <strong>{events.length}</strong>
+            <span className="text-xs text-[#62768A] font-mono">
+              Total Events: <strong className="text-[#0B1726]">{events.length}</strong>
             </span>
           </div>
         </div>
-      </Card>
+      </div>
 
       {/* 4. Events Matrix Table */}
-      <Card className="overflow-hidden">
+      <div className="bg-white border-2 border-[#0B1726] rounded-2xl shadow-[4px_4px_0px_#0B1726] overflow-hidden">
         {loading ? (
-          <div className="flex flex-col items-center justify-center p-12 text-slate-500">
-            <Loader2 className="w-8 h-8 animate-spin mb-3 text-indigo-600" />
-            <span className="text-sm font-medium">Scanning Alert Intelligence Registry...</span>
+          <div className="flex flex-col items-center justify-center p-12 text-[#62768A]">
+            <Loader2 className="w-8 h-8 animate-spin mb-3 text-[#008F83]" />
+            <span className="text-xs font-mono font-bold">Scanning Alert Intelligence Registry...</span>
           </div>
         ) : events.length === 0 ? (
-          <div className="text-center p-12 text-slate-500 space-y-2">
-            <Bell className="w-8 h-8 mx-auto text-slate-300" />
-            <p className="text-sm font-medium text-slate-700">No active events matching filter criteria</p>
-            <p className="text-xs text-slate-500">
+          <div className="text-center p-12 text-[#62768A] space-y-2">
+            <Bell className="w-8 h-8 mx-auto text-[#0B1726]/30" />
+            <p className="text-sm font-heading font-bold text-[#0B1726]">No active events matching filter criteria</p>
+            <p className="text-xs text-[#435466]">
               Click &quot;Detect Events&quot; above to run a threshold evaluation pass over current forecast products.
             </p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 border-b border-surface-border font-heading text-slate-700 uppercase tracking-wider text-[11px]">
+              <thead className="bg-[#F7F3EA] border-b-2 border-[#0B1726]/15 font-heading text-[#0B1726] uppercase tracking-wider text-[11px]">
                 <tr>
-                  <th className="py-3 px-4">Event & Type</th>
-                  <th className="py-3 px-3">Severity</th>
-                  <th className="py-3 px-3 text-right">Probability</th>
-                  <th className="py-3 px-3">Validity Window</th>
-                  <th className="py-3 px-3">Status</th>
-                  <th className="py-3 px-3">State</th>
-                  <th className="py-3 px-4 text-center">Actions</th>
+                  <th className="py-3 px-4 font-extrabold">Event & Type</th>
+                  <th className="py-3 px-3 font-extrabold">Severity</th>
+                  <th className="py-3 px-3 text-right font-extrabold">Probability</th>
+                  <th className="py-3 px-3 font-extrabold">Validity Window</th>
+                  <th className="py-3 px-3 font-extrabold">Status</th>
+                  <th className="py-3 px-3 font-extrabold">State</th>
+                  <th className="py-3 px-4 text-center font-extrabold">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-surface-border font-mono text-xs">
+              <tbody className="divide-y divide-[#0B1726]/10 font-mono text-xs">
                 {events.map((ev) => (
-                  <tr key={ev.event_id} className="hover:bg-slate-50/60 transition-colors">
+                  <tr key={ev.event_id} className="hover:bg-[#FDFBF7] transition-colors">
                     <td className="py-3.5 px-4 font-sans">
-                      <div className="font-bold text-slate-900">{ev.event_type}</div>
-                      <div className="text-[10px] font-mono text-slate-400">
+                      <div className="font-heading font-bold text-[#0B1726]">{ev.event_type}</div>
+                      <div className="text-[10px] font-mono text-[#62768A]">
                         {ev.event_id} • Block: {ev.block_id}
                       </div>
                     </td>
 
                     <td className="py-3.5 px-3 font-sans">
-                      <Badge variant={getSeverityBadgeVariant(ev.severity)} size="sm">
+                      <span
+                        className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold border ${
+                          ev.severity === 'CRITICAL'
+                            ? 'bg-[#FEF2F2] text-[#DC2626] border-[#DC2626]/30'
+                            : ev.severity === 'WARNING'
+                            ? 'bg-[#FEF6E9] text-[#9A6218] border-[#E5A33D]/40'
+                            : 'bg-[#EFF6FF] text-[#1D4ED8] border-[#3B82F6]/30'
+                        }`}
+                      >
                         {ev.severity}
-                      </Badge>
+                      </span>
                     </td>
 
-                    <td className="py-3.5 px-3 text-right font-bold text-slate-900">
+                    <td className="py-3.5 px-3 text-right font-bold text-[#0B1726]">
                       {(ev.probability * 100).toFixed(1)}%
                     </td>
 
-                    <td className="py-3.5 px-3 font-sans text-slate-600 text-[11px]">
+                    <td className="py-3.5 px-3 font-sans text-[#435466] text-[11px]">
                       {ev.valid_from} to {ev.valid_until}
                     </td>
 
                     <td className="py-3.5 px-3 font-sans">
-                      <span className="text-[10px] bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded font-mono font-medium">
+                      <span className="text-[10px] bg-[#FEF6E9] text-[#9A6218] border border-[#E5A33D] px-2 py-0.5 rounded font-mono font-bold">
                         {ev.operational_status}
                       </span>
                     </td>
@@ -339,10 +346,10 @@ export const AlertCenterPage: React.FC = () => {
                       <span
                         className={`text-[11px] font-bold px-2 py-0.5 rounded font-mono ${
                           ev.state === 'RESOLVED'
-                            ? 'bg-emerald-50 text-emerald-700'
+                            ? 'bg-[#EBF5EE] text-[#2F7D4A]'
                             : ev.state === 'ACKNOWLEDGED'
-                            ? 'bg-indigo-50 text-indigo-700'
-                            : 'bg-slate-100 text-slate-700'
+                            ? 'bg-[#EFF6FF] text-[#1D4ED8]'
+                            : 'bg-[#F7F3EA] text-[#0B1726]'
                         }`}
                       >
                         {ev.state}
@@ -354,7 +361,7 @@ export const AlertCenterPage: React.FC = () => {
                         {ev.state === 'DETECTED' && (
                           <button
                             onClick={() => handleAcknowledge(ev.event_id)}
-                            className="px-2 py-1 text-[11px] font-semibold bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded transition"
+                            className="px-2.5 py-1 text-[11px] font-heading font-bold bg-[#EBF5EE] hover:bg-[#2F7D4A] hover:text-white text-[#2F7D4A] rounded-lg border border-[#2F7D4A]/30 transition"
                           >
                             Acknowledge
                           </button>
@@ -362,17 +369,16 @@ export const AlertCenterPage: React.FC = () => {
                         {ev.state === 'ACKNOWLEDGED' && (
                           <button
                             onClick={() => handleResolve(ev.event_id)}
-                            className="px-2 py-1 text-[11px] font-semibold bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded transition"
+                            className="px-2.5 py-1 text-[11px] font-heading font-bold bg-[#F7F3EA] hover:bg-[#0B1726] hover:text-white text-[#0B1726] rounded-lg border border-[#0B1726]/20 transition"
                           >
                             Resolve
                           </button>
                         )}
                         <button
                           onClick={() => handleViewHistory(ev.event_id)}
-                          className="p-1 text-slate-400 hover:text-slate-700 rounded"
-                          title="View Transition History"
+                          className="px-2.5 py-1 text-[11px] font-heading font-bold bg-white text-[#435466] hover:text-[#0B1726] rounded-lg border border-[#0B1726]/15 transition"
                         >
-                          <History className="w-3.5 h-3.5" />
+                          History
                         </button>
                       </div>
                     </td>
@@ -382,50 +388,39 @@ export const AlertCenterPage: React.FC = () => {
             </table>
           </div>
         )}
-      </Card>
+      </div>
 
-      {/* 5. Event History Modal */}
+      {/* 5. Event History Inspection Drawer */}
       {selectedEventHistory && (
-        <Card className="p-5 border-indigo-200 bg-white shadow-lg">
-          <div className="flex items-center justify-between pb-3 border-b border-surface-border">
-            <div className="flex items-center gap-2">
-              <History className="w-4 h-4 text-indigo-600" />
-              <h3 className="font-heading font-bold text-sm text-slate-900">
-                Audit Trail: {selectedEventHistory.eventId}
-              </h3>
-            </div>
+        <div className="bg-white border-2 border-[#0B1726] rounded-2xl p-5 shadow-[4px_4px_0px_#0B1726] space-y-3">
+          <div className="flex items-center justify-between pb-2 border-b border-[#0B1726]/10">
+            <h3 className="font-heading font-extrabold text-sm text-[#0B1726]">
+              State Transition Audit: {selectedEventHistory.eventId}
+            </h3>
             <button
               onClick={() => setSelectedEventHistory(null)}
-              className="text-slate-400 hover:text-slate-600 p-1"
+              className="text-xs font-bold text-[#62768A] hover:text-[#0B1726]"
             >
-              <X className="w-4 h-4" />
+              Close
             </button>
           </div>
 
-          <div className="mt-3 space-y-2">
-            {selectedEventHistory.history.length === 0 ? (
-              <p className="text-xs text-slate-500 py-3">No state transitions recorded yet.</p>
-            ) : (
-              selectedEventHistory.history.map((t, idx) => (
-                <div
-                  key={t.transition_id || idx}
-                  className="p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs flex items-center justify-between gap-4"
-                >
+          {selectedEventHistory.history.length === 0 ? (
+            <p className="text-xs text-[#62768A]">No previous transitions recorded.</p>
+          ) : (
+            <div className="space-y-2 text-xs">
+              {selectedEventHistory.history.map((t, idx) => (
+                <div key={idx} className="p-3 bg-[#F7F3EA] rounded-xl border border-[#0B1726]/15 flex items-center justify-between">
                   <div>
-                    <span className="font-bold text-slate-900">
-                      {t.previous_state} ➔ {t.new_state}
-                    </span>
-                    <span className="text-slate-500 text-[11px] block">{t.reason}</span>
+                    <span className="font-bold text-[#0B1726]">{t.previous_state} → {t.new_state}</span>
+                    <p className="text-[11px] text-[#435466]">{t.reason}</p>
                   </div>
-                  <div className="text-right text-[10px] font-mono text-slate-400 shrink-0">
-                    <div>Actor: {t.actor}</div>
-                    <div>{t.timestamp}</div>
-                  </div>
+                  <span className="font-mono text-[10px] text-[#62768A]">{t.timestamp}</span>
                 </div>
-              ))
-            )}
-          </div>
-        </Card>
+              ))}
+            </div>
+          )}
+        </div>
       )}
     </div>
   );

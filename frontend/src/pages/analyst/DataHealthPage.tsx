@@ -5,13 +5,8 @@ import {
   DataSourceItem,
   DataIngestionRunItem,
 } from '../../services/dataHealthService';
-import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
-import { Badge } from '../../components/ui/Badge';
-import { Button } from '../../components/ui/Button';
 import {
   Database,
-  CheckCircle2,
-  AlertTriangle,
   Clock,
   RefreshCw,
   FileCheck2,
@@ -71,278 +66,288 @@ export const DataHealthPage: React.FC = () => {
   };
 
   const getStatusBadge = (status: string) => {
-    switch (status.toUpperCase()) {
-      case 'FRESH':
-      case 'SUCCESS':
-      case 'HEALTHY':
-        return <Badge variant="emerald" size="sm">{status}</Badge>;
-      case 'STALE':
-      case 'PARTIAL':
-      case 'DEGRADED':
-      case 'WARNING':
-        return <Badge variant="amber" size="sm">{status}</Badge>;
-      case 'FAILED':
-      case 'UNHEALTHY':
-      case 'BAD':
-        return <Badge variant="crimson" size="sm">{status}</Badge>;
-      case 'INACTIVE':
-      default:
-        return <Badge variant="neutral" size="sm">{status}</Badge>;
+    const s = status.toUpperCase();
+    if (s === 'FRESH' || s === 'SUCCESS' || s === 'HEALTHY') {
+      return (
+        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-mono font-bold uppercase tracking-wider bg-[#2F7D4A]/10 text-[#2F7D4A] border border-[#2F7D4A]/40">
+          ● {status}
+        </span>
+      );
     }
+    if (s === 'STALE' || s === 'PARTIAL' || s === 'DEGRADED' || s === 'WARNING') {
+      return (
+        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-mono font-bold uppercase tracking-wider bg-[#E5A33D]/15 text-[#B45309] border border-[#E5A33D]/50">
+          ▲ {status}
+        </span>
+      );
+    }
+    if (s === 'FAILED' || s === 'UNHEALTHY' || s === 'BAD') {
+      return (
+        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-mono font-bold uppercase tracking-wider bg-rose-100 text-rose-800 border border-rose-300">
+          ✖ {status}
+        </span>
+      );
+    }
+    return (
+      <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-mono font-semibold uppercase tracking-wider bg-slate-100 text-slate-700 border border-slate-300">
+        {status}
+      </span>
+    );
   };
 
   return (
     <div className="space-y-6">
       {/* Page Header */}
-      <Card className="p-5">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white rounded-2xl border-2 border-[#0B1726] shadow-[4px_4px_0px_#0B1726] p-6 transition-all">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2">
-              <h1 className="font-heading font-bold text-2xl text-slate-900">
-                Data Pipeline & Telemetry Health
-              </h1>
-              <Badge variant="emerald" size="sm">Phase 3 Live Data</Badge>
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <span className="px-2.5 py-0.5 rounded text-[11px] font-mono font-bold uppercase tracking-wider bg-[#008F83] text-white border border-[#0B1726]">
+                Telemetry Lab
+              </span>
+              <span className="px-2 py-0.5 rounded text-[11px] font-mono font-semibold uppercase tracking-wider bg-[#2F7D4A]/10 text-[#2F7D4A] border border-[#2F7D4A]/30">
+                Phase 3 Live Data
+              </span>
             </div>
-            <p className="text-xs text-slate-600 mt-1">
-              External climate observation feeds, quality control audits, and derived monsoon feature pipelines.
+            <h1 className="font-heading font-black text-2xl md:text-3xl text-[#0B1726] tracking-tight mt-2">
+              Data Pipeline & Telemetry Health
+            </h1>
+            <p className="text-xs md:text-sm text-slate-600 mt-1 max-w-3xl leading-relaxed">
+              External climate observation feeds, automated quality control audits, and derived monsoon feature pipelines strictly anchored to UP_LKO_BKT.
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
+          <div className="flex items-center gap-2.5 shrink-0 flex-wrap">
+            <button
               onClick={handleRefresh}
               disabled={refreshing || loading}
-              className="flex items-center gap-1.5 text-xs"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider bg-white text-[#0B1726] border-2 border-[#0B1726] shadow-[2px_2px_0px_#0B1726] hover:bg-[#F7F3EA] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all disabled:opacity-50"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
               Refresh Status
-            </Button>
-            <Button
-              variant="primary"
-              size="sm"
+            </button>
+            <button
               onClick={handleTriggerSync}
               disabled={triggering}
-              className="flex items-center gap-1.5 text-xs"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider bg-[#008F83] text-white border-2 border-[#0B1726] shadow-[2px_2px_0px_#0B1726] hover:bg-[#007b70] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all disabled:opacity-50"
             >
               <Activity className="w-3.5 h-3.5" />
               {triggering ? 'Ingesting Feeds...' : 'Trigger Pipeline Ingestion'}
-            </Button>
+            </button>
           </div>
         </div>
-      </Card>
+      </div>
 
       {/* Error Banner */}
       {error && (
-        <div className="p-4 bg-rose-50 border border-rose-200 rounded-xl flex items-center gap-3 text-rose-800 text-xs">
+        <div className="p-4 bg-rose-50 border-2 border-rose-300 rounded-xl flex items-center gap-3 text-rose-900 text-xs shadow-[2px_2px_0px_rgba(225,29,72,0.2)]">
           <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
-          <span>{error}</span>
+          <span className="font-medium">{error}</span>
         </div>
       )}
 
       {/* Overview Metric Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="p-4">
+        <div className="bg-white rounded-2xl border-2 border-[#0B1726] shadow-[3px_3px_0px_#0B1726] p-4 transition-all hover:-translate-y-0.5">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">Pipeline Status</span>
-            <Activity className="w-4 h-4 text-emerald-600" />
+            <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-slate-500">Pipeline Status</span>
+            <Activity className="w-4 h-4 text-[#2F7D4A]" />
           </div>
-          <div className="mt-2 text-xl font-heading font-bold text-slate-900">
+          <div className="mt-2 text-xl font-heading font-black text-[#0B1726]">
             {overview ? getStatusBadge(overview.overallHealth) : 'Not available'}
           </div>
-          <span className="text-[11px] text-slate-500 mt-1 block">
+          <span className="text-[11px] text-slate-600 mt-2 block font-medium">
             {overview ? `${overview.freshSources} of ${overview.totalSources} sources active` : 'Telemetry pending'}
           </span>
-        </Card>
+        </div>
 
-        <Card className="p-4">
+        <div className="bg-white rounded-2xl border-2 border-[#0B1726] shadow-[3px_3px_0px_#0B1726] p-4 transition-all hover:-translate-y-0.5">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">Total Ingestion Runs</span>
-            <Database className="w-4 h-4 text-blue-600" />
+            <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-slate-500">Ingestion Runs</span>
+            <Database className="w-4 h-4 text-[#008F83]" />
           </div>
-          <div className="mt-2 text-xl font-heading font-bold text-slate-900">
+          <div className="mt-2 text-2xl font-mono font-black text-[#0B1726]">
             {overview ? overview.totalRuns : '—'}
           </div>
-          <span className="text-[11px] text-slate-500 mt-1 block">
+          <span className="text-[11px] text-slate-600 mt-2 block font-medium">
             {overview ? `${overview.successfulRuns} successful, ${overview.failedRuns} failed` : '—'}
           </span>
-        </Card>
+        </div>
 
-        <Card className="p-4">
+        <div className="bg-white rounded-2xl border-2 border-[#0B1726] shadow-[3px_3px_0px_#0B1726] p-4 transition-all hover:-translate-y-0.5">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">Quality Assured</span>
-            <FileCheck2 className="w-4 h-4 text-indigo-600" />
+            <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-slate-500">Quality Assured</span>
+            <FileCheck2 className="w-4 h-4 text-[#2F7D4A]" />
           </div>
-          <div className="mt-2 text-xl font-heading font-bold text-slate-900">
+          <div className="mt-2 text-2xl font-mono font-black text-[#2F7D4A]">
             100%
           </div>
-          <span className="text-[11px] text-slate-500 mt-1 block">
+          <span className="text-[11px] text-slate-600 mt-2 block font-medium">
             Bounds QC & Deduplication audited
           </span>
-        </Card>
+        </div>
 
-        <Card className="p-4">
+        <div className="bg-white rounded-2xl border-2 border-[#0B1726] shadow-[3px_3px_0px_#0B1726] p-4 transition-all hover:-translate-y-0.5">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">Last Successful Sync</span>
-            <Clock className="w-4 h-4 text-amber-600" />
+            <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-slate-500">Last Sync Time</span>
+            <Clock className="w-4 h-4 text-[#E5A33D]" />
           </div>
-          <div className="mt-2 text-sm font-heading font-semibold text-slate-900 truncate">
+          <div className="mt-2 text-xs font-mono font-bold text-[#0B1726] truncate">
             {overview?.lastSyncTime
               ? new Date(overview.lastSyncTime).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'short', timeStyle: 'short' })
               : 'Not available'}
           </div>
-          <span className="text-[11px] text-slate-500 mt-1 block">
+          <span className="text-[11px] text-slate-600 mt-2 block font-medium">
             Real meteorological feeds
           </span>
-        </Card>
+        </div>
       </div>
 
       {/* Data Sources Provenance Table */}
-      <Card className="p-5">
-        <CardHeader className="pb-3 border-b border-surface-border">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="p-2 rounded-lg bg-surface-muted border border-surface-border text-slate-700">
-                <Database className="w-5 h-5" />
+      <div className="bg-white rounded-2xl border-2 border-[#0B1726] shadow-[4px_4px_0px_#0B1726] overflow-hidden">
+        <div className="p-5 border-b-2 border-[#0B1726] bg-[#F7F3EA]/60">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-xl bg-white border-2 border-[#0B1726] shadow-[2px_2px_0px_#0B1726] text-[#0B1726]">
+                <Database className="w-4 h-4" />
               </div>
               <div>
-                <CardTitle>Configured Scientific Data Sources</CardTitle>
-                <p className="text-xs text-slate-500">
+                <h3 className="font-heading font-black text-base text-[#0B1726]">
+                  Configured Scientific Data Sources
+                </h3>
+                <p className="text-xs text-slate-600">
                   Global climate indices and regional weather reanalysis feeds
                 </p>
               </div>
             </div>
-            <Badge variant="neutral" size="sm">
+            <span className="inline-flex items-center px-2.5 py-1 rounded text-[11px] font-mono font-bold uppercase tracking-wider bg-white text-[#0B1726] border border-[#0B1726] shadow-[2px_2px_0px_#0B1726] self-start sm:self-auto">
               PostgreSQL Registered
-            </Badge>
+            </span>
           </div>
-        </CardHeader>
-        <CardContent className="pt-4">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr className="border-b border-surface-border text-slate-500 font-heading font-semibold uppercase tracking-wider text-[11px]">
-                  <th className="pb-2.5">Data Feed</th>
-                  <th className="pb-2.5">Provider ID</th>
-                  <th className="pb-2.5">Frequency</th>
-                  <th className="pb-2.5">Freshness Status</th>
-                  <th className="pb-2.5">Last Sync</th>
-                  <th className="pb-2.5">Provenance</th>
+        </div>
+        <div className="p-5 overflow-x-auto">
+          <table className="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr className="border-b-2 border-[#0B1726]/20 text-[#0B1726] font-mono font-bold uppercase tracking-wider text-[11px]">
+                <th className="pb-3 px-2">Data Feed</th>
+                <th className="pb-3 px-2">Provider ID</th>
+                <th className="pb-3 px-2">Frequency</th>
+                <th className="pb-3 px-2">Freshness Status</th>
+                <th className="pb-3 px-2">Last Sync</th>
+                <th className="pb-3 px-2">Provenance</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {sources.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="py-6 text-center text-slate-500 font-mono text-xs">
+                    {loading ? 'Loading sources...' : 'No external data sources registered.'}
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-surface-border">
-                {sources.length === 0 ? (
-                  <tr>
-                    <td colSpan={6} className="py-4 text-center text-slate-500">
-                      {loading ? 'Loading sources...' : 'No external data sources registered.'}
+              ) : (
+                sources.map((s) => (
+                  <tr key={s.id} className="hover:bg-[#F7F3EA]/40 transition-colors">
+                    <td className="py-3 px-2 font-heading font-bold text-[#0B1726]">{s.name}</td>
+                    <td className="py-3 px-2 font-mono text-[11px] text-slate-600">{s.provider}</td>
+                    <td className="py-3 px-2 font-mono text-[11px] text-slate-700">{s.update_frequency || 'DAILY'}</td>
+                    <td className="py-3 px-2">{getStatusBadge(s.status)}</td>
+                    <td className="py-3 px-2 font-mono text-[11px] text-slate-600">
+                      {s.last_successful_sync
+                        ? new Date(s.last_successful_sync).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'short', timeStyle: 'short' })
+                        : 'Not available'}
+                    </td>
+                    <td className="py-3 px-2">
+                      {s.provenance_url ? (
+                        <a
+                          href={s.provenance_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-[#008F83] hover:underline font-mono font-bold text-[11px]"
+                        >
+                          Source Ref ↗
+                        </a>
+                      ) : (
+                        <span className="text-slate-400 font-mono text-[11px]">Not available</span>
+                      )}
                     </td>
                   </tr>
-                ) : (
-                  sources.map((s) => (
-                    <tr key={s.id} className="hover:bg-surface-muted/50 transition-colors">
-                      <td className="py-3 font-medium text-slate-900">{s.name}</td>
-                      <td className="py-3 font-mono text-[11px] text-slate-600">{s.provider}</td>
-                      <td className="py-3 text-slate-600">{s.update_frequency || 'DAILY'}</td>
-                      <td className="py-3">{getStatusBadge(s.status)}</td>
-                      <td className="py-3 text-slate-600">
-                        {s.last_successful_sync
-                          ? new Date(s.last_successful_sync).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'short', timeStyle: 'short' })
-                          : 'Not available'}
-                      </td>
-                      <td className="py-3">
-                        {s.provenance_url ? (
-                          <a
-                            href={s.provenance_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 hover:underline font-mono text-[11px]"
-                          >
-                            Source Ref ↗
-                          </a>
-                        ) : (
-                          <span className="text-slate-400">Not available</span>
-                        )}
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
       {/* Ingestion Runs History Table */}
-      <Card className="p-5">
-        <CardHeader className="pb-3 border-b border-surface-border">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="p-2 rounded-lg bg-surface-muted border border-surface-border text-slate-700">
-                <Layers className="w-5 h-5" />
+      <div className="bg-white rounded-2xl border-2 border-[#0B1726] shadow-[4px_4px_0px_#0B1726] overflow-hidden">
+        <div className="p-5 border-b-2 border-[#0B1726] bg-[#F7F3EA]/60">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-xl bg-white border-2 border-[#0B1726] shadow-[2px_2px_0px_#0B1726] text-[#0B1726]">
+                <Layers className="w-4 h-4" />
               </div>
               <div>
-                <CardTitle>Recent Data Pipeline Ingestion Runs</CardTitle>
-                <p className="text-xs text-slate-500">
+                <h3 className="font-heading font-black text-base text-[#0B1726]">
+                  Recent Data Pipeline Ingestion Runs
+                </h3>
+                <p className="text-xs text-slate-600">
                   Execution logs, validated record volumes, and Parquet storage artefacts
                 </p>
               </div>
             </div>
-            <Badge variant="neutral" size="sm">
+            <span className="inline-flex items-center px-2.5 py-1 rounded text-[11px] font-mono font-bold uppercase tracking-wider bg-white text-[#0B1726] border border-[#0B1726] shadow-[2px_2px_0px_#0B1726] self-start sm:self-auto">
               Audited Runs: {runs.length}
-            </Badge>
+            </span>
           </div>
-        </CardHeader>
-        <CardContent className="pt-4">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr className="border-b border-surface-border text-slate-500 font-heading font-semibold uppercase tracking-wider text-[11px]">
-                  <th className="pb-2.5">Dataset Name</th>
-                  <th className="pb-2.5">Provider</th>
-                  <th className="pb-2.5">Status</th>
-                  <th className="pb-2.5">Records Processed</th>
-                  <th className="pb-2.5">Failed Records</th>
-                  <th className="pb-2.5">Execution Time</th>
-                  <th className="pb-2.5">Artefact Storage</th>
+        </div>
+        <div className="p-5 overflow-x-auto">
+          <table className="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr className="border-b-2 border-[#0B1726]/20 text-[#0B1726] font-mono font-bold uppercase tracking-wider text-[11px]">
+                <th className="pb-3 px-2">Dataset Name</th>
+                <th className="pb-3 px-2">Provider</th>
+                <th className="pb-3 px-2">Status</th>
+                <th className="pb-3 px-2">Records Processed</th>
+                <th className="pb-3 px-2">Failed Records</th>
+                <th className="pb-3 px-2">Execution Time</th>
+                <th className="pb-3 px-2">Artefact Storage</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {runs.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="py-6 text-center text-slate-500 font-mono text-xs">
+                    {loading ? 'Loading ingestion runs...' : 'No data ingestion runs recorded yet.'}
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-surface-border">
-                {runs.length === 0 ? (
-                  <tr>
-                    <td colSpan={7} className="py-4 text-center text-slate-500">
-                      {loading ? 'Loading ingestion runs...' : 'No data ingestion runs recorded yet.'}
+              ) : (
+                runs.map((r) => (
+                  <tr key={r.id} className="hover:bg-[#F7F3EA]/40 transition-colors">
+                    <td className="py-3 px-2 font-heading font-bold text-[#0B1726]">{r.dataset_name}</td>
+                    <td className="py-3 px-2 font-mono text-[11px] text-slate-600">{r.provider}</td>
+                    <td className="py-3 px-2">{getStatusBadge(r.status)}</td>
+                    <td className="py-3 px-2 font-mono font-black text-[#2F7D4A]">
+                      {r.records_processed.toLocaleString()}
+                    </td>
+                    <td className="py-3 px-2 font-mono text-slate-600">
+                      {r.records_failed > 0 ? (
+                        <span className="text-rose-600 font-bold">{r.records_failed}</span>
+                      ) : (
+                        '0'
+                      )}
+                    </td>
+                    <td className="py-3 px-2 font-mono text-[11px] text-slate-600">
+                      {new Date(r.started_at).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'short', timeStyle: 'short' })}
+                    </td>
+                    <td className="py-3 px-2 font-mono text-[10px] text-slate-600 max-w-[200px] truncate" title={r.file_path || ''}>
+                      {r.file_path ? r.file_path.split('/').pop() : 'Not stored'}
                     </td>
                   </tr>
-                ) : (
-                  runs.map((r) => (
-                    <tr key={r.id} className="hover:bg-surface-muted/50 transition-colors">
-                      <td className="py-3 font-medium text-slate-900">{r.dataset_name}</td>
-                      <td className="py-3 font-mono text-[11px] text-slate-600">{r.provider}</td>
-                      <td className="py-3">{getStatusBadge(r.status)}</td>
-                      <td className="py-3 font-mono text-emerald-700 font-semibold">
-                        {r.records_processed.toLocaleString()}
-                      </td>
-                      <td className="py-3 font-mono text-slate-600">
-                        {r.records_failed > 0 ? (
-                          <span className="text-rose-600 font-semibold">{r.records_failed}</span>
-                        ) : (
-                          '0'
-                        )}
-                      </td>
-                      <td className="py-3 text-slate-600">
-                        {new Date(r.started_at).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'short', timeStyle: 'short' })}
-                      </td>
-                      <td className="py-3 font-mono text-[10px] text-slate-500 max-w-[200px] truncate" title={r.file_path || ''}>
-                        {r.file_path ? r.file_path.split('/').pop() : 'Not stored'}
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 };
