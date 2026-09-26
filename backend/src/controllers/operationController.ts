@@ -22,6 +22,21 @@ export const operationController = {
     }
   },
 
+  async getSignalContext(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    try {
+      const signalId = req.params.signalId;
+      const context = await operationalSignalService.getDecisionSupportContext(signalId, {
+        userId: req.user?.id,
+        role: req.user?.role,
+        assignedLocationId: req.user?.assignedLocationId,
+      });
+
+      return sendSuccess(res, context);
+    } catch (error) {
+      next(error);
+    }
+  },
+
   async getStatus(req: Request, res: Response, next: NextFunction) {
     try {
       try {

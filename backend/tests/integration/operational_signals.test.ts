@@ -187,4 +187,114 @@ describe('Phase 7A — Operational Intelligence Signals Integration Tests', () =
       expect(modelStatus).toBeUndefined();
     });
   });
+
+  describe('5. Phase 7B Decision Support Context (GET /operations/signals/:signalId/context)', () => {
+    it('rejects unauthenticated requests with 401 Unauthorized', async () => {
+      const res = await request(app).get(
+        '/api/v1/operations/signals/sig_gate_multiyear_hindcast_insufficient/context'
+      );
+      expect(res.status).toBe(401);
+      expect(res.body.success).toBe(false);
+      expect(res.body.error.code).toBe('UNAUTHORIZED');
+    });
+
+    it('returns 404 NOT_FOUND for nonexistent signal ID', async () => {
+      const res = await request(app)
+        .get('/api/v1/operations/signals/sig_nonexistent_99999/context')
+        .set('Authorization', `Bearer ${analystToken}`);
+
+      expect(res.status).toBe(404);
+      expect(res.body.success).toBe(false);
+      expect(res.body.error.code).toBe('NOT_FOUND');
+    });
+
+    it('returns complete decision support context with standardized envelope for Analyst', async () => {
+      const res = await request(app)
+        .get('/api/v1/operations/signals/sig_gate_multiyear_hindcast_insufficient/context')
+        .set('Authorization', `Bearer ${analystToken}`);
+
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+      expect(res.body).toHaveProperty('data');
+      expect(res.body).toHaveProperty('meta');
+      expect(res.body.meta).toHaveProperty('requestId');
+
+      const data = res.body.data;
+      expect(data.signalId).toBe('sig_gate_multiyear_hindcast_insufficient');
+      expect(data.signalType).toBe('OPERATIONAL_GATE');
+      expect(data.location).toBeDefined();
+      expect(data.location.blockId).toBe('UP_LKO_BKT');
+      expect(data.timing).toBeDefined();
+      expect(data.scientific).toBeDefined();
+      expect(data.scientific.operationalStatus).toBe('DIAGNOSTIC_ONLY');
+      expect(data.scientific.validationStatus).toBe('INSUFFICIENT_DATA');
+      expect(data.evidence).toBeDefined();
+      expect(data.evidence.provenanceAvailable).toBe(true);
+      expect(data.underlyingEntity).toBeDefined();
+      expect(data.underlyingEntity.entityType).toBe('SYSTEM_GATE');
+      expect(Array.isArray(data.nextInspections)).toBe(true);
+      expect(data.nextInspections.length).toBeGreaterThan(0);
+      expect(Array.isArray(data.limitations)).toBe(true);
+    });
+
+    it('resolves underlying EVENT entity with SHAP feature contributions and non-causal disclaimer', async () => {
+      const res = await request(app)
+        .get('/api/v1/operations/signals/sig_evt_evt-101/context')
+        .set('Authorization', `Bearer ${analystToken}`);
+
+      expect(res.status).toBe(200);
+      const data = res.body.data;
+      expect(data.signalType).toBe('EVENT');
+      expect(data.underlyingEntity.entityType).toBe('EVENT');
+      expect(data.evidence.explanation.available).toBe(true);
+      expect(data.evidence.explanation.contributions.length).toBeGreaterThan(0);
+      expect(data.evidence.explanation.nonCausalDisclaimer).toContain('do NOT represent direct causal relationships');
+      expect(data.evidence.modelReference).toBeDefined();
+      expect(data.evidence.modelReference.modelFamily).toContain('Calibrated Tree Ensemble');
+      expect(data.evidence.observationReference).toBeDefined();
+      expect(data.evidence.observationReference.stationId).toBe('AWS_UP_LKO_001');
+    });
+
+    it('forbids Farmer from accessing internal MODEL_STATUS signal', async () => {
+      const res = await request(app)
+        .get('/api/v1/operations/signals/sig_model_calib_ensemble/context')
+        .set('Authorization', `Bearer ${farmerToken}`);
+
+      expect(res.status).toBe(403);
+      expect(res.body.success).toBe(false);
+      expect(res.body.error.code).toBe('FORBIDDEN');
+    });
+
+    it('tailors context for Farmer by omitting raw ECE and Brier scores while showing friendly reliability label', async () => {
+      const res = await request(app)
+        .get('/api/v1/operations/signals/sig_evt_evt-101/context')
+        .set('Authorization', `Bearer ${farmerToken}`);
+
+      expect(res.status).toBe(200);
+      const data = res.body.data;
+      expect(data.scientific.modelReliabilityLabel).toBeDefined();
+      // Raw ECE and Brier scores omitted from default farmer model reference
+      expect(data.evidence.modelReference?.ece).toBeUndefined();
+      expect(data.evidence.modelReference?.brierScore).toBeUndefined();
+    });
+
+    it('allows Officer, Government, and Admin to access authorized signal context', async () => {
+      const [officerRes, govRes, adminRes] = await Promise.all([
+        request(app)
+          .get('/api/v1/operations/signals/sig_evt_evt-101/context')
+          .set('Authorization', `Bearer ${officerToken}`),
+        request(app)
+          .get('/api/v1/operations/signals/sig_evt_evt-101/context')
+          .set('Authorization', `Bearer ${govToken}`),
+        request(app)
+          .get('/api/v1/operations/signals/sig_evt_evt-101/context')
+          .set('Authorization', `Bearer ${adminToken}`),
+      ]);
+
+      expect(officerRes.status).toBe(200);
+      expect(govRes.status).toBe(200);
+      expect(adminRes.status).toBe(200);
+    });
+  });
 });
+

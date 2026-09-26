@@ -18,6 +18,7 @@ import {
 import { useRealtimeStore } from '../../stores/useRealtimeStore';
 import { OperationalSignalCard } from './OperationalSignalCard';
 import { ProvenanceDrawer, ProvenanceDetails } from '../visualization/ProvenanceDrawer';
+import { DecisionSupportWorkspace } from './DecisionSupportWorkspace';
 import { cn } from '../../utils/cn';
 
 interface OperationalSignalCenterProps {
@@ -61,6 +62,7 @@ export const OperationalSignalCenter: React.FC<OperationalSignalCenterProps> = (
   const [selectedType, setSelectedType] = useState<'ALL' | OperationalSignalType>('ALL');
   const [selectedSeverity, setSelectedSeverity] = useState<'ALL' | SignalSeverity>('ALL');
   const [provenanceSignal, setProvenanceSignal] = useState<OperationalSignalDTO | null>(null);
+  const [inspectingSignalId, setInspectingSignalId] = useState<string | null>(null);
 
   // Realtime signals from store
   const realtimeSignals = useRealtimeStore((state) => state.operationalSignals);
@@ -303,6 +305,7 @@ export const OperationalSignalCenter: React.FC<OperationalSignalCenterProps> = (
               signal={signal}
               compact={compact}
               onInspectEvidence={handleOpenEvidence}
+              onInspectDetails={(sig) => setInspectingSignalId(sig.signalId)}
             />
           ))}
         </div>
@@ -316,6 +319,20 @@ export const OperationalSignalCenter: React.FC<OperationalSignalCenterProps> = (
         targetId={provenanceSignal?.signalId}
         provenance={provenanceData}
       />
+
+      {/* Decision Support Workspace */}
+      {inspectingSignalId && (
+        <DecisionSupportWorkspace
+          signalId={inspectingSignalId}
+          isOpen={Boolean(inspectingSignalId)}
+          onClose={() => setInspectingSignalId(null)}
+          persona={persona}
+          onNavigateAction={(target) => {
+            window.location.href = target;
+          }}
+        />
+      )}
     </section>
   );
 };
+
