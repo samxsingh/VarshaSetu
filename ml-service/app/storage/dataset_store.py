@@ -1,16 +1,24 @@
 import json
+import re
 from pathlib import Path
 from typing import Optional, Dict, Any, List
 import pandas as pd
 from ..schemas.provenance import ProvenanceMetadata
 from ..config import settings
 
+def _sanitize_name(name: str) -> str:
+    clean = Path(name).name
+    if not re.match(r'^[a-zA-Z0-9_\-]+$', clean):
+        raise ValueError(f"Invalid dataset or feature set identifier: '{name}'. Path traversal and special characters are strictly prohibited.")
+    return clean
+
 class DatasetStore:
     @classmethod
     def save_processed(cls, dataset_name: str, df: pd.DataFrame, metadata: ProvenanceMetadata) -> Path:
         """Save normalized dataset as Apache Parquet with sidecar provenance metadata."""
-        parquet_path = settings.PROCESSED_DATA_DIR / f"{dataset_name}.parquet"
-        meta_path = settings.PROCESSED_DATA_DIR / f"{dataset_name}_meta.json"
+        safe_name = _sanitize_name(dataset_name)
+        parquet_path = settings.PROCESSED_DATA_DIR / f"{safe_name}.parquet"
+        meta_path = settings.PROCESSED_DATA_DIR / f"{safe_name}_meta.json"
         
         # Save Parquet
         df.to_parquet(parquet_path, engine="pyarrow", index=False)
@@ -26,8 +34,9 @@ class DatasetStore:
     @classmethod
     def save_features(cls, feature_set_name: str, df: pd.DataFrame, metadata: ProvenanceMetadata) -> Path:
         """Save ML-ready feature dataset for consumption by Phase 4."""
-        parquet_path = settings.FEATURE_DATA_DIR / f"{feature_set_name}.parquet"
-        meta_path = settings.FEATURE_DATA_DIR / f"{feature_set_name}_meta.json"
+        safe_name = _sanitize_name(feature_set_name)
+        parquet_path = settings.FEATURE_DATA_DIR / f"{safe_name}.parquet"
+        meta_path = settings.FEATURE_DATA_DIR / f"{safe_name}_meta.json"
         
         df.to_parquet(parquet_path, engine="pyarrow", index=False)
         
@@ -40,14 +49,16 @@ class DatasetStore:
 
     @classmethod
     def load_processed(cls, dataset_name: str) -> Optional[pd.DataFrame]:
-        parquet_path = settings.PROCESSED_DATA_DIR / f"{dataset_name}.parquet"
+        safe_name = _sanitize_name(dataset_name)
+        parquet_path = settings.PROCESSED_DATA_DIR / f"{safe_name}.parquet"
         if not parquet_path.exists():
             return None
         return pd.read_parquet(parquet_path, engine="pyarrow")
 
     @classmethod
     def load_features(cls, feature_set_name: str) -> Optional[pd.DataFrame]:
-        parquet_path = settings.FEATURE_DATA_DIR / f"{feature_set_name}.parquet"
+        safe_name = _sanitize_name(feature_set_name)
+        parquet_path = settings.FEATURE_DATA_DIR / f"{safe_name}.parquet"
         if not parquet_path.exists():
             return None
         return pd.read_parquet(parquet_path, engine="pyarrow")

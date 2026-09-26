@@ -20,6 +20,18 @@ const envSchema = z.object({
   DEFAULT_DEMO_BLOCK: z.string().default('Bakshi Ka Talab'),
   DEFAULT_DEMO_LATITUDE: z.string().default('26.9749').transform((val) => parseFloat(val)),
   DEFAULT_DEMO_LONGITUDE: z.string().default('80.9276').transform((val) => parseFloat(val)),
+  
+  RATE_LIMIT_ENABLED: z.string().default('true').transform((val) => val === 'true'),
+}).refine((data) => {
+  if (data.NODE_ENV === 'production') {
+    if (data.JWT_SECRET === 'varshasetu_development_jwt_secret_key_32chars!') {
+      return false;
+    }
+  }
+  return true;
+}, {
+  message: 'In production mode, JWT_SECRET must be explicitly set to a secure key and cannot be the default development secret.',
+  path: ['JWT_SECRET'],
 });
 
 export type EnvConfig = z.infer<typeof envSchema>;

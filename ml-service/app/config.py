@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     VERSION: str = "1.0.0"
     ENVIRONMENT: str = os.getenv("NODE_ENV", "development")
     PORT: int = int(os.getenv("ML_SERVICE_PORT", "8000"))
+    CORS_ORIGIN: str = os.getenv("CORS_ORIGIN", "http://localhost:5173,http://localhost:5001")
     
     # PostgreSQL Connection (matches backend)
     DATABASE_URL: str = os.getenv("DATABASE_URL", "postgresql://localhost:5432/varshasetu")

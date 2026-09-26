@@ -2,14 +2,16 @@
 > *“From climate signals to confident farm decisions.”*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Status: Phase 5C Complete](https://img.shields.io/badge/Status-Phase%205C%20Complete-emerald.svg)](#roadmap)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Status: Phase 6 Complete](https://img.shields.io/badge/Status-Phase%206%20Production%20Hardened-emerald.svg)](#roadmap)
+[![Tests: 355 Passing](https://img.shields.io/badge/Tests-355%20Passing-brightgreen.svg)](#roadmap)
 [![Stack: TypeScript & Python](https://img.shields.io/badge/Stack-TypeScript%20%7C%20Python%203.11-slate.svg)](#technology-stack)
 
 ---
 
 ## 1. Project Overview
 
-**VarshaSetu** is a production-oriented, hyperlocal monsoon intelligence and agricultural decision-support platform designed for Indian smallholder and rainfed farmers, extension officers, and agricultural planners.
+**VarshaSetu** is a production-hardened, hyperlocal monsoon intelligence and agricultural decision-support platform designed for Indian smallholder and rainfed farmers, extension officers, and agricultural planners.
 
 Operating at the critical block and gram panchayat scale, VarshaSetu bridges the gap between planetary climate modulators (El Niño-Southern Oscillation, Indian Ocean Dipole, Madden-Julian Oscillation) and village-level farm decisions. Rather than presenting generic daily weather forecasts or raw meteorological charts, VarshaSetu delivers **calibrated, probabilistic medium-range (7–30 day) forecasts** translated into **crop-stage-specific agronomic advice** and **interactive "what-if" risk simulations**.
 
@@ -28,7 +30,7 @@ cd backend
 npm install
 npm run migrate   # Applies 11 migrations (geography, auth, sources, ingestion, lifecycle, agronomy, scenarios, multilingual delivery)
 npm run seed      # Seeds demonstration administrative hierarchy & demo users
-npm test          # Runs 85 API, RBAC, downscaling, calibration, hindcasting, event, advisory, scenario, and localization tests
+npm test          # Runs 92 API, security, RBAC, health, downscaling, calibration, hindcasting, advisory, scenario, and localization tests
 npm run dev       # Starts backend API on http://localhost:5001
 ```
 
@@ -38,7 +40,7 @@ cd ml-service
 python3.11 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-pytest            # Runs 174 provider, tree ensemble, SHAP, calibration, hindcasting, lifecycle, event, agronomic, scenario, and localization tests
+pytest            # Runs 202 provider, tree ensemble, SHAP, calibration, hindcasting, scientific integrity, observability, and localization tests
 uvicorn app.main:app --port 8000 --reload  # Starts ML service on http://localhost:8000
 ```
 
@@ -54,6 +56,12 @@ npm run dev       # Starts Vite dev server on http://localhost:5173
 
 ## 3. Comprehensive Documentation
 
+- **[Scientific Integrity Final Audit](docs/scientific-integrity-audit.md):** Automated 25-point audit report verifying single-season Kharif 2024 archive, zero yield models, non-alarmist safety gates, and zero fabricated data.
+- **[Security Architecture & Hardening](docs/security-hardening.md):** Granular RBAC across 5 roles, privilege escalation rejection, parameterized SQL queries, sliding-window rate limiting, and security headers.
+- **[Observability & Telemetry](docs/observability.md):** Unified `/health`, `/ready`, `/version`, `/metrics` architecture, 11 subsystem telemetry states, and service-health vs. scientific-validity separation.
+- **[Deployment Readiness Guide](docs/deployment.md):** Full deployment specifications, ports, environment templates, migration steps, container probes, and rollback procedures.
+- **[Universal API Reference Manual](docs/api-reference.md):** Universal REST endpoint specification covering all 8 API families and typed JSON envelopes.
+- **[Production Readiness & Gating Audits](docs/production-readiness.md):** Subsystem audit matrix, carrier gating safeguards, and operational verification endpoints.
 - **[Multilingual Advisory Delivery & Voice Accessibility](docs/multilingual-advisory.md):** 16 sections on controlled language registry, immutable terminology catalog, deterministic bilingual templates, 14-point safety gate, DEMO_ONLY voice engine, and read receipts.
 - **[Advanced What-If Scenario Analysis & Sensitivity Engine](docs/scenario-analysis.md):** 16 sections on controlled scenario catalog, deterministic sensitivity engine, comparative deltas, envelopes, checks 14–21, and zero-yield-model boundaries.
 - **[Agronomic Rules & Explainable Advisory Foundation](docs/agronomic-rules.md):** 14 sections on controlled crop registry, 9 registered rules, 13-check safety gate, What-If simulator, and non-causal phrasing.
@@ -223,7 +231,9 @@ Key environment parameters:
 - **Phase 5A (Complete):** Agronomic Rules Engine & Explainable Advisory Foundation.
 - **Phase 5B (Complete):** Advanced What-If Scenario Analysis, Sensitivity Engine & Envelopes.
 - **Phase 5C (Complete):** Multilingual Agronomic Advisory Delivery, Voice Accessibility & Personalization.
-- **Phase 6 (Pending):** Production Voice Integration & Multi-Channel Telecom Gateway (Bhashini production, SMS, WhatsApp).
+- **Phase 6 (Complete):** Production Hardening, Deployment Readiness, Security, Observability & Final System Validation.
+
+> **Roadmap Locked:** Phase 1A through Phase 6 are fully implemented and verified with 355 passing tests. No Phase 7 exists. Meteorological forecasts and agronomic recommendations remain in `DIAGNOSTIC_ONLY` mode anchored to the Kharif 2024 observational archive (`UP_LKO_BKT`).
 
 ---
 

@@ -2,8 +2,9 @@ import { userRepository, UserRow } from '../repositories/userRepository';
 import { auditRepository } from '../repositories/auditRepository';
 import { hashPassword, comparePassword } from '../utils/password';
 import { signAuthToken } from '../utils/jwt';
-import { UnauthorizedError, ConflictError, NotFoundError } from '../utils/errors';
+import { UnauthorizedError, ConflictError, NotFoundError, ForbiddenError } from '../utils/errors';
 import { UserEntity, UserRole, PermissionScope } from '@shared/types';
+import { env } from '../config/env';
 
 // Default permissions by role
 const ROLE_DEFAULT_PERMISSIONS: Record<UserRole, PermissionScope[]> = {
@@ -85,6 +86,9 @@ export const authService = {
     if (payload.password) {
       isPasswordValid = await comparePassword(payload.password, userRow.password_hash);
     } else if (payload.otp) {
+      if (env.NODE_ENV === 'production') {
+        throw new UnauthorizedError('OTP login is disabled in production without configured SMS gateway');
+      }
       // Demo OTP accepted for farmer convenience in development environment
       isPasswordValid = payload.otp === '123456';
     }
@@ -127,6 +131,12 @@ export const authService = {
     assignedLocationId?: string;
     ipAddress?: string;
   }): Promise<{ token: string; user: UserEntity }> {
+    // Prevent unauthenticated self-registration privilege escalation
+    if (payload.role && payload.role !== 'FARMER') {
+      throw new ForbiddenError(
+        `Self-registration is restricted to FARMER role. Roles such as '${payload.role}' require administrator assignment.`
+      );
+    }
     if (payload.email) {
       const existing = await userRepository.findByEmail(payload.email);
       if (existing) {

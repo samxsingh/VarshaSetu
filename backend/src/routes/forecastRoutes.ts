@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { forecastController } from '../controllers/forecastController';
+import { simulationRateLimiter } from '../middleware/rateLimitMiddleware';
 
 export const forecastRoutes = Router();
 
@@ -13,8 +14,8 @@ forecastRoutes.get('/location/:blockId', forecastController.getLocationForecasts
 
 // Forecast listing & generation
 forecastRoutes.get('/', forecastController.listForecasts);
-forecastRoutes.post('/generate', forecastController.generateForecast);
-forecastRoutes.post('/process-expiry', forecastController.processExpiry);
+forecastRoutes.post('/generate', simulationRateLimiter, forecastController.generateForecast);
+forecastRoutes.post('/process-expiry', simulationRateLimiter, forecastController.processExpiry);
 
 // Parameterized by forecast ID
 forecastRoutes.get('/:id/explanation', forecastController.getForecastExplanation);

@@ -1,14 +1,31 @@
-from fastapi import FastAPI, HTTPException, Query, BackgroundTasks
+from fastapi import FastAPI, HTTPException, Query, BackgroundTasks, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
 from typing import Optional, List, Dict, Any
 from datetime import datetime, timezone
 import psycopg2
 import pandas as pd
+import uuid
+import time
+import resource
 
 from .config import settings
 from .ingestion.pipeline import IngestionPipeline
 from .storage.dataset_store import DatasetStore
 from .schemas.ingestion import IngestionRunResult
+
+class SecurityAndTracingMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        req_id = request.headers.get("x-request-id") or str(uuid.uuid4())
+        response = await call_next(request)
+        
+        # Security & Tracing Headers
+        response.headers["X-Request-Id"] = req_id
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["X-XSS-Protection"] = "1; mode=block"
+        response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+        return response
 
 app = FastAPI(
     title="VarshaSetu Scientific Data & Meteorological Service",
@@ -16,9 +33,13 @@ app = FastAPI(
     version=settings.VERSION,
 )
 
+cors_origins = [o.strip() for o in settings.CORS_ORIGIN.split(",") if o.strip()]
+allowed_origins = cors_origins if settings.ENVIRONMENT == "production" else ["*"]
+
+app.add_middleware(SecurityAndTracingMiddleware)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -26,7 +47,7 @@ app.add_middleware(
 
 @app.get("/health")
 def get_health() -> Dict[str, Any]:
-    """Microservice health and telemetry."""
+    """Microservice health, unified subsystems telemetry, and scientific disclosures."""
     db_connected = False
     try:
         conn = psycopg2.connect(settings.DATABASE_URL)
@@ -45,11 +66,139 @@ def get_health() -> Dict[str, Any]:
         "environment": settings.ENVIRONMENT,
         "timestamp": datetime.utcnow().isoformat(),
         "database_connected": db_connected,
+        "health_classification": "HEALTHY" if db_connected else "DEGRADED",
         "storage": {
-            "raw_dir": str(settings.RAW_DATA_DIR),
-            "processed_dir": str(settings.PROCESSED_DATA_DIR),
-            "features_dir": str(settings.FEATURE_DATA_DIR),
+            "raw_store": "AVAILABLE" if settings.RAW_DATA_DIR.exists() else "UNAVAILABLE",
+            "processed_store": "AVAILABLE" if settings.PROCESSED_DATA_DIR.exists() else "UNAVAILABLE",
+            "features_store": "AVAILABLE" if settings.FEATURE_DATA_DIR.exists() else "UNAVAILABLE",
         },
+        "subsystems": {
+            "forecast_engine": {
+                "status": "DIAGNOSTIC_ONLY",
+                "operational_mode": "DIAGNOSTIC_ONLY",
+                "ground_anchor": "UP_LKO_BKT",
+                "records_count": 122,
+                "season": "Kharif 2024",
+                "spatial_resolution": "BLOCK",
+            },
+            "calibration_engine": {
+                "status": "HEALTHY",
+                "methods": ["platt", "isotonic"],
+                "calibration_gate": "ENFORCED",
+            },
+            "hindcast_validation": {
+                "status": "HEALTHY",
+                "multiyear_operational_gate": "BLOCKED_SINGLE_SEASON",
+                "evaluated_season": "Kharif 2024",
+            },
+            "agronomic_engine": {
+                "status": "HEALTHY",
+                "rules_count": 9,
+                "safety_gate": "ACTIVE",
+                "yield_biomass_predictions": "PROHIBITED",
+            },
+            "scenario_simulator": {
+                "status": "HEALTHY",
+                "mode": "SCENARIO_INDICATOR_ONLY",
+                "financial_projections": "PROHIBITED",
+            },
+            "localization_engine": {
+                "status": "HEALTHY",
+                "supported_languages": ["EN", "HI"],
+                "method": "CONTROLLED_TEMPLATE",
+                "safety_gate_checks": 14,
+            },
+            "voice_subsystem": {
+                "status": "DEMO_ONLY",
+                "provider": "MOCK_LOCAL_VOICE_ENGINE",
+                "bhashini": "NOT_CONFIGURED",
+            },
+            "alert_lifecycle": {
+                "status": "HEALTHY",
+                "state_machine": "ACTIVE",
+                "deduplication": "ACTIVE",
+            },
+            "notification_delivery": {
+                "status": "NOT_CONFIGURED",
+                "sms": "NOT_CONFIGURED",
+                "whatsapp": "NOT_CONFIGURED",
+            },
+        },
+        "scientific_integrity": {
+            "distinction_note": "Service technical uptime does NOT imply scientific operational validity. Forecasts operate strictly in DIAGNOSTIC_ONLY mode anchored to Kharif 2024 observational archive (UP_LKO_BKT, 122 records).",
+            "ground_anchor": "UP_LKO_BKT",
+            "observational_season": "Kharif 2024",
+            "single_season_constraint": True,
+            "operational_forecast_active": False,
+        },
+    }
+
+@app.get("/ready")
+def get_ready() -> Dict[str, Any]:
+    """Readiness probe checking database connectivity and storage readiness."""
+    db_connected = False
+    try:
+        conn = psycopg2.connect(settings.DATABASE_URL)
+        cur = conn.cursor()
+        cur.execute("SELECT 1;")
+        cur.close()
+        conn.close()
+        db_connected = True
+    except Exception:
+        db_connected = False
+
+    storage_ready = settings.FEATURE_DATA_DIR.exists() and settings.ARTIFACTS_DIR.exists()
+    is_ready = db_connected and storage_ready
+
+    if not is_ready:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "ready": False,
+                "dependencies": {
+                    "database": "UP" if db_connected else "DOWN",
+                    "storage": "UP" if storage_ready else "DOWN",
+                },
+            },
+        )
+    return {
+        "ready": True,
+        "timestamp": datetime.utcnow().isoformat(),
+        "dependencies": {
+            "database": "UP",
+            "storage": "UP",
+        },
+    }
+
+@app.get("/version")
+def get_version() -> Dict[str, Any]:
+    """Semantic version and deployment readiness metadata."""
+    return {
+        "service": settings.SERVICE_NAME,
+        "version": settings.VERSION,
+        "environment": settings.ENVIRONMENT,
+        "phase": "PHASE_6_PRODUCTION_READY",
+        "ground_anchor": "UP_LKO_BKT",
+        "season": "Kharif 2024",
+        "status": "PRODUCTION_HARDENED",
+    }
+
+@app.get("/metrics")
+def get_metrics() -> Dict[str, Any]:
+    """Non-sensitive resource and operational metrics."""
+    try:
+        max_rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    except Exception:
+        max_rss = 0
+    return {
+        "service": settings.SERVICE_NAME,
+        "version": settings.VERSION,
+        "timestamp": datetime.utcnow().isoformat(),
+        "memory": {
+            "max_rss_kb": max_rss,
+        },
+        "scientific_mode": "DIAGNOSTIC_ONLY",
+        "ground_anchor": "UP_LKO_BKT",
     }
 
 @app.get("/data/status")

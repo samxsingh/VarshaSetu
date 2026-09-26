@@ -5,6 +5,7 @@ import { env } from './config/env';
 import { requestLogger } from './middleware/requestLogger';
 import { errorHandler } from './middleware/errorMiddleware';
 import { apiRouter } from './routes';
+import { healthController } from './controllers/healthController';
 import { sendError } from './utils/responseEnvelope';
 
 export function createApp(): Express {
@@ -38,7 +39,13 @@ export function createApp(): Express {
   // 4. Structured Request Logging
   app.use(requestLogger);
 
-  // 5. Mount API version 1
+  // 5. Root Observability Endpoints (for container orchestration, probes & status monitoring)
+  app.get('/health', (req: Request, res: Response) => healthController.getHealth(req, res));
+  app.get('/ready', (req: Request, res: Response) => healthController.getReadiness(req, res));
+  app.get('/version', (req: Request, res: Response) => healthController.getVersion(req, res));
+  app.get('/metrics', (req: Request, res: Response) => healthController.getMetrics(req, res));
+
+  // 6. Mount API version 1
   app.use('/api/v1', apiRouter);
 
   // 6. 404 Catch-All Handler for API

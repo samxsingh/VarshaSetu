@@ -13,4 +13,20 @@ export const healthController = {
     const statusCode = dbHealth.postgres ? 200 : 503;
     return sendSuccess(res, dbHealth, undefined, statusCode);
   },
+
+  async getReadiness(_req: Request, res: Response): Promise<Response> {
+    const readiness = await healthService.getReadiness();
+    const statusCode = readiness.ready ? 200 : 503;
+    return sendSuccess(res, readiness, undefined, statusCode);
+  },
+
+  getVersion(_req: Request, res: Response): Response {
+    const version = healthService.getVersion();
+    return sendSuccess(res, version);
+  },
+
+  getMetrics(_req: Request, res: Response): Response {
+    const metrics = healthService.getMetrics();
+    return sendSuccess(res, metrics);
+  },
 };

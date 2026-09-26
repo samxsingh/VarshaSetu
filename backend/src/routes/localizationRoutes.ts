@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { localizationController } from '../controllers/localizationController';
 import { requireAuth } from '../middleware/authMiddleware';
+import { voiceRateLimiter } from '../middleware/rateLimitMiddleware';
 
 export const localizationRoutes = Router();
 
@@ -17,4 +18,4 @@ localizationRoutes.post('/advisories/:id/read', requireAuth, localizationControl
 
 // Voice accessibility subsystem
 localizationRoutes.get('/status', localizationController.getVoiceStatus);
-localizationRoutes.post('/advisories/:id/synthesize', requireAuth, localizationController.synthesizeVoice);
+localizationRoutes.post('/advisories/:id/synthesize', requireAuth, voiceRateLimiter, localizationController.synthesizeVoice);
