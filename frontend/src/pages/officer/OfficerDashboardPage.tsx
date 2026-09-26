@@ -8,6 +8,7 @@ import { SelectedAreaPanel } from '../../components/maps/SelectedAreaPanel';
 import { ScientificIntegrityStrip } from '../../components/officer/ScientificIntegrityStrip';
 import { useOfficerStore } from '../../stores/useOfficerStore';
 import { Send, MapPin, Compass, Eye, ShieldAlert, Sparkles } from 'lucide-react';
+import { RiskDistribution, ForecastTimeline } from '../../components/visualization';
 
 export const OfficerDashboardPage: React.FC = () => {
   const { t } = useTranslation();
@@ -69,6 +70,85 @@ export const OfficerDashboardPage: React.FC = () => {
 
       {/* 2. Top Intelligence Strip */}
       <SummaryStatCards />
+
+      {/* 2b. Spatial Risk Distribution & Instrument Pipeline (Phase 7C) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="lg:col-span-5 bg-white border-2 border-[#102A43] rounded-2xl p-5 shadow-[4px_4px_0px_#102A43]">
+          <RiskDistribution
+            title="Block Signal Distribution"
+            subtitle="Observed administrative status across 6 monitoring centroids"
+            totalLabel="Active Centroids"
+            items={[
+              {
+                key: 'watch',
+                label: 'WATCH',
+                count: 2,
+                color: '#D97706',
+                description: 'Chinhat, Sarojininagar: Dry spell break risk exceeds 50%',
+              },
+              {
+                key: 'elevated',
+                label: 'ELEVATED',
+                count: 1,
+                color: '#B45309',
+                description: 'Mohanlalganj: Localized rainfall deficit (-28% departure)',
+              },
+              {
+                key: 'normal',
+                label: 'NORMAL',
+                count: 3,
+                color: '#0891B2',
+                description: 'Bakshi Ka Talab, Malihabad, Gosainganj: Climatological bounds',
+              },
+            ]}
+          />
+        </div>
+
+        <div className="lg:col-span-7 bg-white border-2 border-[#102A43] rounded-2xl p-5 shadow-[4px_4px_0px_#102A43] flex flex-col justify-between">
+          <ForecastTimeline
+            mode="process"
+            title="Scientific Pipeline & Verification Lifecycle"
+            subtitle="Operational lineage: IMD Centroid UP_LKO_BKT"
+            stages={[
+              {
+                id: 'obs',
+                name: 'OBSERVATION',
+                timestamp: 'Kharif 2024 Archive',
+                status: 'completed',
+                details: '122 daily IMD AWS observations ingested without gaps',
+              },
+              {
+                id: 'run',
+                name: 'MODEL RUN',
+                timestamp: 'SEAS5 / ERA5 Downscaled',
+                status: 'completed',
+                details: '4km grid resolution numerical atmospheric prediction',
+              },
+              {
+                id: 'calib',
+                name: 'CALIBRATION',
+                timestamp: 'Sample Gate: 18 Test Bins',
+                status: 'gated',
+                details: 'Engineering gate active: empirical validation only',
+              },
+              {
+                id: 'window',
+                name: 'FORECAST WINDOW',
+                timestamp: '7–14 Day Horizon',
+                status: 'active',
+                details: 'Centroid risk evaluations for agricultural extension',
+              },
+              {
+                id: 'val',
+                name: 'VALIDATION',
+                timestamp: 'Skill Score Audit',
+                status: 'pending',
+                details: 'Post-event verification against verified rain gauges',
+              },
+            ]}
+          />
+        </div>
+      </div>
 
       {/* 3. Primary GIS Map & Drill-Down Grid */}
       <div className="space-y-3">

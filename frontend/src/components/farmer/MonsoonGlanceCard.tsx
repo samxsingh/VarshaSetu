@@ -13,6 +13,7 @@ import { useFarmerStore } from '../../stores/useFarmerStore';
 import { HorizonSelector } from '../forecast/HorizonSelector';
 import { ForecastHorizonDays } from '@shared/types';
 import { ScientificStatusBadge } from './ScientificStatusBadge';
+import { ForecastTimeline } from '../visualization';
 
 export const MonsoonGlanceCard: React.FC = () => {
   const { t } = useTranslation();
@@ -215,7 +216,55 @@ export const MonsoonGlanceCard: React.FC = () => {
 
         </div>
 
-        {/* Cumulative Rainfall Strip */}
+        {/* Daily Rainfall Hyetograph Timeline (Phase 7B) */}
+        <ForecastTimeline
+          mode="rainfall"
+          title="Daily Rainfall Distribution (Simulated Diagnostic Hyetograph)"
+          subtitle={`Window: ${current.dates} • Total: ${current.expectedRainfallMm}`}
+          rainfallData={
+            horizon === 7
+              ? [
+                  { date: '2024-06-25', label: 'Jun 25', rainfallMm: 14 },
+                  { date: '2024-06-26', label: 'Jun 26', rainfallMm: 22 },
+                  { date: '2024-06-27', label: 'Jun 27', rainfallMm: 46, isPeak: true },
+                  { date: '2024-06-28', label: 'Jun 28', rainfallMm: 28 },
+                  { date: '2024-06-29', label: 'Jun 29', rainfallMm: 12 },
+                  { date: '2024-06-30', label: 'Jun 30', rainfallMm: 8 },
+                  { date: '2024-07-01', label: 'Jul 01', rainfallMm: 5 },
+                ]
+              : horizon === 14
+              ? [
+                  { date: '2024-06-25', label: 'W1 D1', rainfallMm: 18 },
+                  { date: '2024-06-27', label: 'W1 D3', rainfallMm: 52, isPeak: true },
+                  { date: '2024-06-29', label: 'W1 D5', rainfallMm: 34 },
+                  { date: '2024-07-01', label: 'W1 D7', rainfallMm: 20 },
+                  { date: '2024-07-03', label: 'W2 D2', rainfallMm: 12 },
+                  { date: '2024-07-05', label: 'W2 D4', rainfallMm: 6 },
+                  { date: '2024-07-07', label: 'W2 D6', rainfallMm: 4 },
+                ]
+              : horizon === 21
+              ? [
+                  { date: '2024-06-25', label: 'W1', rainfallMm: 95, isPeak: true },
+                  { date: '2024-07-02', label: 'W2', rainfallMm: 42 },
+                  { date: '2024-07-09', label: 'W3', rainfallMm: 18 },
+                  { date: '2024-07-16', label: 'W4', rainfallMm: 25 },
+                  { date: '2024-07-23', label: 'W5', rainfallMm: 30 },
+                  { date: '2024-07-30', label: 'W6', rainfallMm: 22 },
+                  { date: '2024-08-06', label: 'W7', rainfallMm: 15 },
+                ]
+              : [
+                  { date: '2024-06-25', label: 'W1-2', rainfallMm: 140, isPeak: true },
+                  { date: '2024-07-05', label: 'W3', rainfallMm: 35 },
+                  { date: '2024-07-12', label: 'W4', rainfallMm: 28 },
+                  { date: '2024-07-19', label: 'W5', rainfallMm: 55 },
+                  { date: '2024-07-26', label: 'W6', rainfallMm: 45 },
+                  { date: '2024-08-02', label: 'W7', rainfallMm: 30 },
+                  { date: '2024-08-09', label: 'W8', rainfallMm: 20 },
+                ]
+          }
+        />
+
+        {/* Cumulative Rainfall & Temporal Hierarchy Strip */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-[#F3F6F7] rounded-xl border border-[#102A43]/20 text-xs">
           <div className="flex items-center gap-3">
             <div className="p-1.5 rounded-lg bg-white border border-[#102A43]/10 text-[#0E7490]">
@@ -228,12 +277,15 @@ export const MonsoonGlanceCard: React.FC = () => {
               <span className="text-[#829AB1] block sm:inline sm:ml-2">
                 ({current.departureText})
               </span>
+              <div className="text-[10px] font-mono text-[#829AB1] mt-0.5">
+                Obs Date: Jun 24, 2024 • Model Run: SEAS5/ERA5 Downscaled • Archive: Kharif 2024
+              </div>
             </div>
           </div>
 
           <Link
             to="/farmer/forecast"
-            className="inline-flex items-center gap-1.5 font-heading font-bold text-[#0E7490] hover:text-[#155E75] transition-colors"
+            className="inline-flex items-center gap-1.5 font-heading font-bold text-[#0E7490] hover:text-[#155E75] transition-colors shrink-0"
           >
             <span>Detailed Forecast View</span>
             <ChevronRight className="w-3.5 h-3.5" />

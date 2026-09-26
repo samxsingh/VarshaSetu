@@ -53,6 +53,36 @@ export const CropAdvisoryCard: React.FC = () => {
           </div>
         </div>
 
+        {/* WHAT THE MODEL SEES (Phase 7B Evidence Module) */}
+        <div className="bg-[#F3F6F7] border-2 border-[#102A43] p-4 rounded-xl shadow-[2px_2px_0px_#102A43] space-y-2.5">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-heading font-black text-[#102A43] uppercase tracking-wider">
+              WHAT THE MODEL SEES (Atmospheric Evidence)
+            </span>
+            <span className="text-[10px] font-mono text-[#0E7490] font-bold bg-white px-2 py-0.5 rounded border border-[#102A43]/15">
+              4 Physical Signals
+            </span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            <div className="bg-white p-2.5 rounded-lg border border-[#102A43]/15">
+              <span className="font-heading font-bold text-[#102A43] block">1. Low-Level Moisture Jet</span>
+              <span className="text-[11px] text-[#486581]">850 hPa westerly wind vectors confirm continuous Arabian Sea moisture transport.</span>
+            </div>
+            <div className="bg-white p-2.5 rounded-lg border border-[#102A43]/15">
+              <span className="font-heading font-bold text-[#102A43] block">2. Seedbed Soil Moisture</span>
+              <span className="text-[11px] text-[#486581]">Topsoil currently at 68% field capacity, preventing seed desiccation during germination.</span>
+            </div>
+            <div className="bg-white p-2.5 rounded-lg border border-[#102A43]/15">
+              <span className="font-heading font-bold text-[#102A43] block">3. 48-Hour Safe Window</span>
+              <span className="text-[11px] text-[#486581]">Dry spell probability is low (22%), allowing 2 full rain-free days for nursery bed preparation.</span>
+            </div>
+            <div className="bg-white p-2.5 rounded-lg border border-[#102A43]/15">
+              <span className="font-heading font-bold text-[#102A43] block">4. Convective Rain Arrival</span>
+              <span className="text-[11px] text-[#486581]">Convective system arriving June 27 provides natural watering without diesel pumping cost.</span>
+            </div>
+          </div>
+        </div>
+
         {/* Recommended Actions */}
         <div className="space-y-3">
           <h4 className="font-heading font-black text-sm text-[#102A43] flex items-center gap-2">

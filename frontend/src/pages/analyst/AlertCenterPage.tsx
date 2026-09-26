@@ -295,12 +295,13 @@ export const AlertCenterPage: React.FC = () => {
             <table className="w-full text-left text-xs">
               <thead className="bg-[#F3F6F7] border-b-2 border-[#102A43]/15 font-heading text-[#102A43] uppercase tracking-wider text-[11px]">
                 <tr>
-                  <th className="py-3 px-4 font-extrabold">Event & Type</th>
+                  <th className="py-3 px-4 font-extrabold">Event ID & Source</th>
+                  <th className="py-3 px-3 font-extrabold">Detected</th>
                   <th className="py-3 px-3 font-extrabold">Severity</th>
+                  <th className="py-3 px-3 font-extrabold">Threshold Trigger</th>
                   <th className="py-3 px-3 text-right font-extrabold">Probability</th>
-                  <th className="py-3 px-3 font-extrabold">Validity Window</th>
-                  <th className="py-3 px-3 font-extrabold">Status</th>
-                  <th className="py-3 px-3 font-extrabold">State</th>
+                  <th className="py-3 px-3 font-extrabold">Current State</th>
+                  <th className="py-3 px-3 font-extrabold">Expiry Window</th>
                   <th className="py-3 px-4 text-center font-extrabold">Actions</th>
                 </tr>
               </thead>
@@ -310,8 +311,12 @@ export const AlertCenterPage: React.FC = () => {
                     <td className="py-3.5 px-4 font-sans">
                       <div className="font-heading font-bold text-[#102A43]">{ev.event_type}</div>
                       <div className="text-[10px] font-mono text-[#829AB1]">
-                        {ev.event_id} • Block: {ev.block_id}
+                        {ev.event_id} • Centroid: {ev.block_id}
                       </div>
+                    </td>
+
+                    <td className="py-3.5 px-3 font-mono text-[11px] text-[#486581]">
+                      {ev.detected_at ? new Date(ev.detected_at).toLocaleDateString() : ev.valid_from}
                     </td>
 
                     <td className="py-3.5 px-3 font-sans">
@@ -328,32 +333,30 @@ export const AlertCenterPage: React.FC = () => {
                       </span>
                     </td>
 
+                    <td className="py-3.5 px-3 font-sans text-[#486581] text-[11px] max-w-xs">
+                      {ev.description || 'Threshold exceedance evaluated'}
+                    </td>
+
                     <td className="py-3.5 px-3 text-right font-bold text-[#102A43]">
                       {(ev.probability * 100).toFixed(1)}%
                     </td>
 
-                    <td className="py-3.5 px-3 font-sans text-[#486581] text-[11px]">
-                      {ev.valid_from} to {ev.valid_until}
-                    </td>
-
-                    <td className="py-3.5 px-3 font-sans">
-                      <span className="text-[10px] bg-[#FEF3C7] text-[#B45309] border border-[#D97706] px-2 py-0.5 rounded font-mono font-bold">
-                        {ev.operational_status}
-                      </span>
-                    </td>
-
                     <td className="py-3.5 px-3 font-sans">
                       <span
-                        className={`text-[11px] font-bold px-2 py-0.5 rounded font-mono ${
+                        className={`text-[10px] font-bold px-2 py-0.5 rounded font-mono border ${
                           ev.state === 'RESOLVED'
-                            ? 'bg-[#EBF5EE] text-[#3F7D58]'
+                            ? 'bg-[#EBF5EE] text-[#3F7D58] border-[#3F7D58]/30'
                             : ev.state === 'ACKNOWLEDGED'
-                            ? 'bg-[#DBEAFE] text-[#1E40AF]'
-                            : 'bg-[#F3F6F7] text-[#102A43]'
+                            ? 'bg-[#DBEAFE] text-[#1E40AF] border-[#2563EB]/30'
+                            : 'bg-[#F3F6F7] text-[#102A43] border-[#102A43]/20'
                         }`}
                       >
                         {ev.state}
                       </span>
+                    </td>
+
+                    <td className="py-3.5 px-3 font-mono text-[#486581] text-[11px]">
+                      {ev.valid_until}
                     </td>
 
                     <td className="py-3.5 px-4 text-center font-sans">
@@ -361,7 +364,7 @@ export const AlertCenterPage: React.FC = () => {
                         {ev.state === 'DETECTED' && (
                           <button
                             onClick={() => handleAcknowledge(ev.event_id)}
-                            className="px-2.5 py-1 text-[11px] font-heading font-bold bg-[#EBF5EE] hover:bg-[#3F7D58] hover:text-white text-[#3F7D58] rounded-lg border border-[#3F7D58]/30 transition"
+                            className="px-2.5 py-1 text-[11px] font-heading font-bold bg-[#EBF5EE] hover:bg-[#3F7D58] hover:text-white text-[#3F7D58] rounded-lg border border-[#3F7D58]/30 active:translate-x-0.5 active:translate-y-0.5 transition"
                           >
                             Acknowledge
                           </button>
@@ -369,14 +372,14 @@ export const AlertCenterPage: React.FC = () => {
                         {ev.state === 'ACKNOWLEDGED' && (
                           <button
                             onClick={() => handleResolve(ev.event_id)}
-                            className="px-2.5 py-1 text-[11px] font-heading font-bold bg-[#F3F6F7] hover:bg-[#102A43] hover:text-white text-[#102A43] rounded-lg border border-[#102A43]/20 transition"
+                            className="px-2.5 py-1 text-[11px] font-heading font-bold bg-[#0E7490] hover:bg-[#155E75] text-white rounded-lg border border-[#102A43] active:translate-x-0.5 active:translate-y-0.5 transition"
                           >
                             Resolve
                           </button>
                         )}
                         <button
                           onClick={() => handleViewHistory(ev.event_id)}
-                          className="px-2.5 py-1 text-[11px] font-heading font-bold bg-white text-[#486581] hover:text-[#102A43] rounded-lg border border-[#102A43]/15 transition"
+                          className="px-2.5 py-1 text-[11px] font-heading font-bold bg-white text-[#486581] hover:text-[#102A43] rounded-lg border border-[#102A43]/15 active:translate-x-0.5 active:translate-y-0.5 transition"
                         >
                           History
                         </button>

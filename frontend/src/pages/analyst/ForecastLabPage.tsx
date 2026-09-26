@@ -977,38 +977,75 @@ export const ForecastLabPage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* SHAP Drivers */}
+                {/* Domain-Grouped SHAP Model Attribution */}
                 {generatedForecast.explainability.top_features.length > 0 && (
-                  <div className="pt-4">
-                    <h4 className="font-heading font-black text-xs text-[#102A43] uppercase tracking-wider mb-2.5">
-                      Key Atmospheric Predictors (SHAP Attribution)
-                    </h4>
-                    <div className="space-y-2">
-                      {generatedForecast.explainability.top_features.map((item, idx) => (
-                        <div
-                          key={idx}
-                          className="p-3 bg-[#F3F6F7] border border-[#102A43]/20 rounded-xl text-xs flex items-center justify-between gap-4"
-                        >
-                          <div className="flex items-center gap-2">
-                            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-white border border-[#102A43]/30 text-[#102A43]">
-                              {item.category}
-                            </span>
-                            <span className="font-bold text-[#102A43] font-mono">{item.feature}</span>
-                            <span className="text-slate-600 text-[11px] font-medium">{item.description}</span>
-                          </div>
-                          <div className="flex items-center gap-2 font-mono shrink-0">
-                            <span
-                              className={`text-[11px] font-bold ${
-                                item.direction === 'elevates' ? 'text-[#0E7490]' : 'text-slate-600'
-                              }`}
-                            >
-                              {item.direction.toUpperCase()} ({item.shap_value > 0 ? '+' : ''}
-                              {item.shap_value.toFixed(3)})
-                            </span>
-                          </div>
-                        </div>
-                      ))}
+                  <div className="pt-4 space-y-3">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                      <h4 className="font-heading font-black text-xs text-[#102A43] uppercase tracking-wider">
+                        Domain-Grouped Atmospheric Predictors (SHAP Model Attribution)
+                      </h4>
+                      <span className="text-[10px] font-mono text-[#0E7490] font-bold">
+                        Statistical attribution — not physical cause
+                      </span>
                     </div>
+
+                    <div className="border-2 border-[#102A43] rounded-xl overflow-hidden shadow-[2px_2px_0px_#102A43]">
+                      <table className="w-full text-left text-xs border-collapse">
+                        <thead className="bg-[#F3F6F7] border-b-2 border-[#102A43]/15 text-[#102A43] font-bold text-[11px] font-heading">
+                          <tr>
+                            <th className="py-2.5 px-3">Atmospheric Domain</th>
+                            <th className="py-2.5 px-3">Feature Name</th>
+                            <th className="py-2.5 px-3">Direction</th>
+                            <th className="py-2.5 px-3 text-right">Contribution</th>
+                            <th className="py-2.5 px-3 hidden sm:table-cell">Physical Interpretation</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-[#102A43]/10 bg-white font-mono text-xs">
+                          {generatedForecast.explainability.top_features.map((item, idx) => (
+                            <tr key={idx} className="hover:bg-[#F3F6F7]/50 transition-colors">
+                              <td className="py-2.5 px-3">
+                                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-[#EAF0F2] border border-[#102A43]/15 text-[#102A43]">
+                                  {item.category}
+                                </span>
+                              </td>
+                              <td className="py-2.5 px-3 font-bold text-[#102A43]">
+                                {item.feature}
+                              </td>
+                              <td className="py-2.5 px-3 font-sans">
+                                <span
+                                  className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase ${
+                                    item.direction === 'elevates'
+                                      ? 'bg-[#E4F0E8] text-[#3F7D58] border border-[#3F7D58]/30'
+                                      : 'bg-[#F3F6F7] text-[#486581] border border-[#102A43]/15'
+                                  }`}
+                                >
+                                  {item.direction.toUpperCase()}
+                                </span>
+                              </td>
+                              <td className="py-2.5 px-3 text-right font-bold">
+                                <span
+                                  className={
+                                    item.direction === 'elevates'
+                                      ? 'text-[#0E7490]'
+                                      : 'text-[#486581]'
+                                  }
+                                >
+                                  {item.shap_value > 0 ? '+' : ''}
+                                  {item.shap_value.toFixed(3)}
+                                </span>
+                              </td>
+                              <td className="py-2.5 px-3 font-sans text-[11px] text-[#486581] hidden sm:table-cell">
+                                {item.description}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <p className="text-[10px] text-[#829AB1] font-sans">
+                      * Feature contributions indicate statistical tree model attribution (TreeSHAP log-odds shift), not empirical atmospheric or agronomic causality.
+                    </p>
                   </div>
                 )}
               </div>

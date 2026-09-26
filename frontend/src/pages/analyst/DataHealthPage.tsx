@@ -83,13 +83,13 @@ export const DataHealthPage: React.FC = () => {
     }
     if (s === 'FAILED' || s === 'UNHEALTHY' || s === 'BAD') {
       return (
-        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-mono font-bold uppercase tracking-wider bg-rose-100 text-rose-800 border border-rose-300">
+        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-mono font-bold uppercase tracking-wider bg-[#FEE2E2] text-[#DC2626] border border-[#DC2626]/30">
           ✖ {status}
         </span>
       );
     }
     return (
-      <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-mono font-semibold uppercase tracking-wider bg-slate-100 text-slate-700 border border-slate-300">
+      <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-mono font-semibold uppercase tracking-wider bg-[#F3F6F7] text-[#486581] border border-[#102A43]/20">
         {status}
       </span>
     );
@@ -112,7 +112,7 @@ export const DataHealthPage: React.FC = () => {
             <h1 className="font-heading font-black text-2xl md:text-3xl text-[#102A43] tracking-tight mt-2">
               Data Pipeline & Telemetry Health
             </h1>
-            <p className="text-xs md:text-sm text-slate-600 mt-1 max-w-3xl leading-relaxed">
+            <p className="text-xs md:text-sm text-[#486581] mt-1 max-w-3xl leading-relaxed">
               External climate observation feeds, automated quality control audits, and derived monsoon feature pipelines strictly anchored to UP_LKO_BKT.
             </p>
           </div>
@@ -214,7 +214,7 @@ export const DataHealthPage: React.FC = () => {
                 <h3 className="font-heading font-black text-base text-[#102A43]">
                   Configured Scientific Data Sources
                 </h3>
-                <p className="text-xs text-slate-600">
+                <p className="text-xs text-[#486581]">
                   Global climate indices and regional weather reanalysis feeds
                 </p>
               </div>
@@ -236,10 +236,10 @@ export const DataHealthPage: React.FC = () => {
                 <th className="pb-3 px-2">Provenance</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-[#102A43]/10">
               {sources.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-6 text-center text-slate-500 font-mono text-xs">
+                  <td colSpan={6} className="py-6 text-center text-[#829AB1] font-mono text-xs">
                     {loading ? 'Loading sources...' : 'No external data sources registered.'}
                   </td>
                 </tr>
@@ -247,10 +247,10 @@ export const DataHealthPage: React.FC = () => {
                 sources.map((s) => (
                   <tr key={s.id} className="hover:bg-[#F3F6F7]/40 transition-colors">
                     <td className="py-3 px-2 font-heading font-bold text-[#102A43]">{s.name}</td>
-                    <td className="py-3 px-2 font-mono text-[11px] text-slate-600">{s.provider}</td>
-                    <td className="py-3 px-2 font-mono text-[11px] text-slate-700">{s.update_frequency || 'DAILY'}</td>
+                    <td className="py-3 px-2 font-mono text-[11px] text-[#486581]">{s.provider}</td>
+                    <td className="py-3 px-2 font-mono text-[11px] text-[#102A43] font-bold">{s.update_frequency || 'DAILY'}</td>
                     <td className="py-3 px-2">{getStatusBadge(s.status)}</td>
-                    <td className="py-3 px-2 font-mono text-[11px] text-slate-600">
+                    <td className="py-3 px-2 font-mono text-[11px] text-[#486581]">
                       {s.last_successful_sync
                         ? new Date(s.last_successful_sync).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'short', timeStyle: 'short' })
                         : 'Not available'}
@@ -266,7 +266,7 @@ export const DataHealthPage: React.FC = () => {
                           Source Ref ↗
                         </a>
                       ) : (
-                        <span className="text-slate-400 font-mono text-[11px]">Not available</span>
+                        <span className="text-[#829AB1] font-mono text-[11px]">Not available</span>
                       )}
                     </td>
                   </tr>
@@ -289,7 +289,7 @@ export const DataHealthPage: React.FC = () => {
                 <h3 className="font-heading font-black text-base text-[#102A43]">
                   Recent Data Pipeline Ingestion Runs
                 </h3>
-                <p className="text-xs text-slate-600">
+                <p className="text-xs text-[#486581]">
                   Execution logs, validated record volumes, and Parquet storage artefacts
                 </p>
               </div>
@@ -312,10 +312,10 @@ export const DataHealthPage: React.FC = () => {
                 <th className="pb-3 px-2">Artefact Storage</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-[#102A43]/10">
               {runs.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-6 text-center text-slate-500 font-mono text-xs">
+                  <td colSpan={7} className="py-6 text-center text-[#829AB1] font-mono text-xs">
                     {loading ? 'Loading ingestion runs...' : 'No data ingestion runs recorded yet.'}
                   </td>
                 </tr>
@@ -323,22 +323,22 @@ export const DataHealthPage: React.FC = () => {
                 runs.map((r) => (
                   <tr key={r.id} className="hover:bg-[#F3F6F7]/40 transition-colors">
                     <td className="py-3 px-2 font-heading font-bold text-[#102A43]">{r.dataset_name}</td>
-                    <td className="py-3 px-2 font-mono text-[11px] text-slate-600">{r.provider}</td>
+                    <td className="py-3 px-2 font-mono text-[11px] text-[#486581]">{r.provider}</td>
                     <td className="py-3 px-2">{getStatusBadge(r.status)}</td>
                     <td className="py-3 px-2 font-mono font-black text-[#3F7D58]">
                       {r.records_processed.toLocaleString()}
                     </td>
-                    <td className="py-3 px-2 font-mono text-slate-600">
+                    <td className="py-3 px-2 font-mono text-[#486581]">
                       {r.records_failed > 0 ? (
-                        <span className="text-rose-600 font-bold">{r.records_failed}</span>
+                        <span className="text-[#DC2626] font-bold">{r.records_failed}</span>
                       ) : (
                         '0'
                       )}
                     </td>
-                    <td className="py-3 px-2 font-mono text-[11px] text-slate-600">
+                    <td className="py-3 px-2 font-mono text-[11px] text-[#486581]">
                       {new Date(r.started_at).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'short', timeStyle: 'short' })}
                     </td>
-                    <td className="py-3 px-2 font-mono text-[10px] text-slate-600 max-w-[200px] truncate" title={r.file_path || ''}>
+                    <td className="py-3 px-2 font-mono text-[10px] text-[#486581] max-w-[200px] truncate" title={r.file_path || ''}>
                       {r.file_path ? r.file_path.split('/').pop() : 'Not stored'}
                     </td>
                   </tr>

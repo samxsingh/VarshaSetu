@@ -137,7 +137,7 @@ export const FarmerWhatIfPage: React.FC = () => {
       case 'SEVERE':
         return 'bg-[#FEF2F2] text-[#E53E3E] border border-[#E53E3E]';
       default:
-        return 'bg-slate-100 text-slate-600 border border-slate-300';
+        return 'bg-[#F3F6F7] text-[#486581] border border-[#102A43]/20';
     }
   };
 
@@ -291,7 +291,7 @@ export const FarmerWhatIfPage: React.FC = () => {
                 max="21"
                 value={delayDays}
                 onChange={(e) => setDelayDays(parseInt(e.target.value, 10))}
-                className="w-full h-2 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-[#0E7490]"
+                className="w-full h-2 bg-[#EAF0F2] border border-[#102A43]/20 rounded-lg appearance-none cursor-pointer accent-[#0E7490]"
               />
               <span className="text-[9px] text-[#829AB1] font-mono block mt-1">Instrument Range: [1 – 21 days]</span>
             </div>
@@ -312,7 +312,7 @@ export const FarmerWhatIfPage: React.FC = () => {
                 step="5"
                 value={rainfallAnomaly}
                 onChange={(e) => setRainfallAnomaly(parseInt(e.target.value, 10))}
-                className="w-full h-2 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-[#0E7490]"
+                className="w-full h-2 bg-[#EAF0F2] border border-[#102A43]/20 rounded-lg appearance-none cursor-pointer accent-[#0E7490]"
               />
               <span className="text-[9px] text-[#829AB1] font-mono block mt-1">Instrument Range: [-60% to +60%]</span>
             </div>
@@ -332,7 +332,7 @@ export const FarmerWhatIfPage: React.FC = () => {
                 max="14"
                 value={shiftDays}
                 onChange={(e) => setShiftDays(parseInt(e.target.value, 10))}
-                className="w-full h-2 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-[#0E7490]"
+                className="w-full h-2 bg-[#EAF0F2] border border-[#102A43]/20 rounded-lg appearance-none cursor-pointer accent-[#0E7490]"
               />
               <span className="text-[9px] text-[#829AB1] font-mono block mt-1">Shift window: [-14 to +14 days]</span>
             </div>
@@ -353,7 +353,7 @@ export const FarmerWhatIfPage: React.FC = () => {
                 step="0.1"
                 value={concentrationFactor}
                 onChange={(e) => setConcentrationFactor(parseFloat(e.target.value))}
-                className="w-full h-2 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-[#0E7490]"
+                className="w-full h-2 bg-[#EAF0F2] border border-[#102A43]/20 rounded-lg appearance-none cursor-pointer accent-[#0E7490]"
               />
               <span className="text-[9px] text-[#829AB1] font-mono block mt-1">Multiplier: [1.0x – 2.5x]</span>
             </div>
@@ -373,7 +373,7 @@ export const FarmerWhatIfPage: React.FC = () => {
                 max="30"
                 value={interventionStart}
                 onChange={(e) => setInterventionStart(parseInt(e.target.value, 10))}
-                className="w-full h-2 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-[#0E7490]"
+                className="w-full h-2 bg-[#EAF0F2] border border-[#102A43]/20 rounded-lg appearance-none cursor-pointer accent-[#0E7490]"
               />
               <span className="text-[9px] text-[#829AB1] font-mono block mt-1">Window: Day 1 to 30</span>
             </div>
@@ -394,7 +394,7 @@ export const FarmerWhatIfPage: React.FC = () => {
                   max="21"
                   value={delayDays}
                   onChange={(e) => setDelayDays(parseInt(e.target.value, 10))}
-                  className="w-1/2 h-2 bg-slate-300 rounded-lg accent-[#0E7490]"
+                  className="w-1/2 h-2 bg-[#EAF0F2] border border-[#102A43]/20 rounded-lg accent-[#0E7490]"
                 />
                 <input
                   type="range"
@@ -402,7 +402,7 @@ export const FarmerWhatIfPage: React.FC = () => {
                   max="60"
                   value={rainfallAnomaly}
                   onChange={(e) => setRainfallAnomaly(parseInt(e.target.value, 10))}
-                  className="w-1/2 h-2 bg-slate-300 rounded-lg accent-[#0E7490]"
+                  className="w-1/2 h-2 bg-[#EAF0F2] border border-[#102A43]/20 rounded-lg accent-[#0E7490]"
                 />
               </div>
               <span className="text-[9px] text-[#829AB1] font-mono block mt-1">Max 3 orthogonal dimensions</span>
@@ -413,7 +413,7 @@ export const FarmerWhatIfPage: React.FC = () => {
             <button
               onClick={() => runSimulation(activeScenario)}
               disabled={isSimulating}
-              className="w-full px-5 py-3 min-h-[44px] rounded-xl bg-[#0E7490] text-white border-2 border-[#102A43] font-heading font-bold text-xs shadow-[2px_2px_0px_#102A43] hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_#102A43] transition-all disabled:opacity-50"
+              className="w-full px-5 py-3 min-h-[44px] rounded-xl bg-[#0E7490] text-white border-2 border-[#102A43] font-heading font-bold text-xs shadow-[2px_2px_0px_#102A43] hover:bg-[#155E75] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all disabled:opacity-50"
             >
               {isSimulating ? (
                 <span className="flex items-center gap-1.5 justify-center">
@@ -497,7 +497,7 @@ export const FarmerWhatIfPage: React.FC = () => {
                               {d.relative_delta_pct > 0 ? `+${d.relative_delta_pct.toFixed(1)}%` : `${d.relative_delta_pct.toFixed(1)}%`}
                             </span>
                           ) : (
-                            <span className="text-slate-400">N/A</span>
+                            <span className="text-[#829AB1]">N/A</span>
                           )}
                         </td>
                         <td className="py-3 px-3 text-center">

@@ -238,27 +238,53 @@ export const FarmerForecastPage: React.FC = () => {
                             {fc.prediction.predicted_value?.toFixed(1)} mm
                           </strong>
                         </div>
-                        {fc.uncertainty.status === 'CALCULATED' && (
-                          <div className="p-2.5 bg-[#F3F6F7] rounded-xl border border-[#102A43]/15 text-[11px] text-[#486581] flex justify-between">
-                            <span>Uncertainty (P10–P90):</span>
-                            <span className="font-mono font-bold text-[#102A43]">
-                              {fc.uncertainty.lower_bound} mm — {fc.uncertainty.upper_bound} mm
-                            </span>
+                        {fc.uncertainty.status === 'CALCULATED' && typeof fc.uncertainty.lower_bound === 'number' && typeof fc.uncertainty.upper_bound === 'number' && (
+                          <div className="p-3 bg-[#F3F6F7] rounded-xl border border-[#102A43]/15 text-xs text-[#486581] space-y-1.5">
+                            <div className="flex justify-between items-center">
+                              <span className="font-heading font-bold text-[#102A43]">Forecast Confidence Interval (P10–P90):</span>
+                              <span className="font-mono font-bold text-[#0E7490]">
+                                {fc.uncertainty.lower_bound} – {fc.uncertainty.upper_bound} mm
+                              </span>
+                            </div>
+                            <div className="w-full bg-[#EAF0F2] h-2.5 rounded-full overflow-hidden border border-[#102A43]/20 relative">
+                              <div
+                                className="bg-[#0E7490]/40 h-full absolute"
+                                style={{
+                                  left: `${Math.max(0, Math.min(100, (fc.uncertainty.lower_bound / (fc.uncertainty.upper_bound * 1.2 || 100)) * 100))}%`,
+                                  right: `${Math.max(0, 100 - (fc.uncertainty.upper_bound / (fc.uncertainty.upper_bound * 1.2 || 100)) * 100)}%`,
+                                }}
+                              />
+                            </div>
+                            <div className="flex justify-between text-[10px] text-[#829AB1] font-mono">
+                              <span>Low bound (dry limit)</span>
+                              <span>Method: {fc.uncertainty.method || 'Quantile Resampling'}</span>
+                              <span>High bound (wet limit)</span>
+                            </div>
                           </div>
                         )}
                       </div>
                     ) : null}
                   </div>
 
-                  {/* Model & Metadata Bar */}
+                  {/* Temporal Hierarchy & Provenance Instrument Bar */}
                   <div className="p-3 bg-[#F3F6F7] rounded-xl border border-[#102A43]/15 text-[11px] text-[#486581] space-y-1.5 font-sans">
-                    <div className="flex justify-between">
+                    <div className="grid grid-cols-2 gap-2 text-[10px] font-mono">
+                      <div>
+                        <span className="text-[#829AB1] block uppercase">Obs Date / Start</span>
+                        <strong className="text-[#102A43]">{fc.valid_from}</strong>
+                      </div>
+                      <div>
+                        <span className="text-[#829AB1] block uppercase">Forecast Horizon</span>
+                        <strong className="text-[#0E7490]">{fc.horizon.horizon_days}-Day Outlook ({fc.valid_until})</strong>
+                      </div>
+                    </div>
+                    <div className="flex justify-between pt-1 border-t border-[#102A43]/10">
                       <span>Model: <strong className="font-mono text-[#102A43]">{fc.model.model_id}</strong> ({fc.model.model_family})</span>
                       <span>Validation: <strong className="font-mono text-[#B45309]">{fc.validation.validation_status}</strong></span>
                     </div>
                     <div className="flex justify-between text-[10px] text-[#829AB1]">
-                      <span>Resolution: {fc.location.spatial_resolution} (~9 km)</span>
-                      <span>Freshness: {fc.data.freshness_status}</span>
+                      <span>Spatial Resolution: {fc.location.spatial_resolution} (~9 km)</span>
+                      <span>Data Freshness: {fc.data.freshness_status}</span>
                     </div>
                   </div>
                 </div>

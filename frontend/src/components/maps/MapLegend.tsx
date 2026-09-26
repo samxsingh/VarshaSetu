@@ -11,36 +11,36 @@ export const MapLegend: React.FC<{ className?: string }> = ({ className }) => {
     DRY_SPELL: {
       title: 'Dry Spell Risk (% probability)',
       items: [
-        { label: 'Low (< 30%)', color: 'bg-emerald-500' },
-        { label: 'Moderate (30-60%)', color: 'bg-amber-400' },
-        { label: 'High (60-80%)', color: 'bg-orange-500' },
-        { label: 'Critical (> 80%)', color: 'bg-rose-600' },
+        { label: 'Low (< 30%)', color: 'bg-[#3F7D58]' },
+        { label: 'Moderate (30-60%)', color: 'bg-[#D97706]' },
+        { label: 'High (60-80%)', color: 'bg-[#B45309]' },
+        { label: 'Critical (> 80%)', color: 'bg-[#DC2626]' },
       ],
     },
     ONSET: {
       title: 'Monsoon Onset Window Likelihood',
       items: [
-        { label: 'Probable (> 80%)', color: 'bg-teal-600' },
-        { label: 'Moderate (50-80%)', color: 'bg-teal-400' },
-        { label: 'Emerging (25-50%)', color: 'bg-teal-200' },
-        { label: 'Unlikely (< 25%)', color: 'bg-slate-300' },
+        { label: 'Probable (> 80%)', color: 'bg-[#0E7490]' },
+        { label: 'Moderate (50-80%)', color: 'bg-[#0891B2]' },
+        { label: 'Emerging (25-50%)', color: 'bg-[#155E75]' },
+        { label: 'Unlikely (< 25%)', color: 'bg-[#829AB1]' },
       ],
     },
     HEAVY_RAIN: {
       title: 'Heavy Rainfall Risk (> 65 mm / 24h)',
       items: [
-        { label: 'Severe Alert (> 70%)', color: 'bg-blue-700' },
-        { label: 'Moderate Watch (40-70%)', color: 'bg-blue-400' },
-        { label: 'Low (< 40%)', color: 'bg-blue-200' },
+        { label: 'Severe Alert (> 70%)', color: 'bg-[#1D4ED8]' },
+        { label: 'Moderate Watch (40-70%)', color: 'bg-[#2563EB]' },
+        { label: 'Low (< 40%)', color: 'bg-[#93C5FD]' },
       ],
     },
     ANOMALY: {
-      title: 'Rainfall Departure vs Normal',
+      title: 'Rainfall Departure vs 30-Year Normal',
       items: [
-        { label: 'Excess (+20% to +60%)', color: 'bg-sky-500' },
-        { label: 'Normal (-19% to +19%)', color: 'bg-emerald-500' },
-        { label: 'Deficit (-20% to -59%)', color: 'bg-amber-500' },
-        { label: 'Large Deficit (< -60%)', color: 'bg-red-600' },
+        { label: 'Excess (+20% to +60%)', color: 'bg-[#2563EB]' },
+        { label: 'Normal (-19% to +19%)', color: 'bg-[#0891B2]' },
+        { label: 'Deficit (-20% to -59%)', color: 'bg-[#D97706]' },
+        { label: 'Large Deficit (< -60%)', color: 'bg-[#B45309]' },
       ],
     },
   };
