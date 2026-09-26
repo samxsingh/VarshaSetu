@@ -1,9 +1,15 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { PhoneCall, ShieldAlert, FileText, ExternalLink } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   const { t } = useTranslation();
+  const location = useLocation();
+
+  if (location.pathname === '/') {
+    return null;
+  }
 
   return (
     <footer className="bg-white border-t border-surface-border text-slate-700 text-xs mt-auto">

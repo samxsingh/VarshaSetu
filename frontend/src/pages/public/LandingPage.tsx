@@ -13,16 +13,17 @@ import {
   Volume2,
   Languages,
   CheckCircle2,
-  ChevronRight,
   TrendingUp,
   MapPin,
-  FileCheck2,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
-import { Card } from '../../components/ui/Card';
 import { RoleGatewaySection } from '../../components/landing/RoleGatewaySection';
 import { ScientificGroundingSection } from '../../components/landing/ScientificGroundingSection';
+import { DecisionPathwaysSection } from '../../components/landing/DecisionPathwaysSection';
+import { TrustIntegritySection } from '../../components/landing/TrustIntegritySection';
+import { FinalCTASection } from '../../components/landing/FinalCTASection';
+import { LandingFooter } from '../../components/landing/LandingFooter';
 
 export const LandingPage: React.FC = () => {
   const { t } = useTranslation();
@@ -241,268 +242,17 @@ export const LandingPage: React.FC = () => {
       {/* 3. SCIENTIFIC GROUNDING & PLATFORM STATUS SECTION (PHASE 3) */}
       <ScientificGroundingSection />
 
-      {/* 2. THE PROBLEM */}
-      <section className="py-16 border-b border-surface-border bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-xs font-heading font-bold uppercase tracking-wider text-brand-amber">
-              The Critical Resolution Disconnect
-            </span>
-            <h2 className="font-heading font-bold text-3xl text-slate-900 mt-2">
-              Why District-Level Weather Fails Indian Agriculture
-            </h2>
-          </div>
+      {/* 4. DECISION PATHWAYS SECTION (PHASE 4) */}
+      <DecisionPathwaysSection />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="p-6">
-              <div className="w-10 h-10 rounded-xl bg-brand-crimson-tint text-brand-crimson flex items-center justify-center font-bold mb-4">
-                01
-              </div>
-              <h3 className="font-heading font-bold text-lg text-slate-900 mb-2">
-                False Monsoon Onsets
-              </h3>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                Transient pre-monsoon storm surges prompt farmers to sow nurseries immediately, only for rains to halt for 15 parched days, destroying 100% of germinated seedlings.
-              </p>
-            </Card>
+      {/* 5. TRUST & INTEGRITY BAND (PHASE 4) */}
+      <TrustIntegritySection />
 
-            <Card className="p-6">
-              <div className="w-10 h-10 rounded-xl bg-brand-amber-tint text-brand-amber flex items-center justify-center font-bold mb-4">
-                02
-              </div>
-              <h3 className="font-heading font-bold text-lg text-slate-900 mb-2">
-                Coarse 25km Grid Blanks
-              </h3>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                Broad regional forecasts cannot capture micro-watershed rainfall variations across Lucknow’s 440 Panchayats, parching northern blocks while southern areas flood.
-              </p>
-            </Card>
+      {/* 6. FINAL EDITORIAL CTA SECTION (PHASE 4) */}
+      <FinalCTASection />
 
-            <Card className="p-6">
-              <div className="w-10 h-10 rounded-xl bg-brand-teal-tint text-brand-teal flex items-center justify-center font-bold mb-4">
-                03
-              </div>
-              <h3 className="font-heading font-bold text-lg text-slate-900 mb-2">
-                No Agronomic Meaning
-              </h3>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                Raw millimeter graphs leave farmers stranded. They need to know: <em>"What if I wait 7 days to sow? Will soil moisture hold?"</em>
-              </p>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. FOUR CORE TARGETS */}
-      <section className="py-16 border-b border-surface-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-xs font-heading font-bold uppercase tracking-wider text-brand-teal">
-              Scientific Precision
-            </span>
-            <h2 className="font-heading font-bold text-3xl text-slate-900 mt-2">
-              Four Core Monsoon Forecast Targets
-            </h2>
-            <p className="text-sm text-slate-600 mt-2">
-              Probabilistic outputs delivered at 7, 14, 21, and 30-day decision horizons.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="p-5 border-t-4 border-t-brand-teal">
-              <h4 className="font-heading font-bold text-base text-slate-900 mb-1">
-                1. Monsoon Onset
-              </h4>
-              <p className="text-xs text-slate-600 mb-3">
-                Calculates probability window for sustained low-level westerly surge, guarding against false starts.
-              </p>
-              <Badge variant="teal" size="sm">Onset Window + Risk</Badge>
-            </Card>
-
-            <Card className="p-5 border-t-4 border-t-brand-amber">
-              <h4 className="font-heading font-bold text-base text-slate-900 mb-1">
-                2. Dry Spell Break
-              </h4>
-              <p className="text-xs text-slate-600 mb-3">
-                Identifies consecutive dry spells (≥5 days rain &lt;2.5mm) and predicts exact moisture revival dates.
-              </p>
-              <Badge variant="amber" size="sm">Hiatus Duration</Badge>
-            </Card>
-
-            <Card className="p-5 border-t-4 border-t-brand-azure">
-              <h4 className="font-heading font-bold text-base text-slate-900 mb-1">
-                3. Heavy Rainfall
-              </h4>
-              <p className="text-xs text-slate-600 mb-3">
-                Early warning for localized cloudbursts (&gt;65 mm / 24h) to safeguard field bunds and drainage.
-              </p>
-              <Badge variant="azure" size="sm">24h Threshold Watch</Badge>
-            </Card>
-
-            <Card className="p-5 border-t-4 border-t-brand-crimson">
-              <h4 className="font-heading font-bold text-base text-slate-900 mb-1">
-                4. Rainfall Anomaly
-              </h4>
-              <p className="text-xs text-slate-600 mb-3">
-                Estimates cumulative percentage departure from the 30-year local historical normal.
-              </p>
-              <Badge variant="neutral" size="sm">Departure vs Baseline</Badge>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* 4. FARMER EXPERIENCE & DECISION SIMULATOR */}
-      <section className="py-16 bg-white border-b border-surface-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-5">
-              <Badge variant="teal" size="md">
-                Farmer Experience
-              </Badge>
-              <h2 className="font-heading font-bold text-3xl sm:text-4xl text-slate-900 leading-tight">
-                "Complex intelligence underneath. Simple decisions on top."
-              </h2>
-              <p className="text-slate-600 text-sm leading-relaxed">
-                Farmers don't need to decipher vorticity equations or Sea Surface Temperature anomalies. VarshaSetu turns complex atmospheric dynamics into plain spoken Hindi and English guidance with voice audio playback.
-              </p>
-
-              <div className="space-y-3 pt-2 text-sm text-slate-700">
-                <div className="flex items-center gap-2.5">
-                  <CheckCircle2 className="w-5 h-5 text-brand-emerald shrink-0" />
-                  <span>3-Step zero friction onboarding (Location → Crop → Stage)</span>
-                </div>
-                <div className="flex items-center gap-2.5">
-                  <CheckCircle2 className="w-5 h-5 text-brand-emerald shrink-0" />
-                  <span>One-tap Hindi/Awadhi audio briefing playback</span>
-                </div>
-                <div className="flex items-center gap-2.5">
-                  <CheckCircle2 className="w-5 h-5 text-brand-emerald shrink-0" />
-                  <span>Interactive "What if I wait 7 days?" decision simulator</span>
-                </div>
-              </div>
-
-              <div className="pt-2">
-                <Link to="/farmer/onboarding">
-                  <Button variant="primary" size="md" rightIcon={<ChevronRight className="w-4 h-4" />}>
-                    Experience Farmer Onboarding
-                  </Button>
-                </Link>
-              </div>
-            </div>
-
-            {/* Feature Mock Card */}
-            <div className="bg-canvas border border-surface-border rounded-2xl p-6 shadow-card space-y-4">
-              <div className="flex justify-between items-center pb-3 border-b border-surface-border">
-                <span className="font-heading font-bold text-sm text-slate-900">
-                  What-If Sowing Simulator
-                </span>
-                <Badge variant="demo" size="sm">Simulated Model</Badge>
-              </div>
-
-              <div className="bg-white p-4 rounded-xl border border-surface-border space-y-2">
-                <div className="flex justify-between items-center text-xs">
-                  <strong className="text-slate-900">Option A: Sow Now (June 26)</strong>
-                  <Badge variant="emerald" size="sm">Recommended</Badge>
-                </div>
-                <p className="text-xs text-slate-600">
-                  Optimal 18% moisture stress risk; captures natural monsoon onset saturation.
-                </p>
-              </div>
-
-              <div className="bg-white p-4 rounded-xl border border-surface-border space-y-2">
-                <div className="flex justify-between items-center text-xs">
-                  <strong className="text-slate-900">Option B: Wait 7 Days (July 3)</strong>
-                  <Badge variant="amber" size="sm">Higher Risk (+42%)</Badge>
-                </div>
-                <p className="text-xs text-slate-600">
-                  Postpones germination directly into projected 6-day dry hiatus period.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 5. SCIENTIFIC TRANSPARENCY & OFFICER COMMAND */}
-      <section className="py-16 border-b border-surface-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="bg-white border border-surface-border rounded-2xl p-6 shadow-card space-y-4 order-2 lg:order-1">
-              <div className="flex items-center justify-between pb-3 border-b border-surface-border">
-                <span className="font-heading font-bold text-sm text-slate-900">
-                  Officer GIS Command Center
-                </span>
-                <Badge variant="teal" size="sm">Lucknow District</Badge>
-              </div>
-              <div className="space-y-2 text-xs">
-                <div className="p-3 bg-surface-muted rounded-xl flex justify-between items-center">
-                  <span>Bakshi Ka Talab Block</span>
-                  <strong className="text-amber-700">Dry Spell Watch (58%)</strong>
-                </div>
-                <div className="p-3 bg-surface-muted rounded-xl flex justify-between items-center">
-                  <span>Malihabad Block</span>
-                  <strong className="text-rose-700">High Hiatus Risk (74%)</strong>
-                </div>
-                <div className="p-3 bg-surface-muted rounded-xl flex justify-between items-center">
-                  <span>Mohanlalganj Block</span>
-                  <strong className="text-teal-700">Optimal Onset (91%)</strong>
-                </div>
-              </div>
-              <div className="pt-2">
-                <Link to="/officer">
-                  <Button variant="outline" size="sm" fullWidth>
-                    Open Officer Command Center
-                  </Button>
-                </Link>
-              </div>
-            </div>
-
-            <div className="space-y-5 order-1 lg:order-2">
-              <Badge variant="azure" size="md">
-                Institutional Authority
-              </Badge>
-              <h2 className="font-heading font-bold text-3xl sm:text-4xl text-slate-900 leading-tight">
-                Empowering Block Officers & State Planners
-              </h2>
-              <p className="text-slate-600 text-sm leading-relaxed">
-                Agriculture officers and KVK scientists gain complete spatial oversight with choropleth risk heatmaps, panchayat vulnerability rankings, and one-click advisory bulletin broadcasts.
-              </p>
-              <div className="flex items-center gap-3 pt-2">
-                <Link to="/analyst">
-                  <Button variant="secondary" size="md" leftIcon={<FileCheck2 className="w-4 h-4 text-brand-teal" />}>
-                    View Model Registry & Benchmarks
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 6. FINAL CTA BANNER */}
-      <section className="py-20 bg-brand-teal text-white">
-        <div className="max-w-4xl mx-auto px-4 text-center space-y-6">
-          <h2 className="font-heading font-bold text-3xl sm:text-5xl tracking-tight">
-            Climate-Resilient Agriculture Starts Here
-          </h2>
-          <p className="text-teal-100 text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
-            Explore the live demonstration shell calibrated for Lucknow District, Uttar Pradesh.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-            <Link to="/farmer/dashboard">
-              <Button variant="secondary" size="lg" className="bg-white text-brand-teal-dark hover:bg-teal-50">
-                Launch Farmer Dashboard
-              </Button>
-            </Link>
-            <Link to="/officer">
-              <Button variant="outline" size="lg" className="border-white text-white hover:bg-white/10">
-                Open Officer Center
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* 7. LANDING FOOTER (PHASE 4) */}
+      <LandingFooter />
     </div>
   );
 };

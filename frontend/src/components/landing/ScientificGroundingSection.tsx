@@ -65,7 +65,7 @@ export const ScientificGroundingSection: React.FC = () => {
   ];
 
   return (
-    <section className="py-16 lg:py-24 border-b border-[#0B1726]/15 bg-[#F7F3EA] relative">
+    <section id="scientific-grounding" className="py-16 lg:py-24 border-b border-[#0B1726]/15 bg-[#F7F3EA] relative">
       {/* Subtle contour texture */}
       <div className="absolute inset-0 opacity-25 pointer-events-none bg-subtle-contour" />
 
@@ -346,7 +346,7 @@ export const ScientificGroundingSection: React.FC = () => {
         </div>
 
         {/* E. HORIZONTAL PROVENANCE STRIP (Section E) */}
-        <div className="bg-[#0B1726] text-[#F7F3EA] rounded-2xl border-2 border-[#0B1726] p-6 lg:p-7 shadow-[5px_5px_0px_#008F83]">
+        <div id="provenance-strip" className="bg-[#0B1726] text-[#F7F3EA] rounded-2xl border-2 border-[#0B1726] p-6 lg:p-7 shadow-[5px_5px_0px_#008F83]">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             
             {/* Left Motto */}
