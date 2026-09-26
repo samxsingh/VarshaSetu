@@ -102,34 +102,35 @@ export const LandingPage: React.FC = () => {
 
             {/* RIGHT COLUMN: Atmospheric & Field Imagery with Floating Intelligence Cards */}
             <div className="lg:col-span-6 xl:col-span-5 relative mt-4 lg:mt-0">
-              {/* Primary Image Frame with Crisp Neo-Brutalist Border */}
+              {/* Primary Image Frame with Crisp Neo-Brutalist Border & Attached Status Rail */}
               <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-[#102A43] bg-white shadow-[6px_6px_0px_#102A43] group">
                 <img
                   src="/images/hero-farmer.jpg"
                   alt="Indian farmer inspecting VarshaSetu agro-climate intelligence on a tablet in agricultural field"
-                  className="w-full h-[360px] sm:h-[440px] lg:h-[480px] object-cover object-center filter saturate-[1.05] transition-transform duration-500 group-hover:scale-[1.02]"
+                  className="w-full h-[320px] sm:h-[400px] lg:h-[460px] object-cover object-center filter saturate-[1.04] transition-transform duration-500 group-hover:scale-[1.01]"
                   loading="eager"
                 />
 
-                {/* Soft gradient bottom fade */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#102A43]/75 via-[#102A43]/10 to-transparent pointer-events-none" />
-
-                {/* Integrated Photo Caption Pill */}
-                <div className="absolute bottom-3.5 left-3.5 right-3.5 text-white text-xs font-sans flex items-center justify-between px-3 py-2 rounded-xl bg-[#102A43]/85 backdrop-blur-md border border-white/20">
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-[#0891B2] animate-ping" />
-                    <span className="font-heading font-medium text-[11px] sm:text-xs">
-                      Hyperlocal Intelligence in Action
+                {/* Attached Caption Rail immediately below the photo */}
+                <div className="border-t-2 border-[#102A43] bg-[#0B1F33] px-3.5 sm:px-4 py-2.5 text-white flex items-center justify-between text-xs font-sans">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[#0891B2] animate-pulse shrink-0" />
+                    <span className="font-heading font-semibold text-[11px] sm:text-xs tracking-wide">
+                      Hyperlocal Field Intelligence
+                    </span>
+                    <span className="text-[#829AB1] hidden sm:inline">•</span>
+                    <span className="text-[#EAF0F2] text-[11px] hidden sm:inline">
+                      1 Action Recommended
                     </span>
                   </div>
-                  <span className="text-[#0891B2] font-heading font-bold text-[11px]">
+                  <span className="text-[#0891B2] font-heading font-bold text-[11px] tracking-wide shrink-0">
                     UP_LKO_BKT Pilot
                   </span>
                 </div>
               </div>
 
-              {/* FLOATING CARD 1: Rain Event Intelligence (Top Left) */}
-              <div className="absolute -top-4 -left-3 sm:-top-5 sm:-left-6 z-20 bg-white/95 backdrop-blur-md border border-[#102A43] rounded-xl p-3 shadow-[3px_3px_0px_#102A43] animate-float-slow max-w-[210px] sm:max-w-[230px]">
+              {/* DESKTOP FLOATING CARD 1: Rain Event Intelligence (Perimeter Top Left) */}
+              <div className="hidden md:block absolute -top-4 -left-6 lg:-top-5 lg:-left-8 z-20 bg-white/95 backdrop-blur-md border border-[#102A43] rounded-xl p-3 shadow-[3px_3px_0px_#102A43] animate-float-slow max-w-[210px] sm:max-w-[220px]">
                 <div className="flex items-center justify-between gap-2 text-[10px] uppercase tracking-wider text-[#486581] font-heading font-bold">
                   <span className="flex items-center gap-1 text-[#2563EB]">
                     <CloudRain className="w-3.5 h-3.5" />
@@ -147,8 +148,8 @@ export const LandingPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* FLOATING CARD 2: Forecast Reliability Score (Bottom Left) */}
-              <div className="absolute -bottom-5 -left-2 sm:-bottom-6 sm:-left-4 z-20 bg-white/95 backdrop-blur-md border border-[#102A43] rounded-xl p-3 shadow-[3px_3px_0px_#102A43] animate-float-alt max-w-[220px] sm:max-w-[240px]">
+              {/* DESKTOP FLOATING CARD 2: Forecast Reliability Score (Perimeter Lower Left) */}
+              <div className="hidden md:block absolute bottom-12 -left-6 lg:bottom-14 lg:-left-8 z-20 bg-white/95 backdrop-blur-md border border-[#102A43] rounded-xl p-3 shadow-[3px_3px_0px_#102A43] animate-float-alt max-w-[210px] sm:max-w-[220px]">
                 <div className="flex items-center justify-between gap-2 text-[10px] uppercase tracking-wider text-[#486581] font-heading font-bold">
                   <span className="flex items-center gap-1 text-[#0E7490]">
                     <TrendingUp className="w-3.5 h-3.5" />
@@ -167,9 +168,9 @@ export const LandingPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* FLOATING CARD 3: Climate Teleconnections (Top Right) */}
-              <div className="absolute -top-3 -right-2 sm:-top-4 sm:-right-4 z-20 bg-white/95 backdrop-blur-md border border-[#102A43] rounded-xl p-2.5 shadow-[3px_3px_0px_#102A43] max-w-[190px]">
-                <div className="text-[9px] uppercase tracking-wider text-[#486581] font-heading font-bold flex items-center gap-1">
+              {/* DESKTOP FLOATING CARD 3: Climate Teleconnections (Perimeter Top Right) */}
+              <div className="hidden md:block absolute top-3 -right-4 lg:top-4 lg:-right-6 z-20 bg-white/95 backdrop-blur-md border border-[#B8C5CC] rounded-xl p-2.5 shadow-[3px_3px_0px_#102A43] max-w-[190px]">
+                <div className="text-[9px] uppercase tracking-wider text-[#486581] font-heading font-bold flex items-center gap-1 text-[#102A43]">
                   <Waves className="w-3 h-3 text-[#0E7490]" />
                   CLIMATE SIGNALS
                 </div>
@@ -183,6 +184,67 @@ export const LandingPage: React.FC = () => {
                   <span className="px-1.5 py-0.5 rounded bg-[#EAF0F2] border border-[#102A43]/20 font-heading font-bold text-[#102A43]">
                     MJO
                   </span>
+                </div>
+              </div>
+
+              {/* MOBILE ONLY: 3 stacked intelligence cards beneath the image frame (normal document flow) */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mt-3 md:hidden">
+                {/* Mobile Card 1: Rain Event */}
+                <div className="bg-white rounded-xl border border-[#102A43] p-3 shadow-[2px_2px_0px_#102A43]">
+                  <div className="flex items-center justify-between gap-2 text-[10px] uppercase tracking-wider text-[#486581] font-heading font-bold">
+                    <span className="flex items-center gap-1 text-[#2563EB]">
+                      <CloudRain className="w-3.5 h-3.5" />
+                      RAIN EVENT
+                    </span>
+                    <span className="px-1.5 py-0.5 rounded bg-[#DBEAFE] text-[#2563EB] text-[9px] font-bold">
+                      7–10 DAYS
+                    </span>
+                  </div>
+                  <div className="mt-1 font-heading font-bold text-sm text-[#102A43]">
+                    Moderate Risk
+                  </div>
+                  <div className="text-[10px] text-[#486581] mt-0.5">
+                    Probabilistic Downscaled Model
+                  </div>
+                </div>
+
+                {/* Mobile Card 2: Confidence */}
+                <div className="bg-white rounded-xl border border-[#102A43] p-3 shadow-[2px_2px_0px_#102A43]">
+                  <div className="flex items-center justify-between gap-2 text-[10px] uppercase tracking-wider text-[#486581] font-heading font-bold">
+                    <span className="flex items-center gap-1 text-[#0E7490]">
+                      <TrendingUp className="w-3.5 h-3.5" />
+                      CONFIDENCE
+                    </span>
+                    <span className="px-1.5 py-0.5 rounded bg-[#E8F4F6] text-[#0E7490] text-[9px] font-bold">
+                      CALIBRATED
+                    </span>
+                  </div>
+                  <div className="mt-1 font-heading font-extrabold text-base text-[#102A43] flex items-baseline gap-1.5">
+                    <span>68%</span>
+                    <span className="text-xs font-medium text-[#486581] font-sans">Medium Skill</span>
+                  </div>
+                  <div className="text-[10px] text-[#829AB1] mt-0.5">
+                    Isotonic & Platt Reliability Curve
+                  </div>
+                </div>
+
+                {/* Mobile Card 3: Climate Signals */}
+                <div className="bg-white rounded-xl border border-[#B8C5CC] p-3 shadow-[2px_2px_0px_#102A43]">
+                  <div className="text-[10px] uppercase tracking-wider text-[#486581] font-heading font-bold flex items-center gap-1 text-[#102A43]">
+                    <Waves className="w-3.5 h-3.5 text-[#0E7490]" />
+                    CLIMATE SIGNALS
+                  </div>
+                  <div className="mt-1.5 flex items-center gap-1.5 text-[10px]">
+                    <span className="px-1.5 py-0.5 rounded bg-[#EAF0F2] border border-[#102A43]/20 font-heading font-bold text-[#102A43]">
+                      ENSO
+                    </span>
+                    <span className="px-1.5 py-0.5 rounded bg-[#EAF0F2] border border-[#102A43]/20 font-heading font-bold text-[#102A43]">
+                      IOD
+                    </span>
+                    <span className="px-1.5 py-0.5 rounded bg-[#EAF0F2] border border-[#102A43]/20 font-heading font-bold text-[#102A43]">
+                      MJO
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>

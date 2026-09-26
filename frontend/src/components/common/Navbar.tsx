@@ -46,7 +46,7 @@ export const Navbar: React.FC = () => {
           'max-w-7xl mx-auto rounded-2xl transition-all duration-200 px-3.5 sm:px-5 py-2 flex items-center justify-between',
           isScrolled
             ? 'bg-white/95 backdrop-blur-md border border-[#B8C5CC] shadow-[0_8px_30px_rgba(16,42,67,0.08)]'
-            : 'bg-white/90 backdrop-blur-sm border border-[#B8C5CC] shadow-[0_4px_16px_rgba(16,42,67,0.05)]'
+            : 'bg-white/95 backdrop-blur-md border border-[#B8C5CC] shadow-[0_4px_16px_rgba(16,42,67,0.06)]'
         )}
       >
         {/* LEFT: VarshaSetu Brand Logo */}

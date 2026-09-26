@@ -9,7 +9,7 @@ export const DemoBanner: React.FC = () => {
   return (
     <aside
       aria-label="Simulation and scientific transparency notice"
-      className="bg-[#FFFFFF] border-b border-[#B8C5CC] text-[#486581] text-xs transition-colors"
+      className="bg-[#F3F6F7] border-b border-[#B8C5CC]/60 text-[#486581] text-xs transition-colors"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2.5 flex-wrap">
@@ -40,7 +40,7 @@ export const DemoBanner: React.FC = () => {
       </div>
 
       {isExpanded && (
-        <div className="border-t border-[#B8C5CC] bg-[#EAF0F2] px-4 sm:px-6 lg:px-8 py-2.5 text-xs text-[#486581] leading-relaxed animate-fade-in">
+        <div className="border-t border-[#B8C5CC]/60 bg-[#EAF0F2] px-4 sm:px-6 lg:px-8 py-2.5 text-xs text-[#486581] leading-relaxed animate-fade-in">
           <div className="max-w-7xl mx-auto flex items-start gap-2.5">
             <ShieldAlert className="w-4 h-4 text-[#D97706] shrink-0 mt-0.5" />
             <div>
