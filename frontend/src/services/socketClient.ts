@@ -115,6 +115,26 @@ class SocketClientManager {
       useRealtimeStore.getState().addOperationalSignal(data);
     });
 
+    socket.on('inspection:created', (data) => {
+      useRealtimeStore.getState().addOrUpdateInspectionAction(data);
+    });
+
+    socket.on('inspection:assigned', (data) => {
+      useRealtimeStore.getState().addOrUpdateInspectionAction(data);
+    });
+
+    socket.on('inspection:started', (data) => {
+      useRealtimeStore.getState().addOrUpdateInspectionAction(data);
+    });
+
+    socket.on('inspection:completed', (data) => {
+      useRealtimeStore.getState().addOrUpdateInspectionAction(data);
+    });
+
+    socket.on('inspection:cancelled', (data) => {
+      useRealtimeStore.getState().addOrUpdateInspectionAction(data);
+    });
+
     this.socket = socket;
     return socket;
   }

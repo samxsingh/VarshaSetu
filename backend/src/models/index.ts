@@ -14,3 +14,4 @@ export * from './DataHealth';
 export * from './Notification';
 export * from './Localization';
 export * from './AuditLog';
+export * from './InspectionAction';

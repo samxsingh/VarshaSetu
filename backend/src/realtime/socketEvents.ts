@@ -6,6 +6,7 @@ import {
   DataHealthUpdatedDTO,
   InAppNotificationDTO,
   SystemAnnouncementDTO,
+  InspectionActionRealtimeDTO,
 } from './types';
 import { OperationalSignalDTO } from '../services/operational/operationalSignalTypes';
 
@@ -187,6 +188,109 @@ export const realtimeService = {
     }
 
     io.to(targetRooms).emit('operation:signal', signal);
+  },
+
+  /**
+   * Broadcasts creation of an operational inspection action.
+   */
+  emitInspectionCreated(action: InspectionActionRealtimeDTO): void {
+    if (!isSocketInitialized()) return;
+    const io = getIO();
+
+    const targetRooms: string[] = [
+      'role:admin',
+      'role:analyst',
+      'role:officer',
+      'role:government',
+    ];
+    if (action.blockId) {
+      targetRooms.push(`block:${action.blockId}`);
+    }
+
+    io.to(targetRooms).emit('inspection:created', action);
+  },
+
+  /**
+   * Broadcasts assignment of an operational inspection action.
+   */
+  emitInspectionAssigned(action: InspectionActionRealtimeDTO): void {
+    if (!isSocketInitialized()) return;
+    const io = getIO();
+
+    const targetRooms: string[] = [
+      'role:admin',
+      'role:analyst',
+      'role:officer',
+      'role:government',
+    ];
+    if (action.blockId) {
+      targetRooms.push(`block:${action.blockId}`);
+    }
+    if (action.assignedTo) {
+      targetRooms.push(`user:${action.assignedTo}`);
+    }
+
+    io.to(targetRooms).emit('inspection:assigned', action);
+  },
+
+  /**
+   * Broadcasts start of an operational inspection action.
+   */
+  emitInspectionStarted(action: InspectionActionRealtimeDTO): void {
+    if (!isSocketInitialized()) return;
+    const io = getIO();
+
+    const targetRooms: string[] = [
+      'role:admin',
+      'role:analyst',
+      'role:officer',
+      'role:government',
+    ];
+    if (action.blockId) {
+      targetRooms.push(`block:${action.blockId}`);
+    }
+
+    io.to(targetRooms).emit('inspection:started', action);
+  },
+
+  /**
+   * Broadcasts completion of an operational inspection action.
+   */
+  emitInspectionCompleted(action: InspectionActionRealtimeDTO): void {
+    if (!isSocketInitialized()) return;
+    const io = getIO();
+
+    const targetRooms: string[] = [
+      'role:admin',
+      'role:analyst',
+      'role:officer',
+      'role:government',
+    ];
+    if (action.blockId) {
+      targetRooms.push(`block:${action.blockId}`);
+    }
+
+    io.to(targetRooms).emit('inspection:completed', action);
+  },
+
+  /**
+   * Broadcasts cancellation of an operational inspection action.
+   */
+  emitInspectionCancelled(action: InspectionActionRealtimeDTO): void {
+    if (!isSocketInitialized()) return;
+    const io = getIO();
+
+    const targetRooms: string[] = [
+      'role:admin',
+      'role:analyst',
+      'role:officer',
+      'role:government',
+    ];
+    if (action.blockId) {
+      targetRooms.push(`block:${action.blockId}`);
+    }
+
+    io.to(targetRooms).emit('inspection:cancelled', action);
   },
 };
 

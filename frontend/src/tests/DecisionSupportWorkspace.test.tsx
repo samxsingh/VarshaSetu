@@ -13,6 +13,7 @@ vi.mock('../services/operationalService', async () => {
     ...actual,
     operationalService: {
       getSignalContext: vi.fn(),
+      createInspectionAction: vi.fn(),
     },
   };
 });
@@ -419,4 +420,89 @@ describe('DecisionSupportWorkspace Component (Phase 7B)', () => {
     );
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
+
+  it('allows user to trigger and create an inspection action from next inspections', async () => {
+    vi.mocked(operationalService.getSignalContext).mockResolvedValue({
+      success: true,
+      data: mockContext,
+    });
+
+    const mockActionResponse = {
+      actionId: 'act_12345678',
+      signalId: 'sig_evt_101',
+      actionType: 'FIELD_OBSERVATION' as const,
+      title: 'Inspect: WARNING: HEAVY RAIN RISK',
+      description: 'Operational review for sig_evt_101',
+      severity: 'WARNING' as const,
+      priority: 'P2' as const,
+      blockId: 'UP_LKO_BKT',
+      status: 'OPEN' as const,
+      createdBy: 'test_user',
+      creatorRole: 'CLIMATE_ANALYST',
+      evidenceSnapshot: {
+        originatingSignalType: 'EVENT',
+        originatingSeverity: 'WARNING',
+        detectedAt: '2024-07-20T10:00:00.000Z',
+        scientificDisclosures: [],
+        sourceReferences: [],
+      },
+      auditTrail: [
+        {
+          transition: 'CREATE',
+          performedBy: 'test_user',
+          role: 'CLIMATE_ANALYST',
+          timestamp: '2024-07-20T10:00:00.000Z',
+        },
+      ],
+      createdAt: '2024-07-20T10:00:00.000Z',
+      updatedAt: '2024-07-20T10:00:00.000Z',
+    };
+
+    vi.mocked(operationalService.createInspectionAction).mockResolvedValue({
+      success: true,
+      data: mockActionResponse,
+    });
+
+    const onActionCreated = vi.fn();
+
+    render(
+      <MemoryRouter>
+        <DecisionSupportWorkspace
+          signalId="sig_evt_101"
+          isOpen={true}
+          onClose={vi.fn()}
+          onActionCreated={onActionCreated}
+        />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Recommended Operational Inspections')).toBeInTheDocument();
+    });
+
+    const createBtn = screen.getByTestId('open-create-action-btn');
+    expect(createBtn).toBeInTheDocument();
+    fireEvent.click(createBtn);
+
+    // Modal opens
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: /Create Inspection Action/i })).toBeInTheDocument();
+    });
+
+    const submitBtn = screen.getByTestId('submit-create-action-btn');
+    fireEvent.click(submitBtn);
+
+    await waitFor(() => {
+      expect(operationalService.createInspectionAction).toHaveBeenCalledWith(
+        expect.objectContaining({
+          signalId: 'sig_evt_101',
+          priority: 'P2',
+        })
+      );
+      expect(onActionCreated).toHaveBeenCalledWith(mockActionResponse);
+      expect(screen.getByText(/Inspection action created successfully/i)).toBeInTheDocument();
+      expect(screen.getByText(/Action ID: #act_12345678/i)).toBeInTheDocument();
+    });
+  });
 });
+

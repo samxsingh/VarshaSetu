@@ -19,12 +19,17 @@ import {
   Activity,
   Server,
   Lock,
+  ClipboardCheck,
+  CheckCircle2,
 } from 'lucide-react';
 import {
   operationalService,
   DecisionSupportContext,
   SignalSeverity,
   OperationalSignalType,
+  InspectionActionDTO,
+  InspectionActionType,
+  InspectionActionPriority,
 } from '../../services/operationalService';
 import { useRealtimeStore } from '../../stores/useRealtimeStore';
 import { ProvenanceDrawer, ProvenanceDetails } from '../visualization/ProvenanceDrawer';
@@ -36,6 +41,7 @@ interface DecisionSupportWorkspaceProps {
   onClose: () => void;
   persona?: 'FARMER' | 'OFFICER' | 'GOVERNMENT' | 'CLIMATE_ANALYST' | 'ADMIN';
   onNavigateAction?: (target: string) => void;
+  onActionCreated?: (action: InspectionActionDTO) => void;
 }
 
 const SEVERITY_COLORS: Record<SignalSeverity, { bg: string; border: string; text: string; badge: string; icon: React.ComponentType<{ className?: string }> }> = {
@@ -75,6 +81,7 @@ export const DecisionSupportWorkspace: React.FC<DecisionSupportWorkspaceProps> =
   onClose,
   persona = 'CLIMATE_ANALYST',
   onNavigateAction,
+  onActionCreated,
 }) => {
   const [context, setContext] = useState<DecisionSupportContext | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -84,6 +91,95 @@ export const DecisionSupportWorkspace: React.FC<DecisionSupportWorkspaceProps> =
   const [realtimeUpdateAvailable, setRealtimeUpdateAvailable] = useState<boolean>(false);
 
   const modalRef = useRef<HTMLDivElement>(null);
+
+  // Inspection Action creation state
+  const [isCreateActionOpen, setIsCreateActionOpen] = useState<boolean>(false);
+  const [actionType, setActionType] = useState<InspectionActionType>('FIELD_OBSERVATION');
+  const [actionTitle, setActionTitle] = useState<string>('');
+  const [actionDescription, setActionDescription] = useState<string>('');
+  const [actionPriority, setActionPriority] = useState<InspectionActionPriority>('P2');
+  const [actionAssignedTo, setActionAssignedTo] = useState<string>('');
+  const [actionCreating, setActionCreating] = useState<boolean>(false);
+  const [actionError, setActionError] = useState<string | null>(null);
+  const [createdAction, setCreatedAction] = useState<InspectionActionDTO | null>(null);
+
+  const getDefaultActionType = useCallback(
+    (signalType?: OperationalSignalType): InspectionActionType => {
+      if (persona === 'FARMER') return 'FIELD_OBSERVATION';
+      switch (signalType) {
+        case 'DATA_QUALITY':
+          return 'DATA_QUALITY_CHECK';
+        case 'MODEL_STATUS':
+        case 'OPERATIONAL_GATE':
+          return 'MODEL_EVIDENCE_REVIEW';
+        case 'FORECAST_CHANGE':
+          return 'FORECAST_REVIEW';
+        case 'ADVISORY':
+          return 'ADVISORY_REVIEW';
+        case 'EVENT':
+          return 'FIELD_OBSERVATION';
+        default:
+          return 'FIELD_OBSERVATION';
+      }
+    },
+    [persona]
+  );
+
+  const getDefaultPriority = (severity?: SignalSeverity): InspectionActionPriority => {
+    switch (severity) {
+      case 'CRITICAL':
+        return 'P1';
+      case 'WARNING':
+        return 'P2';
+      case 'WATCH':
+        return 'P3';
+      case 'INFO':
+      default:
+        return 'P4';
+    }
+  };
+
+  const handleOpenCreateAction = () => {
+    if (!context) return;
+    const initialType = getDefaultActionType(context.signalType);
+    setActionType(initialType);
+    setActionTitle(`Inspect: ${context.title}`);
+    setActionDescription(`Operational review for ${context.signalId}: ${context.summary}. Recommended: ${context.recommendedInspection}`);
+    setActionPriority(getDefaultPriority(context.severity));
+    setActionAssignedTo('');
+    setActionError(null);
+    setIsCreateActionOpen(true);
+  };
+
+  const handleCreateActionSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!context) return;
+    setActionCreating(true);
+    setActionError(null);
+    try {
+      const res = await operationalService.createInspectionAction({
+        signalId: context.signalId,
+        actionType,
+        title: actionTitle.trim(),
+        description: actionDescription.trim(),
+        priority: actionPriority,
+        assignedTo: actionAssignedTo.trim() || undefined,
+      });
+
+      if (res.data) {
+        setCreatedAction(res.data);
+        useRealtimeStore.getState().addOrUpdateInspectionAction(res.data);
+        if (onActionCreated) {
+          onActionCreated(res.data);
+        }
+        setIsCreateActionOpen(false);
+      }
+    } catch (err: any) {
+      setActionError(err?.response?.data?.error?.message || err?.message || 'Failed to create inspection action');
+    } finally {
+      setActionCreating(false);
+    }
+  };
 
   // Realtime subscription: monitor if this signal is updated in the background
   const realtimeSignals = useRealtimeStore((state) => state.operationalSignals);
@@ -558,13 +654,39 @@ export const DecisionSupportWorkspace: React.FC<DecisionSupportWorkspaceProps> =
 
               {/* Section 5: Deterministic Next Inspection Actions */}
               <section aria-labelledby="next-inspections-heading" className="space-y-3">
-                <h3
-                  id="next-inspections-heading"
-                  className="text-xs font-mono font-bold uppercase tracking-wider text-slate-900 dark:text-slate-200 flex items-center gap-1.5"
-                >
-                  <Activity className="w-4 h-4 text-emerald-600" />
-                  Recommended Operational Inspections
-                </h3>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                  <h3
+                    id="next-inspections-heading"
+                    className="text-xs font-mono font-bold uppercase tracking-wider text-slate-900 dark:text-slate-200 flex items-center gap-1.5"
+                  >
+                    <Activity className="w-4 h-4 text-emerald-600" />
+                    Recommended Operational Inspections
+                  </h3>
+
+                  <button
+                    type="button"
+                    data-testid="open-create-action-btn"
+                    onClick={handleOpenCreateAction}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition-colors shadow-xs cursor-pointer self-start sm:self-auto"
+                  >
+                    <ClipboardCheck className="w-4 h-4" />
+                    Create Inspection Action
+                  </button>
+                </div>
+
+                {createdAction && (
+                  <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800 flex items-start gap-2.5 text-xs text-emerald-900 dark:text-emerald-200">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-semibold">
+                        Inspection action created successfully (Status: OPEN)
+                      </p>
+                      <p className="font-mono text-[11px] text-emerald-700 dark:text-emerald-300 mt-0.5">
+                        Action ID: #{createdAction.actionId} &bull; Type: {createdAction.actionType} &bull; Priority: {createdAction.priority}
+                      </p>
+                    </div>
+                  </div>
+                )}
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {context.nextInspections.map((action, idx) => (
@@ -616,7 +738,180 @@ export const DecisionSupportWorkspace: React.FC<DecisionSupportWorkspaceProps> =
           targetId={context?.underlyingEntity.entityId}
           provenance={provenanceData}
         />
+
+        {/* Create Operational Inspection Action Modal */}
+        {isCreateActionOpen && context && (
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="create-action-modal-title"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs"
+          >
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+                <div className="flex items-center gap-2">
+                  <ClipboardCheck className="w-5 h-5 text-emerald-600" />
+                  <h3
+                    id="create-action-modal-title"
+                    className="text-base font-serif font-bold text-slate-900 dark:text-slate-100"
+                  >
+                    Create Inspection Action
+                  </h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsCreateActionOpen(false)}
+                  disabled={actionCreating}
+                  className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg cursor-pointer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Scientific Safeguard Banner */}
+              <div className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900 text-xs text-amber-900 dark:text-amber-200">
+                <strong>DIAGNOSTIC_ONLY: </strong>
+                Creates an operational review record. Does not trigger automated farm actuators or alter scientific ML models.
+              </div>
+
+              <form onSubmit={handleCreateActionSubmit} className="space-y-3.5">
+                {/* Originating signal chip */}
+                <div className="text-xs p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex flex-wrap items-center justify-between gap-2">
+                  <div>
+                    <span className="text-slate-500">Originating Signal: </span>
+                    <strong className="font-mono text-slate-800 dark:text-slate-200">{context.signalId}</strong>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="px-1.5 py-0.5 rounded font-mono text-[10px] bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200">
+                      Block: {context.location.blockId}
+                    </span>
+                    <span className="px-1.5 py-0.5 rounded font-mono text-[10px] bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-200">
+                      {context.severity}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Action Type */}
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    Action Type *
+                  </label>
+                  <select
+                    value={actionType}
+                    onChange={(e) => setActionType(e.target.value as InspectionActionType)}
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-emerald-500 font-mono"
+                  >
+                    {persona === 'FARMER' ? (
+                      <option value="FIELD_OBSERVATION">FIELD OBSERVATION</option>
+                    ) : (
+                      <>
+                        <option value="DATA_QUALITY_CHECK">DATA QUALITY CHECK</option>
+                        <option value="STATION_INSPECTION">STATION INSPECTION</option>
+                        <option value="FORECAST_REVIEW">FORECAST REVIEW</option>
+                        <option value="ADVISORY_REVIEW">ADVISORY REVIEW</option>
+                        <option value="MODEL_EVIDENCE_REVIEW">MODEL EVIDENCE REVIEW</option>
+                        <option value="FIELD_OBSERVATION">FIELD OBSERVATION</option>
+                      </>
+                    )}
+                  </select>
+                </div>
+
+                {/* Title */}
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    Action Title *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={actionTitle}
+                    onChange={(e) => setActionTitle(e.target.value)}
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
+                  />
+                </div>
+
+                {/* Description */}
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    Action Description / Rationale *
+                  </label>
+                  <textarea
+                    rows={3}
+                    required
+                    value={actionDescription}
+                    onChange={(e) => setActionDescription(e.target.value)}
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
+                  />
+                </div>
+
+                {/* Priority & Assigned To in grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                      Priority *
+                    </label>
+                    <select
+                      value={actionPriority}
+                      onChange={(e) => setActionPriority(e.target.value as InspectionActionPriority)}
+                      className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-emerald-500 font-mono"
+                    >
+                      <option value="P1">P1 (Immediate)</option>
+                      <option value="P2">P2 (High)</option>
+                      <option value="P3">P3 (Medium)</option>
+                      <option value="P4">P4 (Low / Informational)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                      Assign To (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      value={actionAssignedTo}
+                      onChange={(e) => setActionAssignedTo(e.target.value)}
+                      placeholder="e.g. officer_pune_south"
+                      className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
+                    />
+                  </div>
+                </div>
+
+                {actionError && (
+                  <div className="p-2.5 rounded-lg bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900 text-xs text-red-700 dark:text-red-300">
+                    {actionError}
+                  </div>
+                )}
+
+                <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+                  <button
+                    type="button"
+                    onClick={() => setIsCreateActionOpen(false)}
+                    disabled={actionCreating}
+                    className="px-4 py-2 text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    data-testid="submit-create-action-btn"
+                    onClick={handleCreateActionSubmit}
+                    disabled={actionCreating}
+                    className="px-4 py-2 text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg shadow-xs cursor-pointer flex items-center gap-1.5"
+                  >
+                    {actionCreating ? (
+                      <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                    ) : (
+                      <ClipboardCheck className="w-3.5 h-3.5" />
+                    )}
+                    Create Inspection Action
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
 };
+

@@ -103,6 +103,19 @@ export interface SystemAnnouncementDTO {
   timestamp: string;
 }
 
+export interface InspectionActionRealtimeDTO {
+  actionId: string;
+  signalId: string;
+  blockId: string;
+  actionType: string;
+  title: string;
+  status: string;
+  priority: string;
+  assignedTo: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface ServerToClientEvents {
   'event:created': (event: ScientificEventDTO) => void;
   'event:updated': (event: ScientificEventDTO) => void;
@@ -115,6 +128,11 @@ export interface ServerToClientEvents {
   'notification:received': (notification: InAppNotificationDTO) => void;
   'system:announcement': (announcement: SystemAnnouncementDTO) => void;
   'operation:signal': (signal: OperationalSignalDTO) => void;
+  'inspection:created': (action: InspectionActionRealtimeDTO) => void;
+  'inspection:assigned': (action: InspectionActionRealtimeDTO) => void;
+  'inspection:started': (action: InspectionActionRealtimeDTO) => void;
+  'inspection:completed': (action: InspectionActionRealtimeDTO) => void;
+  'inspection:cancelled': (action: InspectionActionRealtimeDTO) => void;
   'room:joined': (data: { room: string; timestamp: string }) => void;
   'room:left': (data: { room: string; timestamp: string }) => void;
   'room:error': (data: { room: string; error: string }) => void;

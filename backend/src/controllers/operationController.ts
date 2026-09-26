@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { sendSuccess } from '../utils/responseEnvelope';
 import { mlGatewayClient } from '../services/ml';
 import { operationalSignalService } from '../services/operational/operationalSignalService';
+import { inspectionActionService } from '../services/operational/inspectionActionService';
 import { AuthenticatedRequest } from '../types';
 
 export const operationController = {
@@ -32,6 +33,124 @@ export const operationController = {
       });
 
       return sendSuccess(res, context);
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async createAction(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    try {
+      const action = await inspectionActionService.createAction(req.body, {
+        userId: req.user?.id || 'system',
+        role: req.user?.role || 'ANALYST',
+        assignedLocationId: req.user?.assignedLocationId,
+      });
+
+      return sendSuccess(res, action, undefined, 201);
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async listActions(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    try {
+      const actions = await inspectionActionService.listActions(req.query as any, {
+        userId: req.user?.id || 'system',
+        role: req.user?.role || 'ANALYST',
+        assignedLocationId: req.user?.assignedLocationId,
+      });
+
+      return sendSuccess(res, {
+        items: actions,
+        total: actions.length,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async getActionById(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    try {
+      const action = await inspectionActionService.getActionById(req.params.actionId, {
+        userId: req.user?.id || 'system',
+        role: req.user?.role || 'ANALYST',
+        assignedLocationId: req.user?.assignedLocationId,
+      });
+
+      return sendSuccess(res, action);
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async assignAction(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    try {
+      const action = await inspectionActionService.assignAction(
+        req.params.actionId,
+        req.body?.assignedTo,
+        {
+          userId: req.user?.id || 'system',
+          role: req.user?.role || 'ANALYST',
+          assignedLocationId: req.user?.assignedLocationId,
+        },
+        req.body?.reason
+      );
+
+      return sendSuccess(res, action);
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async startAction(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    try {
+      const action = await inspectionActionService.startAction(
+        req.params.actionId,
+        {
+          userId: req.user?.id || 'system',
+          role: req.user?.role || 'ANALYST',
+          assignedLocationId: req.user?.assignedLocationId,
+        },
+        req.body?.reason
+      );
+
+      return sendSuccess(res, action);
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async completeAction(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    try {
+      const action = await inspectionActionService.completeAction(
+        req.params.actionId,
+        req.body?.completionNotes,
+        {
+          userId: req.user?.id || 'system',
+          role: req.user?.role || 'ANALYST',
+          assignedLocationId: req.user?.assignedLocationId,
+        }
+      );
+
+      return sendSuccess(res, action);
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async cancelAction(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    try {
+      const action = await inspectionActionService.cancelAction(
+        req.params.actionId,
+        req.body?.cancellationReason,
+        {
+          userId: req.user?.id || 'system',
+          role: req.user?.role || 'ANALYST',
+          assignedLocationId: req.user?.assignedLocationId,
+        }
+      );
+
+      return sendSuccess(res, action);
     } catch (error) {
       next(error);
     }

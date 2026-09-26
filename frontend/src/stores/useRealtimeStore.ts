@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { OperationalSignalDTO } from '../services/operationalService';
+import { OperationalSignalDTO, InspectionActionDTO } from '../services/operationalService';
 
 export type RealtimeConnectionStatus =
   | 'DISCONNECTED'
@@ -106,6 +106,7 @@ interface RealtimeState {
   recentForecastUpdates: ForecastUpdatedDTO[];
   latestDataHealth: DataHealthUpdatedDTO | null;
   operationalSignals: OperationalSignalDTO[];
+  inspectionActions: InspectionActionDTO[];
   connectionError: string | null;
 
   setConnectionStatus: (status: RealtimeConnectionStatus, error?: string | null) => void;
@@ -116,6 +117,8 @@ interface RealtimeState {
   setDataHealth: (health: DataHealthUpdatedDTO) => void;
   addOperationalSignal: (signal: OperationalSignalDTO) => void;
   clearOperationalSignals: () => void;
+  addOrUpdateInspectionAction: (action: InspectionActionDTO) => void;
+  clearInspectionActions: () => void;
   markNotificationsRead: () => void;
   clearEvents: () => void;
 }
@@ -124,6 +127,8 @@ const MAX_RECENT_EVENTS = 50;
 const MAX_RECENT_NOTIFICATIONS = 30;
 const MAX_RECENT_FORECASTS = 20;
 const MAX_RECENT_SIGNALS = 50;
+const MAX_RECENT_ACTIONS = 50;
+
 
 export const useRealtimeStore = create<RealtimeState>((set) => ({
   connectionStatus: 'DISCONNECTED',
@@ -135,6 +140,7 @@ export const useRealtimeStore = create<RealtimeState>((set) => ({
   recentForecastUpdates: [],
   latestDataHealth: null,
   operationalSignals: [],
+  inspectionActions: [],
   connectionError: null,
 
   setConnectionStatus: (status, error = null) => {
@@ -257,6 +263,33 @@ export const useRealtimeStore = create<RealtimeState>((set) => ({
   clearOperationalSignals: () => {
     set({
       operationalSignals: [],
+    });
+  },
+
+  addOrUpdateInspectionAction: (action) => {
+    set((state) => {
+      const existingIndex = state.inspectionActions.findIndex(
+        (a) => a.actionId === action.actionId
+      );
+
+      let updatedList: InspectionActionDTO[];
+      if (existingIndex >= 0) {
+        updatedList = [...state.inspectionActions];
+        updatedList[existingIndex] = action;
+      } else {
+        updatedList = [action, ...state.inspectionActions].slice(0, MAX_RECENT_ACTIONS);
+      }
+
+      return {
+        inspectionActions: updatedList,
+        lastEventAt: new Date().toISOString(),
+      };
+    });
+  },
+
+  clearInspectionActions: () => {
+    set({
+      inspectionActions: [],
     });
   },
 
