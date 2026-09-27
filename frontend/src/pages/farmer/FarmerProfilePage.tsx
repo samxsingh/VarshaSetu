@@ -3,12 +3,22 @@ import { useTranslation } from 'react-i18next';
 import { UserCheck, MapPin, Sprout, Droplets, RotateCcw, ShieldCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useFarmerStore } from '../../stores/useFarmerStore';
+import { useAuthStore } from '../../stores/useAuthStore';
 import { LanguageToggle } from '../../components/common/LanguageToggle';
-import { ScientificStatusBadge } from '../../components/farmer/ScientificStatusBadge';
 
 export const FarmerProfilePage: React.FC = () => {
   const { t } = useTranslation();
+  const user = useAuthStore((s) => s.user);
   const { location, crop, stage, irrigation, soil, farmSizeAcres, resetOnboarding } = useFarmerStore();
+
+  const displayName = user?.fullName || 'Ramesh Kumar';
+  const initials = displayName
+    .split(' ')
+    .map((n) => n[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join('')
+    .toUpperCase() || 'RK';
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -18,12 +28,12 @@ export const FarmerProfilePage: React.FC = () => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b-2 border-[#102A43]/10 gap-4">
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 rounded-2xl bg-[#0E7490] text-white flex items-center justify-center font-heading font-black text-xl border-2 border-[#102A43] shadow-[2px_2px_0px_#102A43]">
-              RL
+              {initials}
             </div>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <h2 className="font-heading font-black text-2xl text-[#102A43]">
-                  Ram Lakhan
+                  {displayName}
                 </h2>
                 <span className="px-2.5 py-0.5 rounded-md bg-[#EBF5EE] border border-[#3F7D58] text-[#3F7D58] text-xs font-mono font-bold flex items-center gap-1">
                   <ShieldCheck className="w-3.5 h-3.5" />
@@ -31,12 +41,10 @@ export const FarmerProfilePage: React.FC = () => {
                 </span>
               </div>
               <p className="text-xs text-[#829AB1] mt-0.5 font-sans">
-                Registered Marginal Farmer • Bhaisamau Village • KVK Lucknow Member
+                {user?.email || 'farmer@varshasetu.in'} • Registered Marginal Farmer • Bhaisamau Village • KVK Lucknow Member
               </p>
             </div>
           </div>
-
-          <ScientificStatusBadge status="DEMO IDENTITY" size="sm" />
         </div>
 
         {/* 4 Profile Attributes Grid */}

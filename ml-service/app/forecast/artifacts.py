@@ -88,6 +88,7 @@ class ForecastArtifactManager:
         records: List[ScientificForecastRecord] = []
 
         files = sorted(artifacts_dir.glob("*.json"), key=os.path.getmtime, reverse=True)
+        seen_keys = set()
 
         for f in files:
             if len(records) >= limit:
@@ -106,6 +107,19 @@ class ForecastArtifactManager:
                     continue
                 if status and rec.scientific_disclosure.status.upper() != status.upper():
                     continue
+
+                # Deduplicate by semantic forecast signal key
+                key = (
+                    rec.location.block_id,
+                    rec.horizon.horizon_days,
+                    rec.target.target_type.upper(),
+                    rec.valid_from,
+                    rec.valid_until,
+                    rec.model.model_id
+                )
+                if key in seen_keys:
+                    continue
+                seen_keys.add(key)
 
                 records.append(rec)
             except Exception:

@@ -5,6 +5,8 @@ import { connectDatabase, closeDatabase, isDatabaseConnected } from './config/da
 import { initSocketServer, closeSocketServer } from './realtime';
 import http from 'http';
 
+import { runMongoSeed } from './db/seeds/mongoSeed';
+
 const server = http.createServer(app);
 
 // Initialize real-time Socket.IO server on the authoritative HTTP server
@@ -20,6 +22,13 @@ async function startServer(): Promise<void> {
     try {
       await connectDatabase();
       console.log(`🍃 Connected to MongoDB persistence layer (Database: ${env.NODE_ENV !== 'production' ? 'varshasetu' : 'production'})`);
+
+      // Safe, idempotent deterministic seed mechanism for demonstration accounts
+      try {
+        await runMongoSeed();
+      } catch (seedErr: any) {
+        console.warn(`⚠️  Demonstration seed verification warning: ${seedErr.message}`);
+      }
     } catch (mongoErr: any) {
       console.warn(`⚠️  MongoDB connection deferred or offline (${mongoErr.message}). Gateway will use resilient fallback.`);
     }

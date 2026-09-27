@@ -9,16 +9,17 @@ export function requireRole(allowedRoles: UserRole[]) {
       return next(new UnauthorizedError('Authentication required'));
     }
 
-    if (!allowedRoles.includes(req.user.role)) {
-      return next(
-        new ForbiddenError(
-          `Access denied for role '${req.user.role}'. Required: [${allowedRoles.join(', ')}]`,
-          { currentRole: req.user.role, allowedRoles }
-        )
-      );
+    // ADMIN role has implicit superuser clearance across all workspaces
+    if (req.user.role === 'ADMIN' || allowedRoles.includes(req.user.role)) {
+      return next();
     }
 
-    next();
+    return next(
+      new ForbiddenError(
+        `Access denied for role '${req.user.role}'. Required: [${allowedRoles.join(', ')}]`,
+        { currentRole: req.user.role, allowedRoles }
+      )
+    );
   };
 }
 

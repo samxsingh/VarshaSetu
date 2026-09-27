@@ -347,6 +347,65 @@ VarshaSetu/
 
 ---
 
+## Environment Configuration
+
+VarshaSetu uses distinct configuration files across its three architectural tiers (`backend`, `frontend`, and `ml-service`). All sensitive keys, credentials, and environment-dependent addresses must be loaded through environment variables and never committed to version control.
+
+### Quick Setup Steps
+
+1. **Copy template files:**
+   ```bash
+   cp .env.example .env
+   cp backend/.env.example backend/.env
+   cp frontend/.env.example frontend/.env
+   cp ml-service/.env.example ml-service/.env
+   ```
+2. **Configure required values:** Review each file (especially `backend/.env` for database connection and JWT secrets).
+3. **Start MongoDB:** Ensure MongoDB is running locally on port `27017` (e.g. `mongod --dbpath /data/db` or via Homebrew/system service).
+4. **Start Backend:** `cd backend && npm run dev` (API on port `5001`).
+5. **Start ML Service:** `cd ml-service && source venv/bin/activate && uvicorn app.main:app --port 8000` (ML on port `8000`).
+6. **Start Frontend:** `cd frontend && npm run dev` (Vite client on port `5173`).
+
+---
+
+### Key Environment Variables
+
+| Variable | Tier | Purpose | Default (Dev) | Production Requirement |
+| :--- | :--- | :--- | :--- | :--- |
+| `NODE_ENV` | Backend, Root | Application runtime mode | `development` | Set to `production` |
+| `PORT` | Backend | Express API Gateway port | `5001` | Server port (e.g. `5001`) |
+| `MONGODB_URI` | Backend | MongoDB connection string | `mongodb://127.0.0.1:27017/varshasetu` | Production MongoDB cluster URI |
+| `DATABASE_URL` | Backend, ML | PostgreSQL connection string | `postgresql://localhost:5432/varshasetu` | Production PostgreSQL URI |
+| `JWT_SECRET` | Backend | Access token HMAC-SHA256 secret | Development default | **Required:** Random string $\ge 32$ chars. Startup fails if default key is used. |
+| `JWT_REFRESH_SECRET`| Backend | Refresh token signing secret | Development default | **Required:** Distinct random string $\ge 32$ chars. |
+| `ENABLE_DEMO_ACCOUNTS` | Backend | Permits 1-click demonstration access | `true` | `false` in live environments |
+| `FRONTEND_URL` / `CORS_ORIGIN` | Backend | Allowed CORS origins | `http://localhost:5173` | Production domain origin |
+| `ML_SERVICE_URL` | Backend | Scientific microservice address | `http://localhost:8000` | Microservice address |
+| `VITE_API_BASE_URL` | Frontend | API gateway base endpoint | `http://localhost:5001/api/v1` | Reverse proxy `/api/v1` or public API URL |
+| `VITE_WS_URL` | Frontend | WebSocket / Socket.IO URL | `http://localhost:5001` | Empty (uses `window.location.origin`) or backend origin |
+| `PORT` / `ML_SERVICE_PORT` | ML Service | FastAPI microservice port | `8000` | Port `8000` |
+| `BACKEND_URL` | ML Service | Express API gateway address | `http://localhost:5001` | Gateway address |
+
+---
+
+### Environment Distinction
+
+- **Development (`NODE_ENV=development`):**
+  - Uses sensible local defaults for ports and endpoints.
+  - Safe development JWT secrets permitted.
+  - 1-click demo accounts enabled (`ENABLE_DEMO_ACCOUNTS=true`).
+  - Diagnostic and retrospective flags active.
+- **Test (`NODE_ENV=test`):**
+  - Automated test runners (Vitest, Pytest) run in isolated headless modes.
+  - Strict determinism; external live networks/SMS disabled.
+  - No connection to production databases.
+- **Production (`NODE_ENV=production`):**
+  - **Strict validation:** Backend fails immediately at startup if `JWT_SECRET` or `JWT_REFRESH_SECRET` is unset, weak, or set to development defaults.
+  - Passwords and demo accounts are dropped from public bundles.
+  - Strict CORS origin enforcement and production rate limiting.
+
+---
+
 ## Local Development Setup
 
 ### Prerequisites

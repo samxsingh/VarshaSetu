@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { Navigate, useLocation, Link, Outlet } from 'react-router-dom';
-import { ShieldAlert, LogIn, ArrowRight, RefreshCw } from 'lucide-react';
+import { Navigate, useLocation, useNavigate, Link, Outlet } from 'react-router-dom';
+import { ShieldAlert, LogIn, LogOut, ArrowRight, RefreshCw } from 'lucide-react';
 import { UserRole } from '@shared/types';
 import { useAuthStore } from '../../stores/useAuthStore';
 import { LoadingState } from '../ui/LoadingState';
@@ -15,7 +15,8 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
 }) => {
   const location = useLocation();
-  const { user, authStatus, initAuth } = useAuthStore();
+  const navigate = useNavigate();
+  const { user, authStatus, initAuth, logout } = useAuthStore();
 
   useEffect(() => {
     if (authStatus === 'IDLE') {
@@ -54,9 +55,9 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
         user.role === 'FARMER'
           ? '/farmer/dashboard'
           : user.role === 'OFFICER'
-          ? '/officer'
+          ? '/officer/dashboard'
           : user.role === 'GOVERNMENT'
-          ? '/government/command-center'
+          ? '/government/dashboard'
           : user.role === 'ANALYST'
           ? '/analyst'
           : '/admin';
@@ -94,13 +95,16 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
                 <span>Go to My Portal</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
-              <Link
-                to={`/login?from=${encodeURIComponent(location.pathname)}`}
+              <button
+                onClick={async () => {
+                  await logout();
+                  navigate('/login', { replace: true });
+                }}
                 className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-[#102A43] font-heading font-semibold text-sm border border-[#B8C5CC] transition-colors"
               >
-                <LogIn className="w-4 h-4" />
-                <span>Switch Persona</span>
-              </Link>
+                <LogOut className="w-4 h-4 text-red-600" />
+                <span>Log Out</span>
+              </button>
             </div>
           </div>
         </div>

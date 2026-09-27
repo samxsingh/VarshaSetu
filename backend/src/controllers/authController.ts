@@ -39,4 +39,13 @@ export const authController = {
     // JWT is stateless; client removes token from localStorage.
     return sendSuccess(res, { message: 'Logged out successfully' });
   },
+
+  async demoLogin(req: Request, res: Response): Promise<Response> {
+    const role = req.body?.role;
+    if (!role) {
+      throw new BadRequestError('Role is required for demo login');
+    }
+    const result = await authService.demoLogin(role, req.ip);
+    return sendSuccess(res, result);
+  },
 };

@@ -46,9 +46,29 @@ export const forecastController = {
         },
       }));
 
+      // Semantic deduplication: ensure single latest signal per block, horizon, target, window, and model
+      const seenKeys = new Set<string>();
+      const deduplicated: typeof formatted = [];
+
+      for (const rec of formatted) {
+        const key = [
+          rec.location?.block_id || '',
+          rec.horizon?.horizon_days || '',
+          rec.target?.target_type || '',
+          rec.valid_from || '',
+          rec.valid_until || '',
+          rec.model?.model_id || '',
+        ].join('::');
+
+        if (!seenKeys.has(key)) {
+          seenKeys.add(key);
+          deduplicated.push(rec);
+        }
+      }
+
       return sendSuccess(res, {
-        total_forecasts: formatted.length,
-        forecasts: formatted,
+        total_forecasts: deduplicated.length,
+        forecasts: deduplicated,
       });
     } catch (error) {
       next(error);

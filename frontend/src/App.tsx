@@ -60,6 +60,7 @@ export function App() {
             <Route path="about" element={<AboutPage />} />
             <Route path="how-it-works" element={<HowItWorksPage />} />
             <Route path="login" element={<LoginPage />} />
+            <Route path="auth" element={<LoginPage />} />
 
             {/* Farmer Portal Routes - RBAC Protected */}
             <Route
@@ -90,6 +91,7 @@ export function App() {
               }
             >
               <Route index element={<OfficerDashboardPage />} />
+              <Route path="dashboard" element={<OfficerDashboardPage />} />
               <Route path="map" element={<OfficerMapPage />} />
               <Route path="forecast" element={<OfficerForecastPage />} />
               <Route path="advisories" element={<OfficerAdvisoriesPage />} />
@@ -105,9 +107,9 @@ export function App() {
                 </ProtectedRoute>
               }
             >
-              <Route index element={<Navigate to="command-center" replace />} />
+              <Route index element={<Navigate to="dashboard" replace />} />
+              <Route path="dashboard" element={<GovernmentDashboardPage />} />
               <Route path="command-center" element={<GovernmentDashboardPage />} />
-              <Route path="dashboard" element={<Navigate to="/government/command-center" replace />} />
             </Route>
 
             {/* Analyst Lab Routes - RBAC Protected */}

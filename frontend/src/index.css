@@ -34,6 +34,10 @@
     --amber-warm: #D97706;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     background-color: #F3F6F7;
     color: #102A43;
@@ -95,12 +99,75 @@
   }
 }
 
+@keyframes settleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.985) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
 .animate-fade-up {
-  animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.5s ease-out forwards;
+  animation: fadeIn 0.5s ease-out both;
+}
+
+.animate-settle-in {
+  animation: settleIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animation-delay-100 {
+  animation-delay: 100ms;
+}
+
+.animation-delay-180 {
+  animation-delay: 180ms;
+}
+
+.animation-delay-200 {
+  animation-delay: 200ms;
+}
+
+.animation-delay-280 {
+  animation-delay: 280ms;
+}
+
+.animation-delay-300 {
+  animation-delay: 300ms;
+}
+
+.animation-delay-320 {
+  animation-delay: 320ms;
+}
+
+.animation-delay-380 {
+  animation-delay: 380ms;
+}
+
+.animation-delay-400 {
+  animation-delay: 400ms;
+}
+
+.animation-delay-460 {
+  animation-delay: 460ms;
+}
+
+.animation-delay-480 {
+  animation-delay: 480ms;
+}
+
+.animation-delay-500 {
+  animation-delay: 500ms;
+}
+
+.animation-delay-520 {
+  animation-delay: 520ms;
 }
 
 .animate-float-slow {
@@ -111,23 +178,42 @@
   animation: floatReverse 6s ease-in-out infinite;
 }
 
+/* Subtle cinematic zoom-out for hero observation visual (12-14s continuous) */
+@keyframes cinematicZoomOut {
+  0% {
+    transform: scale(1.045);
+  }
+  100% {
+    transform: scale(1.0);
+  }
+}
+
+.animate-cinematic-zoom {
+  animation: cinematicZoomOut 13s ease-in-out infinite alternate;
+  transform-origin: center center;
+  will-change: transform;
+}
 
 /* Interactive Neo-brutalist buttons */
 .btn-brutal-teal {
   background-color: #0E7490;
   color: #FFFFFF;
   border: 2px solid #102A43;
-  box-shadow: 2px 2px 0px #102A43;
+  box-shadow: 3px 3px 0px #102A43;
   transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .btn-brutal-teal:hover {
   transform: translate(-1.5px, -1.5px);
-  box-shadow: 4px 4px 0px #102A43;
+  box-shadow: 5px 5px 0px #102A43;
   background-color: #155E75;
 }
 .btn-brutal-teal:active {
   transform: translate(1px, 1px);
   box-shadow: 1px 1px 0px #102A43;
+}
+.btn-brutal-teal:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #F3F6F7, 0 0 0 4px #0E7490, 3px 3px 0px #102A43;
 }
 
 .btn-brutal-secondary {
@@ -149,6 +235,16 @@
 
 /* Reduced motion accessibility support */
 @media (prefers-reduced-motion: reduce) {
+  .animate-cinematic-zoom,
+  .animate-fade-up,
+  .animate-fade-in,
+  .animate-settle-in,
+  .animate-float-slow,
+  .animate-float-alt {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
   *, ::before, ::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;

@@ -8,9 +8,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 class Settings(BaseSettings):
     SERVICE_NAME: str = "varshasetu-ml-service"
     VERSION: str = "1.0.0"
-    ENVIRONMENT: str = os.getenv("NODE_ENV", "development")
-    PORT: int = int(os.getenv("ML_SERVICE_PORT", "8000"))
+    ENVIRONMENT: str = os.getenv("NODE_ENV", os.getenv("ENVIRONMENT", "development"))
+    PORT: int = int(os.getenv("PORT", os.getenv("ML_SERVICE_PORT", "8000")))
     CORS_ORIGIN: str = os.getenv("CORS_ORIGIN", "http://localhost:5173,http://localhost:5001")
+    BACKEND_URL: str = os.getenv("BACKEND_URL", "http://localhost:5001")
     
     # PostgreSQL Connection (matches backend)
     DATABASE_URL: str = os.getenv("DATABASE_URL", "postgresql://localhost:5432/varshasetu")

@@ -225,4 +225,67 @@ export const authService = {
     }
     return toUserEntity(userRow);
   },
+
+  async demoLogin(role: UserRole, ipAddress?: string): Promise<{ token: string; refreshToken: string; user: UserEntity }> {
+    if (!env.ENABLE_DEMO_ACCOUNTS) {
+      throw new ForbiddenError('Demo authentication is disabled in this environment');
+    }
+
+    const demoPhoneMap: Record<UserRole, string> = {
+      FARMER: '+919876543210',
+      OFFICER: '+919876543211',
+      GOVERNMENT: '+919876543212',
+      ANALYST: '+919876543213',
+      ADMIN: '+919876543214',
+    };
+
+    const phoneNumber = demoPhoneMap[role];
+    let userRow: UserRow | null = null;
+    if (phoneNumber) {
+      userRow = await userRepository.findByPhone(phoneNumber);
+    }
+    if (!userRow) {
+      const emailMap: Record<UserRole, string> = {
+        FARMER: 'farmer@varshasetu.in',
+        OFFICER: 'officer@varshasetu.in',
+        GOVERNMENT: 'gov@varshasetu.in',
+        ANALYST: 'analyst@varshasetu.in',
+        ADMIN: 'admin@varshasetu.in',
+      };
+      userRow = await userRepository.findByEmail(emailMap[role]);
+    }
+
+    if (!userRow) {
+      throw new NotFoundError(`Demo user for role ${role} not found in database`);
+    }
+
+    if (!userRow.is_active) {
+      throw new UnauthorizedError('Demo user account is disabled');
+    }
+
+    await userRepository.updateLastLogin(userRow.id);
+
+    await auditRepository.log({
+      userId: userRow.id,
+      action: 'DEMO_LOGIN',
+      resourceType: 'users',
+      resourceId: userRow.id,
+      metadata: { role: userRow.role, method: 'demo_auto' },
+      ipAddress,
+    });
+
+    const user = toUserEntity(userRow);
+    const token = signAuthToken({
+      userId: user.id,
+      role: user.role,
+      permissions: user.permissions,
+      assignedLocationId: user.assignedLocationId,
+    });
+    const refreshToken = signRefreshToken({
+      userId: user.id,
+      role: user.role,
+    });
+
+    return { token, refreshToken, user };
+  },
 };

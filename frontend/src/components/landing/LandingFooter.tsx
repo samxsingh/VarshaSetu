@@ -70,7 +70,7 @@ export const LandingFooter: React.FC = () => {
             </h4>
             <ul className="space-y-2 text-sm text-[#B8C7D1]">
               <li>
-                <a href="#scientific-grounding" className="hover:text-white transition-colors duration-150 flex items-center gap-1.5">
+                <a href="#method" className="hover:text-white transition-colors duration-150 flex items-center gap-1.5">
                   <span>Scientific Grounding</span>
                 </a>
               </li>
@@ -85,8 +85,8 @@ export const LandingFooter: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <a href="#provenance-strip" className="hover:text-white transition-colors duration-150 flex items-center gap-1.5">
-                  <span>Provenance</span>
+                <a href="#trust" className="hover:text-white transition-colors duration-150 flex items-center gap-1.5">
+                  <span>Trust & Provenance</span>
                 </a>
               </li>
             </ul>

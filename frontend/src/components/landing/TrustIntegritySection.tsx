@@ -5,6 +5,7 @@ interface TrustBlock {
   num: string;
   title: string;
   description: string;
+  mechanism: string;
   icon: React.ReactNode;
 }
 
@@ -14,30 +15,34 @@ export const TrustIntegritySection: React.FC = () => {
       num: '01',
       title: 'Traceable',
       description: 'Data and scenario artifacts carry identifiable provenance.',
+      mechanism: 'SHA-256 manifests & data provenance hashes',
       icon: <GitBranch className="w-5 h-5 text-[#0891B2]" />,
     },
     {
       num: '02',
       title: 'Calibrated',
       description: 'Probability outputs use explicit calibration methods.',
+      mechanism: 'Isotonic & Platt reliability calibration curves',
       icon: <Gauge className="w-5 h-5 text-[#0891B2]" />,
     },
     {
       num: '03',
       title: 'Disclosed',
       description: 'Diagnostic limitations and operating constraints remain visible.',
+      mechanism: 'Single-season boundary & offline gate disclosure',
       icon: <Eye className="w-5 h-5 text-[#0891B2]" />,
     },
     {
       num: '04',
       title: 'Guarded',
       description: 'Safety gates prevent unsupported yield and financial claims.',
+      mechanism: 'Deterministic safety filters & non-alarmist thresholds',
       icon: <ShieldCheck className="w-5 h-5 text-[#0891B2]" />,
     },
   ];
 
   return (
-    <section id="trust-integrity" className="py-20 lg:py-28 bg-[#0B1F33] text-white relative overflow-hidden border-b border-[#102A43]">
+    <section id="trust" className="py-20 lg:py-28 bg-[#0B1F33] text-white relative overflow-hidden border-b border-[#102A43] scroll-mt-24 sm:scroll-mt-28">
       {/* Subtle atmospheric background grid pattern */}
       <div
         className="absolute inset-0 opacity-10 pointer-events-none"
@@ -53,7 +58,7 @@ export const TrustIntegritySection: React.FC = () => {
           <div className="space-y-4 max-w-2xl">
             {/* Outlined Badge */}
             <a
-              href="#scientific-grounding"
+              href="#method"
               className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#0891B2]/60 bg-[#0891B2]/10 hover:bg-[#0891B2]/20 text-[#0891B2] text-xs font-mono font-bold tracking-wider transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0891B2]"
             >
               <span>SCIENTIFIC INTEGRITY</span>
@@ -76,38 +81,40 @@ export const TrustIntegritySection: React.FC = () => {
           </div>
         </div>
 
-        {/* 4 Trust Blocks */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {blocks.map((block) => (
-            <div
-              key={block.num}
-              className="bg-white/[0.04] backdrop-blur-sm rounded-xl border border-white/10 p-6 flex flex-col justify-between space-y-4 hover:border-[#0891B2]/60 hover:bg-white/[0.07] transition-all duration-200 group shadow-[3px_3px_0px_rgba(8,145,178,0.2)]"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-mono font-bold text-[#0891B2] tracking-widest uppercase">
-                  {block.num}
-                </span>
-                <div className="p-2 rounded-lg bg-[#0891B2]/15 border border-[#0891B2]/30 group-hover:scale-105 group-hover:bg-[#0891B2]/25 transition-all duration-200">
-                  {block.icon}
+        {/* Unified Editorial Four-Part Integrity Structure */}
+        <div className="bg-white/[0.03] backdrop-blur-sm rounded-2xl border border-white/10 overflow-hidden divide-y sm:divide-y-0 sm:divide-x divide-white/10 shadow-[4px_4px_0px_rgba(8,145,178,0.15)]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+            {blocks.map((block) => (
+              <div
+                key={block.num}
+                className="p-6 sm:p-7 flex flex-col justify-between space-y-6 hover:bg-white/[0.04] transition-colors duration-200 group"
+              >
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono font-bold text-[#0891B2] tracking-widest uppercase">
+                      PILLAR {block.num}
+                    </span>
+                    <div className="p-2 rounded-lg bg-[#0891B2]/15 border border-[#0891B2]/30 group-hover:scale-105 group-hover:bg-[#0891B2]/25 transition-all duration-200">
+                      {block.icon}
+                    </div>
+                  </div>
+
+                  <h3 className="font-heading font-black text-xl text-white tracking-tight">
+                    {block.title}
+                  </h3>
+
+                  <p className="text-sm text-[#B8C7D1] leading-relaxed font-sans">
+                    {block.description}
+                  </p>
+                </div>
+
+                <div className="pt-4 border-t border-white/10 text-[11px] font-mono text-[#0891B2]/90 flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#0891B2]" aria-hidden="true" />
+                  <span>{block.mechanism}</span>
                 </div>
               </div>
-
-              <div className="space-y-2">
-                <h3 className="font-heading font-black text-xl text-white tracking-tight">
-                  {block.title}
-                </h3>
-                <p className="text-sm text-[#B8C7D1] leading-relaxed font-sans">
-                  {block.description}
-                </p>
-              </div>
-
-              <div className="pt-2 border-t border-white/5 flex items-center gap-1.5 text-[11px] font-mono text-[#0891B2]/80 group-hover:text-[#0891B2]">
-                <span>VERIFIABLE SPEC</span>
-                <span>•</span>
-                <span>GATED</span>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>

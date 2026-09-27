@@ -1,7 +1,8 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { ApiResponse, ApiErrorResponse } from '@shared/types';
+import { env } from '../config/env';
 
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api/v1';
+export const API_BASE_URL = env.API_BASE_URL;
 
 export class ApiClientError extends Error {
   constructor(

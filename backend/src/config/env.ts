@@ -11,11 +11,18 @@ const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   PORT: z.string().default('5001').transform((val) => parseInt(val, 10)),
   DATABASE_URL: z.string().default('postgresql://postgres:postgres@localhost:5432/varshasetu'),
-  MONGODB_URI: z.string().optional(),
+  MONGODB_URI: z.string().default('mongodb://127.0.0.1:27017/varshasetu'),
   FRONTEND_URL: z.string().default('http://localhost:5173'),
   ML_SERVICE_URL: z.string().default('http://localhost:8000'),
+  
+  // Authentication & Secrets
   JWT_SECRET: z.string().min(16).default('varshasetu_development_jwt_secret_key_32chars!'),
   JWT_EXPIRES_IN: z.string().default('7d'),
+  JWT_REFRESH_SECRET: z.string().min(16).default('varshasetu_development_refresh_secret_key_32chars!'),
+  JWT_REFRESH_EXPIRES_IN: z.string().default('30d'),
+  ENABLE_DEMO_ACCOUNTS: z.string().default('true').transform((val) => val === 'true'),
+
+  // Networking & Security
   CORS_ORIGIN: z.string().default('http://localhost:5173'),
   RATE_LIMIT_ENABLED: z.string().default('true').transform((val) => val === 'true'),
   
@@ -87,14 +94,26 @@ const envSchema = z.object({
   OTEL_SERVICE_NAME: z.string().default('varshasetu-backend'),
 }).refine((data) => {
   if (data.NODE_ENV === 'production') {
-    if (data.JWT_SECRET === 'varshasetu_development_jwt_secret_key_32chars!') {
+    const weakSecrets = ['secret', '123456', 'password', 'varshasetu_development_jwt_secret_key_32chars!'];
+    if (weakSecrets.includes(data.JWT_SECRET) || data.JWT_SECRET.length < 32) {
       return false;
     }
   }
   return true;
 }, {
-  message: 'In production mode, JWT_SECRET must be explicitly set to a secure key and cannot be the default development secret.',
+  message: 'In production mode, JWT_SECRET must be explicitly set to a secure key with >= 32 characters and cannot be a default/weak key.',
   path: ['JWT_SECRET'],
+}).refine((data) => {
+  if (data.NODE_ENV === 'production') {
+    const weakSecrets = ['secret', '123456', 'password', 'varshasetu_development_refresh_secret_key_32chars!'];
+    if (weakSecrets.includes(data.JWT_REFRESH_SECRET) || data.JWT_REFRESH_SECRET.length < 32 || data.JWT_REFRESH_SECRET === data.JWT_SECRET) {
+      return false;
+    }
+  }
+  return true;
+}, {
+  message: 'In production mode, JWT_REFRESH_SECRET must be explicitly set to a unique secure key with >= 32 characters and must not equal JWT_SECRET.',
+  path: ['JWT_REFRESH_SECRET'],
 });
 
 export type EnvConfig = z.infer<typeof envSchema>;

@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { UserEntity, UserRole } from '@shared/types';
 import { authService, LoginPayload, RegisterPayload } from '../services/authService';
 import { useAppStore } from './useAppStore';
+import { useRealtimeStore } from './useRealtimeStore';
 import { socketClient } from '../services/socketClient';
 
 export type AuthStatus = 'IDLE' | 'AUTH_INITIALIZING' | 'AUTHENTICATED' | 'UNAUTHENTICATED';
@@ -192,6 +193,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       try {
         socketClient.disconnect();
       } catch {}
+      // Clear client caches & reset operational perspective to prevent cross-account contamination
+      useAppStore.getState().setRole('FARMER');
+      useRealtimeStore.getState().clearEvents();
+      useRealtimeStore.getState().clearOperationalSignals();
+      useRealtimeStore.getState().clearInspectionActions();
       set({
         user: null,
         token: null,
@@ -218,6 +224,10 @@ if (typeof window !== 'undefined') {
     try {
       socketClient.disconnect();
     } catch {}
+    useAppStore.getState().setRole('FARMER');
+    useRealtimeStore.getState().clearEvents();
+    useRealtimeStore.getState().clearOperationalSignals();
+    useRealtimeStore.getState().clearInspectionActions();
     useAuthStore.setState({
       user: null,
       token: null,

@@ -1,15 +1,18 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
-import { DemoBanner } from '../components/common/DemoBanner';
+import { Outlet, useLocation } from 'react-router-dom';
 import { Navbar } from '../components/common/Navbar';
 import { Footer } from '../components/common/Footer';
 
 export const RootLayout: React.FC = () => {
+  const location = useLocation();
+  const isAuthPage =
+    location.pathname === '/auth' ||
+    location.pathname === '/login' ||
+    location.pathname.startsWith('/auth/') ||
+    location.pathname.startsWith('/login/');
+
   return (
     <div className="min-h-screen flex flex-col bg-canvas text-slate-900">
-      {/* Universal Mandatory Demo & Transparency Banner */}
-      <DemoBanner />
-
       {/* Main App Navigation Bar */}
       <Navbar />
 
@@ -18,8 +21,8 @@ export const RootLayout: React.FC = () => {
         <Outlet />
       </main>
 
-      {/* Institutional Footer */}
-      <Footer />
+      {/* Institutional Footer (omitted on access gateway / auth / login pages) */}
+      {!isAuthPage && <Footer />}
     </div>
   );
 };

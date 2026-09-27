@@ -1,5 +1,6 @@
 import { io, Socket } from 'socket.io-client';
 import { useRealtimeStore } from '../stores/useRealtimeStore';
+import { env } from '../config/env';
 
 // Safe storage accessor
 const getSafeStorage = (): Storage | null => {
@@ -43,8 +44,8 @@ class SocketClientManager {
     this.isExplicitlyDisconnected = false;
     useRealtimeStore.getState().setConnectionStatus('CONNECTING');
 
-    // In dev / production, connect through window.location.origin (proxied by Vite/Express)
-    const socketUrl = window.location.origin;
+    // In dev / production, connect through env.WS_URL or window.location.origin (proxied by Vite/Express)
+    const socketUrl = env.WS_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5001');
 
     const socket = io(socketUrl, {
       auth: { token },

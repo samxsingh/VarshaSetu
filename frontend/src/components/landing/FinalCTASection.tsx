@@ -35,7 +35,7 @@ export const FinalCTASection: React.FC = () => {
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-4">
               <Link
-                to="/farmer/dashboard"
+                to="/auth"
                 className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 min-h-[48px] rounded-xl bg-[#0E7490] text-white border-2 border-[#102A43] font-heading font-bold text-sm shadow-[4px_4px_0px_#102A43] hover:-translate-y-0.5 hover:bg-[#155E75] hover:shadow-[6px_6px_0px_#102A43] transition-all duration-200 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0E7490]"
               >
                 <span>Explore Monsoon Intelligence</span>
@@ -43,7 +43,7 @@ export const FinalCTASection: React.FC = () => {
               </Link>
 
               <a
-                href="#scientific-grounding"
+                href="#method"
                 className="inline-flex items-center justify-center gap-2 px-6 py-3.5 min-h-[48px] rounded-xl bg-white text-[#102A43] border-2 border-[#102A43] font-heading font-bold text-sm shadow-[4px_4px_0px_#102A43] hover:-translate-y-0.5 hover:bg-[#EAF0F2] hover:shadow-[6px_6px_0px_#102A43] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0E7490]"
               >
                 <Compass className="w-4 h-4 text-[#0E7490]" />
