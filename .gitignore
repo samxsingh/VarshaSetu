@@ -67,3 +67,17 @@ out/
 .next/
 coverage/
 *.tsbuildinfo
+
+# ==========================================
+# VarshaSetu ML runtime artifacts
+# Generated dynamically by ML services,
+# forecast pipelines, simulations and tests
+# ==========================================
+
+ml-service/artifacts/forecasts/
+ml-service/artifacts/lifecycle/
+ml-service/artifacts/calibration/
+ml-service/artifacts/advisories/
+ml-service/artifacts/experiments/
+ml-service/artifacts/hindcasts/
+ml-service/app/artifacts/scenarios/
