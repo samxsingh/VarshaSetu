@@ -4,11 +4,13 @@ import { UserCheck, MapPin, Sprout, Droplets, RotateCcw, ShieldCheck } from 'luc
 import { Link } from 'react-router-dom';
 import { useFarmerStore } from '../../stores/useFarmerStore';
 import { useAuthStore } from '../../stores/useAuthStore';
+import { useOperationalData } from '../../context/OperationalDataContext';
 import { LanguageToggle } from '../../components/common/LanguageToggle';
 
 export const FarmerProfilePage: React.FC = () => {
   const { t } = useTranslation();
   const user = useAuthStore((s) => s.user);
+  const { currentDate } = useOperationalData();
   const { location, crop, stage, irrigation, soil, farmSizeAcres, resetOnboarding } = useFarmerStore();
 
   const displayName = user?.fullName || 'Ramesh Kumar';
@@ -69,7 +71,7 @@ export const FarmerProfilePage: React.FC = () => {
               {t(`crops.${crop}`)}
             </strong>
             <span className="text-[#486581] block">
-              {t(`stages.${stage}`)} • Kharif 2024 Cycle
+              {t(`stages.${stage}`)} • Kharif {currentDate ? currentDate.split('-')[0] : 'Season'} Cycle
             </span>
           </div>
 

@@ -18,6 +18,7 @@ import {
 import { LanguageToggle } from './LanguageToggle';
 import { RealtimeStatusBadge } from './RealtimeStatusBadge';
 import { NotificationDrawer } from './NotificationDrawer';
+import { GlobalDataContextIndicator } from './GlobalDataContextIndicator';
 import { useAppStore } from '../../stores/useAppStore';
 import { PUBLIC_NAVIGATION } from '../../config/navigation';
 import { useAuthStore } from '../../stores/useAuthStore';
@@ -409,6 +410,7 @@ export const Navbar: React.FC = () => {
 
         {/* RIGHT: Language Switcher, Realtime Status, Alerts & Controls */}
         <div className="hidden sm:flex items-center gap-2">
+          {user && <GlobalDataContextIndicator />}
           <RealtimeStatusBadge />
           <NotificationDrawer />
           <LanguageToggle />

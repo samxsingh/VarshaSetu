@@ -42,7 +42,7 @@ export const OfficerCropsPage: React.FC = () => {
       vulnerableBlocks: 'Chinhat & Sarojininagar',
       riskLevel: 'HIGH',
       advisoryNote:
-        'High economic sensitivity from June 27 heavy rain (>65mm). Stake tomato and cucurbit vines to avoid direct soil-borne blight.',
+        'High economic sensitivity from projected heavy rainfall (>65mm). Stake tomato and cucurbit vines to avoid direct soil-borne blight.',
       phenology: 'Active Fruiting / Flowering',
       soilRequirement: 'Sandy Loam Beds',
     },

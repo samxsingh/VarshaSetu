@@ -10,6 +10,7 @@ import { useOfficerStore } from '../../stores/useOfficerStore';
 import { Send, MapPin, Compass, Eye, ShieldAlert, Sparkles } from 'lucide-react';
 import { RiskDistribution, ForecastTimeline } from '../../components/visualization';
 import { OperationalSignalCenter } from '../../components/operations/OperationalSignalCenter';
+import { OfficerFieldIntelligence } from '../../components/officer/OfficerFieldIntelligence';
 
 export const OfficerDashboardPage: React.FC = () => {
   const { t } = useTranslation();
@@ -51,14 +52,14 @@ export const OfficerDashboardPage: React.FC = () => {
         {/* Persistent Status Cluster */}
         <div className="mt-4 pt-4 border-t-2 border-[#102A43]/10 flex flex-wrap items-center justify-between gap-3 text-xs">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="px-2.5 py-1 rounded-md bg-[#FEF3C7] border border-[#D97706] text-[#B45309] text-[10px] font-mono font-bold uppercase tracking-wider">
-              DIAGNOSTIC ONLY
+            <span className="px-2.5 py-1 rounded-md bg-emerald-50 border border-emerald-300 text-emerald-800 text-[10px] font-mono font-bold uppercase tracking-wider">
+              LIVE INGESTION
             </span>
             <span className="px-2.5 py-1 rounded-md bg-white border border-[#102A43]/20 text-[#102A43] text-[10px] font-mono font-bold">
               GROUND ANCHOR: UP_LKO_BKT
             </span>
             <span className="px-2.5 py-1 rounded-md bg-white border border-[#102A43]/20 text-[#102A43] text-[10px] font-mono font-bold">
-              KHARIF 2024 (122 OBS)
+              OPERATIONAL CYCLE 2026
             </span>
           </div>
 
@@ -69,7 +70,10 @@ export const OfficerDashboardPage: React.FC = () => {
         </div>
       </div>
 
-      {/* 2. Top Intelligence Strip */}
+      {/* 2. Real-Time Operational Field Conditions & Block Risk Matrix */}
+      <OfficerFieldIntelligence />
+
+      {/* 3. Top Intelligence Strip */}
       <SummaryStatCards />
 
       {/* 2b. Spatial Risk Distribution & Instrument Pipeline (Phase 7C) */}

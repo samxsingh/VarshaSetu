@@ -502,3 +502,50 @@ VarshaSetu/
 - **ADR-003: PostGIS for Administrative Geometries.** Storing vector boundaries directly in PostGIS allows sub-second point-in-polygon resolution and server-side vector tile clipping, eliminating heavy spatial calculation in client code.
 - **ADR-004: Decoupled Advisory Logic.** Agronomic recommendations are derived from explicit, deterministic rules evaluated against forecasts rather than black-box LLM prompts, ensuring transparent, explainable advice.
 - **ADR-005: Configurable Demo Location.** Lucknow District, UP is designated as the reference initial demonstration location via configuration (`DEFAULT_DEMO_LOCATION`), prohibiting any hardcoded location-specific logic.
+- **ADR-006: Normalized Meteorological Provider Layer.** External meteorological data sources (NASA POWER, IMD, ECMWF) are decoupled through canonical abstractions (`WeatherObservation`, `MeteorologicalDataService`). Secrets reside strictly in `backend/.env`. NASA POWER is modeled as a keyless historical/agroclimatology reanalysis source with ~2-4 day latency (never misrepresented as live weather), and -999 values are strictly coerced to null.
+
+---
+
+## 24. External Meteorological Provider Architecture
+
+```mermaid
+flowchart TD
+    subgraph ExternalSources ["External Meteorological Sources"]
+        NP["NASA POWER (Keyless API)\nLatency: ~2-4 Days (Agroclimatology)"]
+        IMD["India Meteorological Department (IMD)\nLive AWS, Rainfall, Warning, Nowcast"]
+        ECMWF["ECMWF (NWP Forecast)\nGlobal NWP Models"]
+        OM["Open-Meteo\nEnsembles & Operational Feeds"]
+    end
+
+    subgraph ProviderAdapters ["Backend Provider Adapters (backend/src/providers/)"]
+        NPSvc["NasaPowerService\n-999 to null coercion\nAvailability & Latency Detection"]
+        IMDSvc["ImdService\nOperational Endpoints\nGIS Visualizations Isolated"]
+        ECMWFSvc["EcmwfService\nNWP Adapter\nGraceful NOT_CONFIGURED"]
+        Cache["ProviderCache (In-Memory)\nTTL & Keyed by Range/Coords"]
+    end
+
+    subgraph Orchestration ["Orchestration Tier"]
+        Orch["MeteorologicalDataService\n(Canonical WeatherObservation Abstraction)"]
+    end
+
+    subgraph Consumers ["Consumers (No Provider Leaks)"]
+        WeatherRoutes["/api/v1/weather/hourly\n/api/v1/weather/sources"]
+        DataHealth["Data Health Catalog\n(Latency & Keyless Disclosures)"]
+        FutureML["Future ML Forecasting Pipeline"]
+    end
+
+    NP --> NPSvc
+    IMD --> IMDSvc
+    ECMWF --> ECMWFSvc
+    OM --> Orch
+
+    NPSvc --> Cache
+    Cache --> Orch
+    IMDSvc --> Orch
+    ECMWFSvc --> Orch
+
+    Orch --> WeatherRoutes
+    Orch --> DataHealth
+    Orch --> FutureML
+```
+

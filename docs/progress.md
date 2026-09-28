@@ -582,6 +582,27 @@
 ## 14. Technical Debt & Scientific Integrity
 - **Zero Technical Debt:** Zero mock or synthetic observations presented as ground truth; zero crop yield or biomass prediction models; zero financial or revenue loss projections; zero uncalibrated alerts; all 355 tests green.
 
+---
+
+## 15. External Meteorological Provider Integration
+- **Status:** COMPLETED
+- **Single Canonical Environment Architecture:** Exactly one backend environment file (`backend/.env`, gitignored); safe placeholders in `.env.example`. Frontend contains zero provider credentials.
+- **NASA POWER Integration (`backend/src/providers/nasaPower/`):**
+  - Configured keyless base URL `https://power.larc.nasa.gov/api`. Does not require an API key (`hasKey: false`, `isKeyless: true`).
+  - Role: Supplementary agroclimatology & historical reanalysis. Latency: ~2-4 days (explicitly not live weather).
+  - Normalization: -999 and -999.0 are strictly coerced to `null` (never converted to 0).
+  - Availability tracking: Distinguishes `AVAILABLE`, `PARTIAL`, `UNAVAILABLE`, and computes `latestAvailableTimestamp`.
+- **IMD Operational Endpoints Integration (`backend/src/providers/imd/`):**
+  - Integrated `/current_wx`, `/districtrainfall`, `/districtwarning`, `/districtnowcast` via `buildImdUrl()`.
+  - Strict provenance isolation: Reference GIS visualization URLs kept separate from machine-readable JSON ingestion.
+- **ECMWF Provider Adapter (`backend/src/providers/ecmwf/`):**
+  - Gracefully reports `NOT_CONFIGURED` without crashing if credentials are absent.
+- **Provider Orchestration & Routes:**
+  - `MeteorologicalDataService` provides unified access to historical and hourly point data.
+  - In-memory provider cache (`ProviderCache`) avoids repeated requests for identical coordinate/date windows.
+  - Endpoints: `GET /api/v1/weather/hourly` and `GET /api/v1/weather/sources`.
+
+
 
 
 

@@ -1,9 +1,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Building2, AlertTriangle, CloudSun, Database, Radio, ArrowUpRight } from 'lucide-react';
+import { useOperationalData } from '../../context/OperationalDataContext';
 
 export const SummaryStatCards: React.FC = () => {
   const { t } = useTranslation();
+  const { forecastWindowLabel } = useOperationalData();
 
   const stats = [
     {
@@ -25,7 +27,7 @@ export const SummaryStatCards: React.FC = () => {
     {
       title: t('officer.heavyRainAlerts', { defaultValue: 'Heavy Rain Exposure' }),
       value: '3 Blocks',
-      subtitle: '>65mm Threshold Projected June 27',
+      subtitle: `>65mm Threshold Projected (${forecastWindowLabel || 'Active Window'})`,
       icon: <CloudSun className="w-4 h-4 text-[#2563EB]" />,
       tag: 'Tier 2 Event',
       tagColor: 'bg-[#DBEAFE] text-[#1E40AF] border-[#2563EB]/30',
@@ -33,7 +35,7 @@ export const SummaryStatCards: React.FC = () => {
     {
       title: t('officer.dataFreshness', { defaultValue: 'Scientific Provenance' }),
       value: 'UP_LKO_BKT',
-      subtitle: '122 Observations • Kharif 2024 Archive',
+      subtitle: '122 Observations • Kharif Baseline Anchor',
       icon: <Database className="w-4 h-4 text-[#0891B2]" />,
       tag: 'Diagnostic',
       tagColor: 'bg-[#E8F4F6] text-[#0E7490] border-[#0891B2]/30',

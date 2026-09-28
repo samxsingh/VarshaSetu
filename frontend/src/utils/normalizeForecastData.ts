@@ -116,8 +116,8 @@ export function normalizeForecastData(records: ScientificForecastRecord[]): Norm
   const primaryRef = distinctRecords[0];
 
   const sharedContext: SharedScientificContext = {
-    observationDate: primaryRef.valid_from || '2024-10-01',
-    validFrom: primaryRef.valid_from,
+    observationDate: primaryRef.valid_from || primaryRef.generated_at?.split('T')[0] || new Date().toISOString().split('T')[0],
+    validFrom: primaryRef.valid_from || new Date().toISOString().split('T')[0],
     validUntil: primaryRef.valid_until,
     forecastHorizonDays: primaryRef.horizon?.horizon_days || 7,
     modelId: primaryRef.model?.model_id || 'xgboost',

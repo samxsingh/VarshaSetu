@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Send, CheckCircle2, AlertTriangle, FileText, X } from 'lucide-react';
 import { useOfficerStore } from '../../stores/useOfficerStore';
+import { useOperationalData } from '../../context/OperationalDataContext';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
@@ -8,13 +9,22 @@ import { Input } from '../ui/Input';
 
 export const BulletinModal: React.FC = () => {
   const { isBulletinModalOpen, setBulletinModalOpen, selectedBlock } = useOfficerStore();
+  const { forecastWindowLabel } = useOperationalData();
   const [sentSuccess, setSentSuccess] = useState(false);
   const [headline, setHeadline] = useState(
     `Urgent Agromet Advisory: Sowing Preparation & Drainage Precautions for ${selectedBlock} Block`
   );
   const [bulletinBody, setBulletinBody] = useState(
-    `Advisory issued for 84 Gram Panchayats: Due to forecasted active monsoon onset between June 26-28 with potential heavy rainfall (>65mm) on June 27, farmers are advised to:\n1. Complete wet-bed nursery sowing for Paddy.\n2. Keep field bund drainage channels open to prevent seed washaway.\n3. Defer broadcasting bare seeds on sloping soils.\n\nHelpline: KVK Lucknow (0522-2970420) / Kisan Call Center 1800-180-1551.`
+    `Advisory issued for 84 Gram Panchayats: Due to forecasted active monsoon conditions across ${forecastWindowLabel || 'the active forecast window'} with potential heavy rainfall (>65mm), farmers are advised to:\n1. Complete wet-bed nursery sowing for Paddy.\n2. Keep field bund drainage channels open to prevent seed washaway.\n3. Defer broadcasting bare seeds on sloping soils.\n\nHelpline: KVK Lucknow (0522-2970420) / Kisan Call Center 1800-180-1551.`
   );
+
+  useEffect(() => {
+    if (forecastWindowLabel) {
+      setBulletinBody(
+        `Advisory issued for 84 Gram Panchayats: Due to forecasted active monsoon conditions across ${forecastWindowLabel} with potential heavy rainfall (>65mm), farmers are advised to:\n1. Complete wet-bed nursery sowing for Paddy.\n2. Keep field bund drainage channels open to prevent seed washaway.\n3. Defer broadcasting bare seeds on sloping soils.\n\nHelpline: KVK Lucknow (0522-2970420) / Kisan Call Center 1800-180-1551.`
+      );
+    }
+  }, [forecastWindowLabel]);
 
   const handleSend = () => {
     setSentSuccess(true);

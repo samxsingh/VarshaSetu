@@ -336,3 +336,13 @@ To establish the national benchmark for climate-resilient agriculture by deliver
 - **Phase 4:** Python FastAPI ML Microservice, Climatology Baseline, Feature Store, and XGBoost/LightGBM downscaling engine.
 - **Phase 5:** Agronomic Rules Engine & What-If Simulator.
 - **Phase 6:** Bhashini Multilingual Speech/Text Integration & WhatsApp/SMS dissemination gateway.
+
+---
+
+## 29. External Meteorological Provider Integration
+1. **Single Backend Environment:** All external provider configuration resides strictly in `backend/.env`. Zero provider credentials in frontend.
+2. **NASA POWER Agroclimatology:** Keyless point reanalysis API (`https://power.larc.nasa.gov/api`). Strictly classified as historical and agroclimatological reanalysis with ~2-4 day latency (never misrepresented as live weather). -999 and -999.0 flags are converted to `null` and never converted to 0.
+3. **IMD Operational Services:** Official endpoints for Current Weather (`/current_wx`), District Rainfall (`/districtrainfall`), District Warning (`/districtwarning`), and District Nowcast (`/districtnowcast`). Reference GIS visualization URLs are strictly isolated for UI provenance and attribution.
+4. **ECMWF Numerical Weather Prediction:** Standardized provider adapter with graceful `NOT_CONFIGURED` fallback.
+5. **Normalized Meteorological Layer:** Universal `WeatherObservation` schema decoupling higher-level intelligence from vendor schemas.
+

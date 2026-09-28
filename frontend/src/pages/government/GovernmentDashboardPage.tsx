@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { GovCommandHeader } from '../../components/government/GovCommandHeader';
 import { GovIntelligenceStrip } from '../../components/government/GovIntelligenceStrip';
+import { GovDecisionIntelligence } from '../../components/government/GovDecisionIntelligence';
 import { GovRegionalMapWorkspace } from '../../components/government/GovRegionalMapWorkspace';
 import { GovRegionalSignalMatrix } from '../../components/government/GovRegionalSignalMatrix';
 import { GovForecastWorkspace } from '../../components/government/GovForecastWorkspace';
@@ -72,11 +73,12 @@ export const GovernmentDashboardPage: React.FC = () => {
         />
 
         {/* 2. Command Intelligence Metrics Strip */}
-        <div id="overview" className="scroll-mt-24">
+        <div id="overview" className="scroll-mt-24 space-y-6">
           <GovIntelligenceStrip
             forecastStatus={forecastStatus}
             availability={availability}
           />
+          <GovDecisionIntelligence />
         </div>
 
         {/* 3. Regional Intelligence GIS Map */}

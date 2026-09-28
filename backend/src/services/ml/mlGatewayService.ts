@@ -114,12 +114,18 @@ export class MLGatewayService {
     try {
       return await mlGatewayClient.get('/forecasts', { query: params });
     } catch {
-      // Return standard offline fallback forecast record anchored to Kharif 2024
+      // Return standard offline fallback forecast record anchored to Kharif reanalysis
+      const horizonDays = parseInt(params.horizon || '7', 10);
+      const now = new Date();
+      const validFromStr = now.toISOString().split('T')[0];
+      const validUntilDate = new Date(now.getTime() + horizonDays * 86400000);
+      const validUntilStr = validUntilDate.toISOString().split('T')[0];
+
       const fallbackRecord = ScientificForecastRecordSchema.parse({
-        forecast_id: 'fc_heavy_rain_7d_fallback',
-        generated_at: new Date().toISOString(),
-        valid_from: '2024-10-01',
-        valid_until: '2024-10-07',
+        forecast_id: `fc_heavy_rain_${horizonDays}d_fallback`,
+        generated_at: now.toISOString(),
+        valid_from: validFromStr,
+        valid_until: validUntilStr,
         location: {
           state_id: 'UP',
           district_id: 'UP_LKO',
@@ -175,8 +181,10 @@ export class MLGatewayService {
           ],
         },
         data: {
-          dataset_name: 'Kharif 2024 Reanalysis',
-          season: 'Kharif 2024',
+          dataset_name: 'Kharif Baseline Reanalysis',
+          source_status: 'OFFLINE_FALLBACK',
+          freshness_status: 'STALE',
+          season: `Kharif ${now.getFullYear()}`,
           observation_count: 122,
           ground_anchor: 'Bakshi Ka Talab centroid (~9km)',
         },

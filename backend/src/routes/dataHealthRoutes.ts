@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { dataHealthController } from '../controllers/dataHealthController';
+import { weatherController } from '../controllers/weatherController';
 
 export const dataHealthRoutes = Router();
 
@@ -9,6 +10,7 @@ dataHealthRoutes.get('/overview', dataHealthController.getOverview);
 
 // List of all configured data sources and freshness
 dataHealthRoutes.get('/sources', dataHealthController.listSources);
+dataHealthRoutes.get('/providers', weatherController.getProviderHealth);
 
 // Ingestion runs list with pagination and status filters
 dataHealthRoutes.get('/runs', dataHealthController.listRuns);

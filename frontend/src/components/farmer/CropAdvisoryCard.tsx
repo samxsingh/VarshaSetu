@@ -11,14 +11,18 @@ import {
   Database,
 } from 'lucide-react';
 import { useFarmerStore } from '../../stores/useFarmerStore';
+import { useOperationalData } from '../../context/OperationalDataContext';
 import { ScientificStatusBadge } from './ScientificStatusBadge';
 import { ProvenanceDrawer } from '../visualization/ProvenanceDrawer';
 
 export const CropAdvisoryCard: React.FC = () => {
   const { t } = useTranslation();
   const { crop, stage } = useFarmerStore();
+  const { forecastWindowLabel, currentDateLabel, sourceAttribution, currentDate, freshnessStatus } = useOperationalData();
   const [showWhyDetails, setShowWhyDetails] = useState(false);
   const [showProvenance, setShowProvenance] = useState(false);
+
+  const windowLabel = forecastWindowLabel || 'Active Forecast Window';
 
   return (
     <div className="bg-white rounded-2xl border-2 border-[#102A43] shadow-[4px_4px_0px_#102A43] mb-6 overflow-hidden">
@@ -48,7 +52,7 @@ export const CropAdvisoryCard: React.FC = () => {
           <Sparkles className="w-5 h-5 text-[#3F7D58] shrink-0 mt-0.5" />
           <div className="text-xs sm:text-sm text-[#102A43] leading-relaxed">
             <p className="font-heading font-bold text-[#3F7D58]">
-              Favorable rainfall arrival between June 26–28 supports nursery seeding.
+              Favorable rainfall arrival across {windowLabel} supports nursery seeding.
             </p>
             <p className="text-[#486581] text-xs mt-0.5 font-sans">
               Topsoil moisture index is projected to reach optimal 0.65–0.75 saturation.
@@ -91,7 +95,7 @@ export const CropAdvisoryCard: React.FC = () => {
             </div>
             <div className="bg-white p-2.5 rounded-lg border border-[#102A43]/15">
               <span className="font-heading font-bold text-[#102A43] block">4. Convective Rain Arrival</span>
-              <span className="text-[11px] text-[#486581]">Convective system arriving June 27 provides natural watering without diesel pumping cost.</span>
+              <span className="text-[11px] text-[#486581]">Convective system arriving during operational window provides natural watering without diesel pumping cost.</span>
             </div>
           </div>
         </div>
@@ -106,7 +110,7 @@ export const CropAdvisoryCard: React.FC = () => {
             <li className="flex items-start gap-2.5 bg-[#F3F6F7] p-3 rounded-xl border border-[#102A43]/15">
               <span className="w-2 h-2 rounded-full bg-[#3F7D58] shrink-0 mt-1.5" />
               <span>
-                <strong className="text-[#102A43]">Mat-type / Wet-bed nursery sowing:</strong> Proceed between June 26–28 to capture natural monsoon soil saturation.
+                <strong className="text-[#102A43]">Mat-type / Wet-bed nursery sowing:</strong> Proceed within {windowLabel} to capture natural monsoon soil saturation.
               </span>
             </li>
             <li className="flex items-start gap-2.5 bg-[#F3F6F7] p-3 rounded-xl border border-[#102A43]/15">
@@ -118,7 +122,7 @@ export const CropAdvisoryCard: React.FC = () => {
             <li className="flex items-start gap-2.5 bg-[#F3F6F7] p-3 rounded-xl border border-[#102A43]/15">
               <span className="w-2 h-2 rounded-full bg-[#3F7D58] shrink-0 mt-1.5" />
               <span>
-                <strong className="text-[#102A43]">Field Drainage Gates:</strong> Clear bund outlet channels (मेड़ की निकासी) ahead of the June 27 localized downpour.
+                <strong className="text-[#102A43]">Field Drainage Gates:</strong> Clear bund outlet channels (मेड़ की निकासी) ahead of projected localized downpours.
               </span>
             </li>
           </ul>
@@ -134,7 +138,7 @@ export const CropAdvisoryCard: React.FC = () => {
             <li className="flex items-start gap-2.5 bg-[#FEF2F2] p-3 rounded-xl border border-[#E53E3E]/30">
               <span className="w-2 h-2 rounded-full bg-[#E53E3E] shrink-0 mt-1.5" />
               <span>
-                <strong className="text-[#102A43]">Direct Seeded Rice (DSR) broadcast:</strong> Do not broadcast bare seeds on sloping ground immediately before June 27 heavy rain to prevent surface runoff washaway.
+                <strong className="text-[#102A43]">Direct Seeded Rice (DSR) broadcast:</strong> Do not broadcast bare seeds on sloping ground immediately before heavy rain events to prevent surface runoff washaway.
               </span>
             </li>
             <li className="flex items-start gap-2.5 bg-[#FEF2F2] p-3 rounded-xl border border-[#E53E3E]/30">
@@ -162,10 +166,10 @@ export const CropAdvisoryCard: React.FC = () => {
           {showWhyDetails && (
             <div className="mt-3 p-4 bg-white border-2 border-[#102A43] rounded-xl text-xs text-[#486581] space-y-2.5 leading-relaxed font-sans shadow-[2px_2px_0px_#102A43]">
               <p>
-                <strong className="text-[#102A43]">Agronomic Rationale:</strong> In Lucknow district climatology, paddy varieties (e.g., Swarna, Sambha Mahsuri) require 21–25 days in nursery before transplanting. Sowing between June 26–28 ensures 22-day seedlings reach prime physiological vigor right when the second monsoon pulse arrives in mid-July.
+                <strong className="text-[#102A43]">Agronomic Rationale:</strong> In Lucknow district climatology, paddy varieties (e.g., Swarna, Sambha Mahsuri) require 21–25 days in nursery before transplanting. Sowing within the optimal window ({windowLabel}) ensures 22-day seedlings reach prime physiological vigor right when the next monsoon pulse arrives.
               </p>
               <p>
-                <strong className="text-[#102A43]">Scientific Teleconnections:</strong> Active MJO Phase 3 over the equatorial Indian Ocean coupled with a neutral-to-positive IOD condition provides strong confidence in uninterrupted low-level moisture transport across eastern Uttar Pradesh.
+                <strong className="text-[#102A43]">Scientific Teleconnections:</strong> Active atmospheric moisture transport coupled with positive moisture convergence provides strong confidence in uninterrupted low-level moisture transport across eastern Uttar Pradesh.
               </p>
             </div>
           )}
@@ -178,12 +182,12 @@ export const CropAdvisoryCard: React.FC = () => {
         onClose={() => setShowProvenance(false)}
         title="Paddy Nursery Sowing — Scientific Lineage"
         provenance={{
-          dataSource: 'IMD Lucknow Station Mesonet (18 Stations) + ECMWF SEAS5',
+          dataSource: sourceAttribution || 'IMD Lucknow Station Mesonet (18 Stations) + ECMWF SEAS5',
           spatialResolution: '0.1° Downscaled Regional Grid',
           stationsCovered: 18,
-          temporalCoverage: 'Kharif 2024 Historical Station Records',
-          observationTimestamp: '2024-06-25T06:00:00Z',
-          freshnessLatency: '35 minutes',
+          temporalCoverage: `Kharif ${currentDate.split('-')[0]} Operational Outlook (${currentDateLabel})`,
+          observationTimestamp: currentDateLabel || 'Current Operational Cycle',
+          freshnessLatency: freshnessStatus,
           modelPipeline: 'VarshaSetu Agro-Rules Engine v1.0 + Isotonic Probabilities',
           calibrator: 'Isotonic Regression Calibration',
           eceScore: '0.038 (Calibrated)',

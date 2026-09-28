@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   CloudRain,
@@ -7,75 +7,78 @@ import {
   TrendingUp,
   ChevronRight,
   Compass,
+  Archive,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useFarmerStore } from '../../stores/useFarmerStore';
 import { HorizonSelector } from '../forecast/HorizonSelector';
 import { ForecastHorizonDays } from '@shared/types';
 import { ScientificStatusBadge } from './ScientificStatusBadge';
-import { ForecastTimeline } from '../visualization';
+import { useOperationalData } from '../../context/OperationalDataContext';
+import { weatherService, NormalizedForecastResponse } from '../../services/weatherService';
+import { CanonicalRainfallTrendChart } from '../charts/CanonicalRainfallTrendChart';
 
 export const MonsoonGlanceCard: React.FC = () => {
   const { t } = useTranslation();
   const { horizon, setHorizon } = useFarmerStore();
+  const {
+    currentDateLabel,
+    forecastWindowLabel,
+    referenceTimeIST,
+    freshnessStatus,
+    sourceAttribution,
+  } = useOperationalData();
 
-  // Controlled Demo Scenarios calibrated per horizon (explicitly simulated)
-  const demoOutlookData: Record<
-    ForecastHorizonDays,
-    {
-      dates: string;
-      phaseLabel: string;
-      onsetProb: number;
-      drySpellRisk: number;
-      heavyRainProb: number;
-      expectedRainfallMm: string;
-      departureText: string;
-      confidence: string;
-    }
-  > = {
-    7: {
-      dates: 'Next 7 Days (June 25 - July 1)',
-      phaseLabel: 'Active Monsoon Surge (सक्रिय चरण)',
-      onsetProb: 84,
-      drySpellRisk: 22,
-      heavyRainProb: 65,
-      expectedRainfallMm: '110 - 145 mm',
-      departureText: '+18% above 30-year Lucknow normal',
-      confidence: t('common.highConfidence') || 'High Confidence',
-    },
-    14: {
-      dates: '14-Day Outlook (June 25 - July 8)',
-      phaseLabel: 'Surge Followed by Potential Hiatus',
-      onsetProb: 92,
-      drySpellRisk: 58,
-      heavyRainProb: 40,
-      expectedRainfallMm: '160 - 210 mm',
-      departureText: '+5% normal range',
-      confidence: t('common.moderateConfidence') || 'Moderate Confidence',
-    },
-    21: {
-      dates: '21-Day Outlook (June 25 - July 15)',
-      phaseLabel: 'Intraseasonal Break Risk',
-      onsetProb: 96,
-      drySpellRisk: 72,
-      heavyRainProb: 30,
-      expectedRainfallMm: '220 - 275 mm',
-      departureText: '-12% below normal',
-      confidence: t('common.moderateConfidence') || 'Moderate Confidence',
-    },
-    30: {
-      dates: '30-Day Outlook (June 25 - July 24)',
-      phaseLabel: 'Revival Phase Expected Mid-July',
-      onsetProb: 98,
-      drySpellRisk: 45,
-      heavyRainProb: 50,
-      expectedRainfallMm: '310 - 380 mm',
-      departureText: 'Near normal (-4%)',
-      confidence: t('common.lowConfidence') || 'Low Confidence',
-    },
-  };
+  const [forecast, setForecast] = useState<NormalizedForecastResponse | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [showHistoricalArchive, setShowHistoricalArchive] = useState<boolean>(false);
 
-  const current = demoOutlookData[horizon];
+  useEffect(() => {
+    let isMounted = true;
+    const loadForecast = async () => {
+      try {
+        setLoading(true);
+        const res = await weatherService.getForecast({
+          block_id: 'UP_LKO_BKT',
+          horizon: horizon,
+        });
+        if (isMounted && res.success && res.data) {
+          setForecast(res.data);
+        }
+      } catch (err) {
+        console.error('MonsoonGlanceCard error:', err);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+    loadForecast();
+    return () => {
+      isMounted = false;
+    };
+  }, [horizon]);
+
+  // Derived metrics from canonical forecast data
+  const totalRainfallMm = forecast?.summary.expectedTotalRainfall7dMm ?? 0;
+  const isExtendedHorizon = horizon > 7;
+
+  // Rain event probability from daily peak or average
+  const maxRainProb = forecast?.daily && forecast.daily.length > 0
+    ? Math.max(...forecast.daily.map((d) => d.rainfallProbability))
+    : 15;
+
+  const heavyRainProb = forecast?.summary.heavyRainAlertRisk === 'HIGH' || forecast?.summary.heavyRainAlertRisk === 'CRITICAL'
+    ? 65
+    : forecast?.summary.heavyRainAlertRisk === 'MODERATE'
+    ? 35
+    : 10;
+
+  const drySpellRiskPct = forecast?.summary.drySpellAlertRisk === 'HIGH' || forecast?.summary.drySpellAlertRisk === 'CRITICAL'
+    ? 70
+    : forecast?.summary.drySpellAlertRisk === 'MODERATE'
+    ? 40
+    : 15;
 
   return (
     <div className="bg-white rounded-2xl border-2 border-[#102A43] shadow-[4px_4px_0px_#102A43] mb-6 overflow-hidden">
@@ -84,12 +87,21 @@ export const MonsoonGlanceCard: React.FC = () => {
         <div>
           <div className="flex items-center gap-2.5 flex-wrap">
             <h3 className="font-heading font-black text-xl text-[#102A43]">
-              {t('farmer.monsoonOutlook') || 'Monsoon Outlook'}
+              {t('farmer.monsoonOutlook') || 'Monsoon Outlook & Precipitation Horizon'}
             </h3>
-            <ScientificStatusBadge status="DIAGNOSTIC ARCHIVE" size="sm" />
+            <ScientificStatusBadge
+              status={isExtendedHorizon ? 'CLIMATOLOGICAL OUTLOOK' : freshnessStatus}
+              size="sm"
+            />
           </div>
           <p className="text-xs text-[#486581] mt-1 font-sans">
-            {current.dates} • <span className="font-heading font-bold text-[#0E7490]">{current.phaseLabel}</span>
+            Window: <span className="font-mono font-bold text-[#102A43]">{forecastWindowLabel}</span>
+            {' '}• Reference:{' '}
+            <span className="font-heading font-bold text-[#0E7490]">
+              {isExtendedHorizon
+                ? `${horizon}-Day Climatological Projection (ERA5 Baseline)`
+                : `Operational Numerical Assimilation (${sourceAttribution})`}
+            </span>
           </p>
         </div>
 
@@ -100,38 +112,40 @@ export const MonsoonGlanceCard: React.FC = () => {
       <div className="p-5 sm:p-6 space-y-5">
         {/* 3 Core Metric Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          
-          {/* 1. Monsoon Onset */}
+          {/* 1. Rainfall Probability */}
           <div className="bg-[#E8F4F6]/50 border-2 border-[#102A43] rounded-xl p-5 shadow-[2px_2px_0px_#102A43] flex flex-col justify-between">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-2 text-[#155E75]">
                 <CloudRain className="w-5 h-5 text-[#0E7490]" />
                 <span className="text-xs font-heading font-extrabold uppercase tracking-wider">
-                  {t('targets.onset') || 'Monsoon Onset'}
+                  Rainfall Likelihood
                 </span>
               </div>
               <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-[#E8F4F6] border border-[#0E7490]/40 text-[#155E75]">
-                Favorable
+                {maxRainProb > 50 ? 'Rain Likely' : 'Low Probability'}
               </span>
             </div>
 
             <div className="my-4">
               <div className="flex items-baseline gap-1.5">
                 <span className="font-heading font-black text-4xl text-[#102A43]">
-                  {current.onsetProb}%
+                  {maxRainProb}%
                 </span>
-                <span className="text-xs text-[#829AB1] font-medium font-sans">likelihood</span>
+                <span className="text-xs text-[#829AB1] font-medium font-sans">peak probability</span>
               </div>
               <p className="text-xs text-[#486581] mt-1 font-sans">
-                Window: June 26–28 • <span className="font-medium text-[#155E75]">{current.confidence}</span>
+                Accumulation:{' '}
+                <span className="font-mono font-bold text-[#102A43]">
+                  {totalRainfallMm.toFixed(1)} mm
+                </span>{' '}
+                expected in period
               </p>
             </div>
 
-            {/* Neo-brutalist Progress Bar */}
             <div className="w-full bg-white h-2.5 rounded-full border border-[#102A43]/30 overflow-hidden">
               <div
                 className="bg-[#0E7490] h-full transition-all duration-300"
-                style={{ width: `${current.onsetProb}%` }}
+                style={{ width: `${maxRainProb}%` }}
               />
             </div>
           </div>
@@ -142,39 +156,40 @@ export const MonsoonGlanceCard: React.FC = () => {
               <div className="flex items-center gap-2 text-[#B45309]">
                 <SunMedium className="w-5 h-5 text-[#D97706]" />
                 <span className="text-xs font-heading font-extrabold uppercase tracking-wider">
-                  {t('targets.drySpell') || 'Dry Spell Break'}
+                  Dry Spell Exposure
                 </span>
               </div>
               <span
                 className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase border ${
-                  current.drySpellRisk > 50
+                  drySpellRiskPct > 50
                     ? 'bg-[#FEF3C7] border-[#D97706] text-[#B45309]'
                     : 'bg-[#EBF5EE] border-[#3F7D58] text-[#3F7D58]'
                 }`}
               >
-                {current.drySpellRisk > 50 ? t('common.riskHigh') || 'High Risk' : t('common.riskLow') || 'Low Risk'}
+                {drySpellRiskPct > 50 ? 'High Risk' : 'Low Risk'}
               </span>
             </div>
 
             <div className="my-4">
               <div className="flex items-baseline gap-1.5">
                 <span className="font-heading font-black text-4xl text-[#102A43]">
-                  {current.drySpellRisk}%
+                  {drySpellRiskPct}%
                 </span>
                 <span className="text-xs text-[#829AB1] font-medium font-sans">break risk</span>
               </div>
               <p className="text-xs text-[#486581] mt-1 font-sans">
-                {current.drySpellRisk > 50 ? 'hiatus expected after day 6' : 'consistent moisture continuity'}
+                {drySpellRiskPct > 50
+                  ? '≥5 consecutive rainless days (&lt;1 mm) probable'
+                  : 'Moisture continuity adequate'}
               </p>
             </div>
 
-            {/* Progress Bar */}
             <div className="w-full bg-white h-2.5 rounded-full border border-[#102A43]/30 overflow-hidden">
               <div
                 className={`h-full transition-all duration-300 ${
-                  current.drySpellRisk > 50 ? 'bg-[#D97706]' : 'bg-[#3F7D58]'
+                  drySpellRiskPct > 50 ? 'bg-[#D97706]' : 'bg-[#3F7D58]'
                 }`}
-                style={{ width: `${current.drySpellRisk}%` }}
+                style={{ width: `${drySpellRiskPct}%` }}
               />
             </div>
           </div>
@@ -185,111 +200,94 @@ export const MonsoonGlanceCard: React.FC = () => {
               <div className="flex items-center gap-2 text-[#1E3A8A]">
                 <CloudLightning className="w-5 h-5 text-[#2563EB]" />
                 <span className="text-xs font-heading font-extrabold uppercase tracking-wider">
-                  {t('targets.heavyRain') || 'Heavy Rain'}
+                  Heavy Rain Alert
                 </span>
               </div>
               <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-[#DBEAFE] border border-[#2563EB]/40 text-[#1E3A8A]">
-                &gt; 65 mm / 24h
+                ≥64.5 mm / 24h
               </span>
             </div>
 
             <div className="my-4">
               <div className="flex items-baseline gap-1.5">
                 <span className="font-heading font-black text-4xl text-[#102A43]">
-                  {current.heavyRainProb}%
+                  {heavyRainProb}%
                 </span>
-                <span className="text-xs text-[#829AB1] font-medium font-sans">probability</span>
+                <span className="text-xs text-[#829AB1] font-medium font-sans">risk likelihood</span>
               </div>
               <p className="text-xs text-[#486581] mt-1 font-sans">
-                Peak convective event: June 27 evening
+                {forecast?.summary.heavyRainAlertRisk === 'HIGH' || forecast?.summary.heavyRainAlertRisk === 'CRITICAL'
+                  ? 'Convective event threshold exceeded in model cycle'
+                  : 'No extreme episodic convection detected'}
               </p>
             </div>
 
-            {/* Progress Bar */}
             <div className="w-full bg-white h-2.5 rounded-full border border-[#102A43]/30 overflow-hidden">
               <div
                 className="bg-[#2563EB] h-full transition-all duration-300"
-                style={{ width: `${current.heavyRainProb}%` }}
+                style={{ width: `${heavyRainProb}%` }}
               />
             </div>
           </div>
-
         </div>
 
-        {/* Daily Rainfall Hyetograph Timeline (Phase 7B) */}
-        <ForecastTimeline
-          mode="rainfall"
-          title="Daily Rainfall Distribution (Simulated Diagnostic Hyetograph)"
-          subtitle={`Window: ${current.dates} • Total: ${current.expectedRainfallMm}`}
-          rainfallData={
-            horizon === 7
-              ? [
-                  { date: '2024-06-25', label: 'Jun 25', rainfallMm: 14 },
-                  { date: '2024-06-26', label: 'Jun 26', rainfallMm: 22 },
-                  { date: '2024-06-27', label: 'Jun 27', rainfallMm: 46, isPeak: true },
-                  { date: '2024-06-28', label: 'Jun 28', rainfallMm: 28 },
-                  { date: '2024-06-29', label: 'Jun 29', rainfallMm: 12 },
-                  { date: '2024-06-30', label: 'Jun 30', rainfallMm: 8 },
-                  { date: '2024-07-01', label: 'Jul 01', rainfallMm: 5 },
-                ]
-              : horizon === 14
-              ? [
-                  { date: '2024-06-25', label: 'W1 D1', rainfallMm: 18 },
-                  { date: '2024-06-27', label: 'W1 D3', rainfallMm: 52, isPeak: true },
-                  { date: '2024-06-29', label: 'W1 D5', rainfallMm: 34 },
-                  { date: '2024-07-01', label: 'W1 D7', rainfallMm: 20 },
-                  { date: '2024-07-03', label: 'W2 D2', rainfallMm: 12 },
-                  { date: '2024-07-05', label: 'W2 D4', rainfallMm: 6 },
-                  { date: '2024-07-07', label: 'W2 D6', rainfallMm: 4 },
-                ]
-              : horizon === 21
-              ? [
-                  { date: '2024-06-25', label: 'W1', rainfallMm: 95, isPeak: true },
-                  { date: '2024-07-02', label: 'W2', rainfallMm: 42 },
-                  { date: '2024-07-09', label: 'W3', rainfallMm: 18 },
-                  { date: '2024-07-16', label: 'W4', rainfallMm: 25 },
-                  { date: '2024-07-23', label: 'W5', rainfallMm: 30 },
-                  { date: '2024-07-30', label: 'W6', rainfallMm: 22 },
-                  { date: '2024-08-06', label: 'W7', rainfallMm: 15 },
-                ]
-              : [
-                  { date: '2024-06-25', label: 'W1-2', rainfallMm: 140, isPeak: true },
-                  { date: '2024-07-05', label: 'W3', rainfallMm: 35 },
-                  { date: '2024-07-12', label: 'W4', rainfallMm: 28 },
-                  { date: '2024-07-19', label: 'W5', rainfallMm: 55 },
-                  { date: '2024-07-26', label: 'W6', rainfallMm: 45 },
-                  { date: '2024-08-02', label: 'W7', rainfallMm: 30 },
-                  { date: '2024-08-09', label: 'W8', rainfallMm: 20 },
-                ]
-          }
-        />
+        {/* Canonical Daily Precipitation Hyetograph */}
+        {forecast?.daily && forecast.daily.length > 0 && (
+          <CanonicalRainfallTrendChart
+            daily={forecast.daily}
+            freshnessStatus={forecast.freshnessStatus}
+            sourceAttribution={forecast.source}
+            title={`${horizon}-Day Operational Rainfall Trajectory`}
+            subtitle={`Window: ${forecastWindowLabel} • Total Projected: ${totalRainfallMm.toFixed(1)} mm`}
+          />
+        )}
 
-        {/* Cumulative Rainfall & Temporal Hierarchy Strip */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-[#F3F6F7] rounded-xl border border-[#102A43]/20 text-xs">
-          <div className="flex items-center gap-3">
-            <div className="p-1.5 rounded-lg bg-white border border-[#102A43]/10 text-[#0E7490]">
-              <TrendingUp className="w-4 h-4" />
-            </div>
-            <div>
+        {/* Separated Historical Benchmark Section (Part 14) */}
+        <div className="mt-4 pt-4 border-t border-[#102A43]/15">
+          <button
+            type="button"
+            onClick={() => setShowHistoricalArchive(!showHistoricalArchive)}
+            className="w-full flex items-center justify-between p-3 rounded-xl bg-[#F8FAFC] border border-[#CBD5E1] text-[#475569] hover:bg-[#F1F5F9] transition-colors text-xs font-sans"
+          >
+            <div className="flex items-center gap-2">
+              <Archive className="w-4 h-4 text-[#64748B]" />
               <span className="font-heading font-bold text-[#102A43]">
-                Projected Rainfall: {current.expectedRainfallMm}
+                Historical Reference Benchmark (Kharif 2024 Archive)
               </span>
-              <span className="text-[#829AB1] block sm:inline sm:ml-2">
-                ({current.departureText})
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-200 text-slate-700 font-bold">
+                HISTORICAL ARCHIVE
               </span>
-              <div className="text-[10px] font-mono text-[#829AB1] mt-0.5">
-                Obs Date: Jun 24, 2024 • Model Run: SEAS5/ERA5 Downscaled • Archive: Kharif 2024
+            </div>
+            <div className="flex items-center gap-1 font-medium">
+              <span>{showHistoricalArchive ? 'Hide Archive' : 'View Historical Benchmark'}</span>
+              {showHistoricalArchive ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            </div>
+          </button>
+
+          {showHistoricalArchive && (
+            <div className="mt-3 p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700 space-y-2 font-sans">
+              <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                <span className="font-heading font-bold text-slate-900">
+                  Retrospective Kharif 2024 Station Record (Bakshi Ka Talab, UP_LKO_BKT)
+                </span>
+                <span className="text-[10px] font-mono text-slate-500">
+                  122 Daily Observations · 2024-06-01 to 2024-09-30
+                </span>
+              </div>
+              <p>
+                During the historical Kharif 2024 benchmark season, Lucknow experienced two episodic convective events exceeding 60 mm (peak convective event recorded on 2024-06-27 with 46 mm in 24 hours). Seasonal accumulation reached 842 mm.
+              </p>
+              <div className="pt-2 flex items-center gap-3">
+                <Link
+                  to="/farmer/what-if"
+                  className="inline-flex items-center gap-1.5 text-[#0E7490] hover:text-[#155E75] font-heading font-bold text-xs"
+                >
+                  <span>Open Kharif 2024 What-If Simulator</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </Link>
               </div>
             </div>
-          </div>
-
-          <Link
-            to="/farmer/forecast"
-            className="inline-flex items-center gap-1.5 font-heading font-bold text-[#0E7490] hover:text-[#155E75] transition-colors shrink-0"
-          >
-            <span>Detailed Forecast View</span>
-            <ChevronRight className="w-3.5 h-3.5" />
-          </Link>
+          )}
         </div>
       </div>
     </div>

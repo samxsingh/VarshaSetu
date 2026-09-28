@@ -5,11 +5,23 @@ import { sendSuccess, sendError } from '../utils/responseEnvelope';
 import { mlGatewayClient } from '../services/ml';
 import { realtimeService } from '../realtime';
 
+import { weatherAggregatorService } from '../services/weather/WeatherAggregatorService';
+import { meteorologicalDataService } from '../services/weather/MeteorologicalDataService';
+
 export const dataHealthController = {
   async getOverview(req: Request, res: Response, next: NextFunction) {
     try {
-      const overview = await dataIngestionRepository.getOverview();
-      return sendSuccess(res, overview);
+      const [overview, providers] = await Promise.all([
+        dataIngestionRepository.getOverview(),
+        weatherAggregatorService.checkAllProvidersHealth().catch(() => []),
+      ]);
+      const meteorologicalSources = meteorologicalDataService.getSources();
+      return sendSuccess(res, {
+        ...overview,
+        overall: overview.overallHealth,
+        providers,
+        meteorologicalSources,
+      });
     } catch (error) {
       next(error);
     }

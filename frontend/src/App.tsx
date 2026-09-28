@@ -43,6 +43,8 @@ const AlertCenterPage = lazy(() => import('./pages/analyst/AlertCenterPage').the
 // Lazy Loaded Admin Page
 const AdminDashboardPage = lazy(() => import('./pages/admin/AdminDashboardPage').then((m) => ({ default: m.AdminDashboardPage })));
 
+import { OperationalDataProvider } from './context/OperationalDataContext';
+
 export function App() {
   const initAuth = useAuthStore((state) => state.initAuth);
 
@@ -52,12 +54,13 @@ export function App() {
 
   return (
     <BrowserRouter>
-      <Suspense fallback={<LoadingState label="Loading VarshaSetu portal..." className="min-h-[50vh]" />}>
-        <Routes>
-          <Route path="/" element={<RootLayout />}>
-            {/* Public Routes */}
-            <Route index element={<LandingPage />} />
-            <Route path="about" element={<AboutPage />} />
+      <OperationalDataProvider>
+        <Suspense fallback={<LoadingState label="Loading VarshaSetu portal..." className="min-h-[50vh]" />}>
+          <Routes>
+            <Route path="/" element={<RootLayout />}>
+              {/* Public Routes */}
+              <Route index element={<LandingPage />} />
+              <Route path="about" element={<AboutPage />} />
             <Route path="how-it-works" element={<HowItWorksPage />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="auth" element={<LoginPage />} />
@@ -148,6 +151,7 @@ export function App() {
           </Route>
         </Routes>
       </Suspense>
+      </OperationalDataProvider>
     </BrowserRouter>
   );
 }

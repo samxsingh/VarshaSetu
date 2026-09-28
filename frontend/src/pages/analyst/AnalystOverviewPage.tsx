@@ -17,6 +17,7 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { AnalystScientificLayer } from '../../components/analyst/AnalystScientificLayer';
 
 export const AnalystOverviewPage: React.FC = () => {
   const researchStages = [
@@ -111,7 +112,10 @@ export const AnalystOverviewPage: React.FC = () => {
         </div>
       </div>
 
-      {/* 2. Visual Research Pipeline */}
+      {/* 2. Planetary Climate Signals, Climatological Anomalies, & Dataset Catalog */}
+      <AnalystScientificLayer />
+
+      {/* 3. Visual Research Pipeline */}
       <div className="bg-white border-2 border-[#102A43] rounded-2xl p-5 shadow-[4px_4px_0px_#102A43] space-y-3">
         <div className="flex items-center justify-between pb-2 border-b border-[#102A43]/10">
           <div className="flex items-center gap-2">

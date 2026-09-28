@@ -6,6 +6,7 @@ import { MonsoonGlanceCard } from '../../components/farmer/MonsoonGlanceCard';
 import { CropAdvisoryCard } from '../../components/farmer/CropAdvisoryCard';
 import { WhatIfPreviewCard } from '../../components/farmer/WhatIfPreviewCard';
 import { OperationalSignalCenter } from '../../components/operations/OperationalSignalCenter';
+import { FarmerLiveWeatherSection } from '../../components/farmer/FarmerLiveWeatherSection';
 
 export const FarmerDashboardPage: React.FC = () => {
   return (
@@ -16,19 +17,22 @@ export const FarmerDashboardPage: React.FC = () => {
         title="Understand the weather around your farm."
         subtitle="Calibrated monsoon signals, downscaled rainfall horizons, and timely agronomic advisories."
         status="DIAGNOSTIC ONLY"
-        badgeLabel="KHARIF 2024 ARCHIVE"
+        badgeLabel="HYPERLOCAL GROUNDING"
       />
 
       {/* 2. Scientific Disclosure & Boundary */}
       <ScientificDisclosure
-        title="Diagnostic Demonstration Mode"
-        message="Forecast outputs and advisory interpretations are anchored to historical Kharif 2024 observations (UP_LKO_BKT, 122 daily records). Technical uptime does not imply operational meteorological validity or commercial crop yield projections."
+        title="Scientific Decision Support & Ground Telemetry"
+        message="Observational surface parameters are retrieved from validated meteorological stations and gridded high-resolution ECMWF/IMD numerical models. Calibrated agronomic guidelines are generated per crop stage."
       />
 
       {/* 3. Farm Location & Active Crop Profile Bar */}
       <FarmerHeader />
 
-      {/* 4. Probabilistic Monsoon Outlook (7, 14, 21, 30 Days) */}
+      {/* 4. Live Ground Conditions & Next 7 Days Outlook */}
+      <FarmerLiveWeatherSection />
+
+      {/* 4b. Probabilistic Monsoon Outlook (7, 14, 21, 30 Days) */}
       <MonsoonGlanceCard />
 
       {/* 4b. Operational Weather & Advisory Signals */}

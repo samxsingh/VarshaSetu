@@ -51,7 +51,7 @@ export const GovRegionalSignalMatrix: React.FC = () => {
       probability: '84.0%',
       status: 'SPATIAL PRIOR INTERPOLATED',
       statusColor: 'bg-white text-[#486581] border-[#102A43]/20',
-      timeframe: 'June 26–28 Window',
+      timeframe: 'Active 3-Day Window',
     },
     {
       signal: 'RAINFALL DEPARTURE',

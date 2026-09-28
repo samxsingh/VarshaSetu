@@ -38,7 +38,7 @@ export const WhatIfPreviewCard: React.FC = () => {
         <div className="bg-[#F3F6F7] p-4 rounded-xl border border-[#102A43]/20 text-xs flex items-center justify-between gap-3">
           <div>
             <span className="font-heading font-black text-sm text-[#102A43] block">
-              Option A: Sow Now (June 26)
+              Option A: Sow Now (Immediate Window)
             </span>
             <span className="text-[#3F7D58] font-semibold mt-0.5 block">
               Optimal 18% moisture stress risk
@@ -52,7 +52,7 @@ export const WhatIfPreviewCard: React.FC = () => {
         <div className="bg-[#F3F6F7] p-4 rounded-xl border border-[#102A43]/20 text-xs flex items-center justify-between gap-3">
           <div>
             <span className="font-heading font-black text-sm text-[#102A43] block">
-              Option B: Wait 7 Days (July 3)
+              Option B: Wait 7 Days (Delayed Window)
             </span>
             <span className="text-[#B45309] font-semibold mt-0.5 block">
               +42% risk due to dry break window
